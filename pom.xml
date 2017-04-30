@@ -69,10 +69,26 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>net.sf.flexjson</groupId>
+            <artifactId>flexjson</artifactId>
+            <version>3.3</version>
+        </dependency>
+
         <!-- Bundels -->
         <dependency>
             <groupId>org.europa.libraries</groupId>
             <artifactId>bundle-logging</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.europa.libraries</groupId>
+            <artifactId>bundle-hibernate</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.europa.libraries</groupId>
+            <artifactId>bundle-spring</artifactId>
             <type>pom</type>
         </dependency>
     </dependencies>
