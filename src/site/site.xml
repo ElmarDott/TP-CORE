@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Module: CORE">
+    <bannerLeft>
+        <name>together Platform</name>
+        <src>images/logo.gif</src>
+        <href>index.html</href>
+    </bannerLeft>
+    <body>
+        <menu ref="parent" />
+        <menu ref="reports" />
+    </body>
+</project>
