@@ -11,12 +11,15 @@ import java.util.List;
  * ClassPathXmlApplicationContext("classpath:eu/freeplace/newsletter/config/spring-dao.xml");
  *
  * This configuration us a MySQL Database connection to local host with the
- * following account: - jdbc.main.schema=collab<br>
+ * following account: <br>
+ * - jdbc.main.schema=collab<br>
  * - jdbc.main.user=collab<br>
  * - jdbc.main.password=collab
  *
  * @param <T> the Entity to Save
  * @param <PK> the Primary Key
+ *
+ * @author elmar.dott@gmail.com
  */
 public interface GenericDAO<T, PK extends Serializable> extends Serializable {
 

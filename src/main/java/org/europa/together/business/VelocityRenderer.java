@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Velocity Template Renderer.
+ *
+ * @author elmar.dott@gmail.com
  */
 @Component
 public interface VelocityRenderer {

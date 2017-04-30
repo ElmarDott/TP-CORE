@@ -12,7 +12,8 @@ public class DAOException extends Exception {
      * message.
      */
     public DAOException() {
-        /* NOT IN USE. */ }
+        /* NOT IN USE. */
+    }
 
     /**
      * Constructs an instance of <code>DAOException</code> with the specified
