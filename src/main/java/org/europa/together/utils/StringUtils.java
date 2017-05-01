@@ -12,7 +12,7 @@ import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 
 /**
- * Some useful Methods for String manipulation like Hash and UUID generation.
+ * Some useful Methods for String manipulation, Hash and UUID generation.
  */
 public final class StringUtils {
 

@@ -1,7 +1,7 @@
 package org.europa.together.domain;
 
 /**
- * Available Hash Algortithms.
+ * Available Hash Algorithms.
  */
 public enum HashAlgorithm {
 
@@ -12,6 +12,7 @@ public enum HashAlgorithm {
 
     private final String value;
 
+    //CONSTRUCTOR
     private HashAlgorithm(final String value) {
         this.value = value;
     }

@@ -166,8 +166,11 @@ public class MailClientImpl implements MailClient {
 
                 mail.addRecipient(Message.RecipientType.TO, recipient);
                 //after x mails wait for n seconds
-                if (counter % (Integer.valueOf(config.get("mail.count"))) == 0) {
-                    TimeUnit.SECONDS.sleep(Long.valueOf(config.get("mail.wait")));
+                int mailcounter = Integer.parseInt(config.get("mail.count"));
+                long waitTime = Long.parseLong(config.get("mail.wait"));
+
+                if ((counter % mailcounter) == 0) {
+                    TimeUnit.SECONDS.sleep(waitTime);
                     LOGGER.log("Timer wait for " + config.get("mail.wait") + " seconds.",
                             LogLevel.DEBUG);
                 }

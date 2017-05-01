@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Abstract implementation of Domain DAO.
  *
  * @param <T> as template.
- * @param <PK> as Pr
+ * @param <PK> as PrimaryKey
  */
 @SuppressWarnings("unchecked")
 @Transactional

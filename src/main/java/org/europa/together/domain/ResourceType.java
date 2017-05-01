@@ -13,6 +13,7 @@ public enum ResourceType {
 
     private final String value;
 
+    //CONSTRUCTOR
     private ResourceType(final String value) {
         this.value = value;
     }

@@ -7,9 +7,10 @@ import java.util.List;
  * GenericDAO interface primary for CRUD Database operations. To use the DAO by
  * your own configuration, you need to load the spring-dao.xml into your Spring
  * context. For Desktop application you can load the spring context by following
- * code: * private transient ApplicationContext context = new
+ * code:<br>
+ * private transient ApplicationContext context = new
  * ClassPathXmlApplicationContext("classpath:eu/freeplace/newsletter/config/spring-dao.xml");
- *
+ * <br><br>
  * This configuration us a MySQL Database connection to local host with the
  * following account: <br>
  * - jdbc.main.schema=collab<br>

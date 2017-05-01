@@ -16,8 +16,8 @@ import org.europa.together.business.Logger;
 
 /**
  * Application wide configuration with key=value entries. For an easier
- * maintanence are entries with modul-name, modul-version and a depecated marker
- * extended.
+ * maintenance are entries with module-name, module-version and a deprecated
+ * marker extended.
  */
 @Entity
 @Table(name = "APP_CONFIG", uniqueConstraints = {
@@ -27,6 +27,7 @@ public class Configuration implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = new LoggerImpl(Configuration.class);
+    private static final int HASH = 43;
 
     @Id
     @Column(name = "IDX")
@@ -268,10 +269,10 @@ public class Configuration implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 43 * hash + Objects.hashCode(this.key);
-        hash = 43 * hash + Objects.hashCode(this.modulName);
-        hash = 43 * hash + Objects.hashCode(this.version);
+        int hash = HASH * 5;
+        hash = hash + Objects.hashCode(this.key);
+        hash = hash + Objects.hashCode(this.modulName);
+        hash = hash + Objects.hashCode(this.version);
         return hash;
     }
 

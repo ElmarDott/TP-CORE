@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 /**
  * Simple SMTP E Mail Client with SSL to send E-Mails from a configured Mail
  * Account. The Mailer allows sending mass mails (e.g. newsletter), this feature
- * needs a timer to interrupt after 100 mails for a few seconds.
+ * needs a timer to interrupt after 100 mails for a few seconds.<br>
  *
  * <code>
  * \@Autowired<br>

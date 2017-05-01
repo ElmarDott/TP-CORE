@@ -56,7 +56,7 @@ public class VelocityRendererImpl implements VelocityRenderer {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private String proccesResource(String resource, Map<String, String> properties) {
+    private String proccesResource(final String resource, final Map<String, String> properties) {
         Template template = engine.getTemplate(resource);
 
         StringWriter writer = new StringWriter();
