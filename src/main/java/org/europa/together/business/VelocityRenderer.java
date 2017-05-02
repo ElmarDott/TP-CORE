@@ -36,10 +36,11 @@ public interface VelocityRenderer {
      * Generate a String from a Template from a external File and a Map with
      * Variables.
      *
-     * @param resource as String
+     * @param resourcePath as String
+     * @param template as String
      * @param properties as Map
      * @return processedTemplate as String
      */
-    String generateContentByFileResource(String resource,
+    String generateContentByFileResource(String resourcePath, String template,
             Map<String, String> properties);
 }

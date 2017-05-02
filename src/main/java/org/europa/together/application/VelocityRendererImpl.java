@@ -21,8 +21,6 @@ public class VelocityRendererImpl implements VelocityRenderer {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = new LoggerImpl(VelocityRendererImpl.class);
 
-    private final VelocityEngine engine = new VelocityEngine();
-
     /**
      * Constructor.
      */
@@ -34,12 +32,13 @@ public class VelocityRendererImpl implements VelocityRenderer {
     public String generateContentByClasspathResource(final String resource,
             final Map<String, String> properties) {
 
+        VelocityEngine engine = new VelocityEngine();
         engine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         engine.setProperty("classpath.resource.loader.class",
                 ClasspathResourceLoader.class.getName());
         engine.init();
 
-        return this.proccesResource(resource, properties);
+        return this.proccesResource(engine, resource, properties);
     }
 
     @Override
@@ -50,15 +49,21 @@ public class VelocityRendererImpl implements VelocityRenderer {
     }
 
     @Override
-    public String generateContentByFileResource(final String resource,
+    public String generateContentByFileResource(final String resourcePath,
+            final String template,
             final Map<String, String> properties) {
-        //TODO: generateContentByFileResource() implement me
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        VelocityEngine engine = new VelocityEngine();
+        engine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resourcePath);
+        engine.init();
+
+        return this.proccesResource(engine, template, properties);
     }
 
-    private String proccesResource(final String resource, final Map<String, String> properties) {
-        Template template = engine.getTemplate(resource);
+    private String proccesResource(final VelocityEngine engine, final String resource,
+            final Map<String, String> properties) {
 
+        Template template = engine.getTemplate(resource);
         StringWriter writer = new StringWriter();
         writer.flush();
 

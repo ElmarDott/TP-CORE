@@ -8,7 +8,7 @@ import org.europa.together.domain.LogLevel;
 /**
  * Constraints for the package CORE.
  */
-public final class Constraints {
+public class Constraints {
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
