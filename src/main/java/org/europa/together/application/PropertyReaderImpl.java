@@ -3,8 +3,13 @@ package org.europa.together.application;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
@@ -31,12 +36,10 @@ public class PropertyReaderImpl implements PropertyReader {
     @Override
     public boolean addProperty(final String key, final String value) {
         boolean success = false;
-        if (this.lookupForPropertyKey(key)) {
+        try {
+            this.lookupForPropertyKey(key);
 
-            LOGGER.log("The Property Key " + key
-                    + " already exist and will not be added. Value:"
-                    + propertyList.get(key), LogLevel.WARN);
-        } else {
+        } catch (Exception ex) {
             propertyList.put(key, value);
             LOGGER.log("Entry: " + key + "=" + value + " added.", LogLevel.DEBUG);
             success = true;
@@ -73,8 +76,7 @@ public class PropertyReaderImpl implements PropertyReader {
             }
             reader.close();
 
-            String logMsg
-                    = "readPropertyFile(" + resource + ") "
+            String logMsg = "readPropertyFromClasspath(" + resource + ") "
                     + count + " Properties readed.";
             LOGGER.log(logMsg, LogLevel.DEBUG);
 
@@ -97,16 +99,47 @@ public class PropertyReaderImpl implements PropertyReader {
 
     @Override
     public boolean appendPropertiesFromFile(final String resource) {
-        //TODO: appendPropertiesFromExternalFile(final String file) implement me
-        throw new UnsupportedOperationException("Not supported yet.");
+        boolean success = false;
+
+        try (Stream<String> stream = Files.lines(Paths.get(resource))) {
+
+            List<String> content = stream
+                    .filter(line -> !line.startsWith("#"))
+                    .filter(line -> !line.isEmpty())
+                    .collect(Collectors.toList());
+
+            int count = 1;
+            for (String entry : content) {
+
+                String[] parts = entry.split("=");
+                String key = parts[0];
+                String value = "";
+                if (parts.length == 2) {
+                    value = parts[1];
+                }
+                propertyList.put(key, value);
+                count++;
+            }
+
+            String logMsg = "readPropertyFromFile(" + resource + ") "
+                    + count + " Properties readed.";
+            LOGGER.log(logMsg, LogLevel.DEBUG);
+
+            success = true;
+
+        } catch (IOException ex) {
+            LOGGER.log("IOException: resource=('" + resource + "') is empty"
+                    + ex.getMessage(), LogLevel.ERROR);
+        }
+
+        this.printPropertyList();
+        return success;
     }
 
     @Override
     public boolean clear() {
         Boolean success = false;
-        if (propertyList == null) {
-            LOGGER.log("PropertyList is NULL, nothig to remove.", LogLevel.WARN);
-        } else if (propertyList.isEmpty()) {
+        if (propertyList.isEmpty()) {
             LOGGER.log("PropertyList is EMPTY, nothing to remove.", LogLevel.WARN);
         } else {
             propertyList.clear();
@@ -119,23 +152,29 @@ public class PropertyReaderImpl implements PropertyReader {
     @Override
     public boolean removeProperty(final String key) {
         boolean success = false;
-        if (this.lookupForPropertyKey(key)) {
-
+        try {
+            this.lookupForPropertyKey(key);
             propertyList.remove(key);
             success = true;
-        } else {
-            LOGGER.log("Entry " + key + " don't exist and cant't removed from the PropertyList.",
-                    LogLevel.WARN);
+            LOGGER.log(key + " successful removed.", LogLevel.DEBUG);
+
+        } catch (Exception ex) {
+            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
         }
         return success;
     }
 
     @Override
     public boolean updateProperty(final String key, final String value) {
-        if (this.lookupForPropertyKey(key)) {
+        try {
+            this.lookupForPropertyKey(key);
+            propertyList.put(key, value);
+            LOGGER.log("Entry " + key + " will be updated.", LogLevel.INFO);
+
+        } catch (Exception ex) {
             LOGGER.log("Entry " + key + " don't exist and will created.", LogLevel.INFO);
+            propertyList.put(key, value);
         }
-        propertyList.put(key, value);
         return true;
     }
 
@@ -148,9 +187,7 @@ public class PropertyReaderImpl implements PropertyReader {
     public Boolean getPropertyAsBoolean(final String key) {
         Boolean value = null;
         try {
-            if (!this.lookupForPropertyKey(key)) {
-                throw new Exception("Entry not found.");
-            }
+            this.lookupForPropertyKey(key);
             if (propertyList.get(key).matches("true|false|TRUE|FALSE|0")) {
                 value = Boolean.parseBoolean(propertyList.get(key));
             }
@@ -167,9 +204,7 @@ public class PropertyReaderImpl implements PropertyReader {
     public Double getPropertyAsDouble(final String key) {
         Double value = null;
         try {
-            if (!this.lookupForPropertyKey(key)) {
-                throw new Exception("Entry not found.");
-            }
+            this.lookupForPropertyKey(key);
             value = Double.parseDouble(propertyList.get(key));
         } catch (Exception ex) {
             LOGGER.log("getPropertyAsDouble() " + ex.getMessage() + " is no Double Value",
@@ -182,9 +217,7 @@ public class PropertyReaderImpl implements PropertyReader {
     public Float getPropertyAsFloat(final String key) {
         Float value = null;
         try {
-            if (!this.lookupForPropertyKey(key)) {
-                throw new Exception("Entry not found.");
-            }
+            this.lookupForPropertyKey(key);
             value = Float.parseFloat(propertyList.get(key));
         } catch (Exception ex) {
             LOGGER.log("getPropertyAsFloat() " + ex.getMessage() + " is no Float Value",
@@ -197,9 +230,7 @@ public class PropertyReaderImpl implements PropertyReader {
     public Integer getPropertyAsInt(final String key) {
         Integer value = null;
         try {
-            if (!this.lookupForPropertyKey(key)) {
-                throw new Exception("Entry not found.");
-            }
+            this.lookupForPropertyKey(key);
             value = Integer.parseInt(propertyList.get(key));
         } catch (Exception ex) {
             LOGGER.log("getPropertyAsInt() " + ex.getMessage() + " is no Integer Value",
@@ -212,9 +243,7 @@ public class PropertyReaderImpl implements PropertyReader {
     public String getPropertyAsString(final String key) {
         String value = null;
         try {
-            if (!this.lookupForPropertyKey(key)) {
-                throw new Exception("Entry not found.");
-            }
+            this.lookupForPropertyKey(key);
             value = propertyList.get(key);
         } catch (Exception ex) {
             LOGGER.log("getPropertyAsInt() " + ex.getMessage() + " is no Integer Value",
@@ -227,12 +256,13 @@ public class PropertyReaderImpl implements PropertyReader {
         LOGGER.log(propertyList.toString(), LogLevel.TRACE);
     }
 
-    private boolean lookupForPropertyKey(final String key) {
+    private boolean lookupForPropertyKey(final String key) throws Exception {
         boolean success = false;
         if (propertyList.containsKey(key)) {
             success = true;
         } else {
             LOGGER.log("Property Entry " + key + " don't exist.", LogLevel.WARN);
+            throw new Exception("Entry not found.");
         }
         return success;
     }

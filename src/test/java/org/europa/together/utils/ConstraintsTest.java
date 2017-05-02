@@ -1,6 +1,7 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
+import org.junit.Assert;
 import org.junit.Test;
 
 @SuppressWarnings("unchecked")
@@ -14,4 +15,9 @@ public class ConstraintsTest {
         Constraints call = clazz.newInstance();
     }
 
+    @Test
+    public void testToString() {
+        String info = Constraints.printConstraintInfo();
+        Assert.assertNotNull(info);
+    }
 }

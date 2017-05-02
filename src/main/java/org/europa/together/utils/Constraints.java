@@ -1,9 +1,16 @@
 package org.europa.together.utils;
 
+import java.nio.file.Paths;
+import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
+
 /**
  * Constraints for the package CORE.
  */
 public final class Constraints {
+
+    private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
     /**
      * Constructor.
@@ -26,4 +33,37 @@ public final class Constraints {
      * A short description of the module.
      */
     public static final String MODULE_DESCRIPTION = "Basic Library";
+
+    /**
+     * Detect the Operating System (OS) where the application is running.
+     */
+    public static final String SYSTEM_OS = System.getProperty("os.name");
+
+    /**
+     * Detect the Home Directory of the user in the OS.
+     */
+    public static final String SYSTEM_USER_HOME_DIR = System.getProperty("user.home");
+
+    /**
+     * Detect the Directory where the application is running.
+     */
+    public static final String SYSTEM_APP_DIR = Paths.get(".").toAbsolutePath().toString();
+
+    /**
+     * Implements a static version of toString();.
+     *
+     * @return Constraints as String
+     */
+    public static final String printConstraintInfo() {
+        String moduleInfo = "CORE Constraints DEBUG Info."
+                + "\n\t Module Name: " + MODULE_NAME
+                + "\n\t Module Version: " + MODULE_VERSION
+                + "\n\t Module Description: " + MODULE_DESCRIPTION
+                + "\n\t Operating System: " + SYSTEM_OS
+                + "\n\t User Home DIR: " + SYSTEM_USER_HOME_DIR
+                + "\n\t User Home DIR: " + SYSTEM_APP_DIR;
+
+        LOGGER.log(moduleInfo, LogLevel.DEBUG);
+        return moduleInfo;
+    }
 }
