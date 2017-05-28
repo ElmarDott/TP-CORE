@@ -30,31 +30,33 @@ public class Configuration implements Serializable {
     private static final int HASH = 43;
 
     @Id
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "IDX")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
-    @NotNull(message = "validation.notnull")
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_KEY", nullable = false)
     private String key;
 
     @Column(name = "CONF_VALUE")
     private String value;
 
-    @NotNull(message = "validation.notnull")
-    @Column(name = "DEFAULT_VALUE")
+    @NotNull(message = "{validation.notnull}")
+    @Column(name = "DEFAULT_VALUE", nullable = false)
     private String defaultValue;
 
-    @NotNull(message = "validation.notnull")
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "MODUL_NAME", nullable = false)
     private String modulName;
 
-    @Column(name = "CONF_SET")
-    private String configurationSet;
-
-    @NotNull(message = "validation.notnull")
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "MODUL_VERSION", nullable = false)
     private String version;
+
+    @NotNull(message = "{validation.notnull}")
+    @Column(name = "CONF_SET", nullable = false)
+    private String configurationSet;
 
     @Column(name = "DEPECATED", nullable = false)
     private boolean depecated;
@@ -70,11 +72,43 @@ public class Configuration implements Serializable {
     }
 
     /**
+     * Constructor.
+     *
+     * @param uuid as String
+     * @param key as String
+     * @param value as String
+     * @param defaultValue as String
+     * @param modulName as String
+     * @param configurationSet as String
+     * @param version as String
+     * @param depecated as boolean
+     * @param comment as String
+     */
+    public Configuration(final String uuid, final String key, final String value,
+            final String defaultValue, final String modulName,
+            final String configurationSet, final String version,
+            final boolean depecated, final String comment) {
+
+        this.uuid = uuid;
+        this.key = key;
+        this.value = value;
+        this.defaultValue = defaultValue;
+        this.modulName = modulName;
+        this.configurationSet = configurationSet;
+        this.version = version;
+        this.depecated = depecated;
+        this.comment = comment;
+    }
+
+    /**
      * Actions who have to performed before objects get persisted. e.g. cerate
      * default entries in the database.
      */
     @PrePersist
     public void prePersist() {
+        this.value = null;
+        this.defaultValue = "none";
+        this.configurationSet = "none";
         this.depecated = false;
         LOGGER.log("@PrePersist", LogLevel.INFO);
     }

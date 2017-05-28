@@ -74,55 +74,55 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
     @Override
     public List<Configuration> getAllConfigurationSetEntries(final String module,
             final String configSet) {
-        //TODO: isDateToday() inplement me.
+        //TODO: getAllConfigurationSetEntries() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public boolean updateConfigurationEntries(final List<Configuration> configuration) {
-        //TODO: isDateToday() inplement me.
+        //TODO: updateConfigurationEntries() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public List<String> compareConfigurationSetWithDefault(final List<Configuration> configSet) {
-        //TODO: isDateToday() inplement me.
+        //TODO: compareConfigurationSetWithDefault() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public boolean restoreKeyToDefault(final Configuration entry) {
-        //TODO: isDateToday() inplement me.
+        //TODO: restoreKeyToDefault() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public List<Configuration> getHistoryOfAEntry(final String module, final String key) {
-        //TODO: isDateToday() inplement me.
+        //TODO: getHistoryOfAEntry() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public String exportEntireConfiguration() {
-        //TODO: isDateToday() inplement me.
+        //TODO: exportEntireConfiguration() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public String exportConfigurationOfAModule(final String module) {
-        //TODO: isDateToday() inplement me.
+        //TODO: exportConfigurationOfAModule() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public String exportConfigurationSet(final String module, final String configSet) {
-        //TODO: isDateToday() inplement me.
+        //TODO: exportConfigurationSet() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
     public boolean importConfiguration(final String configuration) {
-        //TODO: isDateToday() inplement me.
+        //TODO: importConfiguration() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 }
