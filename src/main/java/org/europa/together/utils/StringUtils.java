@@ -1,6 +1,14 @@
 package org.europa.together.utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -174,5 +182,68 @@ public final class StringUtils {
         String uuid = UUID.randomUUID().toString();
         LOGGER.log(uuid, LogLevel.DEBUG);
         return uuid;
+    }
+
+    /**
+     * Copy a File to another destination. Alternative can a String written to a
+     * File.
+     *
+     * @param content as String
+     * @param destinationFile as String
+     * @param sourceFile as String
+     * @return true on success
+     */
+    public static boolean writeStringToFile(
+            final String content,
+            final String destinationFile,
+            final String sourceFile) {
+        boolean success = false;
+
+        Charset charset = Charset.forName("US-ASCII");
+        StringBuilder sb = new StringBuilder();
+
+        LOGGER.log("writeStringToFile() destination:"
+                + destinationFile + " source:" + sourceFile, LogLevel.DEBUG);
+
+        try {
+            if (content != null || content.length() > 0) {
+                sb.append(content);
+                LOGGER.log("content: " + content, LogLevel.TRACE);
+            }
+
+            if (sourceFile != null) {
+                BufferedReader reader
+                        = Files.newBufferedReader(Paths.get(sourceFile), charset);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+            }
+
+            if (sb != null || sb.length() > 0) {
+                BufferedWriter writer
+                        = Files.newBufferedWriter(Paths.get(destinationFile), charset);
+                writer.append(sb.toString(), 0, sb.length());
+                writer.close();
+                LOGGER.log("writeStringToFile() count of characters:" + sb.length(), LogLevel.DEBUG);
+
+            } else {
+                LOGGER.log("Filecontent is empty.", LogLevel.ERROR);
+            }
+
+            File testFile = new File(destinationFile);
+            if (testFile.exists()) {
+                success = true;
+                LOGGER.log("Filesize is " + testFile.length(), LogLevel.DEBUG);
+            } else {
+                LOGGER.log(destinationFile + " don't exst.", LogLevel.ERROR);
+            }
+
+        } catch (IOException ex) {
+            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+        }
+
+        return success;
     }
 }

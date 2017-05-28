@@ -1,27 +1,62 @@
 package org.europa.together.application;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.utils.Constraints;
-import org.junit.Test;
+import org.europa.together.utils.StringUtils;
+import org.junit.AfterClass;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 @SuppressWarnings("unchecked")
 public class PropertyReaderImplTest {
 
-    String propertyFile = "org/europa/together/properties/classpathTest.properties";
+    private static final String PROPERTY_FILE
+            = "org/europa/together/properties/classpathTest.properties";
+    private static final String TEST_FILE
+            = Constraints.SYSTEM_USER_HOME_DIR + "/fileTest.properties";
+
     private final PropertyReader propertyReader = new PropertyReaderImpl();
+
+    @BeforeClass
+    public static void setUpEnvironment() {
+
+        PropertyReader source = new PropertyReaderImpl();
+        source.appendPropertiesFromClasspath(PROPERTY_FILE);
+        Map<String, String> properties = new HashMap<>();
+        properties.putAll(source.getPropertyList());
+        StringBuilder sb = new StringBuilder();
+
+        for (String key : properties.keySet()) {
+            sb.append(key + "=" + properties.get(key) + "\n");
+        }
+
+        StringUtils.writeStringToFile(sb.toString(), TEST_FILE, null);
+    }
+
+    @AfterClass
+    public static void tearDownEnvironment() {
+        try {
+            Files.delete(Paths.get(TEST_FILE));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     @Test
     public void testAppendPropertiesFromDatabase() {
     }
 
-    @Test()
+    @Test
     public void testAppendPropertiesFromExternalFile() {
 
         propertyReader.clear();
-        String file = Constraints.SYSTEM_USER_HOME_DIR + "/fileTest.properties";
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromFile(file);
+        propertyReader.appendPropertiesFromFile(TEST_FILE);
         assertEquals(33, propertyReader.count());
     }
 
@@ -30,13 +65,13 @@ public class PropertyReaderImplTest {
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
         assertEquals(33, propertyReader.count());
     }
 
     @Test
     public void testGetPropertyAsBoolean() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
 
         assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
         assertTrue(propertyReader.getPropertyAsBoolean("test.type.boolean.01"));
@@ -50,7 +85,7 @@ public class PropertyReaderImplTest {
 
     @Test
     public void testGetPropertyAsInt() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
 
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.00"));
         assertEquals(new Integer(-1), propertyReader.getPropertyAsInt("test.type.int.01"));
@@ -64,7 +99,7 @@ public class PropertyReaderImplTest {
 
     @Test
     public void testGetPropertyAsString() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
 
         assertEquals("", propertyReader.getPropertyAsString("test.type.string.00"));
         assertEquals("string", propertyReader.getPropertyAsString("test.type.string.01"));
@@ -75,7 +110,7 @@ public class PropertyReaderImplTest {
 
     @Test
     public void testGetPropertyAsFloat() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
 
         assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(new Float(0), propertyReader.getPropertyAsFloat("test.type.float.01"));
@@ -90,7 +125,7 @@ public class PropertyReaderImplTest {
 
     @Test
     public void testGetPropertyAsDouble() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
 
         assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(new Double(0), propertyReader.getPropertyAsDouble("test.type.double.01"));
@@ -104,7 +139,7 @@ public class PropertyReaderImplTest {
     @Test
     public void testAddProperty() {
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
         assertEquals(33, propertyReader.count());
         assertTrue(propertyReader.addProperty("test", "testValue"));
         assertEquals(34, propertyReader.count());
@@ -115,7 +150,7 @@ public class PropertyReaderImplTest {
 
     @Test
     public void testRemoveProperty() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
         assertEquals(33, propertyReader.count());
         assertFalse(propertyReader.removeProperty("propertyFile"));
         assertTrue(propertyReader.removeProperty("test.type.double.02"));
@@ -136,8 +171,8 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testClear() {
-        propertyReader.appendPropertiesFromClasspath(propertyFile);
+    public void testClearProperties() {
+        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
         assertEquals(33, propertyReader.count());
         assertTrue(propertyReader.clear());
         assertEquals(0, propertyReader.count());

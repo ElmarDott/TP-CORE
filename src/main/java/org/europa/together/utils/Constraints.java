@@ -8,7 +8,7 @@ import org.europa.together.domain.LogLevel;
 /**
  * Constraints for the package CORE.
  */
-public class Constraints {
+public final class Constraints {
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
@@ -54,7 +54,7 @@ public class Constraints {
      *
      * @return Constraints as String
      */
-    public static final String printConstraintInfo() {
+    public static String printConstraintInfo() {
         String moduleInfo = "CORE Constraints DEBUG Info."
                 + "\n\t Module Name: " + MODULE_NAME
                 + "\n\t Module Version: " + MODULE_VERSION

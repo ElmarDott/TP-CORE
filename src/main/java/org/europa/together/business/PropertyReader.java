@@ -1,5 +1,7 @@
 package org.europa.together.business;
 
+import java.util.Map;
+
 /**
  * The PropertyReader is be able to read properties from different resources
  * like File, Database or from the Classpath. It is also possible to manipulate
@@ -127,4 +129,11 @@ public interface PropertyReader {
      * @return String PropertyAsString
      */
     String getPropertyAsString(final String key);
+
+    /**
+     * Get the full property list as Map.
+     *
+     * @return propertyLit as Map
+     */
+    Map<String, String> getPropertyList();
 }
