@@ -47,7 +47,7 @@ public final class Constraints {
     /**
      * Detect the Directory where the application is running.
      */
-    public static final String SYSTEM_APP_DIR = Paths.get(".").toAbsolutePath().toString();
+    public static final String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
 
     /**
      * Implements a static version of toString();.
