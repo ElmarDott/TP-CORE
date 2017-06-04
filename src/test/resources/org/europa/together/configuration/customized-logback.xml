@@ -10,9 +10,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.europa.together" level="TRACE" />
+    <logger name="org.europa.together" level="ERROR" />
 
-    <root level="TRACE">
+    <root level="ERROR">
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>
