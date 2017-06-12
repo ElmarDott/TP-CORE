@@ -1,10 +1,10 @@
 --- #### #######################################################################
 --- ####                POPULATE CONFIGURATION TABLE
 --- #### #######################################################################
---  Notes: CONF-KEY in table APP_CONFIG is SHA-256 protected
+---  Notes: CONF-KEY in table APP_CONFIG is SHA-256 protected
 
--- #### E-MAIL
--- mailer.host
+--- #### E-MAIL
+--- mailer.host
 INSERT INTO APP_CONFIG (CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, DEPECATED, COMMENT)
 VALUES ('630fa1d4617b3f19bb631e93befc5462111f7e6ee927300b6778638cfcbdfae9', '', '', 'email', 'core', '1.0', false, '');
 -- mailer.port
@@ -16,9 +16,9 @@ VALUES ('dfb5634b02902fbfcf7bbed2dea5eec99a3a6b7cb5f44bd483e4916ae1fc9dfe', '', 
 -- mailer.user
 INSERT INTO APP_CONFIG (CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, DEPECATED, COMMENT)
 VALUES ('b5255cb2a1425fa96e1b64182b58fa5b3b2d46c30462de64d7dc6465b02875c8', '', 'JohnDoe', 'email', 'core', '1.0', false, '');
--- mailer.passwort
+-- mailer.password
 INSERT INTO APP_CONFIG (CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, DEPECATED, COMMENT)
-VALUES ('2be6dca3046a6fecf7acbffe3ace6e043b741398ded3f28349fc2cce52f25fd8', '', 'none', 'email', 'core', '1.0', false, '');
+VALUES ('33e05ee4bd073156793d10793d980caf59ce8b016f0a6a8820b1d5ce18dc9b47', '', 'none', 'email', 'core', '1.0', false, '');
 -- mailer.ssl
 INSERT INTO APP_CONFIG (CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, DEPECATED, COMMENT)
 VALUES ('8e49cc844a943733ad9bbf0dca5f2cb76f2cd1555b0f714ed57447c9baa265c3', '', 'false', 'email', 'core', '1.0', false, '');

@@ -22,18 +22,22 @@
 
     <build>
         <filters>
-            <filter>build.properties</filter>
+            <filter>src/main/filter/database.properties</filter>
+            <filter>src/main/filter/mail.properties</filter>
         </filters>
 
         <resources>
             <resource>
                 <directory>src/main/resources/</directory>
-                <excludes>
-                    <exclude>**/*placeholder</exclude>
-                </excludes>
                 <filtering>true</filtering>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources/</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>

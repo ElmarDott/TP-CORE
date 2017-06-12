@@ -61,7 +61,7 @@ public final class Constraints {
                 + "\n\t Module Description: " + MODULE_DESCRIPTION
                 + "\n\t Operating System: " + SYSTEM_OS
                 + "\n\t User Home DIR: " + SYSTEM_USER_HOME_DIR
-                + "\n\t User Home DIR: " + SYSTEM_APP_DIR;
+                + "\n\t Application DIR: " + SYSTEM_APP_DIR;
 
         LOGGER.log(moduleInfo, LogLevel.DEBUG);
         return moduleInfo;
