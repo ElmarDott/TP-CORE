@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -13,6 +11,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.utils.StringUtils;
 
 /**
  * Application wide configuration with key=value entries. For an easier
@@ -30,9 +29,7 @@ public class Configuration implements Serializable {
     private static final int HASH = 43;
 
     @Id
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "IDX")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
     @NotNull(message = "{validation.notnull}")
@@ -68,13 +65,12 @@ public class Configuration implements Serializable {
      * Constructor.
      */
     public Configuration() {
-        /* NOT IN USE */
+        this.uuid = StringUtils.generateUUID();
     }
 
     /**
      * Constructor.
      *
-     * @param uuid as String
      * @param key as String
      * @param value as String
      * @param defaultValue as String
@@ -84,12 +80,12 @@ public class Configuration implements Serializable {
      * @param depecated as boolean
      * @param comment as String
      */
-    public Configuration(final String uuid, final String key, final String value,
+    public Configuration(final String key, final String value,
             final String defaultValue, final String modulName,
             final String configurationSet, final String version,
             final boolean depecated, final String comment) {
 
-        this.uuid = uuid;
+        this.uuid = StringUtils.generateUUID();
         this.key = key;
         this.value = value;
         this.defaultValue = defaultValue;

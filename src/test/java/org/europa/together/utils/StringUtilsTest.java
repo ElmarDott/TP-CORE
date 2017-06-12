@@ -1,6 +1,8 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.domain.HashAlgorithm;
@@ -58,6 +60,7 @@ public class StringUtilsTest {
         check.add("more");
 
         assertEquals(check, StringUtils.stringListBuilder("foo", "more"));
+        assertEquals(check, StringUtils.stringListBuilder("foo", null, "more"));
         assertNull(StringUtils.stringListBuilder());
     }
 
@@ -136,5 +139,29 @@ public class StringUtilsTest {
         assertEquals(9220, StringUtils.hashToInt(StringUtils.calculateHash(" ", HashAlgorithm.SHA512)));
         assertEquals(9028, StringUtils.hashToInt(StringUtils.calculateHash("SHA-512", HashAlgorithm.SHA512)));
         assertEquals(8941, StringUtils.hashToInt(StringUtils.calculateHash("sha-512", HashAlgorithm.SHA512)));
+    }
+
+    @Test
+    public void testGenerateUUID() {
+        //UUID: a3ae3672-22bc-411f-81c5-103652a5846e
+        String uuid = StringUtils.generateUUID();
+        assertNotNull(uuid);
+        assertEquals(36, uuid.length());
+    }
+
+    @Test
+    public void testWriteStringToFile() {
+
+        String fileContent = "Content of the written File";
+        String path = Constraints.SYSTEM_USER_HOME_DIR + "/test.txt";
+
+        assertFalse(StringUtils.writeStringToFile("", path));
+        assertTrue(StringUtils.writeStringToFile(fileContent, path));
+
+        try {
+            Files.delete(Paths.get(path));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
