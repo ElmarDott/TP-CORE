@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.utils.StringUtils;
 
 /**
  * Application wide configuration with key=value entries. For an easier
@@ -20,19 +20,27 @@ import org.europa.together.business.Logger;
  * marker extended.
  */
 @Entity
-@Table(name = "APP_CONFIG", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"MODUL_NAME", "MODUL_VERSION", "CONF_KEY"})
-})
-public class Configuration implements Serializable {
+@Table(name = "APP_CONFIG",
+        indexes = {
+            @Index(columnList = "CONF_KEY", name = "configuration_key")
+            ,
+            @Index(columnList = "MODUL_NAME", name = "modul_name")
+            ,
+            @Index(columnList = "CONF_SET", name = "configuration_set")
+        },
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames
+                    = {"MODUL_NAME", "MODUL_VERSION", "CONF_KEY"})
+        }
+)
+public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = new LoggerImpl(Configuration.class);
+    private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
     private static final int HASH = 43;
 
     @Id
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "IDX")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
     @NotNull(message = "{validation.notnull}")
@@ -54,12 +62,11 @@ public class Configuration implements Serializable {
     @Column(name = "MODUL_VERSION", nullable = false)
     private String version;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @Column(name = "DEPECATED", nullable = false)
-    private boolean depecated;
+    @Column(name = "DEPRECATED", nullable = false)
+    private boolean deprecated;
 
     @Column(name = "COMMENT")
     private String comment;
@@ -67,14 +74,13 @@ public class Configuration implements Serializable {
     /**
      * Constructor.
      */
-    public Configuration() {
-        /* NOT IN USE */
+    public ConfigurationDO() {
+        this.uuid = StringUtils.generateUUID();
     }
 
     /**
      * Constructor.
      *
-     * @param uuid as String
      * @param key as String
      * @param value as String
      * @param defaultValue as String
@@ -84,19 +90,19 @@ public class Configuration implements Serializable {
      * @param depecated as boolean
      * @param comment as String
      */
-    public Configuration(final String uuid, final String key, final String value,
+    public ConfigurationDO(final String key, final String value,
             final String defaultValue, final String modulName,
             final String configurationSet, final String version,
             final boolean depecated, final String comment) {
 
-        this.uuid = uuid;
+        this.uuid = StringUtils.generateUUID();
         this.key = key;
         this.value = value;
         this.defaultValue = defaultValue;
         this.modulName = modulName;
         this.configurationSet = configurationSet;
         this.version = version;
-        this.depecated = depecated;
+        this.deprecated = depecated;
         this.comment = comment;
     }
 
@@ -106,10 +112,8 @@ public class Configuration implements Serializable {
      */
     @PrePersist
     public void prePersist() {
-        this.value = null;
         this.defaultValue = "none";
-        this.configurationSet = "none";
-        this.depecated = false;
+        this.deprecated = false;
         LOGGER.log("@PrePersist", LogLevel.INFO);
     }
 
@@ -120,7 +124,7 @@ public class Configuration implements Serializable {
      * @return true if is depecated
      */
     public boolean isDepecated() {
-        return depecated;
+        return deprecated;
     }
 
     /**
@@ -156,7 +160,7 @@ public class Configuration implements Serializable {
      * @param depecated as boolean
      */
     public void setDepecated(final boolean depecated) {
-        this.depecated = depecated;
+        this.deprecated = depecated;
     }
 
     /**
@@ -288,7 +292,7 @@ public class Configuration implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Configuration other = (Configuration) obj;
+        final ConfigurationDO other = (ConfigurationDO) obj;
         if (!Objects.equals(this.key, other.key)) {
             return false;
         }
@@ -312,14 +316,14 @@ public class Configuration implements Serializable {
 
     @Override
     public String toString() {
-        return "Configuration{" + "uuid=" + uuid
+        return "ConfigurationDO{" + "uuid=" + uuid
                 + ", key=" + key
                 + ", value=" + value
                 + ", defaultValue=" + defaultValue
                 + ", modulName=" + modulName
                 + ", configurationSet=" + configurationSet
                 + ", version=" + version
-                + ", depecated=" + depecated
+                + ", depecated=" + deprecated
                 + ", comment=" + comment + '}';
     }
 }

@@ -8,9 +8,21 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <!-- Package needed to be scanned for annotation for @autowired DI-->
+    <context:component-scan base-package="org.europa.together">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Component" />
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Service" />
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Repository" />
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
     <bean id="mainSchemata" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="jdbcUrl" value="${jdbc.main.url}"/>
-        <property name="driverClass" value="${jdbc.main.driverClassName}"/>
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
         <property name="user" value="${jdbc.main.user}"/>
         <property name="password" value="${jdbc.main.password}"/>
         <!-- 3CPO Connection POOL -->
@@ -52,7 +64,7 @@
         <!-- https://bitbucket.org/kienerj/moleculedatabaseframework/wiki/Spring%20Context%20Configuration -->
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.dialect">${hibernate.dialect.main.database}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
                 <!--
                     validate: validate the schema, makes no changes to the database.
                     update: update the schema.

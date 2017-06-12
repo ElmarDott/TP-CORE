@@ -1,16 +1,12 @@
 package org.europa.together.utils;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +35,7 @@ public final class StringUtils {
 
     /**
      * Creates a List with Strings entries in a short way. Sample:
-     * List&gt;String&lt; list = new arrayList(); list.add("foo");
+     * List&lt;String&gt; list = new arrayList(); list.add("foo");
      * list.add("more");
      * <br> is reduced to stringListBuilder("foo", "more");
      *
@@ -164,8 +160,8 @@ public final class StringUtils {
                     + " plaintext: " + plainText + " hash: " + hash;
             LOGGER.log(msg, LogLevel.DEBUG);
 
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            LOGGER.log(algorithm.toString() + " is not supported.", LogLevel.ERROR);
+        } catch (Exception ex) {
+            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
         }
         return hash;
     }
@@ -179,9 +175,9 @@ public final class StringUtils {
      */
     public static String generateUUID() {
 
-        String uuid = UUID.randomUUID().toString();
-        LOGGER.log(uuid, LogLevel.DEBUG);
-        return uuid;
+        UUID uuid = UUID.randomUUID();
+        LOGGER.log("generateUUID() " + uuid, LogLevel.DEBUG);
+        return uuid.toString();
     }
 
     /**
@@ -190,43 +186,22 @@ public final class StringUtils {
      *
      * @param content as String
      * @param destinationFile as String
-     * @param sourceFile as String
      * @return true on success
      */
-    public static boolean writeStringToFile(
-            final String content,
-            final String destinationFile,
-            final String sourceFile) {
+    public static boolean writeStringToFile(final String content, final String destinationFile) {
+
         boolean success = false;
-
         Charset charset = Charset.forName("US-ASCII");
-        StringBuilder sb = new StringBuilder();
-
-        LOGGER.log("writeStringToFile() destination:"
-                + destinationFile + " source:" + sourceFile, LogLevel.DEBUG);
+        LOGGER.log("writeStringToFile() destination:" + destinationFile, LogLevel.DEBUG);
 
         try {
-            if (content != null || content.length() > 0) {
-                sb.append(content);
-                LOGGER.log("content: " + content, LogLevel.TRACE);
-            }
-
-            if (sourceFile != null) {
-                BufferedReader reader
-                        = Files.newBufferedReader(Paths.get(sourceFile), charset);
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-            }
-
-            if (sb != null || sb.length() > 0) {
+            if (!isEmpty(content)) {
                 BufferedWriter writer
                         = Files.newBufferedWriter(Paths.get(destinationFile), charset);
-                writer.append(sb.toString(), 0, sb.length());
+                writer.append(content, 0, content.length());
                 writer.close();
-                LOGGER.log("writeStringToFile() count of characters:" + sb.length(), LogLevel.DEBUG);
+                LOGGER.log("writeStringToFile() count of characters:"
+                        + content.length(), LogLevel.DEBUG);
 
             } else {
                 LOGGER.log("Filecontent is empty.", LogLevel.ERROR);
@@ -235,7 +210,8 @@ public final class StringUtils {
             File testFile = new File(destinationFile);
             if (testFile.exists()) {
                 success = true;
-                LOGGER.log("Filesize is " + testFile.length(), LogLevel.DEBUG);
+                LOGGER.log("writeStringToFile() size of the written file is "
+                        + testFile.length(), LogLevel.DEBUG);
             } else {
                 LOGGER.log(destinationFile + " don't exst.", LogLevel.ERROR);
             }

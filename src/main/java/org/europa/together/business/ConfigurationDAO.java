@@ -54,14 +54,14 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      *
      * @param module as String
      * @param configSet as Sting
-     * @return ConfigurationSet as List&gt;Configuration&lt;
+     * @return ConfigurationSet as List&lt;Configuration&gt;
      */
     List<Configuration> getAllConfigurationSetEntries(String module, String configSet);
 
     /**
      * Update existing configuration entries.
      *
-     * @param configuration as List&gt;Configuration&lt;
+     * @param configuration as List&lt;Configuration&gt;
      * @return true on success
      */
     boolean updateConfigurationEntries(List<Configuration> configuration);

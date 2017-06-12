@@ -1,7 +1,7 @@
 package org.europa.together.exceptions;
 
 /**
- * Custom DAO Exception for Transaction Rollback.
+ * DAO Exception for Transaction Rollback.
  */
 public class DAOException extends Exception {
 
