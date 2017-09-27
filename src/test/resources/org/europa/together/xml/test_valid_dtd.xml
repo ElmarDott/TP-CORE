@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE EmployeeInfo SYSTEM "simple.dtd">
+
+<EmployeeInfo>
+    <Employee  EmployeeNumber="105">
+        <Name>Masashi Okamura</Name>
+        <Department>Design Department</Department>
+        <Telephone>03-1452-4567</Telephone>
+        <Email>okamura@xmltr.co.jp</Email>
+    </Employee>
+    <Employee  EmployeeNumber="109">
+        <Name>Aiko Tanaka</Name>
+        <Department>Sales Department</Department>
+        <Telephone>03-6459-98764</Telephone>
+        <Email>tanaka@xmltr.co.jp</Email>
+    </Employee>
+</EmployeeInfo>

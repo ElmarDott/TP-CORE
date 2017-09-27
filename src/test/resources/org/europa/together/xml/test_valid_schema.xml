@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!-- Test file for XML Schema validation. -->
+<e:EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:e="http://www.sample.com/EmployeeInfo"
+                xsi:schemaLocation="http://www.sample.com/EmployeeInfo simple.xsd">
+
+    <!-- XML Comment for: Employee -->
+    <e:Employee EmployeeNumber="1">
+        <!-- XML Comment for: Name -->
+        <e:Name>Masashi Okamura</e:Name>
+        <e:Department>Design Department</e:Department>
+        <e:Telephone>03-1452-4567</e:Telephone>
+        <e:Email>okamura@xmltr.co.jp</e:Email>
+    </e:Employee>
+    <e:Employee EmployeeNumber="2">
+        <e:Name>Aiko Tanaka</e:Name>
+        <e:Department>Sales Department</e:Department>
+        <e:Telephone>03-6459-98764</e:Telephone>
+        <e:Email>tanaka@xmltr.co.jp</e:Email>
+    </e:Employee>
+</e:EmployeeInfo>

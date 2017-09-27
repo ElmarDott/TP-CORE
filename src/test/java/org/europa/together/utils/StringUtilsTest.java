@@ -1,8 +1,6 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.domain.HashAlgorithm;
@@ -149,19 +147,4 @@ public class StringUtilsTest {
         assertEquals(36, uuid.length());
     }
 
-    @Test
-    public void testWriteStringToFile() {
-
-        String fileContent = "Content of the written File";
-        String path = Constraints.SYSTEM_USER_HOME_DIR + "/test.txt";
-
-        assertFalse(StringUtils.writeStringToFile("", path));
-        assertTrue(StringUtils.writeStringToFile(fileContent, path));
-
-        try {
-            Files.delete(Paths.get(path));
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 }

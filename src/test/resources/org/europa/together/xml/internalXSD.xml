@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.sample.com/EmployeeInfo"
+           xmlns:e="http://www.sample.com/EmployeeInfo"
+           elementFormDefault="qualified">
+
+    <xs:element name="EmployeeInfo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Employee" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Name" type="xs:string" />
+                            <xs:element name="Department" type="xs:string" />
+                            <xs:element name="Telephone" type="xs:string" />
+                            <xs:element name="Email" type="xs:string" />
+                        </xs:sequence>
+                        <xs:attribute name="EmployeeNumber" type="xs:int" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+
+<e:EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- XML Comment for: Employee -->
+    <e:Employee EmployeeNumber="1">
+        <!-- XML Comment for: Name -->
+        <e:Name>Masashi Okamura</e:Name>
+        <e:Department>Design Department</e:Department>
+        <e:Telephone>03-1452-4567</e:Telephone>
+        <e:Email>okamura@xmltr.co.jp</e:Email>
+    </e:Employee>
+    <e:Employee EmployeeNumber="2">
+        <e:Name>Aiko Tanaka</e:Name>
+        <e:Department>Sales Department</e:Department>
+        <e:Telephone>03-6459-98764</e:Telephone>
+        <e:Email>tanaka@xmltr.co.jp</e:Email>
+    </e:Employee>
+</e:EmployeeInfo>

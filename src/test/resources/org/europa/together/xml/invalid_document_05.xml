@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <node>
+        <child>child 1</child>
+        <child>child 2</child>
+        <child>child 2</child>
+    </node>
+
+    <attribute value="attribute a">attribute node</attribute>
+
+    <emptyTag />
+
+    <char>
+        <escape>&</escape>
+    </char>
+</root>

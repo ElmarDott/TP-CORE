@@ -1,0 +1,75 @@
+package org.europa.together.utils;
+
+import java.lang.reflect.Constructor;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+@SuppressWarnings("unchecked")
+public class FileUtilsTest {
+
+    private static final String DIRECTORY
+            = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
+
+    @Test(expected = Exception.class)
+    public void testPrivateConstructor() throws Exception {
+        Constructor<FileUtils> clazz
+                = FileUtils.class.getDeclaredConstructor();
+        clazz.setAccessible(true);
+        FileUtils call = clazz.newInstance();
+    }
+
+    @Test
+    public void testGetFileSize() {
+        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
+        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
+        assertEquals(259, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
+
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "mega"));
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "giga"));
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "tera"));
+    }
+
+    @Test
+    public void testWriteStringToFile() {
+
+        String fileContent = "Content of the written File";
+        String path = Constraints.SYSTEM_USER_HOME_DIR;
+
+        assertTrue(FileUtils.writeStringToFile(fileContent, path + "/test.txt"));
+        assertEquals(27, FileUtils.getFileSize(path + "/test.txt", null));
+
+        assertFalse(FileUtils.writeStringToFile("", path + "/test_empty.txt"));
+        assertFalse(FileUtils.writeStringToFile(null, path + "/test_empty.txt"));
+
+        try {
+            Files.delete(Paths.get(path + "/test.txt"));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadFile() {
+        String file = DIRECTORY + "TestFile";
+        assertEquals("Hello World!", FileUtils.readFileStream(file));
+    }
+
+    @Test
+    public void testAppendFile() {
+        String file = DIRECTORY + "AppendTestFile.txt";
+        FileUtils.writeStringToFile("Hello World!", file);
+
+        String append = " more content.";
+        FileUtils.appendFile(file, append);
+
+        assertEquals("Hello World! more content.", FileUtils.readFileStream(file));
+
+        try {
+            Files.delete(Paths.get(file));
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+}

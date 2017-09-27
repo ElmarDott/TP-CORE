@@ -1,12 +1,8 @@
 package org.europa.together.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +27,40 @@ public final class StringUtils {
      */
     private StringUtils() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Test a String if is Empty or NULL. The test don't figure out when a Sting
+     * contains only non printable or whitespace characters.
+     *
+     * @param string as String
+     * @return true if the string is empty or null
+     */
+    public static boolean isEmpty(final String string) {
+        boolean test = false;
+        if (string == null || string.equals("")) {
+            test = true;
+        }
+        return test;
+    }
+
+    /**
+     * Convert a Hash String to an Integer. Takes each character of the hash
+     * string, convert them to his ASCII number as int and add the result to a
+     * sum.
+     *
+     * @param hash as String
+     * @return hash as integer
+     */
+    public static int hashToInt(final String hash) {
+        int hashNumber = 0;
+        for (int i = 0; i < hash.length(); i++) {
+            char character = hash.charAt(i);
+            int ascii = (int) character;
+            hashNumber += ascii;
+        }
+        LOGGER.log("hashToInt() " + hash + " -> " + hashNumber, LogLevel.DEBUG);
+        return hashNumber;
     }
 
     /**
@@ -73,74 +103,6 @@ public final class StringUtils {
     }
 
     /**
-     * Concatenate a list of Strings using StringBuilder.
-     *
-     * @param strings as String
-     * @return string as string
-     */
-    public static String concatString(final String... strings) {
-        StringBuilder result = new StringBuilder();
-        for (String s : strings) {
-            result.append(s);
-        }
-        return result.toString();
-    }
-
-    /**
-     * Test a String if is Empty or NULL. The test don't figure out when a Sting
-     * contains only non printable or whitespace characters.
-     *
-     * @param string as String
-     * @return true if the string is empty or null
-     */
-    public static boolean isEmpty(final String string) {
-        boolean test = false;
-        if (string == null || string.equals("")) {
-            test = true;
-        }
-        return test;
-    }
-
-    /**
-     * Creates a String of specified length.
-     *
-     * @param length as int
-     * @return string as String
-     */
-    public static String generateStringOfLength(final int length) {
-        StringBuilder sb = new StringBuilder(length);
-        int counter = 0;
-        for (int i = 0; i < length; ++i) {
-
-            sb.append(counter);
-            counter++;
-            if (counter > LIMES) {
-                counter = 0;
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Convert a Hash String to an Integer. Takes each character of the hash
-     * string, convert them to his ASCII number as int and add the result to a
-     * sum.
-     *
-     * @param hash as String
-     * @return hash as integer
-     */
-    public static int hashToInt(final String hash) {
-        int hashNumber = 0;
-        for (int i = 0; i < hash.length(); i++) {
-            char character = hash.charAt(i);
-            int ascii = (int) character;
-            hashNumber += ascii;
-        }
-        LOGGER.log("hashToInt() " + hash + " -> " + hashNumber, LogLevel.DEBUG);
-        return hashNumber;
-    }
-
-    /**
      * Calculates a hash from a given String.
      *
      * @param plainText as String
@@ -160,10 +122,79 @@ public final class StringUtils {
                     + " plaintext: " + plainText + " hash: " + hash;
             LOGGER.log(msg, LogLevel.DEBUG);
 
-        } catch (Exception ex) {
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
             LOGGER.log(ex.getMessage(), LogLevel.ERROR);
         }
         return hash;
+    }
+
+    /**
+     * Concatenate a list of Strings using StringBuilder.
+     *
+     * @param strings as String
+     * @return string as string
+     */
+    public static String concatString(final String... strings) {
+        StringBuilder result = new StringBuilder();
+        for (String s : strings) {
+            result.append(s);
+        }
+        return result.toString();
+    }
+
+    /**
+     * Remove form a String the UTF8 BOM. BOM = Byte Order Mark
+     *
+     * @param content as String
+     * @return content as String
+     */
+    public static String convertToUtf8NoBom(final String content) {
+        String cleanedString = "";
+        if (content.startsWith("\\uFEFF")) {
+            cleanedString = content.substring(1);
+            LOGGER.log("UTF-8 BOM removed.", LogLevel.DEBUG);
+        }
+        return cleanedString;
+    }
+
+    /**
+     * Escape (decode) in a String all special Characters for XML to thir
+     * equivalent representation. Characters: <, >, &, ', "<br>
+     * This replacement extend the security of a web Application against XSS and
+     * SQL Injections for user modified content.
+     *
+     * @param content as String
+     * @return escapedHtml as String
+     */
+    public static String escapeXmlCharacters(final String content) {
+        //do not change ordering!
+        String replace = content.replaceAll("&", "&#0038;");
+        replace = replace.replaceAll("<", "&#0060;");
+        replace = replace.replaceAll(">", "&#0062;");
+        replace = replace.replaceAll("'", "&#0039;");
+        replace = replace.replaceAll("\"", "&#0034;");
+        return replace;
+    }
+
+    /**
+     * Creates a String of specified length with the content of numbers.
+     * generateStringOfLength(13) = [0123456789012]
+     *
+     * @param length as int
+     * @return string as String
+     */
+    public static String generateStringOfLength(final int length) {
+        StringBuilder sb = new StringBuilder(length);
+        int counter = 0;
+        for (int i = 0; i < length; ++i) {
+
+            sb.append(counter);
+            counter++;
+            if (counter > LIMES) {
+                counter = 0;
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -180,46 +211,4 @@ public final class StringUtils {
         return uuid.toString();
     }
 
-    /**
-     * Copy a File to another destination. Alternative can a String written to a
-     * File.
-     *
-     * @param content as String
-     * @param destinationFile as String
-     * @return true on success
-     */
-    public static boolean writeStringToFile(final String content, final String destinationFile) {
-
-        boolean success = false;
-        Charset charset = Charset.forName("US-ASCII");
-        LOGGER.log("writeStringToFile() destination:" + destinationFile, LogLevel.DEBUG);
-
-        try {
-            if (!isEmpty(content)) {
-                BufferedWriter writer
-                        = Files.newBufferedWriter(Paths.get(destinationFile), charset);
-                writer.append(content, 0, content.length());
-                writer.close();
-                LOGGER.log("writeStringToFile() count of characters:"
-                        + content.length(), LogLevel.DEBUG);
-
-            } else {
-                LOGGER.log("Filecontent is empty.", LogLevel.ERROR);
-            }
-
-            File testFile = new File(destinationFile);
-            if (testFile.exists()) {
-                success = true;
-                LOGGER.log("writeStringToFile() size of the written file is "
-                        + testFile.length(), LogLevel.DEBUG);
-            } else {
-                LOGGER.log(destinationFile + " don't exst.", LogLevel.ERROR);
-            }
-
-        } catch (IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
-        }
-
-        return success;
-    }
 }

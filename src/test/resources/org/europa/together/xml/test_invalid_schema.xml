@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<e:EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:e="http://www.sample.com/EmployeeInfo"
+                xsi:schemaLocation="http://www.sample.com/EmployeeInfo simple.xsd">
+
+    <e:Employee>
+        <e:Name test="1" nr2="2">Masashi Okamura</e:Name>
+        <e:Department>Design Department</e:Department>
+        <e:Telephone>03-1452-4567</e:Telephone>
+        <e:Email>okamura@xmltr.co.jp</e:Email>
+    </e:Employee>
+    <e:Employee>
+        <e:Name>Aiko Tanaka</e:Name>
+        <e:Department>Sales Department</e:Department>
+        <e:Telephone>03-6459-98764</e:Telephone>
+        <e:Email>tanaka@xmltr.co.jp</e:Email>
+    </e:Employee>
+</e:EmployeeInfo>
