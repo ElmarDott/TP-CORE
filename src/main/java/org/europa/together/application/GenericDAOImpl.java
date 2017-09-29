@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SuppressWarnings("unchecked")
 @Transactional
-public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T, PK> {
+public abstract class GenericDAOImpl<T, PK extends Serializable>
+        implements GenericDAO<T, PK> {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = new LoggerImpl(GenericDAOImpl.class);
@@ -101,8 +102,12 @@ public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T,
     }
 
     @Override
-    public T deserializeAsObject(final String json) {
-        return new JSONDeserializer<T>().deserialize(json);
+    @Transactional(readOnly = true)
+    public long countEntries(final String table) {
+        String sql = "SELECT COUNT(*) FROM " + table;
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+
+        return new Long(session.createSQLQuery(sql).uniqueResult().toString());
     }
 
     @Override
@@ -133,7 +138,7 @@ public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T,
 
     @Override
     public final String serializeAsJson(final T object) {
-        String json = "";
+        String json = null;
         if (object != null) {
             JSONSerializer serializer = new JSONSerializer();
             json = serializer.serialize(object);
@@ -144,13 +149,18 @@ public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T,
     }
 
     @Override
+    public T deserializeAsObject(final String json) {
+        return new JSONDeserializer<T>().deserialize(json);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public final T find(final PK id) {
         T retVal = null;
         try {
             retVal = mainEntityManagerFactory.find(genericType, id);
             if (retVal == null) {
-                LOGGER.log("Could not find " + genericType.getSimpleName(), LogLevel.WARN);
+                throw new IllegalArgumentException("Could not find " + genericType.getSimpleName());
             }
 
         } catch (IllegalArgumentException ex) {
@@ -160,4 +170,12 @@ public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T,
         return retVal;
     }
 
+    @Override
+    public final void flushTable(final String table) {
+        String sql = "TRUNCATE TABLE " + table;
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        session.createSQLQuery(sql).executeUpdate();
+
+        LOGGER.log("The Database table " + table + " was flushed.", LogLevel.WARN);
+    }
 }

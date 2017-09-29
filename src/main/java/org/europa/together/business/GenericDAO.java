@@ -30,16 +30,16 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * entity the method return FALSE.
      *
      * @param object of an Entity
-     * @return return success as boolean
+     * @return true on success
      */
     boolean create(T object);
 
     /**
-     * Search for an persitend entity. If it's alredy existent then it will be
+     * Search for an persistent entity. If it's already existent then it will be
      * delete, otherwise the Method return FALSE.
      *
      * @param id as Object
-     * @return success as boolean
+     * @return true on success
      */
     boolean delete(PK id);
 
@@ -49,17 +49,20 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @param id as object
      * @param object of an Entity
-     * @return success as boolean
+     * @return true on success
      */
     boolean update(PK id, T object);
 
     /**
-     * Tried to create a Object from a given JSON String.
+     * Count the entries of an database table. THis function call native SQL
+     * code, to be efficient in the performance of the execution time. This is
+     * designed for huge datasets. SQL: <br>
+     * <code>SELECT COUNT(*) FROM &lt;TABLE&gt;</code>
      *
-     * @param json as String
-     * @return Entity as String
+     * @param table as String
+     * @return resultSet as int
      */
-    T deserializeAsObject(String json);
+    long countEntries(String table);
 
     /**
      * Get all persited entries of an Entity.
@@ -86,10 +89,25 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
     String serializeAsJson(T object);
 
     /**
+     * Tried to create a Object from a given JSON String.
+     *
+     * @param json as String
+     * @return Entity as String
+     */
+    T deserializeAsObject(String json);
+
+    /**
      * try to find a persitence Object.
      *
      * @param id as Object
      * @return object
      */
     T find(PK id);
+
+    /**
+     * Delete all Entries of a Database Table.
+     *
+     * @param tableName as String
+     */
+    void flushTable(String tableName);
 }

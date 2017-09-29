@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
@@ -66,7 +66,7 @@
                     create: creates the schema, destroying previous data.
                     create-drop: drop the schema at the end of the session.
                 -->
-                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <!-- prop key="hibernate.id.new_generator_mappings">true</prop -->
                 <!--prop key="hibernate.cache.use_second_level_cache">true</prop-->
