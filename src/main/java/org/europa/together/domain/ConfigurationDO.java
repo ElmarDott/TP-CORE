@@ -39,6 +39,11 @@ public class ConfigurationDO implements Serializable {
     private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
     private static final int HASH = 43;
 
+    /**
+     * The name of the used database table for this domain object.
+     */
+    public static final String TABLE_NAME = "APP_CONFIG";
+
     @Id
     @Column(name = "IDX")
     private String uuid;

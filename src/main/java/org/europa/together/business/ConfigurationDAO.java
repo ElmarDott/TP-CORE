@@ -1,7 +1,7 @@
 package org.europa.together.business;
 
 import java.util.List;
-import org.europa.together.domain.Configuration;
+import org.europa.together.domain.ConfigurationDO;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
  *
  * The keys are stored as SHA-256 hash, to protect the Database against direct
  * editing.
+ *
+ * @author elmar.dott@gmail.com
  */
 @Component
-public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
+public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
 
     /**
      * Get the whole configuration object by a given key, module and the version
@@ -28,7 +30,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param version as String
      * @return configuration as Object
      */
-    Configuration getConfigurationByKey(String key, String module, String version);
+    ConfigurationDO getConfigurationByKey(String key, String module, String version);
 
     /**
      * Return the value of a key from a module. The hashing of the key will be
@@ -56,7 +58,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param configSet as Sting
      * @return ConfigurationSet as List&lt;Configuration&gt;
      */
-    List<Configuration> getAllConfigurationSetEntries(String module, String configSet);
+    List<ConfigurationDO> getAllConfigurationSetEntries(String module, String configSet);
 
     /**
      * Update existing configuration entries.
@@ -64,7 +66,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param configuration as List&lt;Configuration&gt;
      * @return true on success
      */
-    boolean updateConfigurationEntries(List<Configuration> configuration);
+    boolean updateConfigurationEntries(List<ConfigurationDO> configuration);
 
     /**
      * Compare from a given collection all entries with the default values. The
@@ -74,7 +76,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param configSet as List
      * @return Configurations as List
      */
-    List<String> compareConfigurationSetWithDefault(List<Configuration> configSet);
+    List<String> compareConfigurationSetWithDefault(List<ConfigurationDO> configSet);
 
     /**
      * Restore a single Entry to his default value.
@@ -82,7 +84,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param entry as Configuration
      * @return true on success
      */
-    boolean restoreKeyToDefault(Configuration entry);
+    boolean restoreKeyToDefault(ConfigurationDO entry);
 
     /**
      * In the case that for a module exist more versions, for example after some
@@ -93,7 +95,7 @@ public interface ConfigurationDAO extends GenericDAO<Configuration, Long> {
      * @param key as String
      * @return Configuration as List
      */
-    List<Configuration> getHistoryOfAEntry(String module, String key);
+    List<ConfigurationDO> getHistoryOfAEntry(String module, String key);
 
     /**
      * Export the entire configuration as JSON String.

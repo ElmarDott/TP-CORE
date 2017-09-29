@@ -12,10 +12,13 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @SuppressWarnings("unchecked")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
 public class ConfigurationDOTest {
 
     private static ValidatorFactory validatorFactory;
@@ -25,9 +28,6 @@ public class ConfigurationDOTest {
     public static void setUp() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validate = validatorFactory.getValidator();
-
-        ApplicationContext context
-                = new ClassPathXmlApplicationContext("classpath:org/europa/together/configuration/spring-dao-test.xml");
     }
 
     @AfterClass
@@ -60,9 +60,7 @@ public class ConfigurationDOTest {
 
         assertNotNull(domainObject);
         assertEquals(false, domainObject.isDepecated());
-        assertEquals(null, domainObject.getValue());
         assertEquals("none", domainObject.getDefaultValue());
-        assertEquals("none", domainObject.getConfigurationSet());
     }
 
     @Test

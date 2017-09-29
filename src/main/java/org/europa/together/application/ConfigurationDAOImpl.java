@@ -3,7 +3,7 @@ package org.europa.together.application;
 import java.util.List;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
-import org.europa.together.domain.Configuration;
+import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.StringUtils;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of the ConfigurationDAO.
  */
 @Repository
-public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
+public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String>
         implements ConfigurationDAO {
 
     private static final long serialVersionUID = 1L;
@@ -26,17 +26,19 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
      * Constructor.
      */
     public ConfigurationDAOImpl() {
+        super();
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
     @Override
-    @Transactional
-    public Configuration getConfigurationByKey(final String key,
+    @Transactional(readOnly = true)
+    public ConfigurationDO getConfigurationByKey(final String key,
             final String module, final String version) {
 
+        ConfigurationDO entry = null;
         String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
         Session session = mainEntityManagerFactory.unwrap(Session.class);
-        Configuration entry = (Configuration) session.createCriteria(Configuration.class)
+        entry = (ConfigurationDO) session.createCriteria(ConfigurationDO.class)
                 .add(Restrictions.eq("key", hash))
                 .add(Restrictions.eq("modulName", module))
                 .add(Restrictions.eq("version", version))
@@ -45,20 +47,20 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
         if (entry != null) {
             LOGGER.log("getValueByKey() : " + entry.toString(), LogLevel.DEBUG);
         } else {
-            LOGGER.log("getValueByKey() : key: " + key + " for "
+            LOGGER.log("ConfigurationByKey() : key: " + key + " for "
                     + module + " not found.", LogLevel.WARN);
         }
         return entry;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public String getValueByKey(final String key, final String module, final String version) {
 
         String value = null;
         LOGGER.log("Module: " + module + " :: Version: " + version + " :: Key: " + key,
                 LogLevel.DEBUG);
-        Configuration entry = getConfigurationByKey(key, module, version);
+        ConfigurationDO entry = getConfigurationByKey(key, module, version);
 
         if (entry != null) {
             value = entry.getValue();
@@ -72,49 +74,55 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
     }
 
     @Override
-    public List<Configuration> getAllConfigurationSetEntries(final String module,
+    @Transactional(readOnly = true)
+    public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String configSet) {
         //TODO: getAllConfigurationSetEntries() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
-    public boolean updateConfigurationEntries(final List<Configuration> configuration) {
+    public boolean updateConfigurationEntries(final List<ConfigurationDO> configuration) {
         //TODO: updateConfigurationEntries() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
-    public List<String> compareConfigurationSetWithDefault(final List<Configuration> configSet) {
+    @Transactional(readOnly = true)
+    public List<String> compareConfigurationSetWithDefault(final List<ConfigurationDO> configSet) {
         //TODO: compareConfigurationSetWithDefault() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
-    public boolean restoreKeyToDefault(final Configuration entry) {
+    public boolean restoreKeyToDefault(final ConfigurationDO entry) {
         //TODO: restoreKeyToDefault() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
-    public List<Configuration> getHistoryOfAEntry(final String module, final String key) {
+    @Transactional(readOnly = true)
+    public List<ConfigurationDO> getHistoryOfAEntry(final String module, final String key) {
         //TODO: getHistoryOfAEntry() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String exportEntireConfiguration() {
         //TODO: exportEntireConfiguration() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String exportConfigurationOfAModule(final String module) {
         //TODO: exportConfigurationOfAModule() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String exportConfigurationSet(final String module, final String configSet) {
         //TODO: exportConfigurationSet() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
@@ -125,4 +133,5 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<Configuration, Long>
         //TODO: importConfiguration() inplement me.
         throw new UnsupportedOperationException("TODO: Not supported yet.");
     }
+
 }
