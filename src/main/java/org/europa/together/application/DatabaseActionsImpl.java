@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Properties;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -23,6 +23,10 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImpl.class);
 
+    /**
+     * Activate a Test JDBC Connection.
+     */
+    private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnetion = null;
     private Statement statement = null;
 
@@ -39,33 +43,48 @@ public class DatabaseActionsImpl implements DatabaseActions {
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param activateTestMode as boolean
+     */
+    public DatabaseActionsImpl(final boolean activateTestMode) {
+        this.testMode = activateTestMode;
+        LOGGER.log("instance class (TEST MODE)", LogLevel.INFO);
+    }
+
     @Override
     public boolean connect(final String propertyFile) {
+        boolean connected = false;
         this.fetchProperties(Constraints.SYSTEM_APP_DIR + propertyFile);
         this.establishConnection();
+
+        if (this.jdbcConnetion != null) {
+            connected = true;
+        }
+        return connected;
+    }
+
+    @Override
+    public boolean disconnect() {
+        if (this.jdbcConnetion != null) {
+            try {
+                this.jdbcConnetion.close();
+            } catch (SQLException ex) {
+                LOGGER.log(ex.getMessage(), LogLevel.WARN);
+            }
+        }
         return true;
-    }
-
-    @Override
-    public boolean activateTestMode() {
-        this.testMode = true;
-        return this.testMode;
-    }
-
-    @Override
-    public final List<Object> fetchData(final String sql) {
-        List<Object> results = null;
-
-        return results;
     }
 
     @Override
     public boolean executeSqlFromClasspath(final String sqlFile) {
 
         boolean success = false;
+        BufferedReader reader = null;
         StringBuilder sql = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
+            reader = new BufferedReader(new InputStreamReader(
                     getClass().getClassLoader().getResourceAsStream(sqlFile), "UTF-8"));
 
             String line;
@@ -75,10 +94,18 @@ public class DatabaseActionsImpl implements DatabaseActions {
                 }
             }
             success = this.executeQuery(sql.toString());
-            reader.close();
 
         } catch (IOException ex) {
             LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException ex) {
+                LOGGER.log(ex.getMessage(), LogLevel.WARN);
+            }
         }
 
         LOGGER.log("File (" + sqlFile + "): " + sql.toString(), LogLevel.DEBUG);
@@ -98,16 +125,17 @@ public class DatabaseActionsImpl implements DatabaseActions {
             } else {
                 LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
             }
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             LOGGER.log(ex.getMessage(), LogLevel.ERROR);
         }
         return success;
     }
 
+//  ----------------------------------------------------------------------------
     private void fetchProperties(final String propertyFile) {
 
         PropertyReader reader = new PropertyReaderImpl();
-        reader.appendPropertiesFromClasspath("org/europa/together/configuration/jdbc.properties");
+        reader.appendPropertiesFromClasspath(jdbcProperties);
 
         if (!StringUtils.isEmpty(propertyFile)) {
             reader.appendPropertiesFromFile(propertyFile);
@@ -128,7 +156,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
 
     private void establishConnection() {
         try {
-            //test if the JDBC Driver issavailable
+            //test if the JDBC Driver is available
             Class.forName(this.driverClass);
 
             Properties connectionProps = new Properties();
@@ -137,8 +165,17 @@ public class DatabaseActionsImpl implements DatabaseActions {
             this.jdbcConnetion
                     = DriverManager.getConnection(connectionUrl, connectionProps);
 
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
+            if (this.jdbcConnetion != null) {
+                try {
+                    this.jdbcConnetion.close();
+                } catch (SQLException innerEx) {
+                    LOGGER.log(innerEx.getMessage(), LogLevel.WARN);
+                }
+            }
             LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+
         }
     }
+
 }
