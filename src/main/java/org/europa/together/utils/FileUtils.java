@@ -22,8 +22,6 @@ public final class FileUtils {
     private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
     private static final Charset CHARSET = Charset.forName("US-ASCII");
 
-    private static final int BYTE_DEVISOR = 1024;
-
     /**
      * Constructor.
      */
@@ -92,16 +90,18 @@ public final class FileUtils {
                 default:
                     break;
                 case "kilo":
-                    size = size / BYTE_DEVISOR;
+                    size = size / Constraints.BYTE_DEVISOR;
                     break;
                 case "mega":
-                    size = (size / BYTE_DEVISOR) / BYTE_DEVISOR;
+                    size = (size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
                     break;
                 case "giga":
-                    size = ((size / BYTE_DEVISOR) / BYTE_DEVISOR) / BYTE_DEVISOR;
+                    size = ((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
+                            / Constraints.BYTE_DEVISOR;
                     break;
                 case "tera":
-                    size = (((size / BYTE_DEVISOR) / BYTE_DEVISOR) / BYTE_DEVISOR) / BYTE_DEVISOR;
+                    size = (((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
+                            / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
                     break;
             }
 

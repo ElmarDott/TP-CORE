@@ -2,6 +2,7 @@ package org.europa.together.business;
 
 import java.util.List;
 import java.util.Map;
+import javax.activation.FileDataSource;
 import javax.mail.internet.InternetAddress;
 import org.europa.together.domain.ResourceType;
 import org.springframework.stereotype.Component;
@@ -24,88 +25,19 @@ import org.springframework.stereotype.Component;
  * </code>
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 @Component
 public interface MailClient {
-
-    /**
-     * Clear attachment list.
-     */
-    void clearAttachments();
-
-    /**
-     * Clear recipent list.
-     */
-    void clearRecipents();
-
-    /**
-     * Load Configuration from database.
-     *
-     * @param module as String
-     * @param version as String
-     */
-    void loadConfigurationFromDatabase(String module, String version);
-
-    /**
-     * Load Configuration from a given property file.
-     *
-     * @param resource as String
-     */
-    void loadConfigurationFromProperties(String resource);
-
-    /**
-     * Mail function to connect to a configured SMTP Server and send an E-Mail.
-     *
-     * @param subject as String
-     */
-    void mail(String subject);
-
-    /**
-     * By default the MIME Type is plain. This function changes the MimeType
-     * from plain to HTML.
-     */
-    void setMimeTypeToHTML();
-
-    /**
-     * This function allows to change the MimeType back to plain text.
-     */
-    void setMimeTypeToPlain();
-
-    /**
-     * Function to get the configured mimeType.
-     *
-     * @return mimeType as String
-     */
-    String getMimeType();
 
     /**
      * Add attacments to an e-mail. The Resource parameter is the path and
      * filename of an resource as String. resource = 'path/my.file'
      *
      * @param resource as String
-     * @return count of attacments as int
+     * @return true on success
      */
-    int addAttachment(String resource);
-
-    /**
-     * Set the mail message.
-     *
-     * @param message as String
-     * @return message length as int
-     */
-    int setContent(String message);
-
-    /**
-     * Process from a Map of key value pairs and a given Velocity Template the
-     * Mail Content as String. The Template resource can be a template file from
-     * classpath, database or an external file.
-     *
-     * @param type as Resourcetype
-     * @param resource as String
-     * @param model as Map
-     * @return message lenght as int
-     */
-    int setContentByVelocityTemplate(ResourceType type, String resource, Map<String, String> model);
+    boolean addAttachment(String resource);
 
     /**
      * Validates if the recipient is a correct E-Mail Address and add they to
@@ -126,9 +58,107 @@ public interface MailClient {
     boolean addRecipentList(List<String> recipients);
 
     /**
+     * Load Configuration from database.
+     *
+     * @param module as String
+     * @param version as String
+     * @return true on success
+     */
+    boolean loadConfigurationFromDatabase(String module, String version);
+
+    /**
+     * Load Configuration from a given property file. Possible ResourceTypes
+     * are: CLASSPATH, FILE and DATABASE.
+     *
+     * @param resourceType as ResourceType
+     * @param resource as String
+     * @return true on success
+     */
+    boolean loadConfigurationFromProperties(ResourceType resourceType, String resource);
+
+    /**
+     * Set the mail message.
+     *
+     * @param message as String
+     * @return message length as int
+     */
+    int setContent(String message);
+
+    /**
+     * Process from a Map of key value pairs and a given Velocity Template the
+     * Mail Content as String. The Template resource can be a template file from
+     * classpath, database or an external file.
+     *
+     * @param type as Resourcetype
+     * @param resourcePath as String
+     * @param template as String
+     * @param model as Map
+     * @return message lenght as int
+     */
+    int setContentByVelocityTemplate(ResourceType type, String resourcePath,
+            String template, Map<String, String> model);
+
+    /**
+     * Get the attachment List for a E-Mail.
+     *
+     * @return List of Attachments
+     */
+    List<FileDataSource> getAttachments();
+
+    /**
      * Get recipients as List of InternetAddress.
      *
-     * @return recipients as List&gt;InternetAddressl&lt;
+     * @return recipients as List&lt;InternetAddressl&gt;
      */
     List<InternetAddress> getRecipents();
+
+    /**
+     * Get the content who is set for the E-Mail.
+     *
+     * @return mailcontent as String
+     */
+    String getContent();
+
+    /**
+     * Function to get the configured mimeType.
+     *
+     * @return mimeType as String
+     */
+    String getMimeType();
+
+    /**
+     * Clear attachment list.
+     */
+    void clearAttachments();
+
+    /**
+     * Clear recipent list.
+     */
+    void clearRecipents();
+
+    /**
+     * Mail function to connect to a configured SMTP Server and send an E-Mail.
+     *
+     * @param subject as String
+     */
+    void mail(String subject);
+
+    /**
+     * By default the MIME Type is plain. This function changes the MimeType
+     * from plain to HTML.
+     */
+    void setMimeTypeToHTML();
+
+    /**
+     * This function allows to change the MimeType back to plain text.
+     */
+    void setMimeTypeToPlain();
+
+    /**
+     * Set a limit of the file size for all attachments in kB, who are be able
+     * to send by E-Mail. The default is 0 (unlimited);
+     *
+     * @param lenght in kB
+     */
+    void setAttachmentSizeLimit(long lenght);
 }

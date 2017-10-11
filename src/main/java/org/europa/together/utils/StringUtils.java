@@ -16,8 +16,6 @@ import org.europa.together.domain.LogLevel;
  */
 public final class StringUtils {
 
-    private static final int HEX_255 = 0xff;
-    private static final int HEX_256 = 0x100;
     private static final int LIMES = 9;
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
@@ -97,7 +95,7 @@ public final class StringUtils {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (int i = 0; i < bytes.length; ++i) {
             sb.append(Integer.toHexString(
-                    (bytes[i] & HEX_255) | HEX_256).substring(1, 1 + 2));
+                    (bytes[i] & Constraints.HEX_255) | Constraints.HEX_256).substring(1, 1 + 2));
         }
         return sb.toString();
     }
