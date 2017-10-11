@@ -21,6 +21,7 @@ import java.util.List;
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface GenericDAO<T, PK extends Serializable> extends Serializable {
 

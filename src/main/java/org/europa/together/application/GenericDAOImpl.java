@@ -156,14 +156,9 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     @Override
     @Transactional(readOnly = true)
     public final T find(final PK id) {
-        T retVal = null;
-        try {
-            retVal = mainEntityManagerFactory.find(genericType, id);
-            if (retVal == null) {
-                throw new IllegalArgumentException("Could not find " + genericType.getSimpleName());
-            }
+        T retVal = mainEntityManagerFactory.find(genericType, id);
+        if (retVal == null) {
 
-        } catch (IllegalArgumentException ex) {
             LOGGER.log("DAO (" + genericType.getClass().getSimpleName()
                     + ") is not a Entity!", LogLevel.ERROR);
         }
