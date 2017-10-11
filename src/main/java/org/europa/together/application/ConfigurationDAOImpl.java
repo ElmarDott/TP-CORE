@@ -31,6 +31,19 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     }
 
     @Override
+    public boolean importConfiguration(final String configuration) {
+        //TODO: importConfiguration() inplement me.
+        throw new UnsupportedOperationException("TODO: Not supported yet.");
+    }
+
+    @Override
+    public void updateConfigurationEntries(final List<ConfigurationDO> configuration) {
+        for (ConfigurationDO entry : configuration) {
+            this.update(entry.getUuid(), entry);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public ConfigurationDO getConfigurationByKey(final String key,
             final String module, final String version) {
@@ -55,6 +68,74 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
 
     @Override
     @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
+            final String version, final String configSet) {
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        return session.createCriteria(ConfigurationDO.class)
+                .add(Restrictions.eq("modulName", module))
+                .add(Restrictions.eq("version", version))
+                .add(Restrictions.eq("configurationSet", configSet))
+                .list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ConfigurationDO> getDeprecatedEntries() {
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        return session.createCriteria(ConfigurationDO.class)
+                .add(Restrictions.eq("deprecated", true))
+                .list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ConfigurationDO> getDeprecatedModuleEntries(final String moduleName) {
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        return session.createCriteria(ConfigurationDO.class)
+                .add(Restrictions.eq("deprecated", true))
+                .add(Restrictions.eq("modulName", moduleName))
+                .list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    public List<ConfigurationDO> getHistoryOfAEntry(final String module,
+            final String key, final String configSet) {
+
+        String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        return session.createCriteria(ConfigurationDO.class)
+                .add(Restrictions.eq("key", hash))
+                .add(Restrictions.eq("modulName", module))
+                .add(Restrictions.eq("configurationSet", configSet))
+                .list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String exportConfigurationOfAModule(final String module) {
+        //TODO: exportConfigurationOfAModule() inplement me.
+        throw new UnsupportedOperationException("TODO: Not supported yet.");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String exportConfigurationSet(final String module, final String configSet) {
+        //TODO: exportConfigurationSet() inplement me.
+        throw new UnsupportedOperationException("TODO: Not supported yet.");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String exportEntireConfiguration() {
+        //TODO: exportEntireConfiguration() inplement me.
+        throw new UnsupportedOperationException("TODO: Not supported yet.");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public String getValueByKey(final String key, final String module, final String version) {
 
         String value = null;
@@ -74,64 +155,10 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
-            final String configSet) {
-        //TODO: getAllConfigurationSetEntries() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
+    public void restoreKeyToDefault(final ConfigurationDO entry) {
+        ConfigurationDO change = this.find(entry.getUuid());
+        change.setValue(change.getDefaultValue());
+        this.update(change.getUuid(), change);
+        LOGGER.log(change.getKey() + " reset to default.", LogLevel.DEBUG);
     }
-
-    @Override
-    public boolean updateConfigurationEntries(final List<ConfigurationDO> configuration) {
-        //TODO: updateConfigurationEntries() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<String> compareConfigurationSetWithDefault(final List<ConfigurationDO> configSet) {
-        //TODO: compareConfigurationSetWithDefault() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    public boolean restoreKeyToDefault(final ConfigurationDO entry) {
-        //TODO: restoreKeyToDefault() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ConfigurationDO> getHistoryOfAEntry(final String module, final String key) {
-        //TODO: getHistoryOfAEntry() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String exportEntireConfiguration() {
-        //TODO: exportEntireConfiguration() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String exportConfigurationOfAModule(final String module) {
-        //TODO: exportConfigurationOfAModule() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String exportConfigurationSet(final String module, final String configSet) {
-        //TODO: exportConfigurationSet() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
-    @Override
-    public boolean importConfiguration(final String configuration) {
-        //TODO: importConfiguration() inplement me.
-        throw new UnsupportedOperationException("TODO: Not supported yet.");
-    }
-
 }

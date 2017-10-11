@@ -17,9 +17,18 @@ import org.springframework.stereotype.Component;
  * editing.
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 @Component
 public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
+
+    /**
+     * Allows the import of configuations as JSON objects.
+     *
+     * @param configuration as Sting
+     * @return true on success
+     */
+    boolean importConfiguration(String configuration);
 
     /**
      * Get the whole configuration object by a given key, module and the version
@@ -33,76 +42,44 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     ConfigurationDO getConfigurationByKey(String key, String module, String version);
 
     /**
-     * Return the value of a key from a module. The hashing of the key will be
-     * done in this function, so the usage is more easy. The identifier for a
-     * configuration entry is a combination of the key itself, the module-name
-     * and the module-version were the DAO stored who use the module. e. g.:
-     * E-Mail Configuration is implemented in core, since version 1.0
+     * Return a List with all configuration Objects of a ConfigurationSet. A
+     * ConfigurationSet is a collection of all configuration Entries of one
+     * version for a special service like email inside a module.
      *
-     * In the case a entry exist but the value is empty, then the default value
-     * will be use.
-     *
-     * @param key as String
      * @param module as String
      * @param version as String
-     * @return value as String
-     */
-    String getValueByKey(String key, String module, String version);
-
-    /**
-     * Return a List with all configuration Objects of a ConfigurationSet. A
-     * ConfigurationSet is a collection of all configuration Entries for a
-     * special service like email inside a module.
-     *
-     * @param module as String
      * @param configSet as Sting
      * @return ConfigurationSet as List&lt;Configuration&gt;
      */
-    List<ConfigurationDO> getAllConfigurationSetEntries(String module, String configSet);
+    List<ConfigurationDO>
+            getAllConfigurationSetEntries(String module, String version, String configSet);
 
     /**
-     * Update existing configuration entries.
+     * Return a List of all deprecated ConfigurationDO.
      *
-     * @param configuration as List&lt;Configuration&gt;
-     * @return true on success
+     * @return deprecated ConfigurationDO
      */
-    boolean updateConfigurationEntries(List<ConfigurationDO> configuration);
+    List<ConfigurationDO> getDeprecatedEntries();
 
     /**
-     * Compare from a given collection all entries with the default values. The
-     * result will be a list of Strings.<br>
-     * &nbsp; &nbsp; [Key] value (default)
+     * Return a list of all deprecated Entries of a module.
      *
-     * @param configSet as List
-     * @return Configurations as List
+     * @param moduleName as String
+     * @return deprecated ConfigurationDO
      */
-    List<String> compareConfigurationSetWithDefault(List<ConfigurationDO> configSet);
+    List<ConfigurationDO> getDeprecatedModuleEntries(String moduleName);
 
     /**
-     * Restore a single Entry to his default value.
-     *
-     * @param entry as Configuration
-     * @return true on success
-     */
-    boolean restoreKeyToDefault(ConfigurationDO entry);
-
-    /**
-     * In the case that for a module exist more versions, for example after some
-     * upgrades, this method supports a history function of the previous
-     * configuration.
+     * In the case that for a module exist more versions than one. fFor example
+     * after some upgrades, this method supports a history function of the
+     * previous configuration.
      *
      * @param module as String
      * @param key as String
+     * @param configSet as String
      * @return Configuration as List
      */
-    List<ConfigurationDO> getHistoryOfAEntry(String module, String key);
-
-    /**
-     * Export the entire configuration as JSON String.
-     *
-     * @return JSON as String
-     */
-    String exportEntireConfiguration();
+    List<ConfigurationDO> getHistoryOfAEntry(String module, String key, String configSet);
 
     /**
      * Export a full module as JSON String.
@@ -122,10 +99,41 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     String exportConfigurationSet(String module, String configSet);
 
     /**
-     * Allows the import of configuations as JSON objects.
+     * Export the entire configuration as JSON String.
      *
-     * @param configuration as Sting
-     * @return true on success
+     * @return JSON as String
      */
-    boolean importConfiguration(String configuration);
+    String exportEntireConfiguration();
+
+    /**
+     * Return the value of a key from a module. The hashing of the key will be
+     * done in this function, so the usage is more easy. The identifier for a
+     * configuration entry is a combination of the key itself, the module-name
+     * and the module-version were the DAO stored who use the module. e. g.:
+     * E-Mail Configuration is implemented in core, since version 1.0
+     *
+     * In the case a entry exist but the value is empty, then the default value
+     * will be use.
+     *
+     * @param key as String
+     * @param module as String
+     * @param version as String
+     * @return value as String
+     */
+    String getValueByKey(String key, String module, String version);
+
+    /**
+     * Restore a single Entry to his default value.
+     *
+     * @param entry as Configuration
+     */
+    void restoreKeyToDefault(ConfigurationDO entry);
+
+    /**
+     * Update existing configuration entries.
+     *
+     * @param configuration as List&lt;Configuration&gt;
+     */
+    void updateConfigurationEntries(List<ConfigurationDO> configuration);
+
 }

@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
@@ -137,7 +138,7 @@ public class ConfigurationDAOImplTest {
 
     @Test
     public void testGetConfigurationByKey() {
-        ConfigurationDO config = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0");
+        ConfigurationDO config = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0.1");
         assertEquals("Y.1", config.getValue());
     }
 
@@ -145,5 +146,104 @@ public class ConfigurationDAOImplTest {
     public void testGetValueByKey() {
         String value = configurationDAO.getValueByKey("key", "Module_A", "2.0.1");
         assertEquals("Y.1", value);
+    }
+
+    @Test
+    public void testRestorKeyToDefault() {
+        ConfigurationDO before = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0");
+        assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", before.getUuid());
+        assertEquals("Y.1", before.getValue());
+        assertEquals("Y", before.getDefaultValue());
+
+        configurationDAO.restoreKeyToDefault(before);
+
+        ConfigurationDO after = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0");
+        assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", after.getUuid());
+        assertEquals("Y", after.getValue());
+        assertEquals("Y", after.getDefaultValue());
+    }
+
+    @Test
+    public void testGetAllSetEntries() {
+        List<ConfigurationDO> set
+                = configurationDAO.getAllConfigurationSetEntries("Module_A", "1.0", "Set_1");
+
+        assertEquals(3, set.size());
+
+        assertEquals("a", set.get(0).getDefaultValue());
+        assertEquals("b", set.get(1).getDefaultValue());
+        assertEquals("c", set.get(2).getDefaultValue());
+    }
+
+    @Test
+    public void testGetHistoryOfAEntry() {
+        List<ConfigurationDO> set
+                = configurationDAO.getHistoryOfAEntry("Module_A", "key", "none");
+
+        assertEquals(6, set.size());
+        assertEquals("1.0", set.get(0).getVersion());
+        assertEquals("1.1", set.get(1).getVersion());
+        assertEquals("1.2", set.get(2).getVersion());
+        assertEquals("1.3", set.get(3).getVersion());
+        assertEquals("2.0.1", set.get(4).getVersion());
+        assertEquals("2.0", set.get(5).getVersion());
+    }
+
+    @Test
+    public void testUpdateConfigurationEntries() {
+        List<ConfigurationDO> set
+                = configurationDAO.getAllConfigurationSetEntries("Module_B", "1.0", "Set_2");
+
+        assertEquals(3, set.size());
+        ConfigurationDO a = set.get(0);
+        ConfigurationDO b = set.get(1);
+        ConfigurationDO c = set.get(2);
+
+        assertEquals("none", a.getValue());
+        assertEquals("a", b.getValue());
+        assertEquals("a", c.getValue());
+
+        a.setValue("a_01");
+        b.setValue("a_02");
+        c.setValue("a_03");
+
+        List<ConfigurationDO> newSet = new ArrayList<>();
+        newSet.add(a);
+        newSet.add(b);
+        newSet.add(c);
+
+        configurationDAO.updateConfigurationEntries(newSet);
+
+        assertEquals("a_01", configurationDAO.find(a.getUuid()).getValue());
+        assertEquals("a_02", configurationDAO.find(b.getUuid()).getValue());
+        assertEquals("a_03", configurationDAO.find(c.getUuid()).getValue());
+    }
+
+    @Test
+    public void testGetDeprecatedEntries() {
+        List<ConfigurationDO> set = configurationDAO.getDeprecatedEntries();
+        assertEquals(2, set.size());
+
+        if (set.get(0).getUuid().equals("1de21a70-591b-4af8-8706-fc5581e90b0a")) {
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(0).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(1).getUuid());
+        } else {
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(1).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(0).getUuid());
+        }
+    }
+
+    @Test
+    public void testGetDeprecatedModuleEntries() {
+        List<ConfigurationDO> set = configurationDAO.getDeprecatedModuleEntries("Module_A");
+        assertEquals(2, set.size());
+
+        if (set.get(0).getUuid().equals("1de21a70-591b-4af8-8706-fc5581e90b0a")) {
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(0).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(1).getUuid());
+        } else {
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(1).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(0).getUuid());
+        }
     }
 }
