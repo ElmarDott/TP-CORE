@@ -9,6 +9,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -62,7 +65,7 @@ public final class FileUtils {
             }
 
         } catch (IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return success;
     }
@@ -116,32 +119,22 @@ public final class FileUtils {
     /**
      * Reads the full content of a text file.
      *
-     * @param filePath as String
+     * @param file as File
      * @return fileContent as String
      */
-    public static String readFileStream(final String filePath) {
+    public static String readFileStream(final File file) {
         StringBuilder content = new StringBuilder();
         InputStreamReader inputStreamReader = null;
-        try {
 
-            inputStreamReader = new InputStreamReader(new FileInputStream(filePath), CHARSET);
+        try {
+            inputStreamReader = new InputStreamReader(new FileInputStream(file), CHARSET);
             int line;
             while ((line = inputStreamReader.read()) != -1) {
                 content.append((char) line);
             }
-
+            inputStreamReader.close();
         } catch (IOException ex) {
-
-            LOGGER.log("File " + filePath + " not found.", LogLevel.ERROR);
-        } finally {
-
-            try {
-                if (inputStreamReader != null) {
-                    inputStreamReader.close();
-                }
-            } catch (IOException ex) {
-                LOGGER.log(ex.getMessage(), LogLevel.ERROR);
-            }
+            LOGGER.catchException(ex);
         }
         return content.toString();
     }
@@ -159,7 +152,32 @@ public final class FileUtils {
             LOGGER.log(filePath + " extende with " + content.length() + " characters",
                     LogLevel.DEBUG);
         } catch (IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
+    }
+
+    /**
+     * Discover a directory and all subdirectories to collect their the files in
+     * a List. The list entries are the full path, the filename with file
+     * extension. Example /usr/home/john/file.txt
+     *
+     * @param directory as File
+     * @return Collection of Files
+     */
+    public static Collection<File> listFileTree(final File directory) {
+        Set<File> fileTree = new HashSet<>();
+
+        if (directory == null || directory.listFiles() == null) {
+            return fileTree;
+        }
+
+        for (File entry : directory.listFiles()) {
+            if (entry.isFile()) {
+                fileTree.add(entry);
+            } else {
+                fileTree.addAll(listFileTree(entry));
+            }
+        }
+        return fileTree;
     }
 }

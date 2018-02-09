@@ -26,6 +26,7 @@
         <property name="user" value="${jdbc.main.user}"/>
         <property name="password" value="${jdbc.main.password}"/>
         <!-- 3CPO Connection POOL -->
+        <property name="c3p0.timeout" value="3" /> <!-- Ste the timeout in SEC to try etablish a connection -->
         <property name="acquireIncrement" value="1"/> <!-- How many Connects try reconnect at same time -->
         <property name="acquireRetryAttempts" value="10"/> <!-- How many retries default=30 -->
         <property name="acquireRetryDelay" value="3000"/> <!-- ms, retry delay default=1000 -->

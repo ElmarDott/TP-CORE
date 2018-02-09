@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
  * (PIM). It's implemeted an encoder and also an decoder.
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface QrCodeGenerator {
 

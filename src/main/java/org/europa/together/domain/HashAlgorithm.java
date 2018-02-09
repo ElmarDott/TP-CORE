@@ -13,7 +13,7 @@ public enum HashAlgorithm {
     private final String value;
 
     //CONSTRUCTOR
-    private HashAlgorithm(final String value) {
+    HashAlgorithm(final String value) {
         this.value = value;
     }
 

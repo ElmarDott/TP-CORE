@@ -5,8 +5,6 @@ import com.google.zxing.BinaryBitmap;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -14,7 +12,6 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +26,7 @@ import org.joda.time.DateTime;
  */
 public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7L;
     private static final Logger LOGGER = new LoggerImpl(PropertyReaderImpl.class);
 
     private static final int SUBSTRING = 8;
@@ -133,8 +130,8 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
             MatrixToImageWriter.writeToPath(matrix, "png", Paths.get(fileOutputPath));
             success = true;
 
-        } catch (WriterException | IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
 
         return success;
@@ -151,8 +148,8 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
                                             ImageIO.read(new FileInputStream(qrCode)))));
             decode = new MultiFormatReader().decode(binaryBitmap).getText();
 
-        } catch (NotFoundException | IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
 
         return decode;

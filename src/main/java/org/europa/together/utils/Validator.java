@@ -102,12 +102,7 @@ public final class Validator {
     public static boolean isDateAfter(final DateTime check, final DateTime after) {
         boolean success = false;
         if (check != null && after != null) {
-            try {
-                success = check.isAfter(after);
-            } catch (IllegalArgumentException ex) {
-                LOGGER.log("Date: " + check.toString() + " is not after "
-                        + after.toString(), LogLevel.WARN);
-            }
+            success = check.isAfter(after);
         }
         return success;
     }
@@ -126,12 +121,8 @@ public final class Validator {
     public static boolean isDateBefore(final DateTime check, final DateTime before) {
         boolean success = false;
         if (check != null && before != null) {
-            try {
-                success = check.isBefore(before);
-            } catch (IllegalArgumentException ex) {
-                LOGGER.log("Date: " + check.toString() + " is not before "
-                        + before.toString(), LogLevel.WARN);
-            }
+            success = check.isBefore(before);
+
         }
         return success;
     }

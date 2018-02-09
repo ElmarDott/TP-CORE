@@ -121,7 +121,7 @@ public final class StringUtils {
             LOGGER.log(msg, LogLevel.DEBUG);
 
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return hash;
     }

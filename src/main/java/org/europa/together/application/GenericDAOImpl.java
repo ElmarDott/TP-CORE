@@ -12,6 +12,7 @@ import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -22,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SuppressWarnings("unchecked")
 @Transactional
+@Repository
 public abstract class GenericDAOImpl<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private static final Logger LOGGER = new LoggerImpl(GenericDAOImpl.class);
 
     protected final Class<T> genericType;
@@ -54,12 +56,8 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
                     LogLevel.TRACE);
             success = true;
 
-        } catch (EntityExistsException ex) {
-            LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") alredy exist!",
-                    LogLevel.ERROR);
-        } catch (IllegalArgumentException ex) {
-            LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") is not a Entity!",
-                    LogLevel.ERROR);
+        } catch (EntityExistsException | IllegalArgumentException ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }
@@ -74,8 +72,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
                 LOGGER.log("DAO (" + genericType.getSimpleName() + ") delete", LogLevel.TRACE);
                 success = true;
             } catch (IllegalArgumentException ex) {
-                LOGGER.log("DAO (" + foundObject.getClass().getSimpleName()
-                        + ") is not a Entity!", LogLevel.ERROR);
+                LOGGER.catchException(ex);
             }
         }
         return success;
