@@ -13,15 +13,18 @@ import java.util.stream.Stream;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of the PropertyReader.
  */
+@Repository
 public class PropertyReaderImpl implements PropertyReader {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4L;
     private static final Logger LOGGER = new LoggerImpl(PropertyReaderImpl.class);
 
     private Map<String, String> propertyList = new HashMap<>();
@@ -29,7 +32,7 @@ public class PropertyReaderImpl implements PropertyReader {
     /**
      * Constructor.
      */
-    PropertyReaderImpl() {
+    public PropertyReaderImpl() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
@@ -41,8 +44,26 @@ public class PropertyReaderImpl implements PropertyReader {
 
         } catch (Exception ex) {
             propertyList.put(key, value);
-            LOGGER.log("Entry: " + key + "=" + value + " added.", LogLevel.DEBUG);
+            LOGGER.catchException(ex);
             success = true;
+        }
+        return success;
+    }
+
+    @Override
+    public boolean addPropertyList(final Map<String, String> resource) {
+        boolean success = false;
+        int sizeOrginalList = propertyList.size();
+        int sizeNewList = resource.size();
+        int size = sizeOrginalList + sizeNewList;
+        propertyList.putAll(resource);
+
+        if (size > sizeOrginalList) {
+            success = true;
+            LOGGER.log(sizeNewList + " Properties apended.", LogLevel.DEBUG);
+        } else {
+            LOGGER.log("Could not append Properties. Size Orginal List: "
+                    + sizeOrginalList + " : Size New List: " + sizeNewList, LogLevel.WARN);
         }
         return success;
     }
@@ -50,8 +71,10 @@ public class PropertyReaderImpl implements PropertyReader {
     @Override
     public boolean appendPropertiesFromClasspath(final String resource) {
         boolean success = false;
+        ApplicationContext context = new ClassPathXmlApplicationContext();
+
         try {
-            ApplicationContext context = new ClassPathXmlApplicationContext();
+
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(
                             context.getResource(resource).getInputStream(), "UTF8")
@@ -83,18 +106,11 @@ public class PropertyReaderImpl implements PropertyReader {
             success = true;
 
         } catch (IOException ex) {
-            LOGGER.log("IOException: resource=('" + resource + "') is empty"
-                    + ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
 
         this.printPropertyList();
         return success;
-    }
-
-    @Override
-    public boolean appendPropertiesFromDatabase(final String resource) {
-        //TODO: appendPropertiesFromDatabase(final String resource) implement me
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -128,8 +144,7 @@ public class PropertyReaderImpl implements PropertyReader {
             success = true;
 
         } catch (IOException ex) {
-            LOGGER.log("IOException: resource=('" + resource + "') is empty"
-                    + ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
 
         this.printPropertyList();
@@ -159,7 +174,7 @@ public class PropertyReaderImpl implements PropertyReader {
             LOGGER.log(key + " successful removed.", LogLevel.DEBUG);
 
         } catch (Exception ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return success;
     }
@@ -172,7 +187,7 @@ public class PropertyReaderImpl implements PropertyReader {
             LOGGER.log("Entry " + key + " will be updated.", LogLevel.INFO);
 
         } catch (Exception ex) {
-            LOGGER.log("Entry " + key + " don't exist and will created.", LogLevel.INFO);
+            LOGGER.catchException(ex);
             propertyList.put(key, value);
         }
         return true;
@@ -195,7 +210,7 @@ public class PropertyReaderImpl implements PropertyReader {
                 value = true;
             }
         } catch (Exception ex) {
-            LOGGER.log("getPropertyAsBoolean() " + ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return value;
     }
@@ -207,8 +222,7 @@ public class PropertyReaderImpl implements PropertyReader {
             this.lookupForPropertyKey(key);
             value = Double.parseDouble(propertyList.get(key));
         } catch (Exception ex) {
-            LOGGER.log("getPropertyAsDouble() " + ex.getMessage() + " is no Double Value",
-                    LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return value;
     }
@@ -220,8 +234,7 @@ public class PropertyReaderImpl implements PropertyReader {
             this.lookupForPropertyKey(key);
             value = Float.parseFloat(propertyList.get(key));
         } catch (Exception ex) {
-            LOGGER.log("getPropertyAsFloat() " + ex.getMessage() + " is no Float Value",
-                    LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return value;
     }
@@ -233,8 +246,7 @@ public class PropertyReaderImpl implements PropertyReader {
             this.lookupForPropertyKey(key);
             value = Integer.parseInt(propertyList.get(key));
         } catch (Exception ex) {
-            LOGGER.log("getPropertyAsInt() " + ex.getMessage() + " is no Integer Value",
-                    LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return value;
     }
@@ -246,10 +258,14 @@ public class PropertyReaderImpl implements PropertyReader {
             this.lookupForPropertyKey(key);
             value = propertyList.get(key);
         } catch (Exception ex) {
-            LOGGER.log("getPropertyAsInt() " + ex.getMessage() + " is no Integer Value",
-                    LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return value;
+    }
+
+    @Override
+    public Map<String, String> getPropertyList() {
+        return propertyList;
     }
 
     private void printPropertyList() {
@@ -262,7 +278,8 @@ public class PropertyReaderImpl implements PropertyReader {
             success = true;
         } else {
             LOGGER.log("Property Entry " + key + " don't exist.", LogLevel.WARN);
-            throw new Exception("Entry not found.");
+            throw new MisconfigurationException(
+                    "Configuration entry in property file not found.");
         }
         return success;
     }

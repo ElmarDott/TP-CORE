@@ -12,18 +12,27 @@ import java.util.Map;
  * the # character.
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface PropertyReader {
 
     /**
      * Add a single Property to the Property list. If the property already exist
-     * in the List, it will not added and the method return false.
+     * in the List, the new entry will not added and the method return false.
      *
      * @param key as String
      * @param value as String
      * @return true on success
      */
     boolean addProperty(String key, String value);
+
+    /**
+     * Extend property list by Map&lt;String, String&gt;.
+     *
+     * @param propertyList as Map
+     * @return true on success
+     */
+    boolean addPropertyList(final Map<String, String> propertyList);
 
     /**
      * Load a property List from an given file inside the classpath. eg:
@@ -33,14 +42,6 @@ public interface PropertyReader {
      * @return true on success
      */
     boolean appendPropertiesFromClasspath(final String resource);
-
-    /**
-     * Load a property List from a Database.
-     *
-     * @param resource as String
-     * @return true on success
-     */
-    boolean appendPropertiesFromDatabase(final String resource);
 
     /**
      * Load a property List from an external file. eg:
