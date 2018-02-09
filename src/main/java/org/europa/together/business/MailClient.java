@@ -4,25 +4,14 @@ import java.util.List;
 import java.util.Map;
 import javax.activation.FileDataSource;
 import javax.mail.internet.InternetAddress;
-import org.europa.together.domain.ResourceType;
+import javax.mail.internet.MimeMessage;
 import org.springframework.stereotype.Component;
 
 /**
  * Simple SMTP E Mail Client with SSL to send E-Mails from a configured Mail
- * Account. The Mailer allows sending mass mails (e.g. newsletter), this feature
- * needs a timer to interrupt after 100 mails for a few seconds.<br>
- *
- * <code>
- * \@Autowired<br>
- * \@Qualifier("mailClientImpl")<br>
- * private MailClient mailClient;<br>
- * <br>
- * mailClient.loadConfigurationFromProperties("eu/freeplace/config/mail.properties");<br>
- * mailClient.setContent("the content of the E-Mail message.");<br>
- * addRecipent("JohnDoe@sample.org"); <br>
- * addRecipent("JeanDoe@sample.org");<br>
- * mailClient.mail("Mail Subject");<br>
- * </code>
+ * Account (SMTP Server). The Mailer allows sending mass mails (e.g.
+ * newsletter), this feature needs a timer to interrupt after a configured
+ * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -31,134 +20,167 @@ import org.springframework.stereotype.Component;
 public interface MailClient {
 
     /**
-     * Add attacments to an e-mail. The Resource parameter is the path and
-     * filename of an resource as String. resource = 'path/my.file'
+     * Define the Configuration Set for the MailClient.
+     */
+    String CONFIG_SET = "email";
+
+    /**
+     * Add attachments from a given List of strings to the mail attachments. A
+     * list entry represents the full path to the attachment as String.
+     *
+     * @param attachmentList as String
+     */
+    void addAttachmentList(List<String> attachmentList);
+
+    /**
+     * Add a recipient from a given list of Strings to the mail recipients. A
+     * list entry represent a E-Mail Address as String. This function allows an
+     * import e-mail from other systems.
+     *
+     * @param recipientList as String
+     */
+    void addRecipientList(List<String> recipientList);
+
+    /**
+     * Reset the Attchment List.
+     *
+     */
+    void clearAttachments();
+
+    /**
+     * Reset the Recipient List.
+     */
+    void clearRecipents();
+
+    /**
+     * Limit the maximum file size for attachments.
+     *
+     * @param attachmentSize as long
+     */
+    void setAttachmentSize(long attachmentSize);
+
+    /**
+     * Add E-MAil content from a String.
+     *
+     * @param content as String
+     */
+    void setContent(String content);
+
+    /**
+     * Set the MimeType of a E-Mail to HTML.
+     */
+    void setMimeTypeToHTML();
+
+    /**
+     * Set the MimeType of an E-Mail to plain text.
+     */
+    void setMimeTypeToPlain();
+
+    /**
+     * Add a subject (topic) to the mail.
+     *
+     * @param subject as String
+     */
+    void setSubject(final String subject);
+
+    /**
+     * Add an attachment to the Attachment List. The file size of attachments
+     * can be limited. To refer an attachment, set the resource e.g.:
+     * picture.png
      *
      * @param resource as String
      * @return true on success
      */
-    boolean addAttachment(String resource);
+    boolean addAttachment(final String resource);
 
     /**
-     * Validates if the recipient is a correct E-Mail Address and add they to
-     * the recipient list. In the case that the validation fail or the address
-     * already exist in the list, the address will not added.
+     * Add an Recipient to the Recipent List. The implementation check if the
+     * recipient already exist in the List. Also the format of an valid e-mail
+     * address will be tested. If an given E-Mail address is not valid it will
+     * not added to the List.
      *
      * @param recipent as String
      * @return true on success
      */
-    boolean addRecipent(String recipent);
+    boolean addRecipent(final String recipent);
 
     /**
-     * Add a List of recipients.
      *
-     * @param recipients as List
-     * @return true on success
-     */
-    boolean addRecipentList(List<String> recipients);
-
-    /**
-     * Load Configuration from database.
-     *
-     * @param module as String
-     * @param version as String
-     * @return true on success
-     */
-    boolean loadConfigurationFromDatabase(String module, String version);
-
-    /**
-     * Load Configuration from a given property file. Possible ResourceTypes
-     * are: CLASSPATH, FILE and DATABASE.
-     *
-     * @param resourceType as ResourceType
      * @param resource as String
      * @return true on success
      */
-    boolean loadConfigurationFromProperties(ResourceType resourceType, String resource);
+    boolean loadConfigurationFromProperties(final String resource);
 
     /**
-     * Set the mail message.
      *
-     * @param message as String
-     * @return message length as int
+     * @return true on success
      */
-    int setContent(String message);
+    boolean loadConfigurationFromDatabase();
 
     /**
-     * Process from a Map of key value pairs and a given Velocity Template the
-     * Mail Content as String. The Template resource can be a template file from
-     * classpath, database or an external file.
+     * Get the limitation of the maximum amount of sending e-mails until a time
+     * interrupt will be processed.
      *
-     * @param type as Resourcetype
-     * @param resourcePath as String
-     * @param template as String
-     * @param model as Map
-     * @return message lenght as int
+     * @return limitOfBulkMails as int
      */
-    int setContentByVelocityTemplate(ResourceType type, String resourcePath,
-            String template, Map<String, String> model);
+    int getBulkMailLimiter();
 
     /**
-     * Get the attachment List for a E-Mail.
      *
-     * @return List of Attachments
+     * @return size as long
      */
-    List<FileDataSource> getAttachments();
+    long getAttachmentSize();
 
     /**
-     * Get recipients as List of InternetAddress.
+     * Get the Configured wait time in milliseconds until the next mail bulk can
+     * be send.
      *
-     * @return recipients as List&lt;InternetAddressl&gt;
+     * @return waitTime as long
      */
-    List<InternetAddress> getRecipents();
+    long getWaitTime();
 
     /**
-     * Get the content who is set for the E-Mail.
      *
-     * @return mailcontent as String
+     * @return content as String
      */
     String getContent();
 
     /**
-     * Function to get the configured mimeType.
      *
      * @return mimeType as String
      */
     String getMimeType();
 
     /**
-     * Clear attachment list.
-     */
-    void clearAttachments();
-
-    /**
-     * Clear recipent list.
-     */
-    void clearRecipents();
-
-    /**
-     * Mail function to connect to a configured SMTP Server and send an E-Mail.
      *
-     * @param subject as String
+     * @return subject as String
      */
-    void mail(String subject);
+    String getSubject();
 
     /**
-     * By default the MIME Type is plain. This function changes the MimeType
-     * from plain to HTML.
-     */
-    void setMimeTypeToHTML();
-
-    /**
-     * This function allows to change the MimeType back to plain text.
-     */
-    void setMimeTypeToPlain();
-
-    /**
-     * Set a limit of the file size for all attachments in kB, who are be able
-     * to send by E-Mail. The default is 0 (unlimited);
      *
-     * @param lenght in kB
+     * @return attachments as List
      */
-    void setAttachmentSizeLimit(long lenght);
+    List<FileDataSource> getAttachmentList();
+
+    /**
+     *
+     * @return recipients as List
+     */
+    List<InternetAddress> getRecipentList();
+
+    /**
+     * Get the full SMTP Configuration.
+     *
+     * @return configuration as Map
+     */
+    Map<String, String> getConfiguration();
+
+    /**
+     * Compose a full E-Mail, ready to send.
+     *
+     * @param recipient as InternetAdress
+     * @return e-mail as MimeMessage
+     */
+    MimeMessage composeMail(InternetAddress recipient);
 }
