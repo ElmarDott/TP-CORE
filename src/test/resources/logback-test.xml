@@ -10,8 +10,6 @@
         </encoder>
     </appender>
 
-    <logger name="org.europa.together" level="TRACE" />
-
     <root level="TRACE">
         <appender-ref ref="CONSOLE" />
     </root>

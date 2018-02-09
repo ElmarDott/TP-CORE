@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
-import ch.qos.logback.access.joran.JoranConfigurator;
-import ch.qos.logback.classic.LoggerContext;
+import java.util.Arrays;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.slf4j.LoggerFactory;
@@ -11,9 +10,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class LoggerImpl implements Logger {
 
-    private final JoranConfigurator configurator
-            = new JoranConfigurator();
-    private final LoggerContext context;
     private final org.slf4j.Logger logger;
 
     /**
@@ -24,10 +20,7 @@ public final class LoggerImpl implements Logger {
     public LoggerImpl(final Class<?> instance) {
 
         logger = LoggerFactory.getLogger(instance);
-        context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        this.log("instance class", LogLevel.INFO);
-        this.log("Logger Name: " + logger.getName(), LogLevel.DEBUG);
+        this.log("[Logger Name] " + logger.getName(), LogLevel.TRACE);
     }
 
     @Override
@@ -71,18 +64,19 @@ public final class LoggerImpl implements Logger {
             level = LogLevel.ERROR;
         }
 
-        this.log("the configured LogLevel is " + level, LogLevel.DEBUG);
+        this.log("The configured LogLevel is " + level, LogLevel.DEBUG);
         return level;
     }
 
     @Override
-    public boolean setConfigurationFile(final String file) {
+    public String catchException(final Exception ex) {
+        String exceptionType = ex.getClass().getSimpleName();
+        logger.error(exceptionType + ": " + ex.getMessage());
 
-        boolean success = false;
+        if (exceptionType.equals("NullPointerException")) {
+            logger.error(Arrays.toString(ex.getStackTrace()));
+        }
 
-        //TODO: setConfigurationFile() inplement me.
-        throw new UnsupportedOperationException("Not supported yet.");
-//        return success;
+        return ex.getMessage();
     }
-
 }

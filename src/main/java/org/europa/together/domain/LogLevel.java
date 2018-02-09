@@ -14,7 +14,7 @@ public enum LogLevel {
     private final String value;
 
     //CONSTRUCTOR
-    private LogLevel(final String value) {
+    LogLevel(final String value) {
         this.value = value;
     }
 

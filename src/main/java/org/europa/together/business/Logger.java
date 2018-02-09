@@ -6,6 +6,7 @@ import org.europa.together.domain.LogLevel;
  * Wrapper for the SLF4j and Logback Logging Framework.
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface Logger {
 
@@ -27,12 +28,13 @@ public interface Logger {
     LogLevel getConfiguredLogLevel();
 
     /**
-     * Change where the configuration file get loaded. This method allows to
-     * load an external XML configuration file into the application. his means
-     * the default configuration from the classpath will overwritten.
+     * Modified Method to log Exceptions. The output will be the exception Name
+     * and the exception message in the LogLevel Error. In the case a
+     * NullPointerException is thrown, the StackTrace will be logged too.
      *
-     * @param file as String
-     * @return true on success
+     * @param ex as Exception
+     * @return exception MEssage as String
      */
-    boolean setConfigurationFile(String file);
+    String catchException(Exception ex);
+
 }
