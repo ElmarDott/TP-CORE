@@ -23,14 +23,6 @@ import org.springframework.stereotype.Component;
 public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
 
     /**
-     * Allows the import of configuations as JSON objects.
-     *
-     * @param configuration as Sting
-     * @return true on success
-     */
-    boolean importConfiguration(String configuration);
-
-    /**
      * Get the whole configuration object by a given key, module and the version
      * of the module.
      *
@@ -59,15 +51,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      *
      * @return deprecated ConfigurationDO
      */
-    List<ConfigurationDO> getDeprecatedEntries();
-
-    /**
-     * Return a list of all deprecated Entries of a module.
-     *
-     * @param moduleName as String
-     * @return deprecated ConfigurationDO
-     */
-    List<ConfigurationDO> getDeprecatedModuleEntries(String moduleName);
+    List<ConfigurationDO> getAllDepecatedEntries();
 
     /**
      * In the case that for a module exist more versions than one. fFor example
@@ -80,30 +64,6 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @return Configuration as List
      */
     List<ConfigurationDO> getHistoryOfAEntry(String module, String key, String configSet);
-
-    /**
-     * Export a full module as JSON String.
-     *
-     * @param module as Sting
-     * @return JSON as String
-     */
-    String exportConfigurationOfAModule(String module);
-
-    /**
-     * Export a ConfigurationSet like E-Mail as JSON String.
-     *
-     * @param module as Sting
-     * @param configSet as Sting
-     * @return JSON as String
-     */
-    String exportConfigurationSet(String module, String configSet);
-
-    /**
-     * Export the entire configuration as JSON String.
-     *
-     * @return JSON as String
-     */
-    String exportEntireConfiguration();
 
     /**
      * Return the value of a key from a module. The hashing of the key will be
@@ -130,7 +90,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     void restoreKeyToDefault(ConfigurationDO entry);
 
     /**
-     * Update existing configuration entries.
+     * Update a List of existing configuration entries.
      *
      * @param configuration as List&lt;Configuration&gt;
      */

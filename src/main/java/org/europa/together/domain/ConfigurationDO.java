@@ -68,8 +68,11 @@ public class ConfigurationDO implements Serializable {
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @Column(name = "DEPRECATED", nullable = false)
-    private boolean deprecated;
+    @Column(name = "DEPECATED", nullable = false)
+    private boolean depecated;
+
+    @Column(name = "MANDATORY", nullable = false)
+    private boolean mandatory;
 
     @Column(name = "COMMENT")
     private String comment;
@@ -91,12 +94,14 @@ public class ConfigurationDO implements Serializable {
      * @param configurationSet as String
      * @param version as String
      * @param depecated as boolean
+     * @param mandatory as boolean
      * @param comment as String
      */
     public ConfigurationDO(final String key, final String value,
             final String defaultValue, final String modulName,
             final String configurationSet, final String version,
-            final boolean depecated, final String comment) {
+            final boolean depecated, final boolean mandatory,
+            final String comment) {
 
         this.uuid = StringUtils.generateUUID();
         this.key = key;
@@ -105,7 +110,8 @@ public class ConfigurationDO implements Serializable {
         this.modulName = modulName;
         this.configurationSet = configurationSet;
         this.version = version;
-        this.deprecated = depecated;
+        this.depecated = depecated;
+        this.mandatory = mandatory;
         this.comment = comment;
     }
 
@@ -115,8 +121,9 @@ public class ConfigurationDO implements Serializable {
      */
     @PrePersist
     public void prePersist() {
-        this.defaultValue = "none";
-        this.deprecated = false;
+        this.defaultValue = "NIL";
+        this.depecated = false;
+        this.mandatory = false;
         LOGGER.log("@PrePersist", LogLevel.INFO);
     }
 
@@ -127,7 +134,16 @@ public class ConfigurationDO implements Serializable {
      * @return true if is depecated
      */
     public boolean isDepecated() {
-        return deprecated;
+        return depecated;
+    }
+
+    /**
+     * Mark if an configuration entry is mandatory.
+     *
+     * @return true if is mandatory
+     */
+    public boolean isMandatory() {
+        return mandatory;
     }
 
     /**
@@ -163,7 +179,16 @@ public class ConfigurationDO implements Serializable {
      * @param depecated as boolean
      */
     public void setDepecated(final boolean depecated) {
-        this.deprecated = depecated;
+        this.depecated = depecated;
+    }
+
+    /**
+     * Set if a entry is mandatory.
+     *
+     * @param mandatory as boolean
+     */
+    public void setMandatory(final boolean mandatory) {
+        this.mandatory = mandatory;
     }
 
     /**
@@ -176,7 +201,7 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Set modul´name.
+     * Set module´name.
      *
      * @param modulName as String
      */
@@ -203,7 +228,7 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Set verson of modul.
+     * Set version of module.
      *
      * @param version as String
      */
@@ -248,9 +273,9 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Get Modulname.
+     * Get Modulename.
      *
-     * @return modulname as String
+     * @return modulename as String
      */
     public String getModulName() {
         return modulName;
@@ -275,9 +300,9 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Get modul version.
+     * Get module version.
      *
-     * @return modulversion as String
+     * @return moduleversion as String
      */
     public String getVersion() {
         return version;
@@ -326,7 +351,8 @@ public class ConfigurationDO implements Serializable {
                 + ", modulName=" + modulName
                 + ", configurationSet=" + configurationSet
                 + ", version=" + version
-                + ", depecated=" + deprecated
+                + ", depecated=" + depecated
+                + ", mandatory=" + mandatory
                 + ", comment=" + comment + '}';
     }
 }
