@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
  * DatabaseActions(boolean activateTestMode);
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 @Component
 public interface DatabaseActions {
@@ -23,13 +24,6 @@ public interface DatabaseActions {
      * @return true on success
      */
     boolean connect(String propertyFile);
-
-    /**
-     * Close the JDBC Connection.
-     *
-     * @return true on success
-     */
-    boolean disconnect();
 
     /**
      * Execute a plain SQL Query.
@@ -47,4 +41,17 @@ public interface DatabaseActions {
      */
     boolean executeSqlFromClasspath(String sqlFile);
 
+    /**
+     * Get the port for the configured database connection.
+     *
+     * @return port as int
+     */
+    int getPort();
+
+    /**
+     * Get the host URL / IP of the configured Database connection.
+     *
+     * @return uri as String
+     */
+    String getUri();
 }

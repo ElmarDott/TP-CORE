@@ -1,31 +1,31 @@
 package org.europa.together.application;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.Constraints;
+import org.europa.together.exceptions.TimeOutException;
+import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of Database JDBC Actions.
  */
+@Repository
 public class DatabaseActionsImpl implements DatabaseActions {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8L;
     private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImpl.class);
 
-    /**
-     * Activate a Test JDBC Connection.
-     */
+    private static final int TIMEOUT = 2000;
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnetion = null;
     private Statement statement = null;
@@ -35,6 +35,9 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private String pwd;
     private String connectionUrl;
     private String driverClass;
+
+    private String uri;
+    private int port;
 
     /**
      * Constructor.
@@ -55,26 +58,14 @@ public class DatabaseActionsImpl implements DatabaseActions {
 
     @Override
     public boolean connect(final String propertyFile) {
-        boolean connected = false;
-        this.fetchProperties(Constraints.SYSTEM_APP_DIR + propertyFile);
-        this.establishConnection();
 
-        if (this.jdbcConnetion != null) {
+        boolean connected = false;
+        fetchProperties(propertyFile);
+        establishPooledConnection();
+        if (jdbcConnetion != null) {
             connected = true;
         }
         return connected;
-    }
-
-    @Override
-    public boolean disconnect() {
-        if (this.jdbcConnetion != null) {
-            try {
-                this.jdbcConnetion.close();
-            } catch (SQLException ex) {
-                LOGGER.log(ex.getMessage(), LogLevel.WARN);
-            }
-        }
-        return true;
     }
 
     @Override
@@ -83,9 +74,12 @@ public class DatabaseActionsImpl implements DatabaseActions {
         boolean success = false;
         BufferedReader reader = null;
         StringBuilder sql = new StringBuilder();
+        ApplicationContext context = new ClassPathXmlApplicationContext();
         try {
-            reader = new BufferedReader(new InputStreamReader(
-                    getClass().getClassLoader().getResourceAsStream(sqlFile), "UTF-8"));
+            reader = new BufferedReader(
+                    new InputStreamReader(
+                            context.getResource(sqlFile).getInputStream(), "UTF8")
+            );
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -94,18 +88,10 @@ public class DatabaseActionsImpl implements DatabaseActions {
                 }
             }
             success = this.executeQuery(sql.toString());
+            reader.close();
 
-        } catch (IOException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
-
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException ex) {
-                LOGGER.log(ex.getMessage(), LogLevel.WARN);
-            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
 
         LOGGER.log("File (" + sqlFile + "): " + sql.toString(), LogLevel.DEBUG);
@@ -125,16 +111,27 @@ public class DatabaseActionsImpl implements DatabaseActions {
             } else {
                 LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
             }
-        } catch (SQLException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }
 
+    @Override
+    public int getPort() {
+        return this.port;
+    }
+
+    @Override
+    public String getUri() {
+        return this.uri;
+    }
 //  ----------------------------------------------------------------------------
+
     private void fetchProperties(final String propertyFile) {
 
         PropertyReader reader = new PropertyReaderImpl();
+        //Default configuration
         reader.appendPropertiesFromClasspath(jdbcProperties);
 
         if (!StringUtils.isEmpty(propertyFile)) {
@@ -151,31 +148,41 @@ public class DatabaseActionsImpl implements DatabaseActions {
             pwd = reader.getPropertyAsString("jdbc.main.password");
             connectionUrl = reader.getPropertyAsString("jdbc.main.url");
         }
+
         driverClass = reader.getPropertyAsString("jdbc.driverClassName");
     }
 
-    private void establishConnection() {
+    private void establishPooledConnection() {
+
         try {
+            LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
+            if (!connectionTimeout()) {
+                throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
+            }
             //test if the JDBC Driver is available
             Class.forName(this.driverClass);
 
-            Properties connectionProps = new Properties();
-            connectionProps.put("user", user);
-            connectionProps.put("password", pwd);
-            this.jdbcConnetion
-                    = DriverManager.getConnection(connectionUrl, connectionProps);
+            ComboPooledDataSource cpds = new ComboPooledDataSource();
+            cpds.setDriverClass(driverClass);
+            cpds.setJdbcUrl(connectionUrl);
+            cpds.setUser(user);
+            cpds.setPassword(pwd);
+            this.jdbcConnetion = cpds.getConnection();
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            if (this.jdbcConnetion != null) {
-                try {
-                    this.jdbcConnetion.close();
-                } catch (SQLException innerEx) {
-                    LOGGER.log(innerEx.getMessage(), LogLevel.WARN);
-                }
-            }
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
-
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
     }
 
+    private boolean connectionTimeout() {
+        // extract uri & port
+        // jdbc:postgresql://172.17.0.1:5432/together-test
+        String[] extraction01 = connectionUrl.split("//");
+        String[] extraction02 = extraction01[1].split("/");
+        String[] extraction03 = extraction02[0].split(":");
+        this.uri = extraction03[0];
+        this.port = Integer.parseInt(extraction03[1]);
+
+        return SocketTimeout.timeout(TIMEOUT, uri, port);
+    }
 }
