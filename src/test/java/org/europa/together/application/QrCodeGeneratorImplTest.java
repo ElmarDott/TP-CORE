@@ -1,15 +1,26 @@
 package org.europa.together.application;
 
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
+import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.joda.time.DateTime;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
+@RunWith(JUnitPlatform.class)
 public class QrCodeGeneratorImplTest {
 
     private static final String FILE_PATH
@@ -17,8 +28,36 @@ public class QrCodeGeneratorImplTest {
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
+    private static final Logger LOGGER = new LoggerImpl(QrCodeGeneratorImplTest.class);
+
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
     @Test
-    public void testQrCodeGenerator() {
+    void testConstructor() {
+        assertThat(QrCodeGeneratorImpl.class, hasValidBeanConstructor());
+    }
+
+    @Test
+    void testQrCodeGenerator() {
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "QrCode-0000.png";
         QrCodeGenerator generator = new QrCodeGeneratorImpl();
@@ -29,7 +68,21 @@ public class QrCodeGeneratorImplTest {
     }
 
     @Test
-    public void testVCard() {
+    void testFailEncode() {
+        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        generator.setup("/fail.png", 100);
+
+        assertFalse(generator.encode(generator.generateDataForvCard(null)));
+    }
+
+    @Test
+    void testFailDecode() {
+        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        assertNull(generator.decode(null));
+    }
+
+    @Test
+    void testVCard() {
 
         Map<String, String> vCard = new HashMap<>();
         vCard.put("gender", "Mr.");
@@ -62,7 +115,14 @@ public class QrCodeGeneratorImplTest {
     }
 
     @Test
-    public void testGeoInfo() {
+    void testEMptyVCard() {
+        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        assertNull(generator.generateDataForvCard(new HashMap<>()));
+        assertNull(generator.generateDataForvCard(null));
+    }
+
+    @Test
+    void testGeoInfo() {
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_geoInfo.png";
         QrCodeGenerator generator = new QrCodeGeneratorImpl();
         generator.setup(out, 100);
@@ -71,7 +131,7 @@ public class QrCodeGeneratorImplTest {
     }
 
     @Test
-    public void testUrl() {
+    void testUrl() {
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_url.png";
         QrCodeGenerator generator = new QrCodeGeneratorImpl();
         generator.setup(out, 100);
@@ -80,7 +140,7 @@ public class QrCodeGeneratorImplTest {
     }
 
     @Test
-    public void testCaledar() {
+    void testCaledar() {
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_event.png";
         QrCodeGenerator generator = new QrCodeGeneratorImpl();
         generator.setup(out, 100);

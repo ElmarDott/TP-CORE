@@ -2,23 +2,28 @@ package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
 import org.joda.time.DateTime;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 public class ValidatorTest {
 
-    @Test(expected = Exception.class)
-    public void testPrivateConstructor() throws Exception {
+    @Test//(expected = Exception.class)
+    void testPrivateConstructor() throws Exception {
         Constructor<Validator> clazz
                 = Validator.class.getDeclaredConstructor();
         clazz.setAccessible(true);
-        Validator call = clazz.newInstance();
+        assertThrows(Exception.class, () -> {
+            Validator call = clazz.newInstance();
+        });
     }
 
     @Test
-    public void testBooleanRegex() {
+    void testBooleanRegex() {
         assertTrue(Validator.validate("true", Validator.BOOLEAN));
         assertTrue(Validator.validate("false", Validator.BOOLEAN));
         assertTrue(Validator.validate("TRUE", Validator.BOOLEAN));
@@ -33,7 +38,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testDigitRegex() {
+    void testDigitRegex() {
         assertTrue(Validator.validate("0000", Validator.DIGIT));
         assertTrue(Validator.validate("1", Validator.DIGIT));
         assertTrue(Validator.validate("1234567890", Validator.DIGIT));
@@ -43,7 +48,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testCaracterRegex() {
+    void testCaracterRegex() {
         assertTrue(Validator.validate("abcdefghijklmnopqrstuvwxyz", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("ABCDEFGHIJKLMNOPQRSTUVWXYZ", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("abc XYZ", Validator.ASCII_CHARACTER));
@@ -53,7 +58,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testTextRegex() {
+    void testTextRegex() {
         assertTrue(Validator.validate("A fool with a tool is still a fool.", Validator.TEXT));
         assertTrue(Validator.validate("Remember, remember the 1 st. of November!", Validator.TEXT));
         assertTrue(Validator.validate("EN/00001.III-D", Validator.TEXT));
@@ -66,7 +71,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testFloatingPointRegex() {
+    void testFloatingPointRegex() {
         assertTrue(Validator.validate("0000", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("1", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("1234567890", Validator.FLOATING_POINT));
@@ -89,7 +94,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testTime24Regex() {
+    void testTime24Regex() {
 
         assertTrue(Validator.validate("00:00", Validator.TIME_24H));
         assertTrue(Validator.validate("00:01", Validator.TIME_24H));
@@ -149,7 +154,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testRGBColor() {
+    void testRGBColor() {
 
         assertTrue(Validator.validate("#000", Validator.RGB_COLOR));
         assertTrue(Validator.validate("#fff", Validator.RGB_COLOR));
@@ -183,7 +188,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsValidEMail() {
+    void testIsValidEMail() {
         assertTrue(Validator.validate("john@sample.eu", Validator.E_MAIL_ADDRESS));
         assertTrue(Validator.validate("john.doe@sample.org", Validator.E_MAIL_ADDRESS));
         assertTrue(Validator.validate("john_doe@sample.org", Validator.E_MAIL_ADDRESS));
@@ -196,7 +201,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsInvalidEMail() {
+    void testIsInvalidEMail() {
         assertFalse(Validator.validate("john@sample", Validator.E_MAIL_ADDRESS));
         assertFalse(Validator.validate("john@", Validator.E_MAIL_ADDRESS));
         assertFalse(Validator.validate("@sample.o", Validator.E_MAIL_ADDRESS));
@@ -207,28 +212,28 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsIntegerInRange() {
+    void testIsIntegerInRange() {
         assertTrue(Validator.isIntegerInRange(1, 1, 5));
         assertTrue(Validator.isIntegerInRange(3, 1, 5));
         assertTrue(Validator.isIntegerInRange(5, 1, 5));
     }
 
     @Test
-    public void testIsIntegerNotInRange() {
+    void testIsIntegerNotInRange() {
         assertFalse(Validator.isIntegerInRange(0, 1, 5));
         assertFalse(Validator.isIntegerInRange(6, 1, 5));
     }
 
     @Test
-    public void testIsDateAfter() {
+    void testIsDateAfter() {
         //now() is after 2015
         assertTrue(Validator.isDateAfter(new DateTime(), new DateTime(2015, 12, 31, 23, 59)));
         //after
         assertTrue(Validator.isDateAfter(new DateTime(2016, 1, 1, 0, 0), new DateTime(2015, 12, 31, 23, 59)));
     }
 
-    @Test//(expected = IllegalArgumentException.class)
-    public void testIsDateNotAfter() {
+    @Test
+    void testIsDateNotAfter() {
         //equal
         assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2015, 12, 31, 23, 59)));
 
@@ -241,7 +246,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsDateBefore() {
+    void testIsDateBefore() {
         //2015 is before now() => TRUE
         assertTrue(Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime()));
         //before
@@ -249,7 +254,7 @@ public class ValidatorTest {
     }
 
     @Test//(expected = IllegalArgumentException.class)
-    public void testIsDateNotBefore() {
+    void testIsDateNotBefore() {
         //equal
         assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2015, 12, 31, 23, 59)));
 
@@ -262,7 +267,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsDateInRange() {
+    void testIsDateInRange() {
         assertTrue(Validator.isDateInRange(
                 new DateTime(2015, 6, 15, 12, 0),
                 new DateTime(2014, 1, 1, 0, 0),
@@ -270,7 +275,7 @@ public class ValidatorTest {
     }
 
     @Test
-    public void testIsDateNotInRange() {
+    void testIsDateNotInRange() {
         assertFalse(Validator.isDateInRange(
                 new DateTime(2014, 1, 1, 0, 0),
                 new DateTime(2014, 1, 1, 0, 0),

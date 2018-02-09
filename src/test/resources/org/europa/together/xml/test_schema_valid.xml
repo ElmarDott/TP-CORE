@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
+
 <!-- Test file for XML Schema validation. -->
 <e:EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:e="http://www.sample.com/EmployeeInfo"

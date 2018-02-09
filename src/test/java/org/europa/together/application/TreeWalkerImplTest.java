@@ -1,23 +1,58 @@
 package org.europa.together.application;
 
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
+import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
-/**
- *
- * @author john
- */
+@SuppressWarnings("unchecked")
+@RunWith(JUnitPlatform.class)
 public class TreeWalkerImplTest {
 
+    private static final Logger LOGGER = new LoggerImpl(TreeWalkerImplTest.class);
     private TreeWalker treeWalker
             = new TreeWalkerImpl(new TreeNode("Root Node"));
 
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
     @Test
-    public void testAddRoot() {
+    void testConstructor() {
+        assertThat(TreeWalkerImpl.class, hasValidBeanConstructor());
+    }
+
+    @Test
+    void testAddRoot() {
         TreeNode root = new TreeNode();
         root.setNodeName("ROOT");
         TreeWalker walker = new TreeWalkerImpl(root);
@@ -28,7 +63,7 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testGetRoot() {
+    void testGetRoot() {
         TreeWalker walker
                 = new TreeWalkerImpl(new TreeNode("Root Node"));
 
@@ -37,19 +72,19 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testCountNodes() {
+    void testCountNodes() {
         TreeWalker walker = new TreeWalkerImpl();
         assertEquals(0, walker.countNodes());
     }
 
     @Test
-    public void testAddNode() {
+    void testAddNode() {
         this.buildTree();
         assertEquals(12, treeWalker.countNodes());
     }
 
     @Test
-    public void testIsLeaf() {
+    void testIsLeaf() {
         buildTree();
         List<TreeNode> tree = treeWalker.getTree();
         List<TreeNode> leaf = new ArrayList<>();
@@ -67,7 +102,7 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testGetNodeByUuid() {
+    void testGetNodeByUuid() {
         buildTree();
         TreeNode node = this.treeWalker.getTree().get(5);
         String uuid = node.getUuid();
@@ -80,7 +115,7 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testIsNodeElemntOfTree() {
+    void testIsNodeElemntOfTree() {
         buildTree();
         TreeNode node = treeWalker.getTree().get(4);
 
@@ -89,13 +124,13 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testRemoveNode() {
+    void testRemoveNode() {
         buildTree();
         assertFalse(treeWalker.removeNode(treeWalker.getTree().get(0)));
     }
 
     @Test
-    public void testIsNameUnique() {
+    void testIsNameUnique() {
         buildTree();
         assertEquals(1, treeWalker.isNameUnique("05"));
         assertEquals(0, treeWalker.isNameUnique("00"));
@@ -108,7 +143,7 @@ public class TreeWalkerImplTest {
     }
 
     @Test
-    public void testGetElemnetsByName() {
+    void testGetElemnetsByName() {
         buildTree();
 
         TreeNode nodeA = new TreeNode("05");

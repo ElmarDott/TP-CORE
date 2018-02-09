@@ -4,27 +4,32 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.domain.HashAlgorithm;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 public class StringUtilsTest {
 
-    @Test(expected = Exception.class)
-    public void testPrivateConstructor() throws Exception {
+    @Test//(expected = Exception.class)
+    void testPrivateConstructor() throws Exception {
         Constructor<StringUtils> clazz
                 = StringUtils.class.getDeclaredConstructor();
         clazz.setAccessible(true);
-        StringUtils call = clazz.newInstance();
+        assertThrows(Exception.class, () -> {
+            StringUtils call = clazz.newInstance();
+        });
     }
 
     @Test
-    public void testConcatString() {
+    void testConcatString() {
         assertEquals("ABCD", StringUtils.concatString("A", "B", "C", "D"));
     }
 
     @Test
-    public void testGenerateStringOfLength() {
+    void testGenerateStringOfLength() {
         assertEquals("012345678", StringUtils.generateStringOfLength(9));
         assertEquals("01234567890123", StringUtils.generateStringOfLength(14));
     }
@@ -33,7 +38,7 @@ public class StringUtilsTest {
      * Test of bytesToString method, of class StringUtils.
      */
     @Test
-    public void testByteToString() {
+    void testByteToString() {
         assertEquals("23", StringUtils.byteToString("#".getBytes()));
     }
 
@@ -41,7 +46,7 @@ public class StringUtilsTest {
      * Test of isEmpty method, of class StringUtils.
      */
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertFalse(StringUtils.isEmpty(" "));
         assertFalse(StringUtils.isEmpty("test"));
         assertTrue(StringUtils.isEmpty(""));
@@ -52,7 +57,7 @@ public class StringUtilsTest {
      * Test of stringListBuilder method, of class StringUtils.
      */
     @Test
-    public void testStringListBuilder() {
+    void testStringListBuilder() {
         List<String> check = new ArrayList<>();
         check.add("foo");
         check.add("more");
@@ -63,7 +68,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testCalculateMD5Hashes() {
+    void testCalculateMD5Hashes() {
 
         //ZERO HASH
         assertEquals("d41d8cd98f00b204e9800998ecf8427e",
@@ -77,7 +82,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testCalculateSHA1Hashes() {
+    void testCalculateSHA1Hashes() {
 
         assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709",
                 StringUtils.calculateHash("", HashAlgorithm.SHA));
@@ -90,7 +95,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testCalculateSHA512Hashes() {
+    void testCalculateSHA512Hashes() {
 
         assertEquals("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
                 StringUtils.calculateHash("", HashAlgorithm.SHA512));
@@ -103,7 +108,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testCalculateSHA256Hashes() {
+    void testCalculateSHA256Hashes() {
 
         assertEquals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 StringUtils.calculateHash("", HashAlgorithm.SHA256));
@@ -116,7 +121,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testHashToInt() {
+    void testHashToInt() {
 
         assertEquals(2211, StringUtils.hashToInt(StringUtils.calculateHash("", HashAlgorithm.MD5)));
         assertEquals(2262, StringUtils.hashToInt(StringUtils.calculateHash(" ", HashAlgorithm.MD5)));
@@ -140,7 +145,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testGenerateUUID() {
+    void testGenerateUUID() {
         //UUID: a3ae3672-22bc-411f-81c5-103652a5846e
         String uuid = StringUtils.generateUUID();
         assertNotNull(uuid);

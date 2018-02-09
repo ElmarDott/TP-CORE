@@ -72,6 +72,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <debug>false</debug>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -97,11 +100,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>javax.mail-api</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.0</version>
@@ -121,16 +119,21 @@
             <artifactId>flexjson</artifactId>
             <version>3.3</version>
         </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+        </dependency>
         <!-- Bean Validation -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.4.1.Final</version>
+            <version>5.4.2.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator-annotation-processor</artifactId>
-            <version>5.4.1.Final</version>
+            <version>5.4.2.Final</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.web</groupId>
@@ -142,12 +145,12 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
         </dependency>
 
         <!-- Bundels -->

@@ -1,37 +1,32 @@
 package org.europa.together.domain;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCodeFor;
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
-import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @SuppressWarnings("unchecked")
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@RunWith(JUnitPlatform.class)
 public class ConfigurationDOTest {
 
     private static ValidatorFactory validatorFactory;
     private static Validator validate;
 
-    @BeforeClass
-    public static void setUp() {
+    @BeforeAll
+    static void setUp() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validate = validatorFactory.getValidator();
     }
 
-    @AfterClass
-    public static void tearDown() {
+    @AfterAll
+    static void tearDown() {
         validatorFactory.close();
     }
 
@@ -42,29 +37,29 @@ public class ConfigurationDOTest {
     private String configSet = "configuration";
     private String version = "1.0";
     private boolean depecated = true;
+    private boolean mandatory = false;
     private String comment = "no comment";
 
     @Test
-    public void testDomainObject() {
+    void testDomainObject() {
         assertThat(ConfigurationDO.class, hasValidBeanConstructor());
-        assertThat(ConfigurationDO.class, hasValidGettersAndSetters());
         assertThat(ConfigurationDO.class, hasValidBeanToString());
         assertThat(ConfigurationDO.class, hasValidBeanHashCodeFor("key", "modulName", "version"));
         assertThat(ConfigurationDO.class, hasValidBeanEqualsFor("key", "modulName", "version"));
     }
 
     @Test
-    public void prePersist() {
+    void prePersist() {
         ConfigurationDO domainObject = new ConfigurationDO();
         domainObject.prePersist();
 
         assertNotNull(domainObject);
         assertEquals(false, domainObject.isDepecated());
-        assertEquals("none", domainObject.getDefaultValue());
+        assertEquals("NIL", domainObject.getDefaultValue());
     }
 
     @Test
-    public void testCreateDomainObjectBySetter() {
+    void testCreateDomainObjectBySetter() {
         ConfigurationDO configurationDO = new ConfigurationDO();
         configurationDO.setKey(key);
         configurationDO.setModulName(modulName);
@@ -77,73 +72,73 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    public void testCorrectValidation() {
+    void testCorrectValidation() {
 
         ConfigurationDO domainObject;
 
         domainObject = new ConfigurationDO(key, value,
-                defaultValue, modulName, configSet, version, depecated, comment);
+                defaultValue, modulName, configSet, version, depecated, mandatory, comment);
         assertTrue(validate.validate(domainObject).isEmpty());
 
         domainObject = new ConfigurationDO(key, null,
-                defaultValue, modulName, configSet, version, depecated, comment);
+                defaultValue, modulName, configSet, version, depecated, mandatory, comment);
         assertTrue(validate.validate(domainObject).isEmpty());
 
         domainObject = new ConfigurationDO(key, value,
-                defaultValue, modulName, configSet, version, depecated, null);
+                defaultValue, modulName, configSet, version, depecated, mandatory, null);
         assertTrue(validate.validate(domainObject).isEmpty());
     }
 
     @Test
-    public void testValidationNotNull() {
+    void testValidationNotNull() {
 
         ConfigurationDO domainObject = new ConfigurationDO();
         assertFalse(validate.validate(domainObject).isEmpty());
     }
 
     @Test
-    public void testValidationUuidNotNull() {
+    void testValidationUuidNotNull() {
         //UUID
         ConfigurationDO domainObject = new ConfigurationDO(key, value,
-                defaultValue, modulName, configSet, version, depecated, comment);
+                defaultValue, modulName, configSet, version, depecated, mandatory, comment);
         assertEquals(0, validate.validate(domainObject).size());
     }
 
     @Test
-    public void testValidationKeyNotNull() {
+    void testValidationKeyNotNull() {
         //UUID
         ConfigurationDO domainObject = new ConfigurationDO(null, value,
-                defaultValue, modulName, configSet, version, depecated, comment);
+                defaultValue, modulName, configSet, version, depecated, mandatory, comment);
         assertEquals(1, validate.validate(domainObject).size());
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
     }
 
     @Test
-    public void testValidationDefaultValueNotNull() {
+    void testValidationDefaultValueNotNull() {
         //UUID
         ConfigurationDO domainObject = new ConfigurationDO(key, value,
-                null, modulName, configSet, version, depecated, comment);
+                null, modulName, configSet, version, depecated, mandatory, comment);
         assertEquals(1, validate.validate(domainObject).size());
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
     }
 
     @Test
-    public void testValidationModulNameNotNull() {
+    void testValidationModulNameNotNull() {
         //UUID
         ConfigurationDO domainObject = new ConfigurationDO(key, value,
-                defaultValue, null, configSet, version, depecated, comment);
+                defaultValue, null, configSet, version, depecated, mandatory, comment);
         assertEquals(1, validate.validate(domainObject).size());
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
     }
 
     @Test
-    public void testValidationVersionNotNull() {
+    void testValidationVersionNotNull() {
         //UUID
         ConfigurationDO domainObject = new ConfigurationDO(key, value,
-                defaultValue, modulName, configSet, null, depecated, comment);
+                defaultValue, modulName, configSet, null, depecated, mandatory, comment);
         assertEquals(1, validate.validate(domainObject).size());
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());

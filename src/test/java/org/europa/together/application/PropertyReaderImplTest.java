@@ -1,77 +1,130 @@
 package org.europa.together.application;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.HashMap;
 import java.util.Map;
+import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
+import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.StringUtils;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
+@RunWith(JUnitPlatform.class)
 public class PropertyReaderImplTest {
 
-    private static final String PROPERTY_FILE
-            = "org/europa/together/properties/classpathTest.properties";
-    private static final String TEST_FILE
-            = Constraints.SYSTEM_USER_HOME_DIR + "/fileTest.properties";
+    private static final String FILE_PATH
+            = "org/europa/together/properties/properties-test-classpath.properties";
+    private static final String DIRECTORY
+            = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
+    private static final Logger LOGGER = new LoggerImpl(PropertyReaderImplTest.class);
     private final PropertyReader propertyReader = new PropertyReaderImpl();
 
-    @BeforeClass
-    public static void setUpEnvironment() {
-
-        PropertyReader source = new PropertyReaderImpl();
-        source.appendPropertiesFromClasspath(PROPERTY_FILE);
-        Map<String, String> properties = new HashMap<>();
-        properties.putAll(source.getPropertyList());
-        StringBuilder sb = new StringBuilder();
-
-        for (String key : properties.keySet()) {
-            sb.append(key + "=" + properties.get(key) + "\n");
-        }
-
-        StringUtils.writeStringToFile(sb.toString(), TEST_FILE, null);
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
     }
 
-    @AfterClass
-    public static void tearDownEnvironment() {
-        try {
-            Files.delete(Paths.get(TEST_FILE));
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
+    @Test
+    void testConstructor() {
+        assertThat(PropertyReaderImpl.class, hasValidBeanConstructor());
     }
 
     @Test
-    public void testAppendPropertiesFromDatabase() {
+    void testAddPropertyList() {
+        Map<String, String> resource = new HashMap();
+        resource.put("1", "1");
+        resource.put("2", "1");
+        resource.put("3", "1");
+        propertyReader.clear();
+        propertyReader.addPropertyList(resource);
+        assertEquals(3, propertyReader.count());
+
+        Map<String, String> update = new HashMap();
+        propertyReader.addPropertyList(update);
+        assertEquals(3, propertyReader.count());
     }
 
     @Test
-    public void testAppendPropertiesFromExternalFile() {
+    void testOverwriteAddPropertyList() {
+        Map<String, String> resource = new HashMap();
+        resource.put("1", "1");
+        resource.put("2", "1");
+        resource.put("3", "1");
+        propertyReader.clear();
+        propertyReader.addPropertyList(resource);
+        assertEquals(3, propertyReader.count());
+
+        propertyReader.addPropertyList(resource);
+        assertEquals(3, propertyReader.count());
+    }
+
+    @Test
+    void testAppendPropertiesFromExternalFile() {
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromFile(TEST_FILE);
+        propertyReader.appendPropertiesFromFile(DIRECTORY);
         assertEquals(33, propertyReader.count());
     }
 
     @Test
-    public void testAppendPropertiesFromClasspath() {
+    void testAppendPropertiesFromExternalFileException() throws Exception {
+
+        propertyReader.clear();
+        assertThrows(Exception.class, () -> {
+            propertyReader.appendPropertiesFromFile("");
+        });
+    }
+
+    @Test
+    void testAppendPropertiesFromClasspath() {
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
     }
 
     @Test
-    public void testGetPropertyAsBoolean() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testAppendPropertiesFromClasspathException() throws Exception {
+
+        propertyReader.clear();
+        //BufferdReader => IOException
+//        assertThrows(Exception.class, () -> {
+//            propertyReader.appendPropertiesFromClasspath("<");
+//        });
+        assertFalse(propertyReader.appendPropertiesFromClasspath(" "));
+    }
+
+    @Test
+    void testGetPropertyAsBoolean() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
         assertTrue(propertyReader.getPropertyAsBoolean("test.type.boolean.01"));
@@ -84,8 +137,8 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testGetPropertyAsInt() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testGetPropertyAsInt() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.00"));
         assertEquals(new Integer(-1), propertyReader.getPropertyAsInt("test.type.int.01"));
@@ -94,12 +147,12 @@ public class PropertyReaderImplTest {
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.04"));
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.05"));
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.06"));
-        assertNull(null, propertyReader.getPropertyAsInt("integer"));
+        assertNull(propertyReader.getPropertyAsInt("integer"));
     }
 
     @Test
-    public void testGetPropertyAsString() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testGetPropertyAsString() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertEquals("", propertyReader.getPropertyAsString("test.type.string.00"));
         assertEquals("string", propertyReader.getPropertyAsString("test.type.string.01"));
@@ -109,8 +162,8 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testGetPropertyAsFloat() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testGetPropertyAsFloat() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(new Float(0), propertyReader.getPropertyAsFloat("test.type.float.01"));
@@ -124,8 +177,8 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testGetPropertyAsDouble() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testGetPropertyAsDouble() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(new Double(0), propertyReader.getPropertyAsDouble("test.type.double.01"));
@@ -137,9 +190,9 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testAddProperty() {
+    void testAddProperty() {
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
         assertTrue(propertyReader.addProperty("test", "testValue"));
         assertEquals(34, propertyReader.count());
@@ -149,8 +202,8 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testRemoveProperty() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testRemoveProperty() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
         assertFalse(propertyReader.removeProperty("propertyFile"));
         assertTrue(propertyReader.removeProperty("test.type.double.02"));
@@ -158,7 +211,7 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testUpdateProperty() {
+    void testUpdateProperty() {
         propertyReader.addProperty("test_A", "Value_A");
         propertyReader.addProperty("test_B", "Value_B");
         propertyReader.addProperty("test_C", "Value_C");
@@ -171,12 +224,18 @@ public class PropertyReaderImplTest {
     }
 
     @Test
-    public void testClearProperties() {
-        propertyReader.appendPropertiesFromClasspath(PROPERTY_FILE);
+    void testClearProperties() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
         assertTrue(propertyReader.clear());
         assertEquals(0, propertyReader.count());
         assertFalse(propertyReader.clear());
     }
 
+    @Test
+    void testGetPropertyList() {
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+        int listCount = propertyReader.getPropertyList().size();
+        assertEquals(listCount, propertyReader.count());
+    }
 }

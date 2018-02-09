@@ -1,13 +1,16 @@
 package org.europa.together.domain;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
+@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 public class ResourceTypeTest {
 
     @Test
-    public void testEnumValues() {
+    void testEnumValues() {
 
         assertEquals("classpath",
                 ResourceType.CLASSPATH.toString());
