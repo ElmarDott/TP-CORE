@@ -7,22 +7,20 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.SchemaFactory;
 import org.europa.together.business.Logger;
-import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.SaxDocumentHandler;
 import org.xml.sax.SAXException;
+import org.europa.together.business.XmlTools;
 
 /**
  * Implementation of the XML Tools.
  */
 public class XmlToolsImpl implements XmlTools {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 10L;
     private static final Logger LOGGER = new LoggerImpl(XmlToolsImpl.class);
 
-//    private String applicationPath
-//            = this.getClass().getClassLoader().getResource("").getPath();
     private File xmlFile = null;
     private File schemaFile = null;
 
@@ -33,52 +31,64 @@ public class XmlToolsImpl implements XmlTools {
 
     /**
      * Constructor.
-     *
-     * @param xmlFile as File
      */
-    public XmlToolsImpl(final File xmlFile) {
-        this.xmlFile = xmlFile;
+    public XmlToolsImpl() {
+        LOGGER.log("instance class", LogLevel.INFO);
+    }
 
-        //Sax
-        this.saxHandler = new SaxDocumentHandler();
-        this.parserFactory = SAXParserFactory.newInstance();
-        this.parserFactory = SAXParserFactory.newInstance();
-        this.parserFactory.setNamespaceAware(true);
-        this.parserFactory.setXIncludeAware(true);
-        this.parserFactory.setValidating(false);
+    @Override
+    public String parseXmlFile(final File xmlFile) {
 
-        //detect schema if exist
+        String content = null;
         try {
+
+            if (xmlFile == null) {
+                throw new NullPointerException("No XML File to parse!");
+            }
+            this.xmlFile = xmlFile;
+            LOGGER.log("Parse Document: " + xmlFile.getName(), LogLevel.DEBUG);
+
+            //Sax
+            this.saxHandler = new SaxDocumentHandler();
+            this.parserFactory = SAXParserFactory.newInstance();
+            this.parserFactory.setNamespaceAware(true);
+            this.parserFactory.setXIncludeAware(true);
+            this.parserFactory.setValidating(false);
+
+            //detect schema if exist
             this.parser = this.parserFactory.newSAXParser();
             this.parser.parse(this.xmlFile, saxHandler);
 
             String schema = saxHandler.getSchemaFile();
-
-            //TODO: directory walker to search for XSD in classpath for automated detechtion
             if (schema != null) {
-//                this.setSchemaFile(new File(this.applicationPath));
                 LOGGER.log(">>> " + schema + " in File detected.", LogLevel.DEBUG);
             }
+            content = FileUtils.readFileStream(xmlFile);
 
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            LOGGER.log("instance class (" + this.xmlFile.getName() + ")", LogLevel.ERROR);
-        } finally {
-            this.parser = null;
-            this.saxHandler = new SaxDocumentHandler();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
 
-        LOGGER.log("instance class (" + this.xmlFile.getName() + ")", LogLevel.INFO);
+        this.parser = null;
+        this.saxHandler = new SaxDocumentHandler();
+        return content;
     }
 
     @Override
-    public void setSchemaFile(final File schema) {
-        if (schema == null || !schema.exists()) {
-            LOGGER.log("Schema file does not exist.", LogLevel.ERROR);
-        } else {
-            this.schemaFile = schema;
-            LOGGER.log(this.schemaFile.getName() + " schema file added.",
-                    LogLevel.DEBUG);
+    public String prettyPrintXml() {
+        String content = null;
+        try {
+            if (this.parserFactory != null && this.xmlFile != null) {
+
+                this.parserFactory.setValidating(false);
+                this.parser = parserFactory.newSAXParser();
+                parser.parse(this.xmlFile, saxHandler);
+                content = saxHandler.prettyPrintXml();
+            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
+        return content;
     }
 
     @Override
@@ -106,7 +116,7 @@ public class XmlToolsImpl implements XmlTools {
 
         } catch (IOException | ParserConfigurationException | SAXException ex) {
             success = false;
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+            LOGGER.catchException(ex);
         }
         return success;
     }
@@ -124,35 +134,26 @@ public class XmlToolsImpl implements XmlTools {
             LOGGER.log(this.xmlFile.getName() + " is well formed.",
                     LogLevel.DEBUG);
 
-        } catch (IOException | ParserConfigurationException | SAXException ex) {
-            success = false;
-            LOGGER.log("Document not well formed.", LogLevel.ERROR);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }
 
     @Override
-    public String formatContent() {
-        try {
-            this.parserFactory.setValidating(false);
-
-            this.parser = parserFactory.newSAXParser();
-            parser.parse(this.xmlFile, saxHandler);
-
-        } catch (IOException | ParserConfigurationException | SAXException ex) {
-            LOGGER.log(ex.getMessage(), LogLevel.ERROR);
+    public void setSchemaFile(final File schema) {
+        if (schema == null || !schema.exists()) {
+            LOGGER.log("Schema file does not exist.", LogLevel.ERROR);
+        } else {
+            this.schemaFile = schema;
+            LOGGER.log(this.schemaFile.getName() + " schema file added.",
+                    LogLevel.DEBUG);
         }
-        return saxHandler.prettyPrintXml();
-    }
-
-    @Override
-    public String shrinkContent() {
-        //TODO: formatContent() implement me
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void writeXmlToFile(final String content, final String destinationFile) {
         FileUtils.writeStringToFile(content, destinationFile);
     }
+
 }

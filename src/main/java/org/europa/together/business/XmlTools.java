@@ -9,8 +9,17 @@ import java.io.File;
  * Java Applications.
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface XmlTools {
+
+    /**
+     * Parse a given XML File to grab the content.
+     *
+     * @param xmlFile as File
+     * @return content as String
+     */
+    String parseXmlFile(File xmlFile);
 
     /**
      * Before you write a XML Document on a file, especially computer generated
@@ -23,20 +32,30 @@ public interface XmlTools {
      *
      * @return content as String
      */
-    String formatContent();
+    String prettyPrintXml();
 
-    /**
-     * Shrink the XML Content to reduce the file size for a higher performance
-     * in automated processing. The following option will be executed:
-     * <li>remove XML comments</li>
-     * <li>remove whitespace</li>
-     * <li>remove linebreaks</li>
-     * The final result is an XML in one row without comments and whitespace.
-     *
-     * @return content as String
-     */
-    String shrinkContent();
-
+// VERSION: 1.1
+//    /**
+//     * Shrink the XML Content to reduce the file size for a higher performance
+//     * in automated processing. The following option will be executed:
+//     * <li>remove XML comments</li>
+//     * <li>remove whitespace</li>
+//     * <li>remove linebreaks</li>
+//     * The final result is an XML in one row without comments and whitespace.
+//     *
+//     * @return content as String
+//     */
+//    String shrinkContent();
+//
+//    /**
+//     * Transform an XML File by a given XSLT to a new Output.
+//     *
+//     * @param xml as File
+//     * @param xslt as File
+//     * @return transformation as String
+//     */
+//    String transformXslt(File xml, File xslt);
+//
     /**
      * Validate well formed XML content (XML 1.0) against a given grammar.
      * Grammar files can be DTD or XML Schema. THe validation contains also a
