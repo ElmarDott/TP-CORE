@@ -1,8 +1,7 @@
 package org.europa.together.application;
 
 import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.SchemaFactory;
@@ -10,8 +9,8 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.SaxDocumentHandler;
-import org.xml.sax.SAXException;
 import org.europa.together.business.XmlTools;
+import org.europa.together.utils.StringUtils;
 
 /**
  * Implementation of the XML Tools.
@@ -23,16 +22,19 @@ public class XmlToolsImpl implements XmlTools {
 
     private File xmlFile = null;
     private File schemaFile = null;
-
+    private String prettyPrint;
+    private boolean wellformed = false;
     //Sax
-    private SaxDocumentHandler saxHandler = null;
-    private SAXParserFactory parserFactory = null;
+    private final SaxDocumentHandler saxHandler;
+    private final SAXParserFactory parserFactory;
     private SAXParser parser = null;
 
     /**
      * Constructor.
      */
     public XmlToolsImpl() {
+        this.saxHandler = new SaxDocumentHandler();
+        this.parserFactory = SAXParserFactory.newInstance();
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
@@ -49,44 +51,36 @@ public class XmlToolsImpl implements XmlTools {
             LOGGER.log("Parse Document: " + xmlFile.getName(), LogLevel.DEBUG);
 
             //Sax
-            this.saxHandler = new SaxDocumentHandler();
-            this.parserFactory = SAXParserFactory.newInstance();
+            this.parserFactory.setValidating(false);
             this.parserFactory.setNamespaceAware(true);
             this.parserFactory.setXIncludeAware(true);
-            this.parserFactory.setValidating(false);
 
-            //detect schema if exist
             this.parser = this.parserFactory.newSAXParser();
+            this.parser
+                    .setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
+            this.parser
+                    .setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
             this.parser.parse(this.xmlFile, saxHandler);
 
-            String schema = saxHandler.getSchemaFile();
-            if (schema != null) {
-                LOGGER.log(">>> " + schema + " in File detected.", LogLevel.DEBUG);
-            }
+            this.prettyPrint = saxHandler.prettyPrintXml();
+            this.wellformed = true;
             content = FileUtils.readFileStream(xmlFile);
+
+            this.parser.reset();
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
 
-        this.parser = null;
-        this.saxHandler = new SaxDocumentHandler();
         return content;
     }
 
     @Override
     public String prettyPrintXml() {
-        String content = null;
-        try {
-            if (this.parserFactory != null && this.xmlFile != null) {
 
-                this.parserFactory.setValidating(false);
-                this.parser = parserFactory.newSAXParser();
-                parser.parse(this.xmlFile, saxHandler);
-                content = saxHandler.prettyPrintXml();
-            }
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+        String content = null;
+        if (!StringUtils.isEmpty(this.prettyPrint)) {
+            content = this.prettyPrint;
         }
         return content;
     }
@@ -98,24 +92,41 @@ public class XmlToolsImpl implements XmlTools {
             this.parserFactory.setValidating(true);
             this.parser = this.parserFactory.newSAXParser();
 
-            //External XSD
-            if (this.schemaFile != null && this.schemaFile.exists()) {
-                SchemaFactory schemaFactory
-                        = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-                this.parserFactory.setSchema(schemaFactory.newSchema(this.schemaFile));
+            SchemaFactory schemaFactory
+                    = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            LOGGER.log("Start Validation. ", LogLevel.DEBUG);
 
-                this.parser.setProperty(
-                        "http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-                        "http://www.w3.org/2001/XMLSchema");
+            //Internal XSD [reference inside XML Document]
+            if (this.schemaFile == null && saxHandler.getSchemaFiles() != null) {
+                LOGGER.log("Validate by implizit XSD (" + saxHandler.getSchemaFiles().length + ")",
+                        LogLevel.DEBUG);
+                this.parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                        XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                this.parserFactory.setSchema(schemaFactory.newSchema(saxHandler.getSchemaFiles()));
             }
 
+            //External XSD
+            if (this.schemaFile != null && this.schemaFile.exists()) {
+
+                LOGGER.log("Validate by explizit XSD (" + this.schemaFile.getName() + ")",
+                        LogLevel.DEBUG);
+                this.parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                        XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                this.parserFactory.setSchema(schemaFactory.newSchema(this.schemaFile));
+            }
+
+            this.parser
+                    .setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
+            this.parser
+                    .setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
+
             parser.parse(this.xmlFile, saxHandler);
-            success = true;
             LOGGER.log("Validation for document " + this.xmlFile.getName() + " successful",
                     LogLevel.DEBUG);
+            this.parser.reset();
+            success = true;
 
-        } catch (IOException | ParserConfigurationException | SAXException ex) {
-            success = false;
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
         return success;
@@ -123,21 +134,8 @@ public class XmlToolsImpl implements XmlTools {
 
     @Override
     public boolean isWellFormed() {
-        boolean success = false;
-        try {
-            this.parserFactory.setValidating(false);
-
-            this.parser = this.parserFactory.newSAXParser();
-            this.parser.parse(this.xmlFile, saxHandler);
-
-            success = true;
-            LOGGER.log(this.xmlFile.getName() + " is well formed.",
-                    LogLevel.DEBUG);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return success;
+        LOGGER.log("wellformed: " + this.wellformed, LogLevel.DEBUG);
+        return this.wellformed;
     }
 
     @Override

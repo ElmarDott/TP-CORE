@@ -1,7 +1,10 @@
 package org.europa.together.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -24,10 +27,13 @@ public class SaxDocumentHandler extends DefaultHandler2 {
 
     private StringBuilder formattedXml
             = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    private StringBuilder inlineDtd = new StringBuilder();
+
     private final List<String> namespace = new ArrayList<>();
     private int level = 0;
     private boolean isTagOpend = false;
-    private String schemaFile = null;
+    private boolean hasInineDtd = false;
+    private Source[] schematList = null;
 
     /**
      * Constructor.
@@ -48,12 +54,16 @@ public class SaxDocumentHandler extends DefaultHandler2 {
     }
 
     /**
-     * Get the Filenames of included XML Schema Files.
+     * Return all parsed Schema files in a SchemaFactory for validation.
      *
-     * @return schemaLocation as String
+     * @return schemata as SchemaFactory
      */
-    public String getSchemaFile() {
-        return this.schemaFile;
+    public Source[] getSchemaFiles() {
+        Source[] copy = null;
+        if (this.schematList != null) {
+            copy = this.schematList.clone();
+        }
+        return copy;
     }
 
     @Override
@@ -74,9 +84,86 @@ public class SaxDocumentHandler extends DefaultHandler2 {
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes)
+    public void startDTD(final String name, final String publicId, final String systemId)
             throws SAXException {
+
+        this.formattedXml.append("\n<!DOCTYPE ")
+                .append(name);
+
+        if (!StringUtils.isEmpty(publicId)) {
+            this.formattedXml.append(" PUBLIC \"")
+                    .append(publicId).append("\"");
+        }
+
+        if (!StringUtils.isEmpty(systemId)) {
+            this.formattedXml.append(" SYSTEM \"")
+                    .append(systemId).append("\"");
+        }
+
+        if (StringUtils.isEmpty(publicId) && StringUtils.isEmpty(systemId)) {
+            this.formattedXml.append(" [\n");
+            this.hasInineDtd = true;
+        }
+    }
+
+    @Override
+    public void endDTD() throws SAXException {
+
+        if (this.hasInineDtd) {
+            this.formattedXml.append(inlineDtd).append("]");
+        }
+        this.formattedXml.append(">");
+    }
+
+    @Override
+    public void elementDecl(final String name, final String model)
+            throws SAXException {
+
+        this.inlineDtd.append("    <!ELEMENT ")
+                .append(name)
+                .append(" ")
+                .append(model)
+                .append(">\n");
+    }
+
+    @Override
+    public void attributeDecl(final String eName, final String aName, final String type,
+            final String mode, final String value) throws SAXException {
+
+        this.inlineDtd.append("    <!ATTLIST ")
+                .append(eName).append(" ")
+                .append(aName).append(" ")
+                .append(type).append(" ")
+                .append(mode);
+        if (!StringUtils.isEmpty(value)) {
+            this.inlineDtd.append(" ").append(value);
+        }
+        this.inlineDtd.append(">\n");
+    }
+
+    @Override
+    public void startCDATA() throws SAXException {
+
+        if (this.level == 0) {
+            this.formattedXml.append("\n");
+        }
+        if (this.level >= 1) {
+            this.formattedXml.append("\n");
+            for (int i = 0; i < this.level; i++) {
+                this.formattedXml.append("    ");
+            }
+        }
+        this.formattedXml.append("<![CDATA[");
+    }
+
+    @Override
+    public void endCDATA() throws SAXException {
+        this.formattedXml.append("]]>");
+    }
+
+    @Override
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes attributes) throws SAXException {
 
         //TAG
         this.formattedXml.append("\n");
@@ -87,22 +174,7 @@ public class SaxDocumentHandler extends DefaultHandler2 {
 
         //NAMESPACE
         if (this.level == 0) {
-            if (attributes.getLength() > 0) {
-                String[] schema = attributes.getValue(0).split(" ");
-                if (schema != null) {
-                    this.schemaFile = schema[1];
-                }
-            }
-
-            int space = qName.length() + 1;
-            if (this.namespace != null && this.namespace.size() > 0) {
-                for (int x = 0; x < this.namespace.size(); x++) {
-                    this.formattedXml.append(this.namespace.get(x));
-                    for (int i = 0; i < space; i++) {
-                        this.formattedXml.append(" ");
-                    }
-                }
-            }
+            this.processNamespace(qName, attributes);
         }
 
         //ATTRIBUTES
@@ -148,6 +220,26 @@ public class SaxDocumentHandler extends DefaultHandler2 {
     }
 
     @Override
+    public void comment(final char[] ch, final int start, final int length)
+            throws SAXException {
+
+        if (this.level == 0) {
+            this.formattedXml.append("\n");
+        }
+        if (this.level >= 1) {
+            this.formattedXml.append("\n");
+            for (int i = 0; i < this.level; i++) {
+                this.formattedXml.append("    ");
+            }
+        }
+
+        String comments = new String(ch, start, length).trim();
+        this.formattedXml.append("<!-- ")
+                .append(comments)
+                .append(" -->");
+    }
+
+    @Override
     public void warning(final SAXParseException ex)
             throws SAXException {
         LOGGER.log("SAX LexicalParser: " + ex.getMessage(), LogLevel.WARN);
@@ -167,4 +259,61 @@ public class SaxDocumentHandler extends DefaultHandler2 {
         LOGGER.log("SAX LexicalParser: " + ex.getMessage(), LogLevel.ERROR);
         throw new SAXException("SAX Validation Error");
     }
+
+    private void processNamespace(final String qName, final Attributes attributes) {
+        if (attributes.getLength() > 0) {
+            try {
+                //Extract XSD Files
+                String[] xsdExtraction = attributes.getValue(0).split(" ");
+                List<String> schemaList = new ArrayList<>();
+                StringBuilder attribute = new StringBuilder();
+                attribute.append("Scanned Attributes: ");
+                for (String schema : xsdExtraction) {
+                    if (!StringUtils.isEmpty(schema)) {
+                        attribute.append("\n\t" + schema);
+                        if (schema.endsWith(".xsd")) {
+                            schemaList.add(schema);
+                        }
+                    }
+                }
+                LOGGER.log(attribute.toString(), LogLevel.TRACE);
+                int schemaCount = schemaList.size();
+                LOGGER.log(schemaCount + " XSD Schemata file(s) extracted.", LogLevel.DEBUG);
+
+                //Create XSD Sources
+                this.schematList = new Source[schemaCount];
+                int count = 0;
+                for (int i = 0; i < schemaCount; i++) {
+
+                    String resource = schemaList.get(count);
+
+                    if (resource.contains("http")) {
+
+                        schematList[count] = new StreamSource(resource);
+                        LOGGER.log("ADD URL: " + schemaList.get(count), LogLevel.DEBUG);
+                    } else {
+                        schematList[count] = new StreamSource(new File(resource));
+                        LOGGER.log("ADD FILE: " + schemaList.get(count), LogLevel.DEBUG);
+                    }
+
+                    count++;
+                }
+                LOGGER.log(schematList.length + " Elements added to schemata[]", LogLevel.DEBUG);
+
+            } catch (Exception ex) {
+                LOGGER.catchException(ex);
+            }
+        }
+
+        int space = qName.length() + 1;
+        if (this.namespace != null && this.namespace.size() > 0) {
+            for (int x = 0; x < this.namespace.size(); x++) {
+                this.formattedXml.append(this.namespace.get(x));
+                for (int i = 0; i < space; i++) {
+                    this.formattedXml.append(" ");
+                }
+            }
+        }
+    }
+
 }

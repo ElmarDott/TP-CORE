@@ -85,7 +85,8 @@ public interface XmlTools {
     boolean isWellFormed();
 
     /**
-     * Set explicit the schema file for the validation option.
+     * Set explicit the schema file for the validation option. This method
+     * overwrites in the XML document declares Schemata.
      *
      * @param schema as File
      */

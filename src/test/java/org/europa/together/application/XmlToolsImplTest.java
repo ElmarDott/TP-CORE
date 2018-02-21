@@ -5,7 +5,6 @@ import java.io.File;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -59,6 +58,36 @@ public class XmlToolsImplTest {
     }
 
     @Test
+    void testParseXml() {
+        String xml = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
+        String compare = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "\n"
+                + "<root xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"
+                + "\n"
+                + "    <!-- COMMENT -->\n"
+                + "    <![CDATA[cdata element content]]>\n"
+                + "\n"
+                + "    <node>\n"
+                + "        <child>child 1</child>\n"
+                + "        <child>child 2</child>\n"
+                + "        <child>child 2</child>\n"
+                + "    </node>\n"
+                + "\n"
+                + "    <attribute value=\"attribute a\">attribute node</attribute>\n"
+                + "\n"
+                + "    <emptyTag />\n"
+                + "\n"
+                + "    <char>\n"
+                + "        <escape>&#0060;</escape>\n"
+                + "        <escape>&#0062;</escape>\n"
+                + "        <escape>&#0039;</escape>\n"
+                + "        <escape>&#0034;</escape>\n"
+                + "    </char>\n"
+                + "</root>\n";
+        assertEquals(compare, xml);
+    }
+
+    @Test
     void testFailParsing() {
         assertNull(xmlTools.parseXmlFile(null));
     }
@@ -91,24 +120,64 @@ public class XmlToolsImplTest {
 
     @Test
     void testPrettyPrintXml() {
+        String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_01.xml"));
+        assertTrue(xmlTools.isWellFormed());
 
-        String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print.xml"));
         String output = xmlTools.prettyPrintXml();
         String reference = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "\n"
+                + "<!DOCTYPE EmployeeInfo SYSTEM \"simple.dtd\">\n"
+                + "<!-- THIs Is AN XML COMMENT -->\n"
                 + "<EmployeeInfo xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
                 + "              xmlns:e=\"http://www.sample.com/EmployeeInfo\" \n"
                 + "              xsi:schemaLocation=\"http://www.sample.com/EmployeeInfo simple.xsd\">\n"
+                + "    <!-- THIs Is AN XML COMMENT -->\n"
+                + "    <![CDATA[some stuff]]>\n"
                 + "    <Employee EmployeeNumber=\"1\">\n"
+                + "        <!-- THIs Is AN XML COMMENT -->\n"
+                + "        <Name>Masashi Okamura</Name>\n"
+                + "        <Department>Design Department</Department>\n"
+                + "        <Telephone>03-1452-4567</Telephone>\n"
+                + "        <Email>okamura@xmltr.co.jp\n"
+                + "            <!-- THIs Is AN XML COMMENT --></Email>\n"
+                + "        <Email>okamura@xmltr.co.jp</Email>\n"
+                + "        <XXX>\n"
+                + "            <ABC>03-1452-4567</ABC>\n"
+                + "            <!-- THIs Is AN XML COMMENT -->\n"
+                + "        </XXX>\n"
+                + "    </Employee>\n"
+                + "</EmployeeInfo>\n";
+
+        assertNotEquals(input, output);
+        assertEquals(reference, output);
+    }
+
+    @Test
+    void testPrettyPrintXmlInlineDtd() {
+        String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_02.xml"));
+        assertTrue(xmlTools.isWellFormed());
+
+        String output = xmlTools.prettyPrintXml();
+        String reference = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "\n"
+                + "<!DOCTYPE EmployeeInfo [\n"
+                + "    <!ELEMENT EmployeeInfo (Employee)*>\n"
+                + "    <!ELEMENT Employee (Name,Department,Telephone,Email)>\n"
+                + "    <!ELEMENT Name (#PCDATA)>\n"
+                + "    <!ELEMENT Department (#PCDATA)>\n"
+                + "    <!ELEMENT Telephone (#PCDATA)>\n"
+                + "    <!ELEMENT Email (#PCDATA)>\n"
+                + "    <!ATTLIST Employee EmployeeNumber CDATA #REQUIRED>\n"
+                + "]>\n"
+                + "<EmployeeInfo>\n"
+                + "    <![CDATA[some stuff]]>\n"
+                + "    <Employee EmployeeNumber=\"105\">\n"
                 + "        <Name>Masashi Okamura</Name>\n"
                 + "        <Department>Design Department</Department>\n"
                 + "        <Telephone>03-1452-4567</Telephone>\n"
                 + "        <Email>okamura@xmltr.co.jp</Email>\n"
-                + "        <Email>okamura@xmltr.co.jp</Email>\n"
-                + "        <XXX>\n"
-                + "            <ABC>03-1452-4567</ABC>\n"
-                + "        </XXX>\n"
                 + "    </Employee>\n"
+                + "    <!-- THIs Is AN XML COMMENT -->\n"
                 + "</EmployeeInfo>\n";
 
         assertNotEquals(input, output);
@@ -179,48 +248,24 @@ public class XmlToolsImplTest {
     }
 
     @Test
-    @Disabled
-    void testValidInternalSchema() {
-        System.out.println("\n\n # ");
-
-        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_valid_schema_internal.xml"));
-        assertTrue(xmlTools.isWellFormed());
-        assertTrue(xmlTools.isValid());
-    }
-
-    @Test
-    @Disabled
     void testInvalidSchema() {
-        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_invalid_schema.xml"));
+        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_invalid.xml"));
         xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
         assertTrue(xmlTools.isWellFormed());
         assertFalse(xmlTools.isValid());
     }
 
     @Test
-    @Disabled
     void testValidSchemaByWebResorce() {
-        System.out.println("\n\n # ");
         //check spring config
         String xmlFile = Constraints.SYSTEM_APP_DIR
                 + "/target/test-classes/org/europa/together/configuration/spring-dao-test.xml";
         xmlTools.parseXmlFile(new File(xmlFile));
 
+        xmlTools.prettyPrintXml();
+
         assertTrue(xmlTools.isWellFormed());
         assertTrue(xmlTools.isValid());
     }
 
-    @Test
-    @Disabled
-    void testMixtedGrammar() {
-        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_mixted_grammar.xml"));
-        assertTrue(xmlTools.isWellFormed());
-        assertTrue(xmlTools.isValid());
-    }
-
-    @Test
-    @Disabled
-    void testMultipleSchema() {
-
-    }
 }

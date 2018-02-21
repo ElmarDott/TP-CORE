@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE EmployeeInfo SYSTEM "simple.dtd">
+<EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.sample.com/EmployeeInfo simple.xsd">
 
-<EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+    <![CDATA[]]>
     <Employee  EmployeeNumber="105">
         <Name>Masashi Okamura</Name>
         <Department>Design Department</Department>
