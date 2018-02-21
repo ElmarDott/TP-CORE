@@ -22,4 +22,4 @@ public enum LogLevel {
     public String toString() {
         return this.value;
     }
-};
+}

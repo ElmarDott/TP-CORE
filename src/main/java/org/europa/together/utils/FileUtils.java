@@ -165,17 +165,18 @@ public final class FileUtils {
      * @return Collection of Files
      */
     public static Collection<File> listFileTree(final File directory) {
-        Set<File> fileTree = new HashSet<>();
 
+        Set<File> fileTree;
         if (directory == null || directory.listFiles() == null) {
-            return fileTree;
-        }
-
-        for (File entry : directory.listFiles()) {
-            if (entry.isFile()) {
-                fileTree.add(entry);
-            } else {
-                fileTree.addAll(listFileTree(entry));
+            fileTree = null;
+        } else {
+            fileTree = new HashSet<>();
+            for (File entry : directory.listFiles()) {
+                if (entry.isFile()) {
+                    fileTree.add(entry);
+                } else {
+                    fileTree.addAll(listFileTree(entry));
+                }
             }
         }
         return fileTree;

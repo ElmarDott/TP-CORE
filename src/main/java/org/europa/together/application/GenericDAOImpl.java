@@ -104,7 +104,8 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
         String sql = "SELECT COUNT(*) FROM " + table;
         Session session = mainEntityManagerFactory.unwrap(Session.class);
 
-        return new Long(session.createSQLQuery(sql).uniqueResult().toString());
+        String count = String.valueOf(session.createSQLQuery(sql).uniqueResult());
+        return Long.parseLong(count);
     }
 
     @Override

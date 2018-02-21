@@ -22,4 +22,4 @@ public enum ResourceType {
     public String toString() {
         return this.value;
     }
-};
+}

@@ -381,7 +381,7 @@ public class MailClientImpl implements MailClient {
             });
             connection.setDebug(Boolean.valueOf(mailConfiguration.get("mailer.debug")));
 
-            if (connection == null || !connection.getTransport().isConnected()) {
+            if (!connection.getTransport().isConnected()) {
                 throw new RuntimeException("No SMTP Connection established.");
             }
 

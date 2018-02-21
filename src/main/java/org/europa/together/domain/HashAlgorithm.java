@@ -21,4 +21,4 @@ public enum HashAlgorithm {
     public String toString() {
         return this.value;
     }
-};
+}
