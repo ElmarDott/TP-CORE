@@ -99,6 +99,11 @@ public class MailClientImpl implements MailClient {
     }
 
     @Override
+    public void reconnect() {
+        this.connect();
+    }
+
+    @Override
     public void setAttachmentSize(final long attachmentSize) {
         this.attachmentSize = attachmentSize;
     }
@@ -290,6 +295,11 @@ public class MailClientImpl implements MailClient {
     }
 
     @Override
+    public Session getSession() {
+        return this.connect();
+    }
+
+    @Override
     public String getContent() {
         return this.content;
     }
@@ -325,7 +335,7 @@ public class MailClientImpl implements MailClient {
         LOGGER.log("Compose E-Mail", LogLevel.DEBUG);
         try {
 
-            mail = new MimeMessage(this.connect());
+            mail = new MimeMessage(connect());
             //HEADER - EVENLOPE
             mail.setHeader("From: ", mailConfiguration.get("mailer.sender"));
             mail.setHeader("Return-Path: ", mailConfiguration.get("mailer.sender"));
@@ -369,7 +379,7 @@ public class MailClientImpl implements MailClient {
 
         Session connection = null;
         try {
-            connection = Session.getDefaultInstance(this.processConfiguration(),
+            connection = Session.getInstance(this.processConfiguration(),
                     new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -382,7 +392,7 @@ public class MailClientImpl implements MailClient {
             connection.setDebug(Boolean.valueOf(mailConfiguration.get("mailer.debug")));
 
             if (!connection.getTransport().isConnected()) {
-                throw new RuntimeException("No SMTP Connection established.");
+                throw new RuntimeException("No SMTPS Connection established.");
             }
 
         } catch (Exception ex) {

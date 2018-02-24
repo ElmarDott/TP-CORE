@@ -3,6 +3,9 @@ package org.europa.together.service;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.mail.Address;
+import javax.mail.Message;
+
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.europa.together.application.LoggerImpl;
@@ -13,6 +16,7 @@ import org.europa.together.business.MailClient;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author elmar.dott@gmail.com
  * @version 1.0
  */
-public class MailClientService {
+public final class MailClientService {
 
     private static final long serialVersionUID = 16L;
     private static final Logger LOGGER = new LoggerImpl(MailClientImpl.class);
@@ -94,10 +98,20 @@ public class MailClientService {
      */
     public void sendEmail(final MailClient mail) {
         try {
-            Transport.send(
-                    mail.composeMail(
-                            mail.getRecipentList().get(0))
-            );
+            Address[] addresses = new Address[1];
+            addresses[0] = mail.getRecipentList().get(0);
+            Message msg = mail.composeMail(mail.getRecipentList().get(0));
+
+            Transport postman = mail.getSession().getTransport();
+            postman.connect();
+
+            if (!postman.isConnected()) {
+                postman.close();
+                throw new MisconfigurationException("No SMPT Connection for sending E-MAil.");
+            }
+
+            postman.sendMessage(msg, addresses);
+            postman.close();
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);

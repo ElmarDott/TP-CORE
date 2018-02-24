@@ -40,10 +40,12 @@ public final class SocketTimeout {
 
                 if (socket.isConnected()) {
                     success = true;
-                    socket.close();
                     LOGGER.log("Socket connection to " + uri + ":" + port + " can be established.",
                             LogLevel.DEBUG);
+                    socket.close();
+                    break;
                 }
+                socket.close();
             }
 
         } catch (Exception ex) {

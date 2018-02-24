@@ -3,8 +3,10 @@ package org.europa.together.business;
 import java.util.List;
 import java.util.Map;
 import javax.activation.FileDataSource;
+import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.apiguardian.api.API;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,6 +53,11 @@ public interface MailClient {
      * Reset the Recipient List.
      */
     void clearRecipents();
+
+    /**
+     * Allow a re-connection to the configured SMTP Server.
+     */
+    void reconnect();
 
     /**
      * Limit the maximum file size for attachments.
@@ -138,6 +145,13 @@ public interface MailClient {
      * @return waitTime as long
      */
     long getWaitTime();
+
+    /**
+     * Get the configured session to connect the SMTP Server.
+     *
+     * @return session as Session
+     */
+    Session getSession();
 
     /**
      *

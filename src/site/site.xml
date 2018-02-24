@@ -6,6 +6,9 @@
         <href>index.html</href>
     </bannerLeft>
     <body>
+        <menu name="Module">
+            <item name="JGiven BDD Report" href="jgiven/index.html" />
+        </menu>
         <menu ref="parent" />
         <menu ref="reports" />
     </body>

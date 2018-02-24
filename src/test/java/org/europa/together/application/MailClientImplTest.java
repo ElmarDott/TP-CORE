@@ -63,7 +63,7 @@ public class MailClientImplTest {
         } else {
             out = "skiped.";
         }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
         //SMTP Test Server
@@ -72,6 +72,7 @@ public class MailClientImplTest {
         greenMail.start();
         greenMail.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
 
+        //DBMS Table setup
         actions.executeSqlFromClasspath(SQL_FILE);
     }
 
@@ -320,7 +321,6 @@ public class MailClientImplTest {
 
     @Test
     void testLoadConfigurationFromDatabase() {
-        System.out.println("\n\n # \n\n");
         assertTrue(mailer.loadConfigurationFromDatabase());
 
         assertEquals("smtp.gmail.com", mailer.getConfiguration().get("mailer.host"));
