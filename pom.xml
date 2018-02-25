@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.europa.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>org.europa.together.modules</groupId>
@@ -28,9 +28,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:file://media/veracrypt1/repositories/git-togetherPlatform/Modules/CORE</connection>
+        <connection>scm:git:https://github.com/ElmarDott/TP-CORE.git</connection>
         <developerConnection>scm:git:file://media/veracrypt1/repositories/git-togetherPlatform/Modules/CORE</developerConnection>
-        <url>scm:git:file://media/veracrypt1/repositories/git-togetherPlatform/Modules/CORE</url>
+        <url>scm:git:https://github.com/ElmarDott/TP-CORE.git</url>
     </scm>
 
     <build>
