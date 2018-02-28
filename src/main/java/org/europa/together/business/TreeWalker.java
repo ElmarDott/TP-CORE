@@ -12,6 +12,7 @@ import org.europa.together.domain.TreeNode;
  * <li>parent (String): Reference of the UUID to the parent node
  *
  * @author elmar.dott@gmail.com
+ * @version 1.0
  */
 public interface TreeWalker {
 
@@ -32,6 +33,13 @@ public interface TreeWalker {
     boolean isElementOfTree(TreeNode node);
 
     /**
+     * Check if the representing tree is empty.
+     *
+     * @return true n success
+     */
+    boolean isEmpty();
+
+    /**
      * Check if a given node is a leaf in the tree. Leafs don't have child
      * nodes. => node.uuid != otherNode.getParent
      *
@@ -42,20 +50,13 @@ public interface TreeWalker {
 
     /**
      * Removes a Node (Leaf) from the tree. This method allows just to cut
-     * elements from the tree who have no children. In the case it is necessary
+     * elements from the tree which has no children. In the case it is necessary
      * to cut a subtree use the prune() method.
      *
      * @param node as TreeNode
      * @return true on success
      */
     boolean removeNode(TreeNode node);
-
-    /**
-     * Count all the levels of the Tree.
-     *
-     * @return levels as int
-     */
-    int countLevelsOfTree();
 
     /**
      * Count the nodes of the tree.
@@ -80,7 +81,14 @@ public interface TreeWalker {
      * @param nodeName as String
      * @return nodes as List
      */
-    List<TreeNode> getElemtByName(String nodeName);
+    List<TreeNode> getElementByName(String nodeName);
+
+    /**
+     * Get all leaf nodes of the tree.
+     *
+     * @return leafs as List
+     */
+    List<TreeNode> getLeafs();
 
     /**
      * Get the full tree.
@@ -114,4 +122,26 @@ public interface TreeWalker {
      * @param node as TreeNode
      */
     void addNode(TreeNode node);
+
+    /**
+     * Reset al internal data of the TreeWalker.
+     */
+    void clear();
+
+    /**
+     * Remove an Element and all his child nodes from the tree.
+     *
+     * @param cutNode as TreeNode
+     */
+    void prune(TreeNode cutNode);
+
+    /**
+     * Merge another Tree (TreeWalker) into the present tree. After coosing a
+     * node from the pesent tree the whole new three (inluding) the ROOT Element
+     * will apped on the choosen merge node.
+     *
+     * @param parentUuid as String
+     * @param appendingTree as TreeWalker
+     */
+    void merge(String parentUuid, TreeWalker appendingTree);
 }

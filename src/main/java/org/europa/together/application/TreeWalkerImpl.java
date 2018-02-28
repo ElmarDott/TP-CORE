@@ -6,13 +6,14 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
+import org.europa.together.utils.StringUtils;
 
 /**
  * Implemention of a TreeWalker.
  */
-public class TreeWalkerImpl implements TreeWalker {
+public final class TreeWalkerImpl implements TreeWalker {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 9L;
     private static final Logger LOGGER = new LoggerImpl(TreeWalkerImpl.class);
 
     private List<TreeNode> tree;
@@ -40,7 +41,7 @@ public class TreeWalkerImpl implements TreeWalker {
     @Override
     public boolean addRoot(final TreeNode root) {
         boolean success = false;
-        if (this.rootUuid == null) {
+        if (StringUtils.isEmpty(rootUuid)) {
             this.rootUuid = root.getUuid();
             root.setParent("-1");
             tree.add(root);
@@ -56,26 +57,41 @@ public class TreeWalkerImpl implements TreeWalker {
     @Override
     public boolean isElementOfTree(final TreeNode node) {
         boolean success = false;
-        for (TreeNode element : this.tree) {
-            if (element.equals(node)) {
-                success = true;
+        if (!tree.isEmpty()) {
+            for (TreeNode element : this.tree) {
+                if (element.equals(node)) {
+                    success = true;
+                }
             }
+        } else {
+            LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
         }
         return success;
     }
 
     @Override
+    public boolean isEmpty() {
+        return tree.isEmpty();
+    }
+
+    @Override
     public boolean isLeaf(final TreeNode leaf) {
         boolean isLeaf = false;
-        boolean hasParent = false;
-        for (TreeNode check : this.tree) {
-            if (leaf.getUuid().equals(check.getParent())) {
-                hasParent = true;
-                break;
+        if (!tree.isEmpty()) {
+
+            boolean hasParent = false;
+            for (TreeNode check : this.tree) {
+                if (leaf.getUuid().equals(check.getParent())) {
+                    hasParent = true;
+                    break;
+                }
             }
-        }
-        if (!hasParent) {
-            isLeaf = true;
+            if (!hasParent) {
+                isLeaf = true;
+            }
+
+        } else {
+            LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
         }
         return isLeaf;
     }
@@ -99,31 +115,49 @@ public class TreeWalkerImpl implements TreeWalker {
     }
 
     @Override
-    public int countLevelsOfTree() {
-        //TODO: countLevelsOfTree() : recrsive
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public int isNameUnique(final String nodeName) {
         int count = 0;
-        for (TreeNode node : this.tree) {
-            if (node.getNodeName().equals(nodeName)) {
-                count++;
+        if (!tree.isEmpty()) {
+            for (TreeNode node : this.tree) {
+                if (node.getNodeName().equals(nodeName)) {
+                    count++;
+                }
             }
+        } else {
+            LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
         }
         return count;
     }
 
     @Override
-    public List<TreeNode> getElemtByName(final String nodeName) {
+    public List<TreeNode> getElementByName(final String nodeName) {
         List<TreeNode> elements = new ArrayList<>();
-        for (TreeNode node : this.tree) {
-            if (node.getNodeName().equals(nodeName)) {
-                elements.add(node);
+
+        if (!tree.isEmpty()) {
+            for (TreeNode node : this.tree) {
+                if (node.getNodeName().equals(nodeName)) {
+                    elements.add(node);
+                }
             }
+        } else {
+            LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
+        }
+        if (elements.isEmpty()) {
+            LOGGER.log("No Node(s) with the name " + nodeName + " found.", LogLevel.DEBUG);
         }
         return elements;
+    }
+
+    @Override
+    public List<TreeNode> getLeafs() {
+        List<TreeNode> leafs = new ArrayList<>();
+        for (TreeNode node : tree) {
+            if (isLeaf(node)) {
+                leafs.add(node);
+            }
+        }
+        LOGGER.log(leafs.size() + " Leaf Nodes in the tree detected.", LogLevel.DEBUG);
+        return leafs;
     }
 
     @Override
@@ -134,11 +168,15 @@ public class TreeWalkerImpl implements TreeWalker {
     @Override
     public TreeNode getNodeByUuid(final String uuid) {
         TreeNode search = null;
-        for (TreeNode node : this.tree) {
-            if (node.getUuid().equals(uuid)) {
-                search = node;
-                break;
+        if (!tree.isEmpty()) {
+            for (TreeNode node : this.tree) {
+                if (node.getUuid().equals(uuid)) {
+                    search = node;
+                    break;
+                }
             }
+        } else {
+            LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
         }
         return search;
     }
@@ -146,7 +184,7 @@ public class TreeWalkerImpl implements TreeWalker {
     @Override
     public TreeNode getRoot() {
         TreeNode root = null;
-        if (this.rootUuid != null) {
+        if (this.rootUuid != null && !tree.isEmpty()) {
             for (TreeNode node : this.tree) {
                 if (node.getUuid().equals(this.rootUuid)) {
                     root = node;
@@ -176,6 +214,7 @@ public class TreeWalkerImpl implements TreeWalker {
                     add = true;
                     LOGGER.log("Node [" + node.getNodeName() + "] added.",
                             LogLevel.DEBUG);
+                    break;
 
                 } else {
                     LOGGER.log("Node with the same name and parent or the same UUID already exist.",
@@ -189,24 +228,119 @@ public class TreeWalkerImpl implements TreeWalker {
         }
     }
 
-    public void prune(final TreeNode cutNode) {
-        //TODO: prune()
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public void clear() {
+        this.tree.clear();
+        this.rootUuid = "";
+        LOGGER.log("Tree successful reseted.", LogLevel.TRACE);
     }
 
+    @Override
+    public void prune(final TreeNode cutNode) {
+        try {
+            List<TreeNode> stack = new ArrayList<>();
+            LOGGER.log("Cut Tree by Node "
+                    + cutNode.getNodeName() + " ["
+                    + cutNode.getUuid() + "]", LogLevel.DEBUG);
+
+            stack.addAll(tree);
+            if (cutNode.equals(getRoot())) {
+                clear();
+            } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
+                removeNode(cutNode);
+            } else {
+
+                TreeNode node = cutNode;
+                List<TreeNode> cutted = new ArrayList<>();
+                List<TreeNode> helper = new ArrayList<>();
+                cutted.add(node);
+
+                int loop = this.tree.size();
+                for (int i = 0; i < loop; i++) {
+
+                    if (!stack.isEmpty()) {
+                        for (TreeNode compare : stack) {
+                            if (i != 0) {
+                                node = compare;
+                            }
+                            for (int j = 0; j < tree.size(); j++) {
+                                if (node.getUuid().equals(compare.getUuid())) {
+                                    cutted.add(compare);
+                                    if (!isLeaf(compare)) {
+                                        helper.add(compare);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!helper.isEmpty()) {
+                        stack.clear();
+                        for (TreeNode compare : helper) {
+                            for (TreeNode element : this.tree) {
+                                if (compare.getUuid().equals(element.getParent())) {
+                                    stack.add(element);
+                                }
+                            }
+                        }
+                        cutted.addAll(stack);
+                        helper.clear();
+
+                    } else {
+                        break;
+                    }
+                }
+
+                if (!cutted.isEmpty()) {
+                    for (TreeNode item : cutted) {
+                        this.tree.remove(item);
+                    }
+                }
+
+            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Override
     public void merge(final String parentUuid, final TreeWalker appendingTree) {
-        TreeNode root = appendingTree.getRoot();
-        appendingTree.removeNode(root);
-        root.setParent(parentUuid);
-        this.tree.add(root);
-        this.tree.addAll(appendingTree.getTree());
-        //TODO: merge()
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (appendingTree != null && !appendingTree.isEmpty()) {
+
+            TreeNode root = appendingTree.getRoot();
+            List<TreeNode> newTree = appendingTree.getTree();
+
+            newTree.remove(root);
+            root.setParent(parentUuid);
+            newTree.add(root);
+
+            this.tree.addAll(appendingTree.getTree());
+            LOGGER.log("Append " + appendingTree.countNodes()
+                    + " Nodes to the new Tree.", LogLevel.DEBUG);
+        }
     }
 
     @Override
     public String toString() {
-        return "TreeWalkerImpl{" + "tree=" + tree + '}';
+
+        StringBuilder out = new StringBuilder();
+        out.append("TreeWalkerImpl{\n")
+                .append("\t Root: ")
+                .append(getRoot().getNodeName())
+                .append("\n")
+                .append("\t Nodes: ")
+                .append(tree.size())
+                .append("\n TREE >>>\n");
+
+        for (TreeNode node : tree) {
+            out.append("\t")
+                    .append(node.toString())
+                    .append("\n");
+        }
+
+        out.append("}");
+        return out.toString();
     }
 
 }

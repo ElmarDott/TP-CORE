@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -38,10 +39,12 @@ public class TreeWalkerImplTest {
 
     @BeforeEach
     void testCaseInitialization() {
+        treeWalker.addRoot(new TreeNode("Root Node"));
     }
 
     @AfterEach
     void testCaseTermination() {
+        treeWalker.clear();
         LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
@@ -79,7 +82,7 @@ public class TreeWalkerImplTest {
 
     @Test
     void testAddNode() {
-        this.buildTree();
+        buildTree();
         assertEquals(12, treeWalker.countNodes());
     }
 
@@ -99,6 +102,12 @@ public class TreeWalkerImplTest {
         for (TreeNode node : leaf) {
             assertTrue(treeWalker.isLeaf(node));
         }
+    }
+
+    @Test
+    void testGetLeafs() {
+        buildTree();
+        assertEquals(5, treeWalker.getLeafs().size());
     }
 
     @Test
@@ -156,13 +165,39 @@ public class TreeWalkerImplTest {
         nodeC.setParent(treeWalker.getTree().get(2).getUuid());
         treeWalker.addNode(nodeC);
 
-        List<TreeNode> elements = treeWalker.getElemtByName("05");
+        List<TreeNode> elements = treeWalker.getElementByName("05");
         assertEquals(4, elements.size());
 
         assertEquals("05", elements.get(0).getNodeName());
         assertEquals("05", elements.get(1).getNodeName());
         assertEquals("05", elements.get(2).getNodeName());
         assertEquals("05", elements.get(3).getNodeName());
+    }
+
+    @Test
+    void testPrune() {
+        buildTree();
+
+        TreeNode node = treeWalker.getElementByName("01").get(0);
+        assertEquals("01", node.getNodeName());
+        treeWalker.prune(node);
+        assertEquals(8, treeWalker.countNodes());
+        LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
+
+        treeWalker.prune(treeWalker.getElementByName("10").get(0));
+        assertEquals(7, treeWalker.countNodes());
+        LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
+    }
+
+    @Test
+    void testMerge() {
+        buildTree();
+
+        TreeNode mergID = treeWalker.getElementByName("03").get(0);
+        treeWalker.merge(mergID.getUuid(), appendTree());
+        LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
+
+        assertEquals(16, treeWalker.countNodes());
     }
 
     private void buildTree() {
@@ -206,5 +241,22 @@ public class TreeWalkerImplTest {
         TreeNode n_11 = new TreeNode("11");
         n_11.setParent(n_09.getUuid());
         treeWalker.addNode(n_11);
+    }
+
+    private TreeWalker appendTree() {
+
+        TreeWalker append = new TreeWalkerImpl(new TreeNode("sub tree"));
+        //P:0
+        TreeNode n_01 = new TreeNode("S-01");
+        n_01.setParent(append.getRoot().getUuid());
+        append.addNode(n_01);
+        TreeNode n_02 = new TreeNode("S-02");
+        n_02.setParent(append.getRoot().getUuid());
+        append.addNode(n_02);
+        TreeNode n_03 = new TreeNode("S-03");
+        n_03.setParent(append.getRoot().getUuid());
+        append.addNode(n_03);
+
+        return append;
     }
 }
