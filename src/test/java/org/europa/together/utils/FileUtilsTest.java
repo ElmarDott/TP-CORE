@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -76,6 +77,28 @@ public class FileUtilsTest {
             Files.delete(Paths.get(file));
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test
+    void testlistFileTree() {
+        File file = new File(DIRECTORY + "dir-test");
+        Collection<File> filelist = FileUtils.listFileTree(file);
+
+        assertEquals(3, filelist.size());
+        for (File entry : filelist) {
+            if (entry.getName().equalsIgnoreCase("root")) {
+                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/root",
+                        entry.getAbsolutePath());
+            }
+            if (entry.getName().equalsIgnoreCase("file.sql")) {
+                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/level_2.0/level_2.1/file.sql",
+                        entry.getAbsolutePath());
+            }
+            if (entry.getName().equalsIgnoreCase("file_a.txt")) {
+                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/level_1.0/file_a.txt",
+                        entry.getAbsolutePath());
+            }
         }
     }
 }

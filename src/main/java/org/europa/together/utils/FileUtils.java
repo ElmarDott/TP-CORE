@@ -159,7 +159,8 @@ public final class FileUtils {
     /**
      * Discover a directory and all subdirectories to collect their the files in
      * a List. The list entries are the full path, the filename with file
-     * extension. Example /usr/home/john/file.txt
+     * extension. Empty directories will not listed. <br>
+     * Example /usr/home/john/file.txt
      *
      * @param directory as File
      * @return Collection of Files

@@ -6,7 +6,6 @@ import javax.activation.FileDataSource;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.apiguardian.api.API;
 import org.springframework.stereotype.Component;
 
 /**
