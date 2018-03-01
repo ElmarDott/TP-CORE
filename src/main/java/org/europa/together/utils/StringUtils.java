@@ -1,8 +1,6 @@
 package org.europa.together.utils;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -110,7 +108,7 @@ public final class StringUtils {
     public static String calculateHash(final String plainText,
             final HashAlgorithm algorithm) {
 
-        String hash = "";
+        String hash = null;
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm.toString());
             md.reset();
@@ -120,7 +118,7 @@ public final class StringUtils {
                     + " plaintext: " + plainText + " hash: " + hash;
             LOGGER.log(msg, LogLevel.DEBUG);
 
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
         return hash;
@@ -151,6 +149,8 @@ public final class StringUtils {
         if (content.startsWith("\\uFEFF")) {
             cleanedString = content.substring(1);
             LOGGER.log("UTF-8 BOM removed.", LogLevel.DEBUG);
+        } else {
+            cleanedString = content;
         }
         return cleanedString;
     }
@@ -172,6 +172,55 @@ public final class StringUtils {
         replace = replace.replaceAll("'", "&#0039;");
         replace = replace.replaceAll("\"", "&#0034;");
         return replace;
+    }
+
+    /**
+     * Produce a lorem ipsum Text with 4 paragraphs and 2100 characters. The
+     * paameter chars reduce the output to the given count of characters. To get
+     * the whole text set chars to 0.
+     *
+     * @param chars as int
+     * @return out as String
+     */
+    public static String generateLoremIpsum(final int chars) {
+        String out
+                = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy "
+                + "eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam "
+                + "voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet "
+                + "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit "
+                + "amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
+                + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
+                + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. "
+                + "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor "
+                + "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
+                + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
+                + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet "
+                + "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n"
+                + "\n"
+                + "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie "
+                + "consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan"
+                + " et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis"
+                + " dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer "
+                + "adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore "
+                + "magna aliquam erat volutpat.\n"
+                + "\n"
+                + "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit "
+                + "lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure "
+                + "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore"
+                + " eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim "
+                + "qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla "
+                + "facilisi.\n"
+                + "\n"
+                + "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet "
+                + "doming id quod mazim placera facer possim assum. Lorem ipsum dolor sit amet, "
+                + "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut "
+                + "laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis "
+                + "nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea "
+                + "commodo consequat.";
+        if (chars > 0 && chars <= 2100) {
+            out = out.substring(0, chars);
+        }
+        return out;
     }
 
     /**

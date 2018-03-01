@@ -3,8 +3,17 @@ package org.europa.together.utils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.Logger;
 import org.europa.together.domain.HashAlgorithm;
+import org.europa.together.domain.HashAlgorithmTest;
+import org.europa.together.domain.LogLevel;
+import org.hsqldb.lib.StringUtil;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -13,7 +22,30 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class StringUtilsTest {
 
-    @Test//(expected = Exception.class)
+    private static final Logger LOGGER = new LoggerImpl(StringUtilsTest.class);
+
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
+    @Test
     void testPrivateConstructor() throws Exception {
         Constructor<StringUtils> clazz
                 = StringUtils.class.getDeclaredConstructor();
@@ -34,28 +66,23 @@ public class StringUtilsTest {
         assertEquals("01234567890123", StringUtils.generateStringOfLength(14));
     }
 
-    /**
-     * Test of bytesToString method, of class StringUtils.
-     */
     @Test
     void testByteToString() {
         assertEquals("23", StringUtils.byteToString("#".getBytes()));
     }
 
-    /**
-     * Test of isEmpty method, of class StringUtils.
-     */
     @Test
     void testIsEmpty() {
-        assertFalse(StringUtils.isEmpty(" "));
-        assertFalse(StringUtils.isEmpty("test"));
         assertTrue(StringUtils.isEmpty(""));
         assertTrue(StringUtils.isEmpty(null));
     }
 
-    /**
-     * Test of stringListBuilder method, of class StringUtils.
-     */
+    @Test
+    void testIsNotEmpty() {
+        assertFalse(StringUtils.isEmpty(" "));
+        assertFalse(StringUtils.isEmpty("test"));
+    }
+
     @Test
     void testStringListBuilder() {
         List<String> check = new ArrayList<>();
@@ -121,6 +148,12 @@ public class StringUtilsTest {
     }
 
     @Test
+    void testFailCalculateHashes() {
+        assertNull(StringUtils.calculateHash(null, HashAlgorithm.SHA));
+        assertNull(StringUtils.calculateHash("wrong algorithm", null));
+    }
+
+    @Test
     void testHashToInt() {
 
         assertEquals(2211, StringUtils.hashToInt(StringUtils.calculateHash("", HashAlgorithm.MD5)));
@@ -152,4 +185,31 @@ public class StringUtilsTest {
         assertEquals(36, uuid.length());
     }
 
+    @Test
+    void testLoremIpsumGenerator() {
+        String full = StringUtils.generateLoremIpsum(0);
+        String reducede = StringUtils.generateLoremIpsum(50);
+        String fail_01 = StringUtils.generateLoremIpsum(-1);
+        String fail_02 = StringUtils.generateLoremIpsum(4000);
+
+        assertEquals(2100, full.length());
+        assertEquals(2100, fail_01.length());
+        assertEquals(2100, fail_02.length());
+
+        assertEquals(50, reducede.length());
+        assertEquals("Lorem ipsum dolor sit amet, consetetur sadipscing ", reducede);
+    }
+
+    @Test
+    void testReplaceXmlCharacters() {
+        String orginal = "<root>&nbsp;</root> \" 'home\\dir'";
+        String replaced = "&#0060;root&#0062;&#0038;nbsp;&#0060;/root&#0062; &#0034; &#0039;home\\dir&#0039;";
+        assertEquals(replaced, StringUtils.escapeXmlCharacters(orginal));
+    }
+
+    @Test
+    void testFailClean_UTF8_Bom() {
+        String orginal = "Lorem ipsum";
+        assertEquals(orginal, StringUtils.convertToUtf8NoBom(orginal));
+    }
 }
