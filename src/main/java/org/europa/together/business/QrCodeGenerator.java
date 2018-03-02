@@ -2,7 +2,10 @@ package org.europa.together.business;
 
 import java.io.File;
 import java.util.Map;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.joda.time.DateTime;
+import org.springframework.stereotype.Component;
 
 /**
  * Generates Quick Response Codes (QR Codes) with the Zxing Library. The
@@ -11,7 +14,10 @@ import org.joda.time.DateTime;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface QrCodeGenerator {
 
     /**
@@ -22,6 +28,7 @@ public interface QrCodeGenerator {
      * @param dimensions as int
      * @param fileOutputPath s String
      */
+    @API(status = STABLE, since = "1.0")
     void setup(String fileOutputPath, int dimensions);
 
     /**
@@ -30,6 +37,7 @@ public interface QrCodeGenerator {
      * @param data as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean encode(String data);
 
     /**
@@ -38,6 +46,7 @@ public interface QrCodeGenerator {
      * @param qrCode as File
      * @return the content as String
      */
+    @API(status = STABLE, since = "1.0")
     String decode(File qrCode);
 
     /**
@@ -76,6 +85,7 @@ public interface QrCodeGenerator {
      * @param contact as Map
      * @return dataStructure as String
      */
+    @API(status = STABLE, since = "1.0")
     String generateDataForvCard(Map<String, String> contact);
 
     /**
@@ -86,6 +96,7 @@ public interface QrCodeGenerator {
      * @param end as DateTime
      * @return dataStructure as String
      */
+    @API(status = STABLE, since = "1.0")
     String generateDataForCalenderEvent(String event, DateTime start, DateTime end);
 
     /**
@@ -94,6 +105,7 @@ public interface QrCodeGenerator {
      * @param url as String
      * @return dataStructure as String
      */
+    @API(status = STABLE, since = "1.0")
     String generateDataForUrl(String url);
 
     /**
@@ -110,6 +122,7 @@ public interface QrCodeGenerator {
      * @param latitude as String
      * @return dataStructure as String
      */
+    @API(status = STABLE, since = "1.0")
     String generateDataForGeoLocation(String latitude, String longitude);
 
 }

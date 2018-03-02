@@ -1,11 +1,18 @@
 package org.europa.together.business;
 
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
+import org.springframework.stereotype.Component;
+
 /**
  * Basic PDF functionality to generate from an Application letters or reports.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface PdfRenderer {
 
     /**
@@ -16,6 +23,7 @@ public interface PdfRenderer {
      * @param file as String
      * @param htmlTemplate as String
      */
+    @API(status = STABLE, since = "1.0")
     void renderDocumentFromHtml(String file, String htmlTemplate);
 
     /**
@@ -23,6 +31,7 @@ public interface PdfRenderer {
      *
      * @param author as String
      */
+    @API(status = STABLE, since = "1.0")
     void setAuthor(String author);
 
     /**
@@ -30,6 +39,7 @@ public interface PdfRenderer {
      *
      * @param keywords as String
      */
+    @API(status = STABLE, since = "1.0")
     void setKeywords(String keywords);
 
     /**
@@ -37,6 +47,7 @@ public interface PdfRenderer {
      *
      * @param subject as String
      */
+    @API(status = STABLE, since = "1.0")
     void setSubject(String subject);
 
     /**
@@ -44,6 +55,7 @@ public interface PdfRenderer {
      *
      * @param title as String
      */
+    @API(status = STABLE, since = "1.0")
     void setTitle(String title);
 
     /**
@@ -51,6 +63,7 @@ public interface PdfRenderer {
      *
      * @return author as String
      */
+    @API(status = STABLE, since = "1.0")
     String getAuthor();
 
     /**
@@ -58,6 +71,7 @@ public interface PdfRenderer {
      *
      * @return keywords as String
      */
+    @API(status = STABLE, since = "1.0")
     String getKeywords();
 
     /**
@@ -65,6 +79,7 @@ public interface PdfRenderer {
      *
      * @return subject as String
      */
+    @API(status = STABLE, since = "1.0")
     String getSubject();
 
     /**
@@ -72,5 +87,6 @@ public interface PdfRenderer {
      *
      * @return title as String
      */
+    @API(status = STABLE, since = "1.0")
     String getTitle();
 }

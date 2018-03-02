@@ -1,7 +1,10 @@
 package org.europa.together.business;
 
 import java.util.List;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.TreeNode;
+import org.springframework.stereotype.Component;
 
 /**
  * Implementation of the TREE Datastructure. The Domain Object TreeNode
@@ -13,7 +16,10 @@ import org.europa.together.domain.TreeNode;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface TreeWalker {
 
     /**
@@ -22,6 +28,7 @@ public interface TreeWalker {
      * @param root as TreeNode
      * @return ture on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean addRoot(TreeNode root);
 
     /**
@@ -30,6 +37,7 @@ public interface TreeWalker {
      * @param node as TreeNode
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean isElementOfTree(TreeNode node);
 
     /**
@@ -37,6 +45,7 @@ public interface TreeWalker {
      *
      * @return true n success
      */
+    @API(status = STABLE, since = "1.0")
     boolean isEmpty();
 
     /**
@@ -46,6 +55,7 @@ public interface TreeWalker {
      * @param node as TreeNode
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean isLeaf(TreeNode node);
 
     /**
@@ -56,6 +66,7 @@ public interface TreeWalker {
      * @param node as TreeNode
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean removeNode(TreeNode node);
 
     /**
@@ -63,6 +74,7 @@ public interface TreeWalker {
      *
      * @return count as int
      */
+    @API(status = STABLE, since = "1.0")
     int countNodes();
 
     /**
@@ -73,6 +85,7 @@ public interface TreeWalker {
      * @param nodeName as String
      * @return count as int
      */
+    @API(status = STABLE, since = "1.0")
     int isNameUnique(String nodeName);
 
     /**
@@ -81,6 +94,7 @@ public interface TreeWalker {
      * @param nodeName as String
      * @return nodes as List
      */
+    @API(status = STABLE, since = "1.0")
     List<TreeNode> getElementByName(String nodeName);
 
     /**
@@ -88,6 +102,7 @@ public interface TreeWalker {
      *
      * @return leafs as List
      */
+    @API(status = STABLE, since = "1.0")
     List<TreeNode> getLeafs();
 
     /**
@@ -95,6 +110,7 @@ public interface TreeWalker {
      *
      * @return tree as List
      */
+    @API(status = STABLE, since = "1.0")
     List<TreeNode> getTree();
 
     /**
@@ -103,6 +119,7 @@ public interface TreeWalker {
      * @param uuid as String
      * @return node as TreeNode
      */
+    @API(status = STABLE, since = "1.0")
     TreeNode getNodeByUuid(String uuid);
 
     /**
@@ -110,6 +127,7 @@ public interface TreeWalker {
      *
      * @return root as TreeNode
      */
+    @API(status = STABLE, since = "1.0")
     TreeNode getRoot();
 
     /**
@@ -121,11 +139,13 @@ public interface TreeWalker {
      *
      * @param node as TreeNode
      */
+    @API(status = STABLE, since = "1.0")
     void addNode(TreeNode node);
 
     /**
      * Reset al internal data of the TreeWalker.
      */
+    @API(status = STABLE, since = "1.0")
     void clear();
 
     /**
@@ -133,6 +153,7 @@ public interface TreeWalker {
      *
      * @param cutNode as TreeNode
      */
+    @API(status = STABLE, since = "1.0")
     void prune(TreeNode cutNode);
 
     /**
@@ -143,5 +164,6 @@ public interface TreeWalker {
      * @param parentUuid as String
      * @param appendingTree as TreeWalker
      */
+    @API(status = STABLE, since = "1.0")
     void merge(String parentUuid, TreeWalker appendingTree);
 }

@@ -1,13 +1,19 @@
 package org.europa.together.business;
 
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.LogLevel;
+import org.springframework.stereotype.Component;
 
 /**
  * Wrapper for the SLF4j and Logback Logging Framework.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface Logger {
 
     /**
@@ -18,6 +24,7 @@ public interface Logger {
      * @param level as LogLevel.
      * @return LogLevel
      */
+    @API(status = STABLE, since = "1.0")
     LogLevel log(final String message, final LogLevel level);
 
     /**
@@ -25,6 +32,7 @@ public interface Logger {
      *
      * @return LogLevel
      */
+    @API(status = STABLE, since = "1.0")
     LogLevel getConfiguredLogLevel();
 
     /**
@@ -35,6 +43,7 @@ public interface Logger {
      * @param ex as Exception
      * @return exception MEssage as String
      */
+    @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
 
 }

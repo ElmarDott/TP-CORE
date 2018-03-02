@@ -2,6 +2,9 @@ package org.europa.together.business;
 
 import java.io.Serializable;
 import java.util.List;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
+import org.springframework.stereotype.Component;
 
 /**
  * GenericDAO interface primary for CRUD Database operations. To use the DAO by
@@ -22,7 +25,10 @@ import java.util.List;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface GenericDAO<T, PK extends Serializable> extends Serializable {
 
     /**
@@ -33,6 +39,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param object of an Entity
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean create(T object);
 
     /**
@@ -42,6 +49,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param id as Object
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean delete(PK id);
 
     /**
@@ -52,6 +60,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param object of an Entity
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean update(PK id, T object);
 
     /**
@@ -63,6 +72,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param table as String
      * @return resultSet as int
      */
+    @API(status = STABLE, since = "1.0")
     long countEntries(String table);
 
     /**
@@ -70,6 +80,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @return List of Entity Objects
      */
+    @API(status = STABLE, since = "1.0")
     List<T> listAllElements();
 
     /**
@@ -78,6 +89,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param object as Object
      * @return id as Object
      */
+    @API(status = STABLE, since = "1.0")
     PK getPrimaryKeyOfObject(T object);
 
     /**
@@ -87,6 +99,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param object of an Entity
      * @return JSON object as String
      */
+    @API(status = STABLE, since = "1.0")
     String serializeAsJson(T object);
 
     /**
@@ -95,6 +108,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param json as String
      * @return Entity as String
      */
+    @API(status = STABLE, since = "1.0")
     T deserializeAsObject(String json);
 
     /**
@@ -103,6 +117,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @param id as Object
      * @return object
      */
+    @API(status = STABLE, since = "1.0")
     T find(PK id);
 
     /**
@@ -110,5 +125,6 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @param tableName as String
      */
+    @API(status = STABLE, since = "1.0")
     void flushTable(String tableName);
 }

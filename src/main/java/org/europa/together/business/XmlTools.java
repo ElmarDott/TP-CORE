@@ -1,6 +1,9 @@
 package org.europa.together.business;
 
 import java.io.File;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
+import org.springframework.stereotype.Component;
 
 /**
  * XML Tools are based on the event driven SAX concept. SAX = Simple API for
@@ -10,7 +13,10 @@ import java.io.File;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface XmlTools {
 
     /**
@@ -19,6 +25,7 @@ public interface XmlTools {
      * @param xmlFile as File
      * @return content as String
      */
+    @API(status = STABLE, since = "1.0")
     String parseXmlFile(File xmlFile);
 
     /**
@@ -32,6 +39,7 @@ public interface XmlTools {
      *
      * @return content as String
      */
+    @API(status = STABLE, since = "1.0")
     String prettyPrintXml();
 
 // VERSION: 1.1
@@ -45,6 +53,7 @@ public interface XmlTools {
 //     *
 //     * @return content as String
 //     */
+//    @API(status = EXPERIMENTAL, since = "1.1")
 //    String shrinkContent();
 //
 //    /**
@@ -54,6 +63,7 @@ public interface XmlTools {
 //     * @param xslt as File
 //     * @return transformation as String
 //     */
+//    @API(status = EXPERIMENTAL, since = "1.1")
 //    String transformXslt(File xml, File xslt);
 //
     /**
@@ -63,6 +73,7 @@ public interface XmlTools {
      *
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean isValid();
 
     /**
@@ -82,6 +93,7 @@ public interface XmlTools {
      *
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean isWellFormed();
 
     /**
@@ -90,6 +102,7 @@ public interface XmlTools {
      *
      * @param schema as File
      */
+    @API(status = STABLE, since = "1.0")
     void setSchemaFile(File schema);
 
     /**
@@ -98,5 +111,6 @@ public interface XmlTools {
      * @param content as string
      * @param destinationFile as String
      */
+    @API(status = STABLE, since = "1.0")
     void writeXmlToFile(String content, String destinationFile);
 }

@@ -6,6 +6,8 @@ import javax.activation.FileDataSource;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,13 +18,16 @@ import org.springframework.stereotype.Component;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
 @Component
 public interface MailClient {
 
     /**
      * Define the Configuration Set for the MailClient.
      */
+    @API(status = STABLE, since = "1.0")
     String CONFIG_SET = "email";
 
     /**
@@ -31,6 +36,7 @@ public interface MailClient {
      *
      * @param attachmentList as String
      */
+    @API(status = STABLE, since = "1.0")
     void addAttachmentList(List<String> attachmentList);
 
     /**
@@ -40,22 +46,26 @@ public interface MailClient {
      *
      * @param recipientList as String
      */
+    @API(status = STABLE, since = "1.0")
     void addRecipientList(List<String> recipientList);
 
     /**
      * Reset the Attchment List.
      *
      */
+    @API(status = STABLE, since = "1.0")
     void clearAttachments();
 
     /**
      * Reset the Recipient List.
      */
+    @API(status = STABLE, since = "1.0")
     void clearRecipents();
 
     /**
      * Allow a re-connection to the configured SMTP Server.
      */
+    @API(status = STABLE, since = "1.0")
     void reconnect();
 
     /**
@@ -63,6 +73,7 @@ public interface MailClient {
      *
      * @param attachmentSize as long
      */
+    @API(status = STABLE, since = "1.0")
     void setAttachmentSize(long attachmentSize);
 
     /**
@@ -70,16 +81,19 @@ public interface MailClient {
      *
      * @param content as String
      */
+    @API(status = STABLE, since = "1.0")
     void setContent(String content);
 
     /**
      * Set the MimeType of a E-Mail to HTML.
      */
+    @API(status = STABLE, since = "1.0")
     void setMimeTypeToHTML();
 
     /**
      * Set the MimeType of an E-Mail to plain text.
      */
+    @API(status = STABLE, since = "1.0")
     void setMimeTypeToPlain();
 
     /**
@@ -87,6 +101,7 @@ public interface MailClient {
      *
      * @param subject as String
      */
+    @API(status = STABLE, since = "1.0")
     void setSubject(final String subject);
 
     /**
@@ -97,6 +112,7 @@ public interface MailClient {
      * @param resource as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean addAttachment(final String resource);
 
     /**
@@ -108,6 +124,7 @@ public interface MailClient {
      * @param recipent as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean addRecipent(final String recipent);
 
     /**
@@ -115,12 +132,14 @@ public interface MailClient {
      * @param resource as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean loadConfigurationFromProperties(final String resource);
 
     /**
      *
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean loadConfigurationFromDatabase();
 
     /**
@@ -129,12 +148,14 @@ public interface MailClient {
      *
      * @return limitOfBulkMails as int
      */
+    @API(status = STABLE, since = "1.0")
     int getBulkMailLimiter();
 
     /**
      *
      * @return size as long
      */
+    @API(status = STABLE, since = "1.0")
     long getAttachmentSize();
 
     /**
@@ -143,6 +164,7 @@ public interface MailClient {
      *
      * @return waitTime as long
      */
+    @API(status = STABLE, since = "1.0")
     long getWaitTime();
 
     /**
@@ -150,36 +172,42 @@ public interface MailClient {
      *
      * @return session as Session
      */
+    @API(status = STABLE, since = "1.0")
     Session getSession();
 
     /**
      *
      * @return content as String
      */
+    @API(status = STABLE, since = "1.0")
     String getContent();
 
     /**
      *
      * @return mimeType as String
      */
+    @API(status = STABLE, since = "1.0")
     String getMimeType();
 
     /**
      *
      * @return subject as String
      */
+    @API(status = STABLE, since = "1.0")
     String getSubject();
 
     /**
      *
      * @return attachments as List
      */
+    @API(status = STABLE, since = "1.0")
     List<FileDataSource> getAttachmentList();
 
     /**
      *
      * @return recipients as List
      */
+    @API(status = STABLE, since = "1.0")
     List<InternetAddress> getRecipentList();
 
     /**
@@ -187,6 +215,7 @@ public interface MailClient {
      *
      * @return configuration as Map
      */
+    @API(status = STABLE, since = "1.0")
     Map<String, String> getConfiguration();
 
     /**
@@ -195,5 +224,6 @@ public interface MailClient {
      * @param recipient as InternetAdress
      * @return e-mail as MimeMessage
      */
+    @API(status = STABLE, since = "1.0")
     MimeMessage composeMail(InternetAddress recipient);
 }

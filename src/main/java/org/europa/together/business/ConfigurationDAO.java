@@ -1,6 +1,8 @@
 package org.europa.together.business;
 
 import java.util.List;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.ConfigurationDO;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Component;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
 @Component
 public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
 
@@ -31,6 +35,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param version as String
      * @return configuration as Object
      */
+    @API(status = STABLE, since = "1.0")
     ConfigurationDO getConfigurationByKey(String key, String module, String version);
 
     /**
@@ -43,6 +48,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param configSet as Sting
      * @return ConfigurationSet as List&lt;Configuration&gt;
      */
+    @API(status = STABLE, since = "1.0")
     List<ConfigurationDO>
             getAllConfigurationSetEntries(String module, String version, String configSet);
 
@@ -51,6 +57,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      *
      * @return deprecated ConfigurationDO
      */
+    @API(status = STABLE, since = "1.0")
     List<ConfigurationDO> getAllDepecatedEntries();
 
     /**
@@ -63,6 +70,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param configSet as String
      * @return Configuration as List
      */
+    @API(status = STABLE, since = "1.0")
     List<ConfigurationDO> getHistoryOfAEntry(String module, String key, String configSet);
 
     /**
@@ -80,6 +88,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param version as String
      * @return value as String
      */
+    @API(status = STABLE, since = "1.0")
     String getValueByKey(String key, String module, String version);
 
     /**
@@ -87,6 +96,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      *
      * @param entry as Configuration
      */
+    @API(status = STABLE, since = "1.0")
     void restoreKeyToDefault(ConfigurationDO entry);
 
     /**
@@ -94,6 +104,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      *
      * @param configuration as List&lt;Configuration&gt;
      */
+    @API(status = STABLE, since = "1.0")
     void updateConfigurationEntries(List<ConfigurationDO> configuration);
 
 }

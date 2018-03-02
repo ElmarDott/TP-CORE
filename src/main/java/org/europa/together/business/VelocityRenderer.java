@@ -1,6 +1,8 @@
 package org.europa.together.business;
 
 import java.util.Map;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Component;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
 @Component
 public interface VelocityRenderer {
 
@@ -21,6 +25,7 @@ public interface VelocityRenderer {
      * @param properties as Map
      * @return processedTemplate as String
      */
+    @API(status = STABLE, since = "1.0")
     String loadContentByClasspathResource(String resourcePath, String template,
             Map<String, String> properties);
 
@@ -33,6 +38,7 @@ public interface VelocityRenderer {
      * @param properties as Map
      * @return processedTemplate as String
      */
+    @API(status = STABLE, since = "1.0")
     String loadContentByFileResource(String resourcePath, String template,
             Map<String, String> properties);
 
@@ -44,5 +50,6 @@ public interface VelocityRenderer {
      * @param properties as Map
      * @return processedTemplate as String
      */
+    @API(status = STABLE, since = "1.0")
     String loadContentByStringResource(String resource, Map<String, String> properties);
 }

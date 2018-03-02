@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.mail.Address;
 import javax.mail.Message;
-
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.MailClientImpl;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -27,11 +27,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
 public final class MailClientService {
 
-    private static final long serialVersionUID = 16L;
-    private static final Logger LOGGER = new LoggerImpl(MailClientImpl.class);
+    private static final long serialVersionUID = 206L;
+    private static final Logger LOGGER = new LoggerImpl(MailClientService.class);
 
     @Autowired
     @Qualifier("configurationDAOImpl")

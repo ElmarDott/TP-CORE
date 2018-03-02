@@ -1,6 +1,9 @@
 package org.europa.together.business;
 
 import java.util.Map;
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
+import org.springframework.stereotype.Component;
 
 /**
  * The PropertyReader is be able to read properties from different resources
@@ -13,7 +16,10 @@ import java.util.Map;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
+@Component
 public interface PropertyReader {
 
     /**
@@ -24,6 +30,7 @@ public interface PropertyReader {
      * @param value as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean addProperty(String key, String value);
 
     /**
@@ -32,6 +39,7 @@ public interface PropertyReader {
      * @param propertyList as Map
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean addPropertyList(final Map<String, String> propertyList);
 
     /**
@@ -41,6 +49,7 @@ public interface PropertyReader {
      * @param resource as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean appendPropertiesFromClasspath(final String resource);
 
     /**
@@ -50,6 +59,7 @@ public interface PropertyReader {
      * @param resource as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean appendPropertiesFromFile(final String resource);
 
     /**
@@ -57,6 +67,7 @@ public interface PropertyReader {
      *
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean clear();
 
     /**
@@ -66,6 +77,7 @@ public interface PropertyReader {
      * @param key as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean removeProperty(String key);
 
     /**
@@ -76,6 +88,7 @@ public interface PropertyReader {
      * @param value as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean updateProperty(String key, String value);
 
     /**
@@ -83,6 +96,7 @@ public interface PropertyReader {
      *
      * @return count of properties as int
      */
+    @API(status = STABLE, since = "1.0")
     int count();
 
     /**
@@ -97,6 +111,7 @@ public interface PropertyReader {
      * @param key property given as String
      * @return Boolean PropertyKeyAsBoolean
      */
+    @API(status = STABLE, since = "1.0")
     Boolean getPropertyAsBoolean(final String key);
 
     /**
@@ -105,6 +120,7 @@ public interface PropertyReader {
      * @param key as String
      * @return Double PropertyAsDouble
      */
+    @API(status = STABLE, since = "1.0")
     Double getPropertyAsDouble(final String key);
 
     /**
@@ -113,6 +129,7 @@ public interface PropertyReader {
      * @param key as String
      * @return Float PropertyAsFloat
      */
+    @API(status = STABLE, since = "1.0")
     Float getPropertyAsFloat(final String key);
 
     /**
@@ -121,6 +138,7 @@ public interface PropertyReader {
      * @param key property given as String
      * @return int PropertyKeyAsInteger
      */
+    @API(status = STABLE, since = "1.0")
     Integer getPropertyAsInt(final String key);
 
     /**
@@ -129,6 +147,7 @@ public interface PropertyReader {
      * @param key property given as Stirng
      * @return String PropertyAsString
      */
+    @API(status = STABLE, since = "1.0")
     String getPropertyAsString(final String key);
 
     /**
@@ -136,5 +155,6 @@ public interface PropertyReader {
      *
      * @return propertyLit as Map
      */
+    @API(status = STABLE, since = "1.0")
     Map<String, String> getPropertyList();
 }

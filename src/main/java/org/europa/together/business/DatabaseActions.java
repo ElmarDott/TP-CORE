@@ -1,5 +1,7 @@
 package org.europa.together.business;
 
+import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Component;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
+ * @since 1.0
  */
+@API(status = STABLE, since = "1.0")
 @Component
 public interface DatabaseActions {
 
@@ -23,6 +27,7 @@ public interface DatabaseActions {
      * @param propertyFile as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean connect(String propertyFile);
 
     /**
@@ -31,6 +36,7 @@ public interface DatabaseActions {
      * @param sql as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean executeQuery(String sql);
 
     /**
@@ -39,6 +45,7 @@ public interface DatabaseActions {
      * @param sqlFile as String
      * @return true on success
      */
+    @API(status = STABLE, since = "1.0")
     boolean executeSqlFromClasspath(String sqlFile);
 
     /**
@@ -46,6 +53,7 @@ public interface DatabaseActions {
      *
      * @return port as int
      */
+    @API(status = STABLE, since = "1.0")
     int getPort();
 
     /**
@@ -53,5 +61,6 @@ public interface DatabaseActions {
      *
      * @return uri as String
      */
+    @API(status = STABLE, since = "1.0")
     String getUri();
 }
