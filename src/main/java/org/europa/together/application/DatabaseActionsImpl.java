@@ -60,9 +60,13 @@ public class DatabaseActionsImpl implements DatabaseActions {
     public boolean connect(final String propertyFile) {
 
         boolean connected = false;
-        fetchProperties(propertyFile);
-        establishPooledConnection();
-        if (jdbcConnetion != null) {
+        if (jdbcConnetion == null) {
+            fetchProperties(propertyFile);
+            establishPooledConnection();
+            if (jdbcConnetion != null) {
+                connected = true;
+            }
+        } else {
             connected = true;
         }
         return connected;
