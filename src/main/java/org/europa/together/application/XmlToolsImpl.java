@@ -11,10 +11,12 @@ import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.SaxDocumentHandler;
 import org.europa.together.business.XmlTools;
 import org.europa.together.utils.StringUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of the XML Tools.
  */
+@Repository
 public class XmlToolsImpl implements XmlTools {
 
     private static final long serialVersionUID = 10L;

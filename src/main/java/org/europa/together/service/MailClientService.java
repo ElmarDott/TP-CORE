@@ -21,6 +21,7 @@ import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation of the Mail Client Service.
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
+@Service
 public final class MailClientService {
 
     private static final long serialVersionUID = 206L;

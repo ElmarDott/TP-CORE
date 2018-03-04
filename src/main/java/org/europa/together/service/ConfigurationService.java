@@ -5,6 +5,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
+import org.springframework.stereotype.Service;
 
 /**
  * Implementation of the Configuration Service.
@@ -14,6 +15,7 @@ import org.europa.together.domain.LogLevel;
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
+@Service
 public final class ConfigurationService {
 
     private static final long serialVersionUID = 205L;

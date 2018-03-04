@@ -15,6 +15,7 @@ import org.europa.together.domain.LogLevel;
 public final class StringUtils {
 
     private static final int LIMES = 9;
+    private static final int LIMIT = 2100;
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
@@ -217,7 +218,7 @@ public final class StringUtils {
                 + "laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis "
                 + "nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea "
                 + "commodo consequat.";
-        if (chars > 0 && chars <= 2100) {
+        if (chars > 0 && chars <= LIMIT) {
             out = out.substring(0, chars);
         }
         return out;

@@ -11,10 +11,12 @@ import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of a simple PDF Renderer.
  */
+@Repository
 public class PdfRendererImpl implements PdfRenderer {
 
     private static final long serialVersionUID = 11L;

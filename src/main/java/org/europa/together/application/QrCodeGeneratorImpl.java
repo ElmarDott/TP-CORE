@@ -20,10 +20,12 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of the QR Code Generator.
  */
+@Repository
 public class QrCodeGeneratorImpl implements QrCodeGenerator {
 
     private static final long serialVersionUID = 7L;

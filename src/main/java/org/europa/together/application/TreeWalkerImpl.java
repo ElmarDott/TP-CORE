@@ -7,10 +7,12 @@ import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
 import org.europa.together.utils.StringUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implemention of a TreeWalker.
  */
+@Repository
 public final class TreeWalkerImpl implements TreeWalker {
 
     private static final long serialVersionUID = 9L;
