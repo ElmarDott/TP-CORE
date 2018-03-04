@@ -30,13 +30,13 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     private static final long serialVersionUID = 2L;
     private static final Logger LOGGER = new LoggerImpl(GenericDAOImpl.class);
 
-    protected final Class<T> genericType;
-
     /**
      * JPA Entity Manager for Transactions.
      */
     @PersistenceContext
     public transient EntityManager mainEntityManagerFactory;
+
+    private final Class<T> genericType;
 
     /**
      * Constructor.
