@@ -69,16 +69,14 @@ public final class MailClientService {
                 = configurationDAO.getAllConfigurationSetEntries(
                         Constraints.MODULE_NAME, Constraints.MODULE_VERSION, MailClient.CONFIG_SET);
 
-        if (configurationEntries != null && configurationEntries.size() > 0) {
-            for (ConfigurationDO configEntry : configurationEntries) {
+        for (ConfigurationDO configEntry : configurationEntries) {
 
-                for (Map.Entry<String, String> entry : configurationList.entrySet()) {
-                    if (configEntry.getKey().equals(
-                            StringUtils.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
+            for (Map.Entry<String, String> entry : configurationList.entrySet()) {
+                if (configEntry.getKey().equals(
+                        StringUtils.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
 
-                        configEntry.setValue(entry.getValue());
-                        configurationDAO.update(configEntry.getUuid(), configEntry);
-                    }
+                    configEntry.setValue(entry.getValue());
+                    configurationDAO.update(configEntry.getUuid(), configEntry);
                 }
             }
         }
@@ -108,14 +106,9 @@ public final class MailClientService {
 
             Transport postman = mail.getSession().getTransport();
             postman.connect();
-
-            if (!postman.isConnected()) {
-                postman.close();
-                throw new MisconfigurationException("No SMPT Connection for sending E-MAil.");
-            }
-
             postman.sendMessage(msg, addresses);
             postman.close();
+            LOGGER.log("E-Mail schould be sended.", LogLevel.TRACE);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);

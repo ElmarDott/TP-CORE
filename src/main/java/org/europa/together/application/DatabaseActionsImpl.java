@@ -65,6 +65,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
             establishPooledConnection();
             if (jdbcConnetion != null) {
                 connected = true;
+                LOGGER.log("Connection already established.", LogLevel.DEBUG);
             }
         } else {
             connected = true;
