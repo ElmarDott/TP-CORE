@@ -33,7 +33,7 @@ import org.europa.together.utils.StringUtils;
 )
 public class ConfigurationDO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 102L;
     private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
     private static final int HASH = 43;
 
@@ -65,12 +65,15 @@ public class ConfigurationDO implements Serializable {
     @Column(name = "MODUL_VERSION", nullable = false)
     private String version;
 
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "DEPECATED", nullable = false)
     private boolean depecated;
 
+    @NotNull(message = "{validation.notnull}")
     @Column(name = "MANDATORY", nullable = false)
     private boolean mandatory;
 
@@ -81,6 +84,7 @@ public class ConfigurationDO implements Serializable {
      * Constructor.
      */
     public ConfigurationDO() {
+        //PreSet
         this.uuid = StringUtils.generateUUID();
     }
 
@@ -89,30 +93,25 @@ public class ConfigurationDO implements Serializable {
      *
      * @param key as String
      * @param value as String
-     * @param defaultValue as String
      * @param modulName as String
-     * @param configurationSet as String
      * @param version as String
-     * @param depecated as boolean
-     * @param mandatory as boolean
-     * @param comment as String
      */
-    public ConfigurationDO(final String key, final String value,
-            final String defaultValue, final String modulName,
-            final String configurationSet, final String version,
-            final boolean depecated, final boolean mandatory,
-            final String comment) {
+    public ConfigurationDO(final String key, final String value, final String modulName,
+            final String version) {
 
+        //PreSet
         this.uuid = StringUtils.generateUUID();
+        //mandatory
+        this.modulName = modulName;
+        this.version = version;
         this.key = key;
         this.value = value;
-        this.defaultValue = defaultValue;
-        this.modulName = modulName;
-        this.configurationSet = configurationSet;
-        this.version = version;
-        this.depecated = depecated;
-        this.mandatory = mandatory;
-        this.comment = comment;
+        //optional
+        this.configurationSet = "default";
+        this.defaultValue = "NIL";
+        this.depecated = false;
+        this.mandatory = false;
+        this.comment = "";
     }
 
     /**
@@ -121,10 +120,11 @@ public class ConfigurationDO implements Serializable {
      */
     @PrePersist
     public void prePersist() {
+        this.configurationSet = "default";
         this.defaultValue = "NIL";
         this.depecated = false;
         this.mandatory = false;
-        LOGGER.log("@PrePersist", LogLevel.INFO);
+        LOGGER.log("@PrePersist [ConfigurationDO]", LogLevel.INFO);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
