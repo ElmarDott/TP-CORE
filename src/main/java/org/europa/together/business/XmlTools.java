@@ -2,7 +2,8 @@ package org.europa.together.business;
 
 import java.io.File;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.*;
+import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,30 +43,35 @@ public interface XmlTools {
     @API(status = STABLE, since = "1.0")
     String prettyPrintXml();
 
-// VERSION: 1.1
-//    /**
-//     * Shrink the XML Content to reduce the file size for a higher performance
-//     * in automated processing. The following option will be executed:
-//     * <li>remove XML comments</li>
-//     * <li>remove whitespace</li>
-//     * <li>remove linebreaks</li>
-//     * The final result is an XML in one row without comments and whitespace.
-//     *
-//     * @return content as String
-//     */
-//    @API(status = EXPERIMENTAL, since = "1.1")
-//    String shrinkContent();
-//
-//    /**
-//     * Transform an XML File by a given XSLT to a new Output.
-//     *
-//     * @param xml as File
-//     * @param xslt as File
-//     * @return transformation as String
-//     */
-//    @API(status = EXPERIMENTAL, since = "1.1")
-//    String transformXslt(File xml, File xslt);
-//
+    /**
+     * Shrink the XML Content to reduce the file size for a higher performance
+     * in automated processing.The following option will be executed:
+     * <li>remove XML comments</li>
+     * <li>remove whitespace</li>
+     * <li>remove linebreaks</li>
+     * The final result is an XML in one row without comments and whitespace.
+     *
+     * @return content as String
+     * @throws org.europa.together.exceptions.UnsupportedVersionException
+     */
+    @API(status = EXPERIMENTAL, since = "1.1")
+    default String shrinkContent() throws UnsupportedVersionException {
+        throw new UnsupportedVersionException("Method not implemnted in this Version.");
+    }
+
+    /**
+     * Transform an XML File by a given XSLT to a new Output.
+     *
+     * @param xml as File
+     * @param xslt as File
+     * @return transformation as String
+     * @throws org.europa.together.exceptions.UnsupportedVersionException
+     */
+    @API(status = EXPERIMENTAL, since = "1.1")
+    default String transformXslt(File xml, File xslt) throws UnsupportedVersionException {
+        throw new UnsupportedVersionException("Method not implemnted in this Version.");
+    }
+
     /**
      * Validate well formed XML content (XML 1.0) against a given grammar.
      * Grammar files can be DTD or XML Schema. THe validation contains also a
