@@ -7,7 +7,9 @@
     </bannerLeft>
     <body>
         <menu name="Module">
-            <item name="JGiven BDD Report" href="jgiven/index.html" />
+            <item name="JGiven BDD Report" href="jgiven/index.html" target="_blank" />
+            <item name="GitHub Repository" href="https://github.com/ElmarDott/TP-CORE" target="_blank" />
+            <item name="Follow on Twitter" href="https://twitter.com/ElmarDott" target="_blank" />
         </menu>
         <menu ref="parent" />
         <menu ref="reports" />

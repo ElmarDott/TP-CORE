@@ -8,18 +8,18 @@ of these library has the goal, to create an useful and compact toolbox.
 ## Getting Started
 
 Components - Release: 1.0
- * [CORE-0001] Application Logger
- * [CORE-0002] generic Data Access Object
- * [CORE-0003] Velocity Template Engine
- * [CORE-0004] Property Reader
- * [CORE-0005] Application Configuration
- * [CORE-0006] SMTP E-Mail Client
- * [CORE-0007] QR Code Reader / Writer
- * [CORE-0008] Database Actions
- * [CORE-0009] Tree Walker
- * [CORE-0010] XML Tools
- * [CORE-0011] PDF Renderer
- * [CORE-0012] Image Processor
+ * [CORE-0001] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
+ * [CORE-0002] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
+ * [CORE-0003] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
+ * [CORE-0004] [Property Reader](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0004%5D-Property-Reader)
+ * [CORE-0005] [Application Configuration](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0005%5D-Application-Configuration)
+ * [CORE-0006] [SMTP E-Mail Client](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0006%5D-SMTP-E-Mail-Client)
+ * [CORE-0007] [QR Code Reader / Writer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0007%5D-QR-Code-Reader---Writer)
+ * [CORE-0008] [Database Actions](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0008%5D-Database-Actions)
+ * [CORE-0009] [Tree Walker](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0009%5D-Tree-Walker)
+ * [CORE-0010] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0010%5D-XML-Tools)
+ * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
+ * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
 
 ### Prerequisites
 
@@ -57,4 +57,5 @@ This project is licensed under the General Public License GPL-3.0
 
 ## Contributors
 
-Feel free to send a request by e-mail to contribute the project.
+Feel free to send a request by e-mail to contribute the project. In the case you
+like this project, let me know it an rate it with a star.

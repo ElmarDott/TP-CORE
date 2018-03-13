@@ -8,11 +8,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>CORE</name>
-    <description>Core Functionality</description>
+    <description>The CORE Artifact contains typical basic functions for Java Applications.
+        The Module is elaborated as library and packed as JAR file. It is possible to use
+        this Artifact in Java EE and Java SE (Desktop) Applications. The implementation of
+        these library has the goal, to create an useful and compact toolbox.</description>
     <parent>
         <groupId>org.europa.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
     </parent>
 
     <groupId>org.europa.together.modules</groupId>
@@ -156,12 +159,7 @@
             <artifactId>javase</artifactId>
             <version>3.3.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-imaging</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
+        
         <!-- Bundels -->
         <dependency>
             <groupId>org.europa.libraries</groupId>
