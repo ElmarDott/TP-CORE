@@ -159,7 +159,12 @@
             <artifactId>javase</artifactId>
             <version>3.3.1</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+        </dependency>
+
         <!-- Bundels -->
         <dependency>
             <groupId>org.europa.libraries</groupId>
