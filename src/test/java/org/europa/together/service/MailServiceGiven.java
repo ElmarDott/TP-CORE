@@ -83,6 +83,9 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven email_has_recipients(MailClient client) {
         try {
+            assertEquals(10, client.getRecipentList().size());
+            assertEquals("3", client.getConfiguration().get("mailer.count"));
+            assertEquals("2", client.getConfiguration().get("mailer.wait"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

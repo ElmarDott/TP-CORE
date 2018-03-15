@@ -6,7 +6,9 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.europa.together.application.DatabaseActionsImpl;
 import org.europa.together.application.LoggerImpl;
@@ -50,7 +52,6 @@ public class MailClientScenarioTest extends
         client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
         client.setSubject("JGiven Test E-Mail");
         client.setContent(StringUtils.generateLoremIpsum(0));
-        client.addRecipent("otto@sample.org");
         client.addAttachment(DIRECTORY + "/Attachment.pdf");
     }
 
@@ -99,6 +100,14 @@ public class MailClientScenarioTest extends
 
     @AfterEach
     void testCaseTermination() {
+        try {
+            if (SMTP_SERVER.getReceivedMessages().length > 0) {
+                SMTP_SERVER.purgeEmailFromAllMailboxes();
+                LOGGER.log("Mailboxes deleted.", LogLevel.TRACE);
+            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
         LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
@@ -109,8 +118,50 @@ public class MailClientScenarioTest extends
     }
 
     @Test
-    void scenario_sendSingleEmail() {
+    void scenario_sendBulkMail() {
+        LOGGER.log("Scenario A: Bulk Mail", LogLevel.DEBUG);
 
+        List<String> recipientList = new ArrayList();
+        recipientList.add("recipient_01@sample.org");
+        recipientList.add("recipient_02@sample.org");
+        recipientList.add("recipient_03@sample.org");
+        recipientList.add("recipient_04@sample.org");
+        recipientList.add("recipient_05@sample.org");
+        recipientList.add("recipient_06@sample.org");
+        recipientList.add("recipient_07@sample.org");
+        recipientList.add("recipient_08@sample.org");
+        recipientList.add("recipient_09@sample.org");
+        recipientList.add("recipient_10@sample.org");
+
+        client.clearRecipents();
+        client.addRecipientList(recipientList);
+
+        try {
+            // PreCondition
+            given().email_get_configuration(client)
+                    .and().smpt_server_is_available()
+                    .and().email_has_recipients(client)
+                    .and().email_contains_attachment(client)
+                    .and().email_is_composed(client);
+
+            // Invariant
+            when().smpt_server_is_available()
+                    .and().send_bulk_email(client);
+
+            //PostCondition
+            then().mass_emails_are_arrived(SMTP_SERVER.getReceivedMessages());
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void scenario_sendSingleEmail() {
+        LOGGER.log("Scenario B: Single Mail", LogLevel.DEBUG);
+
+        client.clearRecipents();
+        client.addRecipent("otto@sample.org");
         try {
             // PreCondition
             given().email_get_configuration(client)
@@ -123,12 +174,8 @@ public class MailClientScenarioTest extends
             when().smpt_server_is_available()
                     .and().send_email(client);
 
-            SMTP_SERVER.waitForIncomingEmail(1);
-
             //PostCondition
             then().email_is_arrived(SMTP_SERVER.getReceivedMessages()[0]);
-
-            SMTP_SERVER.purgeEmailFromAllMailboxes();
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -137,6 +184,7 @@ public class MailClientScenarioTest extends
 
     @Test
     void scenario_updateDatabaseConfiguration() {
+        LOGGER.log("Scenario C: Update Database Configuration", LogLevel.DEBUG);
 
         Map<String, String> config = new HashMap<>();
         config.put("mailer.host", "SMTPS.localhost:5432");

@@ -46,8 +46,9 @@ public class MailServiceOutcome extends Stage<MailServiceOutcome> {
         return self();
     }
 
-    public MailServiceOutcome mass_emails_are_arrived() {
+    public MailServiceOutcome mass_emails_are_arrived(MimeMessage[] msg) {
         try {
+            assertEquals(10, msg.length);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);

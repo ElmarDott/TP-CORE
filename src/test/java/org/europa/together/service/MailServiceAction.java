@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -26,8 +25,7 @@ public class MailServiceAction extends Stage<MailServiceAction> {
     private static final Logger LOGGER
             = new LoggerImpl(MailServiceAction.class);
 
-    @Autowired
-    private MailClientService service;
+    private final MailClientService service = new MailClientService();
 
     public MailServiceAction smpt_server_is_available() {
         try {
@@ -40,6 +38,7 @@ public class MailServiceAction extends Stage<MailServiceAction> {
 
     public MailServiceAction send_email(MailClient client) {
         try {
+            assertEquals(1, client.getRecipentList().size());
             service.sendEmail(client);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -49,7 +48,8 @@ public class MailServiceAction extends Stage<MailServiceAction> {
 
     public MailServiceAction send_bulk_email(MailClient client) {
         try {
-            service.sendBulkMail(client);
+            assertEquals(10, client.getRecipentList().size());
+            assertEquals(10, service.sendBulkMail(client));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

@@ -16,7 +16,6 @@ import org.europa.together.business.MailClient;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,17 +131,18 @@ public final class MailClientService {
             int maximumMailBulk = mail.getBulkMailLimiter();
             long countWaitTime = mail.getWaitTime();
 
-            //after x mails wait for n seconds
-            if (countSendedMails % maximumMailBulk == 0) {
-                TimeUnit.SECONDS.sleep(countWaitTime);
-
-                LOGGER.log("Timer wait for " + countWaitTime + " seconds.",
-                        LogLevel.DEBUG);
-            }
-
             for (InternetAddress recipient : mail.getRecipentList()) {
-                Transport.send(mail.composeMail(recipient));
+
                 countSendedMails++;
+                //after x mails wait for n seconds
+                if (countSendedMails % maximumMailBulk == 0) {
+                    TimeUnit.SECONDS.sleep(countWaitTime);
+
+                    LOGGER.log("Timer wait for " + countWaitTime + " seconds.",
+                            LogLevel.DEBUG);
+                }
+
+                Transport.send(mail.composeMail(recipient));
             }
 
         } catch (Exception ex) {
