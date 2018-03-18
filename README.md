@@ -23,14 +23,14 @@ Components - Release: 1.0
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 8.2, Maven 3.5.0 and Java 8 SE. The
+The CORE Module is build with NetBeans 8.2, Maven 3.5.3 and Java 8 SE. The
 implementation is also designed to run in Java EE 7 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 4.3, Spring 5 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL.
 
 ### Build
 
-To build the Project you will need the parent-pom from the TP-KM project. The
+To build the Project you will need the parent-pom from the TP-CM project. The
 project configurations are available in src/main/filter/ directory.
 
 In the case there is no DBMS available, all test cases which depend on Database
