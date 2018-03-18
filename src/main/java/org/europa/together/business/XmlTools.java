@@ -2,7 +2,8 @@ package org.europa.together.business;
 
 import java.io.File;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +53,7 @@ public interface XmlTools {
      * The final result is an XML in one row without comments and whitespace.
      *
      * @return content as String
-     * @throws org.europa.together.exceptions.UnsupportedVersionException
+     * @throws UnsupportedVersionException for missing implementation
      */
     @API(status = EXPERIMENTAL, since = "1.1")
     default String shrinkContent() throws UnsupportedVersionException {
@@ -65,7 +66,7 @@ public interface XmlTools {
      * @param xml as File
      * @param xslt as File
      * @return transformation as String
-     * @throws org.europa.together.exceptions.UnsupportedVersionException
+     * @throws UnsupportedVersionException for missing implementation
      */
     @API(status = EXPERIMENTAL, since = "1.1")
     default String transformXslt(File xml, File xslt) throws UnsupportedVersionException {
