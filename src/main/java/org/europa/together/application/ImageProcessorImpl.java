@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.io.File;
 import javax.imageio.ImageIO;
 import org.europa.together.business.ImageProcessor;
@@ -31,9 +32,32 @@ public class ImageProcessorImpl implements ImageProcessor {
     }
 
     @Override
+    public boolean loadImage(final BufferedImage image) {
+
+        boolean success = false;
+        if (this.image != null) {
+            this.clearImage();
+        }
+
+        this.image = image;
+        this.height = image.getHeight();
+        this.width = image.getWidth();
+
+        if (this.image != null) {
+            success = true;
+        }
+
+        return success;
+    }
+
+    @Override
     public boolean loadImage(final File imageFile) {
 
         boolean success = false;
+        if (this.image != null) {
+            this.clearImage();
+        }
+
         try {
             this.image = ImageIO.read(imageFile);
             this.height = image.getHeight();
@@ -58,9 +82,14 @@ public class ImageProcessorImpl implements ImageProcessor {
 
     @Override
     public boolean saveImage(final BufferedImage renderedImage, final File file,
-            final String format) {
+            final String format)
+            throws MisconfigurationException {
 
         boolean success = false;
+        if (!format.equals("jpg") || !format.equals("png") || !format.equals("gif")) {
+            throw new MisconfigurationException(format + " is not supported.");
+        }
+
         try {
 
             ImageIO.write(renderedImage, format, file);
@@ -75,12 +104,46 @@ public class ImageProcessorImpl implements ImageProcessor {
     }
 
     @Override
-    public void resetImage() {
+    public long getImageSize(BufferedImage image) {
+        DataBuffer dataBuffer = image.getData().getDataBuffer();
+
+        // Each bank element in the data buffer is a 32-bit integer
+        long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
+        return ((long) dataBuffer.getSize()) * 4l;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public void clearImage() {
         this.image = null;
         this.fileName = null;
         this.height = 0;
         this.width = 0;
         LOGGER.log("Loaded image reseted.", LogLevel.TRACE);
+    }
+
+    @Override
+    public BufferedImage crop(final int x, final int y, final int height, final int width)
+            throws MisconfigurationException {
+
+        BufferedImage renderdImg;
+        try {
+            renderdImg = Scalr.crop(this.image, x, y, width, height);
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+            throw new MisconfigurationException(ex.getMessage());
+        }
+        return renderdImg;
     }
 
     @Override
@@ -105,6 +168,11 @@ public class ImageProcessorImpl implements ImageProcessor {
             throw new MisconfigurationException(ex.getMessage());
         }
         return renderdImg;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return this.image;
     }
 
     @Override
@@ -146,4 +214,5 @@ public class ImageProcessorImpl implements ImageProcessor {
         }
         return renderdImg;
     }
+
 }

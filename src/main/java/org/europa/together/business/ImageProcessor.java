@@ -42,7 +42,18 @@ public interface ImageProcessor {
     String FORMAT_PNG = "png";
 
     /**
-     * Load an image from a file.
+     * Load an BufferdImage. In te case an Image is already loaded, this method
+     * overwrite the prvieous image.
+     *
+     * @param image as BufferdImage
+     * @return true on success
+     */
+    @API(status = STABLE, since = "1.0")
+    boolean loadImage(final BufferedImage image);
+
+    /**
+     * Load an image from a file. In te case an Image is already loaded, this
+     * method overwrite the prvieous image.
      *
      * @param image as File
      * @return true on success
@@ -68,26 +79,55 @@ public interface ImageProcessor {
      * @param file as File
      * @param format as String
      * @return true on success
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    boolean saveImage(BufferedImage renderedImage, File file, String format);
+    boolean saveImage(BufferedImage renderedImage, File file, String format)
+            throws MisconfigurationException;
+
+    /**
+     * Get the height in pixel of the loaded image.
+     *
+     * @return height as int
+     */
+    int getHeight();
+
+    /**
+     * Get the width in pixel of the loaded image.
+     *
+     * @return width as int
+     */
+    int getWidth();
+
+    /**
+     * Calculate the size in bytes of the BufferdImage.
+     *
+     * @param image as BufferedImage
+     * @return imageSize as long
+     */
+    public long getImageSize(BufferedImage image);
 
     /**
      * Reset the loaded Image.
      */
-    void resetImage();
+    @API(status = STABLE, since = "1.0")
+    void clearImage();
 
-    @API(status = EXPERIMENTAL, since = "1.0")
-    default BufferedImage crop(long x, long y, long height, long width)
-            throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
-    }
-
-    @API(status = EXPERIMENTAL, since = "1.0")
-    default BufferedImage compress(int percentage)
-            throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
-    }
+    /**
+     * Get from an given image an defined clipping. X and Y are the coordinates
+     * where the cropping starts. Height and Width define an rectangle of the
+     * cropped area, which will be the new image.
+     *
+     * @param x as int
+     * @param y as int
+     * @param height as int
+     * @param width as int
+     * @return renderdImage as BufferedImage
+     * @throws org.europa.together.exceptions.MisconfigurationException
+     */
+    @API(status = STABLE, since = "1.0")
+    BufferedImage crop(int x, int y, int height, int width)
+            throws MisconfigurationException;
 
     /**
      * Flip the image horizontaly.
@@ -106,6 +146,14 @@ public interface ImageProcessor {
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipVertical() throws MisconfigurationException;
+
+    /**
+     * Get the original loaded Image.
+     *
+     * @return image as BufferedImage
+     */
+    @API(status = STABLE, since = "1.0")
+    BufferedImage getImage();
 
     /**
      * Resize an given imag to a new Size. The new scale is given in percent and
@@ -129,13 +177,13 @@ public interface ImageProcessor {
     @API(status = STABLE, since = "1.0")
     BufferedImage rotateRight() throws MisconfigurationException;
 
-    @API(status = EXPERIMENTAL, since = "1.0")
+    @API(status = EXPERIMENTAL, since = "1.1")
     default BufferedImage setMetaData()
             throws UnsupportedVersionException {
         throw new UnsupportedVersionException("Method not implemnted in this Version.");
     }
 
-    @API(status = EXPERIMENTAL, since = "1.0")
+    @API(status = EXPERIMENTAL, since = "1.1")
     default Map<String, String> getMetaData()
             throws UnsupportedVersionException {
         throw new UnsupportedVersionException("Method not implemnted in this Version.");

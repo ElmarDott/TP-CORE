@@ -41,7 +41,7 @@ public class ImageProcessorImplTest {
 
     @BeforeEach
     void testCaseInitialization() {
-        processor.resetImage();
+        processor.clearImage();
     }
 
     @AfterEach
@@ -56,13 +56,47 @@ public class ImageProcessorImplTest {
     }
 
     @Test
-    void testLoadImage() {
+    void testLoadImageAsFile() {
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+    }
+
+    @Test
+    void testLoadImageAsBufferdImage() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        assertNotNull(img);
+        assertTrue(processor.loadImage(img));
     }
 
     @Test
     void testFailLoadImage() {
         assertFalse(processor.loadImage(new File(DIRECTORY + "No_Image.gif")));
+    }
+
+    @Test
+    void testFailSaveImage() throws MisconfigurationException {
+
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.saveImage(img, new File(DIRECTORY + "image_fail_safe.png"), "bpm");
+        });
+    }
+
+    @Test
+    void testImageDimensions() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        assertEquals(407, processor.getHeight());
+        assertEquals(226, processor.getWidth());
+    }
+
+    @Test
+    void testCalculateImageSize() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        assertEquals(1471712, processor.getImageSize(img));
     }
 
     @Test
@@ -77,7 +111,7 @@ public class ImageProcessorImplTest {
         assertFalse(processor.isImageSet());
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertTrue(processor.isImageSet());
-        processor.resetImage();
+        processor.clearImage();
         assertFalse(processor.isImageSet());
     }
 
@@ -88,6 +122,12 @@ public class ImageProcessorImplTest {
             assertTrue(processor.isImageSet());
             BufferedImage img = processor.resize(50);
             assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_resize_reduce.png"), ImageProcessor.FORMAT_PNG));
+
+            processor.clearImage();
+            processor.loadImage(new File(DIRECTORY + "image_resize_reduce.png"));
+            assertEquals(203, processor.getHeight());
+            assertEquals(113, processor.getWidth());
+
         } catch (MisconfigurationException ex) {
             LOGGER.catchException(ex);
         }
@@ -100,6 +140,12 @@ public class ImageProcessorImplTest {
             assertTrue(processor.isImageSet());
             BufferedImage img = processor.resize(100);
             assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_resize_noEffect.png"), ImageProcessor.FORMAT_PNG));
+
+            processor.clearImage();
+            processor.loadImage(new File(DIRECTORY + "image_resize_noEffect.png"));
+            assertEquals(407, processor.getHeight());
+            assertEquals(226, processor.getWidth());
+
         } catch (MisconfigurationException ex) {
             LOGGER.catchException(ex);
         }
@@ -112,6 +158,12 @@ public class ImageProcessorImplTest {
             assertTrue(processor.isImageSet());
             BufferedImage img = processor.resize(150);
             assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_resize_inflate.png"), ImageProcessor.FORMAT_PNG));
+
+            processor.clearImage();
+            processor.loadImage(new File(DIRECTORY + "image_resize_inflate.png"));
+            assertEquals(610, processor.getHeight());
+            assertEquals(339, processor.getWidth());
+
         } catch (MisconfigurationException ex) {
             LOGGER.catchException(ex);
         }
@@ -126,5 +178,72 @@ public class ImageProcessorImplTest {
         assertThrows(MisconfigurationException.class, () -> {
             BufferedImage img = processor.resize(0);
         });
+    }
+
+    @Test
+    void testImageRotate() {
+        try {
+            processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
+            assertTrue(processor.isImageSet());
+            BufferedImage img = processor.rotateRight();
+
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_rotate.png"), ImageProcessor.FORMAT_PNG));
+
+            processor.clearImage();
+            processor.loadImage(new File(DIRECTORY + "image_rotate.png"));
+            assertEquals(226, processor.getHeight());
+            assertEquals(407, processor.getWidth());
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testImageFlipVertical() {
+        try {
+            processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
+            assertTrue(processor.isImageSet());
+            BufferedImage img = processor.flipVertical();
+
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_flip_vertical.png"), ImageProcessor.FORMAT_PNG));
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testImageFlipHorizontal() {
+        try {
+            processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
+            assertTrue(processor.isImageSet());
+            BufferedImage img = processor.flipHorizontal();
+
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_flip_horizontal.png"), ImageProcessor.FORMAT_PNG));
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testCropImage() {
+
+        try {
+            processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
+            assertTrue(processor.isImageSet());
+            BufferedImage img = processor.crop(30, 50, 150, 100);
+
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_cropped.png"), ImageProcessor.FORMAT_PNG));
+
+            processor.clearImage();
+            processor.loadImage(new File(DIRECTORY + "image_cropped.png"));
+            assertEquals(150, processor.getHeight());
+            assertEquals(100, processor.getWidth());
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+
     }
 }
