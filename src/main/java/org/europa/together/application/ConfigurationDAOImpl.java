@@ -8,6 +8,7 @@ import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,11 +75,22 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ConfigurationDO> getAllModuleEntries(String module) {
+        Session session = mainEntityManagerFactory.unwrap(Session.class);
+        return session.createCriteria(ConfigurationDO.class)
+                .add(Restrictions.eq("modulName", module))
+                .addOrder(Order.asc("version"))
+                .list();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public List<ConfigurationDO> getAllDepecatedEntries() {
         Session session = mainEntityManagerFactory.unwrap(Session.class);
         return session.createCriteria(ConfigurationDO.class)
                 .add(Restrictions.eq("depecated", true))
+                .addOrder(Order.asc("version"))
                 .list();
     }
 
@@ -94,6 +106,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
                 .add(Restrictions.eq("key", hash))
                 .add(Restrictions.eq("modulName", module))
                 .add(Restrictions.eq("configurationSet", configSet))
+                .addOrder(Order.asc("version"))
                 .list();
     }
 

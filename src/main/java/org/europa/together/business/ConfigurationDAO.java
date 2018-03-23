@@ -53,9 +53,18 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
             getAllConfigurationSetEntries(String module, String version, String configSet);
 
     /**
+     * get all configuration entries for a module.
+     *
+     * @param module as String
+     * @return ConfigurationSet as List&lt;Configuration&gt;
+     */
+    @API(status = STABLE, since = "1.0")
+    List<ConfigurationDO> getAllModuleEntries(String module);
+
+    /**
      * Return a List of all deprecated ConfigurationDO.
      *
-     * @return deprecated ConfigurationDO
+     * @return deprecated as List&lt;Configuration&gt;
      */
     @API(status = STABLE, since = "1.0")
     List<ConfigurationDO> getAllDepecatedEntries();
@@ -68,7 +77,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param module as String
      * @param key as String
      * @param configSet as String
-     * @return Configuration as List
+     * @return history as List&lt;Configuration&gt;
      */
     @API(status = STABLE, since = "1.0")
     List<ConfigurationDO> getHistoryOfAEntry(String module, String key, String configSet);

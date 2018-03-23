@@ -1,10 +1,16 @@
 package org.europa.together.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +27,10 @@ public final class ConfigurationService {
     private static final long serialVersionUID = 205L;
     private static final Logger LOGGER = new LoggerImpl(ConfigurationService.class);
 
+    @Autowired
+    @Qualifier("configurationDAOImpl")
+    private ConfigurationDAO configurationDAO;
+
     /**
      * Constructor.
      */
@@ -28,11 +38,40 @@ public final class ConfigurationService {
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
-    // import full config from xml
-    // export full config to xml
-    // filter mandatory fields of configuration
-    // reset modul to default
-    // reset all to default
-    // get module history
-    //
+    /**
+     * Reset all configuration key entries for a module back to the default
+     * values.
+     *
+     * @param module as String
+     */
+    public void resetModueToDefault(final String module) {
+
+        List<ConfigurationDO> configurationEntries = configurationDAO.getAllModuleEntries(module);
+        for (ConfigurationDO entry : configurationEntries) {
+            configurationDAO.restoreKeyToDefault(entry);
+        }
+    }
+
+    /**
+     * Filter all mandatory Entries of a ConfigSet.
+     *
+     * @param module as String
+     * @param version as String
+     * @param configSet as String
+     * @return mandatory as List&lt;Configuration&gt;
+     */
+    public List<ConfigurationDO> filterMandatoryFieldsOfConfigSet(
+            final String module, final String version, final String configSet) {
+
+        List<ConfigurationDO> mandantoryEntries = new ArrayList<>();
+        List<ConfigurationDO> configurationEntries
+                = configurationDAO.getAllConfigurationSetEntries(module, version, configSet);
+        for (ConfigurationDO entry : configurationEntries) {
+            if (entry.isMandatory()) {
+                mandantoryEntries.add(entry);
+            }
+        }
+        return mandantoryEntries;
+    }
+
 }
