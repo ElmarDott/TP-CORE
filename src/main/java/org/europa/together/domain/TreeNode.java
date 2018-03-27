@@ -130,10 +130,7 @@ public class TreeNode {
         }
 
         final TreeNode other = (TreeNode) obj;
-
-        if (!Objects.equals(this.uuid, other.uuid)
-                || !Objects.equals(this.nodeName, other.nodeName)
-                && !Objects.equals(this.parent, other.parent)) {
+        if (!Objects.equals(this.uuid, other.uuid)) {
             return false;
         }
         return true;

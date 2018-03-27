@@ -5,7 +5,6 @@ import flexjson.JSONSerializer;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.europa.together.business.GenericDAO;
@@ -56,7 +55,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
                     LogLevel.TRACE);
             success = true;
 
-        } catch (EntityExistsException | IllegalArgumentException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
         return success;
@@ -65,15 +64,15 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     @Override
     public final boolean delete(final PK id) {
         boolean success = false;
-        T foundObject = find(id);
-        if (foundObject != null) {
-            try {
+        try {
+            T foundObject = find(id);
+            if (foundObject != null) {
                 mainEntityManagerFactory.remove(foundObject);
                 LOGGER.log("DAO (" + genericType.getSimpleName() + ") delete", LogLevel.TRACE);
                 success = true;
-            } catch (IllegalArgumentException ex) {
-                LOGGER.catchException(ex);
             }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }
@@ -147,7 +146,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     }
 
     @Override
-    public T deserializeAsObject(final String json) {
+    public T deserializeJsonAsObject(final String json) {
         return new JSONDeserializer<T>().deserialize(json);
     }
 

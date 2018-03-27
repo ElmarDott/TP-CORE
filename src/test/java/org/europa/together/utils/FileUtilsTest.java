@@ -5,7 +5,14 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -14,10 +21,32 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class FileUtilsTest {
 
+    private static final Logger LOGGER = new LoggerImpl(FileUtilsTest.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    @Test//(expected = Exception.class)
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
+    @Test
     void testPrivateConstructor() throws Exception {
         Constructor<FileUtils> clazz
                 = FileUtils.class.getDeclaredConstructor();
@@ -31,6 +60,7 @@ public class FileUtilsTest {
     void testGetFileSize() {
         assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
         assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
+        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", " "));
         assertEquals(259, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
 
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "mega"));
@@ -39,21 +69,28 @@ public class FileUtilsTest {
     }
 
     @Test
+    void testFailGetFileSize() {
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "no_file", null));
+    }
+
+    @Test
     void testWriteStringToFile() {
 
         String fileContent = "Content of the written File";
-        String path = Constraints.SYSTEM_USER_HOME_DIR;
 
-        assertTrue(FileUtils.writeStringToFile(fileContent, path + "/test.txt"));
-        assertEquals(27, FileUtils.getFileSize(path + "/test.txt", null));
+        assertTrue(FileUtils.writeStringToFile(fileContent, DIRECTORY + "/test.txt"));
+        assertEquals(27, FileUtils.getFileSize(DIRECTORY + "/test.txt", null));
 
-        assertFalse(FileUtils.writeStringToFile("", path + "/test_empty.txt"));
-        assertFalse(FileUtils.writeStringToFile(null, path + "/test_empty.txt"));
+        assertTrue(FileUtils.writeStringToFile("", DIRECTORY + "/test_empty.txt"));
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "/test_empty.txt", null));
+
+        assertFalse(FileUtils.writeStringToFile(null, DIRECTORY + "/test_null.txt"));
 
         try {
-            Files.delete(Paths.get(path + "/test.txt"));
+            Files.delete(Paths.get(DIRECTORY + "/test.txt"));
+            Files.delete(Paths.get(DIRECTORY + "/test_empty.txt"));
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            LOGGER.catchException(ex);
         }
     }
 
@@ -61,6 +98,11 @@ public class FileUtilsTest {
     void testReadFile() {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
+    }
+
+    @Test
+    void testFailReadFile() {
+        assertEquals("", FileUtils.readFileStream(new File("no_file")));
     }
 
     @Test
@@ -78,6 +120,11 @@ public class FileUtilsTest {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    @Test
+    void testFailAppendFile() {
+        FileUtils.appendFile("no_file_to_append", "apending string.");
     }
 
     @Test

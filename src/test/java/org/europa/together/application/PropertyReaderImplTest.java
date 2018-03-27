@@ -57,7 +57,7 @@ public class PropertyReaderImplTest {
 
     @Test
     void testAddPropertyList() {
-        Map<String, String> resource = new HashMap();
+        Map<String, String> resource = new HashMap<>();
         resource.put("1", "1");
         resource.put("2", "1");
         resource.put("3", "1");
@@ -65,14 +65,14 @@ public class PropertyReaderImplTest {
         propertyReader.addPropertyList(resource);
         assertEquals(3, propertyReader.count());
 
-        Map<String, String> update = new HashMap();
+        Map<String, String> update = new HashMap<>();
         propertyReader.addPropertyList(update);
         assertEquals(3, propertyReader.count());
     }
 
     @Test
     void testOverwriteAddPropertyList() {
-        Map<String, String> resource = new HashMap();
+        Map<String, String> resource = new HashMap<>();
         resource.put("1", "1");
         resource.put("2", "1");
         resource.put("3", "1");

@@ -204,6 +204,13 @@ public class XmlToolsImplTest {
     }
 
     @Test
+    void testFailValidation() {
+        xmlTools.parseXmlFile(new File(""));
+        assertFalse(xmlTools.isWellFormed());
+        assertFalse(xmlTools.isValid());
+    }
+
+    @Test
     void testValidInternalDtd() {
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_valid_internal.xml"));
         assertTrue(xmlTools.isWellFormed());

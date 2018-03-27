@@ -43,6 +43,7 @@ public final class MailClientService {
     /**
      * Constructor.
      */
+    @API(status = STABLE, since = "1.0")
     public MailClientService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -63,6 +64,7 @@ public final class MailClientService {
      *
      * @param configurationList as Map
      */
+    @API(status = STABLE, since = "1.0")
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
@@ -97,6 +99,7 @@ public final class MailClientService {
      *
      * @param mail as MailClient
      */
+    @API(status = STABLE, since = "1.0")
     public void sendEmail(final MailClient mail) {
         try {
             Address[] addresses = new Address[1];
@@ -124,6 +127,7 @@ public final class MailClientService {
      * @param mail as MailClient
      * @return sendedEmails as int
      */
+    @API(status = STABLE, since = "1.0")
     public int sendBulkMail(final MailClient mail) {
 
         int countSendedMails = 0;

@@ -18,6 +18,7 @@ public class ImageProcessorImpl implements ImageProcessor {
     private static final long serialVersionUID = 12L;
     private static final Logger LOGGER = new LoggerImpl(ImageProcessorImpl.class);
 
+    private static final long MULTIPLIER = 4L;
     private static final int DIVISOR = 100;
     private BufferedImage image = null;
     private String fileName = null;
@@ -35,18 +36,12 @@ public class ImageProcessorImpl implements ImageProcessor {
     public boolean loadImage(final BufferedImage image) {
 
         boolean success = false;
-        if (this.image != null) {
-            this.clearImage();
-        }
-
-        this.image = image;
-        this.height = image.getHeight();
-        this.width = image.getWidth();
-
-        if (this.image != null) {
+        if (image != null) {
+            this.image = image;
+            this.height = image.getHeight();
+            this.width = image.getWidth();
             success = true;
         }
-
         return success;
     }
 
@@ -86,13 +81,26 @@ public class ImageProcessorImpl implements ImageProcessor {
             throws MisconfigurationException {
 
         boolean success = false;
-        if (!format.equals("jpg") || !format.equals("png") || !format.equals("gif")) {
+        if (!(format.equals("jpg") || format.equals("png") || format.equals("gif"))) {
             throw new MisconfigurationException(format + " is not supported.");
         }
 
         try {
+            if (format.equalsIgnoreCase("png")) {
+                ImageIO.write(renderedImage, "PNG", file);
+            }
+            if (format.equalsIgnoreCase("gif")) {
+                ImageIO.write(renderedImage, "GIF", file);
+            }
+            if (format.equalsIgnoreCase("jpg")) {
+                int w = renderedImage.getWidth();
+                int h = renderedImage.getHeight();
+                BufferedImage newImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                int[] rgb = renderedImage.getRGB(0, 0, w, h, null, 0, w);
+                newImage.setRGB(0, 0, w, h, rgb, 0, w);
+                ImageIO.write(newImage, "JPG", file);
+            }
 
-            ImageIO.write(renderedImage, format, file);
             success = true;
             String msg = "Image " + this.fileName + " successful to: "
                     + file.getPath() + " saved.";
@@ -104,12 +112,9 @@ public class ImageProcessorImpl implements ImageProcessor {
     }
 
     @Override
-    public long getImageSize(BufferedImage image) {
+    public long getImageSize(final BufferedImage image) {
         DataBuffer dataBuffer = image.getData().getDataBuffer();
-
-        // Each bank element in the data buffer is a 32-bit integer
-        long sizeBytes = ((long) dataBuffer.getSize()) * 4l;
-        return ((long) dataBuffer.getSize()) * 4l;
+        return ((long) dataBuffer.getSize()) * MULTIPLIER;
     }
 
     @Override

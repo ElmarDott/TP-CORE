@@ -15,11 +15,8 @@ import org.xml.sax.ext.DefaultHandler2;
 
 /**
  * This class extends the SAX2 base handler class to support the SAX2
- * {@link LexicalHandler}, {@link DeclHandler}, and {@link EntityResolver2}
- * extensions. Except for overriding the original SAX1
- * {@link DefaultHandler#resolveEntity resolveEntity()} method the added handler
- * methods just return. Subclassers may override everything on a
- * method-by-method basis.
+ * <b>LexicalHandler</b>, <b>DeclHandler</b>, and <b>EntityResolver2</b>
+ * extensions.
  */
 public class SaxDocumentHandler extends DefaultHandler2 {
 

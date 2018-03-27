@@ -32,6 +32,7 @@ public class ConfigurationDOTest {
 
     @AfterAll
     static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach

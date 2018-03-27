@@ -3,7 +3,6 @@ package org.europa.together.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -15,7 +14,6 @@ import java.util.Set;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import static org.europa.together.utils.StringUtils.isEmpty;
 
 /**
  * Some helpful stuff for file handling.
@@ -45,16 +43,15 @@ public final class FileUtils {
         LOGGER.log("writeStringToFile() destination:" + destinationFile, LogLevel.DEBUG);
 
         try {
-            if (!isEmpty(content)) {
-                BufferedWriter writer
-                        = Files.newBufferedWriter(Paths.get(destinationFile), CHARSET);
-                writer.append(content, 0, content.length());
-                writer.close();
-                LOGGER.log("writeStringToFile() count of characters:"
-                        + content.length(), LogLevel.DEBUG);
+            BufferedWriter writer
+                    = Files.newBufferedWriter(Paths.get(destinationFile), CHARSET);
+            writer.append(content, 0, content.length());
+            writer.close();
+            LOGGER.log("writeStringToFile() count of characters:"
+                    + content.length(), LogLevel.DEBUG);
 
-            } else {
-                LOGGER.log("Filecontent is empty.", LogLevel.ERROR);
+            if (StringUtils.isEmpty(content)) {
+                LOGGER.log("Filecontent is empty.", LogLevel.WARN);
             }
 
             File testFile = new File(destinationFile);
@@ -64,7 +61,7 @@ public final class FileUtils {
                 LOGGER.log(destinationFile + " don't exst.", LogLevel.ERROR);
             }
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
         return success;
@@ -80,8 +77,8 @@ public final class FileUtils {
      * @return fileSize as double
      */
     public static long getFileSize(final String filePath, final String dimension) {
-        String mode = "";
-        if (dimension != null) {
+        String mode = " ";
+        if (!StringUtils.isEmpty(dimension)) {
             mode = dimension;
         }
         File file = new File(filePath);
@@ -133,7 +130,7 @@ public final class FileUtils {
                 content.append((char) line);
             }
             inputStreamReader.close();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
         return content.toString();
@@ -151,7 +148,7 @@ public final class FileUtils {
 
             LOGGER.log(filePath + " extende with " + content.length() + " characters",
                     LogLevel.DEBUG);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
     }

@@ -140,23 +140,6 @@ public final class StringUtils {
     }
 
     /**
-     * Remove form a String the UTF8 BOM. BOM = Byte Order Mark
-     *
-     * @param content as String
-     * @return content as String
-     */
-    public static String convertToUtf8NoBom(final String content) {
-        String cleanedString = "";
-        if (content.startsWith("\\uFEFF")) {
-            cleanedString = content.substring(1);
-            LOGGER.log("UTF-8 BOM removed.", LogLevel.DEBUG);
-        } else {
-            cleanedString = content;
-        }
-        return cleanedString;
-    }
-
-    /**
      * Escape (decode) in a String all special Characters for XML to thir
      * equivalent representation. Characters: <, >, &, ', "<br>
      * This replacement extend the security of a web Application against XSS and

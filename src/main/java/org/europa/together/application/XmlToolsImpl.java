@@ -1,7 +1,9 @@
 package org.europa.together.application;
 
 import java.io.File;
+import java.io.IOException;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.SchemaFactory;
@@ -12,6 +14,7 @@ import org.europa.together.utils.SaxDocumentHandler;
 import org.europa.together.business.XmlTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
+import org.xml.sax.SAXException;
 
 /**
  * Implementation of the XML Tools.
@@ -128,6 +131,8 @@ public class XmlToolsImpl implements XmlTools {
             this.parser.reset();
             success = true;
 
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
+            LOGGER.catchException(ex);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

@@ -204,10 +204,4 @@ public class StringUtilsTest {
         String replaced = "&#0060;root&#0062;&#0038;nbsp;&#0060;/root&#0062; &#0034; &#0039;home\\dir&#0039;";
         assertEquals(replaced, StringUtils.escapeXmlCharacters(orginal));
     }
-
-    @Test
-    void testFailClean_UTF8_Bom() {
-        String orginal = "Lorem ipsum";
-        assertEquals(orginal, StringUtils.convertToUtf8NoBom(orginal));
-    }
 }

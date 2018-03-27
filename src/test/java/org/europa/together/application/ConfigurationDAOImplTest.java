@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -135,6 +136,13 @@ public class ConfigurationDAOImplTest {
     }
 
     @Test
+    void testFailCreate() {
+        assertThrows(Exception.class, () -> {
+            configurationDAO.create(null);
+        });
+    }
+
+    @Test
     void testUpdate() {
         configDO.setValue("changed value");
         configurationDAO.update("QWERTZ", configDO);
@@ -154,6 +162,13 @@ public class ConfigurationDAOImplTest {
     }
 
     @Test
+    void testFailDelete() {
+        assertThrows(Exception.class, () -> {
+            configurationDAO.delete(null);
+        });
+    }
+
+    @Test
     void testSerilizeAsJson() {
         String json
                 = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
@@ -166,7 +181,7 @@ public class ConfigurationDAOImplTest {
     void testDeserializeJson() {
         String json
                 = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
-        ConfigurationDO deserialize = configurationDAO.deserializeAsObject(json);
+        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json);
         assertEquals(configDO, deserialize);
     }
 
@@ -178,7 +193,6 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testGetConfigurationByKeyNoExist() {
-
         assertNull(configurationDAO.getConfigurationByKey("noope", "Module", "1"));
     }
 
@@ -304,5 +318,11 @@ public class ConfigurationDAOImplTest {
             assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(1).getUuid());
             assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(0).getUuid());
         }
+    }
+
+    @Test
+    void testGetAllModuleEntries() {
+        List<ConfigurationDO> set = configurationDAO.getAllModuleEntries("Module_A");
+        assertEquals(10, set.size());
     }
 }

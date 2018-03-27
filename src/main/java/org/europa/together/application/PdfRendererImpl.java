@@ -2,8 +2,8 @@ package org.europa.together.application;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
-import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import org.europa.together.business.Logger;
@@ -66,8 +66,9 @@ public class PdfRendererImpl implements PdfRenderer {
                     .append(template)
                     .append("</body></html>");
 
-            HTMLWorker htmlWorker = new HTMLWorker(document);
-            htmlWorker.parse(new StringReader(html.toString()));
+            XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
+            worker.parseXHtml(pdfWriter, document, new StringReader(html.toString()));
+
             document.close();
             pdfWriter.close();
 

@@ -1,8 +1,15 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
+import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -11,7 +18,30 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class ValidatorTest {
 
-    @Test//(expected = Exception.class)
+    private static final Logger LOGGER = new LoggerImpl(ValidatorTest.class);
+
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() {
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
+    @Test
     void testPrivateConstructor() throws Exception {
         Constructor<Validator> clazz
                 = Validator.class.getDeclaredConstructor();
@@ -252,7 +282,7 @@ public class ValidatorTest {
         assertTrue(Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime(2016, 1, 1, 0, 0)));
     }
 
-    @Test//(expected = IllegalArgumentException.class)
+    @Test
     void testIsDateNotBefore() {
         //equal
         assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2015, 12, 31, 23, 59)));

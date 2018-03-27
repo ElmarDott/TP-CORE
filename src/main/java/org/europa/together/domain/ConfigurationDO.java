@@ -22,9 +22,9 @@ import org.europa.together.utils.StringUtils;
 @Entity
 @Table(name = "APP_CONFIG",
         indexes = {
-            @Index(columnList = "CONF_KEY", name = "configuration_key")
-            , @Index(columnList = "MODUL_NAME", name = "modul_name")
-            , @Index(columnList = "CONF_SET", name = "configuration_set")
+            @Index(columnList = "CONF_KEY", name = "configuration_key"),
+            @Index(columnList = "MODUL_NAME", name = "modul_name"),
+            @Index(columnList = "CONF_SET", name = "configuration_set")
         },
         uniqueConstraints = {
             @UniqueConstraint(columnNames

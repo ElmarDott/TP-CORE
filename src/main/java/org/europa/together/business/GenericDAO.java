@@ -109,7 +109,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @return Entity as String
      */
     @API(status = STABLE, since = "1.0")
-    T deserializeAsObject(String json);
+    T deserializeJsonAsObject(String json);
 
     /**
      * try to find a persitence Object.

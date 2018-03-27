@@ -23,10 +23,10 @@ import org.junit.runner.RunWith;
 public class ImageProcessorImplTest {
 
     private static final String DIRECTORY
-            = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
+            = Constraints.SYSTEM_APP_DIR + "/target/test-classes/org/europa/together/images/";
     private static final Logger LOGGER = new LoggerImpl(ImageProcessorImplTest.class);
 
-    ImageProcessor processor = new ImageProcessorImpl();
+    private ImageProcessor processor = new ImageProcessorImpl();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -72,17 +72,63 @@ public class ImageProcessorImplTest {
     @Test
     void testFailLoadImage() {
         assertFalse(processor.loadImage(new File(DIRECTORY + "No_Image.gif")));
+        BufferedImage img = null;
+        assertFalse(processor.loadImage(img));
     }
 
     @Test
-    void testFailSaveImage() throws MisconfigurationException {
+    void testSaveImageAsJpg() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        try {
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_save.jpg"),
+                    ImageProcessor.FORMAT_JPG));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
 
+    @Test
+    void testSaveImageAsGif() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        try {
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_save.gif"),
+                    ImageProcessor.FORMAT_GIF));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testSaveImageAsPng() {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        try {
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_save.png"),
+                    ImageProcessor.FORMAT_PNG));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testSaveImageWrongType() throws MisconfigurationException {
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
 
         assertThrows(MisconfigurationException.class, () -> {
             processor.saveImage(img, new File(DIRECTORY + "image_fail_safe.png"), "bpm");
         });
+    }
+
+    @Test
+    void testFailSaveImage() {
+        try {
+            processor.saveImage(null, new File(""), "bpm");
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
     }
 
     @Test
@@ -170,6 +216,13 @@ public class ImageProcessorImplTest {
     }
 
     @Test
+    void testFailResize() throws MisconfigurationException {
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.resize(50);
+        });
+    }
+
+    @Test
     void testFailResizeImage() throws MisconfigurationException {
 
         processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -200,6 +253,13 @@ public class ImageProcessorImplTest {
     }
 
     @Test
+    void testFailImageRotate() throws MisconfigurationException {
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.rotateRight();
+        });
+    }
+
+    @Test
     void testImageFlipVertical() {
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -214,6 +274,13 @@ public class ImageProcessorImplTest {
     }
 
     @Test
+    void testFailFlipVerticall() throws MisconfigurationException {
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.flipVertical();
+        });
+    }
+
+    @Test
     void testImageFlipHorizontal() {
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -225,6 +292,13 @@ public class ImageProcessorImplTest {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+    }
+
+    @Test
+    void testFailFlipHorizontal() throws MisconfigurationException {
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.flipHorizontal();
+        });
     }
 
     @Test
@@ -245,5 +319,13 @@ public class ImageProcessorImplTest {
             LOGGER.catchException(ex);
         }
 
+    }
+
+    @Test
+    void testFailCropImage() throws MisconfigurationException {
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        assertThrows(MisconfigurationException.class, () -> {
+            processor.crop(0, 0, 0, 0);
+        });
     }
 }

@@ -121,7 +121,7 @@ public class MailClientScenarioTest extends
     void scenario_sendBulkMail() {
         LOGGER.log("Scenario A: Bulk Mail", LogLevel.DEBUG);
 
-        List<String> recipientList = new ArrayList();
+        List<String> recipientList = new ArrayList<>();
         recipientList.add("recipient_01@sample.org");
         recipientList.add("recipient_02@sample.org");
         recipientList.add("recipient_03@sample.org");

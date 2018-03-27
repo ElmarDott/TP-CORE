@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of the ConfigurationDAO.
  */
 @Repository
+@SuppressWarnings("unchecked")
 public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String>
         implements ConfigurationDAO {
 
@@ -63,7 +64,6 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
 
     @Override
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
         Session session = mainEntityManagerFactory.unwrap(Session.class);
@@ -76,7 +76,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
 
     @Override
     @Transactional(readOnly = true)
-    public List<ConfigurationDO> getAllModuleEntries(String module) {
+    public List<ConfigurationDO> getAllModuleEntries(final String module) {
         Session session = mainEntityManagerFactory.unwrap(Session.class);
         return session.createCriteria(ConfigurationDO.class)
                 .add(Restrictions.eq("modulName", module))
@@ -85,7 +85,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllDepecatedEntries() {
         Session session = mainEntityManagerFactory.unwrap(Session.class);
         return session.createCriteria(ConfigurationDO.class)
@@ -96,7 +96,6 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
 
     @Override
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
     public List<ConfigurationDO> getHistoryOfAEntry(final String module,
             final String key, final String configSet) {
 

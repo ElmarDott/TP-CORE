@@ -34,6 +34,7 @@ public final class ConfigurationService {
     /**
      * Constructor.
      */
+    @API(status = STABLE, since = "1.0")
     public ConfigurationService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -44,7 +45,8 @@ public final class ConfigurationService {
      *
      * @param module as String
      */
-    public void resetModueToDefault(final String module) {
+    @API(status = STABLE, since = "1.0")
+    public void resetModuleToDefault(final String module) {
 
         List<ConfigurationDO> configurationEntries = configurationDAO.getAllModuleEntries(module);
         for (ConfigurationDO entry : configurationEntries) {
@@ -60,6 +62,7 @@ public final class ConfigurationService {
      * @param configSet as String
      * @return mandatory as List&lt;Configuration&gt;
      */
+    @API(status = STABLE, since = "1.0")
     public List<ConfigurationDO> filterMandatoryFieldsOfConfigSet(
             final String module, final String version, final String configSet) {
 

@@ -79,7 +79,7 @@ public interface ImageProcessor {
      * @param file as File
      * @param format as String
      * @return true on success
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     boolean saveImage(BufferedImage renderedImage, File file, String format)
@@ -105,7 +105,7 @@ public interface ImageProcessor {
      * @param image as BufferedImage
      * @return imageSize as long
      */
-    public long getImageSize(BufferedImage image);
+    long getImageSize(BufferedImage image);
 
     /**
      * Reset the loaded Image.
@@ -123,7 +123,7 @@ public interface ImageProcessor {
      * @param height as int
      * @param width as int
      * @return renderdImage as BufferedImage
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage crop(int x, int y, int height, int width)
@@ -133,7 +133,7 @@ public interface ImageProcessor {
      * Flip the image horizontaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipHorizontal() throws MisconfigurationException;
@@ -142,7 +142,7 @@ public interface ImageProcessor {
      * Flip the image verticaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipVertical() throws MisconfigurationException;
@@ -163,7 +163,7 @@ public interface ImageProcessor {
      *
      * @param percentage as int
      * @return renderdImage as BufferedImage
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage resize(int percentage) throws MisconfigurationException;
@@ -172,17 +172,29 @@ public interface ImageProcessor {
      * Rotate the image 90 degree steps to the right side.Clockwise rotation.
      *
      * @return renderdImage as BufferedImage
-     * @throws org.europa.together.exceptions.MisconfigurationException
+     * @throws MisconfigurationException - in the case of wrong usage
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage rotateRight() throws MisconfigurationException;
 
+    /**
+     * Function is not implemented now.
+     *
+     * @return BufferedImage null
+     * @throws UnsupportedVersionException - always
+     */
     @API(status = EXPERIMENTAL, since = "1.1")
     default BufferedImage setMetaData()
             throws UnsupportedVersionException {
         throw new UnsupportedVersionException("Method not implemnted in this Version.");
     }
 
+    /**
+     * Function is not implemented now.
+     *
+     * @return Map null
+     * @throws UnsupportedVersionException - always
+     */
     @API(status = EXPERIMENTAL, since = "1.1")
     default Map<String, String> getMetaData()
             throws UnsupportedVersionException {
