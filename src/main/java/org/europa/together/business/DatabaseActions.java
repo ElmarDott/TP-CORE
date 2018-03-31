@@ -1,5 +1,6 @@
 package org.europa.together.business;
 
+import java.sql.ResultSet;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,13 @@ public interface DatabaseActions {
     boolean executeQuery(String sql);
 
     /**
-     * Load an SQL File from the classpath and execute th script.
+     * Load an SQL File from the classpath and execute the script.
+     * <b>Attention:</b> This function should be used to populate a database and
+     * so on. It is not designed to handle multiple ResultSets by using SELECT.
+     * If multiple SELECT statements appears in an SQL File, then only the
+     * ResultSet of the last SELECT statement will be available. <br>
+     * Internal call this function for each single SQL statement the
+     * executeQuery() method.
      *
      * @param sqlFile as String
      * @return true on success
@@ -55,6 +62,24 @@ public interface DatabaseActions {
      */
     @API(status = STABLE, since = "1.0")
     int getPort();
+
+    /**
+     * Count the entries of an ResultSet.
+     *
+     * @return count as int
+     */
+    @API(status = STABLE, since = "1.0")
+    int getResultCount();
+
+    /**
+     * Get the ResultSet from an SQL Query. RestultSet get produced by
+     * executeQuery(). If exist in an SQL File multiple SELECT statements, then
+     * the ResultSet contains only the rusultSet of the last SELECT statement.
+     *
+     * @return results as ResultSet
+     */
+    @API(status = STABLE, since = "1.0")
+    ResultSet getResultSet();
 
     /**
      * Get the host URL / IP of the configured Database connection.

@@ -7,6 +7,7 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
@@ -43,8 +44,10 @@ public class DatabaseActionsImplTest {
         Assumptions.assumeTrue(check);
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDown() {
+        actions.executeQuery("TRUNCATE TABLE test;");
+        actions.executeQuery("TRUNCATE TABLE app_config;");
         LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
@@ -107,5 +110,16 @@ public class DatabaseActionsImplTest {
     void testSqlFileNotFound() {
         String file = "org/europa/together/sql/file-not-exist.sql";
         assertFalse(actions.executeSqlFromClasspath(file));
+    }
+
+    @Test
+    void testResultSet() {
+        String SQL_FILE
+                = "org/europa/together/sql/configuration-test.sql";
+        actions.connect("default");
+        assertTrue(actions.executeSqlFromClasspath(SQL_FILE));
+        assertTrue(actions.executeQuery("SELECT * FROM app_config;"));
+        assertNotNull(actions.getResultSet());
+        assertEquals(14, actions.getResultCount());
     }
 }

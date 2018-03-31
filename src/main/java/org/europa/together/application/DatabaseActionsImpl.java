@@ -4,6 +4,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -39,10 +40,15 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private String uri;
     private int port;
 
+    private ResultSet resultSet;
+    private int resultCount;
+
     /**
      * Constructor.
      */
     public DatabaseActionsImpl() {
+        resultCount = 0;
+        resultSet = null;
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
@@ -106,11 +112,19 @@ public class DatabaseActionsImpl implements DatabaseActions {
     @Override
     public boolean executeQuery(final String sql) {
         boolean success = false;
+        resultSet = null;
+        resultCount = 0;
         try {
             if (jdbcConnetion != null) {
 
                 statement = jdbcConnetion.createStatement();
                 statement.execute(sql);
+                if (statement.getResultSet() != null) {
+                    resultSet = statement.getResultSet();
+                    while (resultSet.next()) {
+                        resultCount++;
+                    }
+                }
                 success = true;
                 statement = null;
             } else {
@@ -120,6 +134,16 @@ public class DatabaseActionsImpl implements DatabaseActions {
             LOGGER.catchException(ex);
         }
         return success;
+    }
+
+    @Override
+    public int getResultCount() {
+        return resultCount;
+    }
+
+    @Override
+    public ResultSet getResultSet() {
+        return resultSet;
     }
 
     @Override
