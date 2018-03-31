@@ -2,10 +2,11 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import org.europa.together.application.DatabaseActionsImpl;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import static org.europa.together.service.MailClientScenarioTest.CONNECTION;
 import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -24,8 +25,8 @@ public class ConfigurationServiceScenarioTest extends
 
     private static final Logger LOGGER
             = new LoggerImpl(ConfigurationServiceScenarioTest.class);
-    private static final String SQL_FILE
-            = "org/europa/together/sql/email-config-test.sql";
+
+    public static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -42,18 +43,13 @@ public class ConfigurationServiceScenarioTest extends
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
-
-        //DATABASE CONFIGURATION ENTIES FOR E-MAIL
-        CONNECTION.executeSqlFromClasspath(SQL_FILE);
     }
 
     @AfterAll
     static void tearDown() {
         try {
             CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
-
             LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -65,6 +61,7 @@ public class ConfigurationServiceScenarioTest extends
 
     @AfterEach
     void testCaseTermination() {
+        CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
         LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
@@ -74,4 +71,37 @@ public class ConfigurationServiceScenarioTest extends
         assertThat(ConfigurationService.class, hasValidBeanConstructor());
     }
 
+    @Test
+    void testResetModuleToDefault() {
+        try {
+            // PreCondition
+            given().service_has_database_connection()
+                    .and().database_is_populated();
+
+            // Invariant
+            when().reset_module_to_default();
+
+            //PostCondition
+            then().check_default_entries();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void testFilterMandatoryFieldsOfConfigSet() {
+        try {
+            // PreCondition
+            given().service_has_database_connection()
+                    .and().database_is_populated();
+
+            // Invariant
+            when().filter_mandatory_fields_of_configSet();
+
+            //PostCondition
+            then().check_mandantory_entries();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
 }

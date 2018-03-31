@@ -3,7 +3,6 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityExistsException;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
