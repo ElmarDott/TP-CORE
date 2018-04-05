@@ -37,13 +37,17 @@ In the case there is no DBMS available, all test cases which depend on Database
 access will skipped.
 
 ### Installing
+All released Artifacts will be available on Maven Central for usage. To fit with the
+hosting restriction on Sonatype Open Source Project Repository Hosting was necessary
+to change the POM GAV. As Result the java packages do not fit with the pom GAV. SO you
+are be able to use TP-CORE in your project as dependency wit the following entry:
 
-Maven:
+**Maven**
 ```
 <dependency>
-    <groupId>org.europa.together.modules</groupId>
+    <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -59,3 +63,14 @@ This project is licensed under the General Public License GPL-3.0
 
 Feel free to send a request by e-mail to contribute the project. In the case you
 like this project, let me know it an rate it with a star.
+
+## Release Notes
+
+|Version | Comment
++--------+----------------------------------------------------------------------
+| 1.0    | Rejected : not published
++--------+----------------------------------------------------------------------
+| 1.0.1  | published 04/2018
+|        | - change Maven POM GAV for Open Source Project Repository Hosting
++--------+----------------------------------------------------------------------
+| 1.1    | in process
