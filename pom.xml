@@ -13,14 +13,14 @@
         this Artifact in Java EE and Java SE (Desktop) Applications. The implementation of
         these library has the goal, to create an useful and compact toolbox.</description>
     <parent>
-        <groupId>org.europa.together</groupId>
+        <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.6</version>
     </parent>
 
-    <groupId>org.europa.together.modules</groupId>
+    <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -172,17 +172,17 @@
 
         <!-- Bundels -->
         <dependency>
-            <groupId>org.europa.libraries</groupId>
+            <groupId>io.github.together.libraries</groupId>
             <artifactId>bundle-logging</artifactId>
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.europa.libraries</groupId>
+            <groupId>io.github.together.libraries</groupId>
             <artifactId>bundle-hibernate</artifactId>
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.europa.libraries</groupId>
+            <groupId>io.github.together.libraries</groupId>
             <artifactId>bundle-spring</artifactId>
             <type>pom</type>
         </dependency>
