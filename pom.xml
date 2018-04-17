@@ -15,7 +15,7 @@
     <parent>
         <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
     </parent>
 
     <groupId>io.github.together.modules</groupId>
