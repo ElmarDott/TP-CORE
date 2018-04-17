@@ -1,5 +1,6 @@
 package org.europa.together.business;
 
+import java.nio.file.Paths;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.LogLevel;
@@ -15,6 +16,27 @@ import org.springframework.stereotype.Component;
 @API(status = STABLE, since = "1.0")
 @Component
 public interface Logger {
+
+    /**
+     * Define the Configuration Set for the Logger.
+     */
+    @API(status = STABLE, since = "1.1")
+    final String CONFIG_SET = "logger";
+
+    /**
+     * Detect the Directory where the application is running.
+     */
+    @API(status = STABLE, since = "1.1")
+    final String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
+
+    /**
+     * Set a new configuration file for the Logger.
+     *
+     * @param configuration as String
+     * @return true on success
+     */
+    @API(status = STABLE, since = "1.1")
+    boolean setConfigurationFile(String configuration);
 
     /**
      * Create a Log-Entry with the given message for the configured Log-Level.
@@ -45,5 +67,4 @@ public interface Logger {
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
-
 }
