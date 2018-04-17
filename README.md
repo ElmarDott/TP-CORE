@@ -47,7 +47,7 @@ are be able to use TP-CORE in your project as dependency wit the following entry
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
