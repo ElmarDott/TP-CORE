@@ -274,4 +274,18 @@ public class XmlToolsImplTest {
         assertTrue(xmlTools.isValid());
     }
 
+    @Test
+    void testXsltTransformation() {
+        String xml = DIRECTORY + "/xml_datasource.xml";
+        String xslt = DIRECTORY + "/template.xslt";
+        String out = xmlTools.transformXslt(new File(xml), new File(xslt));
+
+        LOGGER.log(">>> XSLT; \n " + out, LogLevel.DEBUG);
+        assertEquals(1606, out.length());
+    }
+
+    @Test
+    void testFailTransformation() {
+        assertEquals("", xmlTools.transformXslt(null, null));
+    }
 }

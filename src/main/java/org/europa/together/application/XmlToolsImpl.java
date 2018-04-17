@@ -2,10 +2,17 @@ package org.europa.together.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -88,6 +95,25 @@ public class XmlToolsImpl implements XmlTools {
             content = this.prettyPrint;
         }
         return content;
+    }
+
+    @Override
+    public String transformXslt(final File xml, final File xslt) {
+        Writer writer = new StringWriter();
+        try {
+            Source template = new StreamSource(xslt);
+            Source input = new StreamSource(xml);
+            StreamResult output = new StreamResult(writer);
+
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer(template);
+            transformer.transform(input, output);
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+
+        return writer.toString();
     }
 
     @Override

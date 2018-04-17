@@ -69,9 +69,7 @@ public interface XmlTools {
      * @throws UnsupportedVersionException for missing implementation
      */
     @API(status = EXPERIMENTAL, since = "1.1")
-    default String transformXslt(File xml, File xslt) throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
-    }
+    String transformXslt(File xml, File xslt);
 
     /**
      * Validate well formed XML content (XML 1.0) against a given grammar.
