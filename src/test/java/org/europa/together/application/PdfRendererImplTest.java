@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import com.itextpdf.text.pdf.PdfReader;
 import java.io.File;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
@@ -73,11 +74,38 @@ public class PdfRendererImplTest {
     }
 
     @Test
+    void testLoadAndWritePdf() {
+        File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
+        PdfReader document = pdf.readDocument(file);
+        assertNotNull(document);
+
+        String out = DIRECTORY + FILE_PATH + "/copy.pdf";
+        pdf.writeDocument(document, out);
+
+        assertEquals(true, new File(out).exists());
+    }
+
+    @Test
     void testRenderHtmlToPdf() {
         String html = "<h1>My First PDF Document</h1 > <p>"
                 + StringUtils.generateLoremIpsum(0) + "</p>";
 
         pdf.renderDocumentFromHtml(DIRECTORY + "test.pdf", html);
         assertTrue(new File(DIRECTORY + "test.pdf").exists());
+    }
+
+    @Test
+    void testRemovePages() {
+        File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
+        PdfReader document = pdf.readDocument(file);
+        assertEquals(5, document.getNumberOfPages());
+
+        PdfReader reduced = pdf.removePage(document, 1, 3, 5);
+
+        String out = DIRECTORY + FILE_PATH + "/reduced.pdf";
+        pdf.writeDocument(reduced, out);
+
+        assertEquals(2, reduced.getNumberOfPages());
+
     }
 }
