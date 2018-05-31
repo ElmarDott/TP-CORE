@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 
@@ -176,10 +177,11 @@ public final class StringUtils {
                 + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
                 + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. "
                 + "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor "
-                + "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
-                + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
-                + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet "
-                + "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n"
+                + "sitView Generated Project Site amet. Lorem ipsum dolor sit amet, consetetur "
+                + "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore "
+                + "magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo "
+                + "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus "
+                + "est Lorem ipsum dolor sit amet.\n"
                 + "\n"
                 + "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie "
                 + "consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan"
@@ -240,6 +242,67 @@ public final class StringUtils {
         UUID uuid = UUID.randomUUID();
         LOGGER.log("generateUUID() " + uuid, LogLevel.DEBUG);
         return uuid.toString();
+    }
+
+    /**
+     * Detect and remove the (BOM) Byte Order Mark from a string.
+     *
+     * @param content as String
+     * @return utf-8 String
+     */
+    public static String skipBom(final String content) {
+
+        if (content.isEmpty()) {
+            throw new NullPointerException("The String in StringUtils.skipBom() is null.");
+        }
+
+        List<ByteOrderMark> bomList = new ArrayList<>();
+        bomList.add(ByteOrderMark.UTF_8);
+        bomList.add(ByteOrderMark.UTF_16LE);
+        bomList.add(ByteOrderMark.UTF_16BE);
+        bomList.add(ByteOrderMark.UTF_32LE);
+        bomList.add(ByteOrderMark.UTF_32BE);
+
+        String clean = content;
+
+        try {
+            byte[] array = content.getBytes("UTF-8");
+
+            for (ByteOrderMark entry : bomList) {
+
+                boolean hasBOM = true;
+                for (int i = 0; i < entry.getBytes().length; i++) {
+
+                    byte[] s = {array[i]};
+                    byte[] d = {entry.getBytes()[i]};
+                    LOGGER.log(i + "> " + byteToString(s) + " : " + byteToString(d),
+                            LogLevel.TRACE);
+
+                    if (array[i] != entry.getBytes()[i]) {
+                        hasBOM = false;
+                        break;
+                    }
+                }
+
+                if (hasBOM) {
+                    if (entry.toString().startsWith("UTF-32")) {
+                        clean = content.substring(2);
+                    } else {
+                        clean = content.substring(1);
+                    }
+                    LOGGER.log("BOM: " + entry.toString() + " detected and removed.",
+                            LogLevel.DEBUG);
+                    break;
+                } else {
+                    LOGGER.log("No BOM detected for: " + entry.toString(), LogLevel.DEBUG);
+                }
+            }
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+
+        return clean;
     }
 
 }

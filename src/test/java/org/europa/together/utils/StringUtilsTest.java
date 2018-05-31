@@ -1,10 +1,13 @@
 package org.europa.together.utils;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.AfterAll;
@@ -21,6 +24,9 @@ import org.junit.runner.RunWith;
 public class StringUtilsTest {
 
     private static final Logger LOGGER = new LoggerImpl(StringUtilsTest.class);
+
+    private static final String FILE_PATH
+            = Constraints.SYSTEM_APP_DIR + "/src/test/resources/org/europa/together/bom";
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -190,9 +196,9 @@ public class StringUtilsTest {
         String fail_01 = StringUtils.generateLoremIpsum(-1);
         String fail_02 = StringUtils.generateLoremIpsum(4000);
 
-        assertEquals(2100, full.length());
-        assertEquals(2100, fail_01.length());
-        assertEquals(2100, fail_02.length());
+        assertEquals(2127, full.length());
+        assertEquals(2127, fail_01.length());
+        assertEquals(2127, fail_02.length());
 
         assertEquals(50, reducede.length());
         assertEquals("Lorem ipsum dolor sit amet, consetetur sadipscing ", reducede);
@@ -204,4 +210,87 @@ public class StringUtilsTest {
         String replaced = "&#0060;root&#0062;&#0038;nbsp;&#0060;/root&#0062; &#0034; &#0039;home\\dir&#0039;";
         assertEquals(replaced, StringUtils.escapeXmlCharacters(orginal));
     }
+
+    @Test
+    void testFailRemoveBom() throws Exception {
+        assertThrows(Exception.class, () -> {
+            StringUtils.skipBom(null);
+        });
+        assertThrows(Exception.class, () -> {
+            StringUtils.skipBom("");
+        });
+    }
+
+    @Test
+    void testWithoutBom() {
+        String check = "Text File without BOM - Byte Order Mark";
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/no-BOM"));
+
+        assertNotNull(bom);
+        assertEquals(check, StringUtils.skipBom(bom));
+    }
+
+    @Test
+    void testRemoveUtf8Bom() {
+        String check = " UTF-8 BOM";
+        LOGGER.log("Test:" + check, LogLevel.DEBUG);
+
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-8-BOM"));
+        assertNotNull(bom);
+
+        assertEquals(check, StringUtils.skipBom(bom));
+    }
+
+    @Test
+    void testRemoveUtf16LeBom() {
+        String check = " UTF-16 BOM LE";
+        LOGGER.log("Test:" + check, LogLevel.DEBUG);
+
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-16-BOM_LE"),
+                ByteOrderMark.UTF_16LE);
+        assertNotNull(bom);
+
+        assertEquals(new String(check.getBytes(), Charset.forName("UTF-16LE")),
+                StringUtils.skipBom(bom));
+    }
+
+    @Test
+    void testRemoveUtf16BeBom() {
+        String check = " UTF-16 BOM BE";
+        LOGGER.log("Test:" + check, LogLevel.DEBUG);
+
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-16-BOM_BE"),
+                ByteOrderMark.UTF_16BE);
+        assertNotNull(bom);
+
+        assertEquals(new String(check.getBytes(), Charset.forName("UTF-16BE")),
+                StringUtils.skipBom(bom));
+    }
+
+    @Test
+    void testRemoveUtf32LeBom() {
+        String check = " UTF-32 BOM LE";
+        LOGGER.log("Test:" + check, LogLevel.DEBUG);
+
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-32-BOM_LE"),
+                ByteOrderMark.UTF_32LE);
+        assertNotNull(bom);
+
+        assertEquals(new String(check.getBytes(), Charset.forName("UTF-32LE")),
+                StringUtils.skipBom(bom));
+    }
+
+    @Test
+    void testRemoveUtf32BeBom() {
+        String check = " UTF-16 BOM BE";
+        LOGGER.log("Test:" + check, LogLevel.DEBUG);
+
+        String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-32-BOM_BE"),
+                ByteOrderMark.UTF_32BE);
+        assertNotNull(bom);
+
+        assertEquals(new String(check.getBytes(), Charset.forName("UTF-32BE")),
+                StringUtils.skipBom(bom));
+    }
+
 }
