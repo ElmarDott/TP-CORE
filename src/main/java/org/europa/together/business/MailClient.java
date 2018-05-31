@@ -31,6 +31,12 @@ public interface MailClient {
     String CONFIG_SET = "email";
 
     /**
+     * Defines for which MODULE_VERSION the configuration will work.
+     */
+    @API(status = STABLE, since = "1.1")
+    String CONFIG_VERSION = "1.0";
+
+    /**
      * Add attachments from a given List of strings to the mail attachments. A
      * list entry represents the full path to the attachment as String.
      *

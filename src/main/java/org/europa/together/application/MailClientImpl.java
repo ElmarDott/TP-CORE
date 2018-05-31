@@ -212,12 +212,12 @@ public class MailClientImpl implements MailClient {
 
         try {
             LOGGER.log("Load all configuration sets of: " + CONFIG_SET
-                    + " - Version: " + Constraints.MODULE_VERSION
+                    + " - Version: " + CONFIG_VERSION
                     + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
 
             List<ConfigurationDO> configurationEntries
                     = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
-                            Constraints.MODULE_VERSION, CONFIG_SET);
+                            CONFIG_VERSION, CONFIG_SET);
 
             for (ConfigurationDO entry : configurationEntries) {
 
