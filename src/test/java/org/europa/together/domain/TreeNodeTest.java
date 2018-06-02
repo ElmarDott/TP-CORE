@@ -3,6 +3,7 @@ package org.europa.together.domain;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -46,29 +47,50 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testEqual() {
-        TreeNode node_00 = new TreeNode("node 1");
-        node_00.setNodeName("node 1");
-        assertNotNull(node_00.getUuid());
+    void testEqualByClone() {
+        LOGGER.log("TEST EQUALITY (clone): TRUE", LogLevel.DEBUG);
 
-        TreeNode node_01 = new TreeNode("node 2");
+        TreeNode node_01 = new TreeNode("node 1");
+        node_01.setNodeName("node 1");
+        node_01.setParent(StringUtils.generateUUID());
+        LOGGER.log(node_01.toString(), LogLevel.DEBUG);
+
+        TreeNode node_02 = node_01;
+        node_02.setNodeName("node 2");
+        node_01.setParent(StringUtils.generateUUID());
+        LOGGER.log(node_02.toString(), LogLevel.DEBUG);
+
+        assertEquals(node_01, node_02);
+        assertTrue(node_01.equals(node_02));
+        assertTrue(node_02.equals(node_01));
+    }
+
+    @Test
+    void testNotEqual() {
+        LOGGER.log("TEST EQUALITY: FALSE", LogLevel.DEBUG);
+
+        TreeNode node_01 = new TreeNode("node A");
         assertNotNull(node_01.getUuid());
 
-        TreeNode node_03 = node_00;
-        node_03.setNodeName("node 3");
-        assertNotNull(node_03.getUuid());
-        assertEquals("node 3", node_03.getNodeName());
+        TreeNode node_02 = new TreeNode("node B");
+        assertNotNull(node_02.getUuid());
 
-        assertNotEquals(node_01, node_00);
-        assertNotEquals(node_01, node_03);
-        assertEquals(node_00, node_03);
+        assertNotEquals(node_01, node_02);
 
-        assertFalse(node_00.equals(null));
-        assertFalse(node_00.equals(new Object()));
-        assertFalse(node_00.equals(new TreeNode("node 4")));
-        assertFalse(node_00.equals(node_01));
+        LOGGER.log("ASSERT FALSE", LogLevel.DEBUG);
+        assertFalse(node_01.equals(node_02));
 
-        assertTrue(node_03.equals(node_00));
+        LOGGER.log("ASSERT FALSE BY <null>", LogLevel.DEBUG);
+        assertFalse(node_01.equals(null));
+
+        LOGGER.log("ASSERT FALSE BY new(NODE_NAME)", LogLevel.DEBUG);
+        assertFalse(node_01.equals(new TreeNode("node C")));
+
+        LOGGER.log("ASSERT FALSE BY new()", LogLevel.DEBUG);
+        assertFalse(node_01.equals(new TreeNode()));
+
+        LOGGER.log("ASSERT FALSE BY wrong Object Type", LogLevel.DEBUG);
+        assertFalse(node_01.equals(new Object()));
     }
 
     @Test

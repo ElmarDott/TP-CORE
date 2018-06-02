@@ -119,21 +119,24 @@ public class TreeNode {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+        boolean success = true;
 
-        final TreeNode other = (TreeNode) obj;
-        if (!Objects.equals(this.uuid, other.uuid)) {
-            return false;
+        if (obj == null) {
+            success = false;
+        } else {
+
+            if (this == obj) {
+                success = true;
+            } else if (getClass() != obj.getClass()) {
+                success = false;
+            } else {
+                final TreeNode other = (TreeNode) obj;
+                if (!Objects.equals(this.uuid, other.uuid)) {
+                    success = false;
+                }
+            }
         }
-        return true;
+        return success;
     }
 
 }
