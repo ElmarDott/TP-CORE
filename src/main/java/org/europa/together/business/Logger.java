@@ -21,22 +21,13 @@ public interface Logger {
      * Define the Configuration Set for the Logger.
      */
     @API(status = STABLE, since = "1.1")
-    final String CONFIG_SET = "logger";
+    String CONFIG_SET = "logger";
 
     /**
      * Detect the Directory where the application is running.
      */
     @API(status = STABLE, since = "1.1")
-    final String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
-
-    /**
-     * Set a new configuration file for the Logger.
-     *
-     * @param configuration as String
-     * @return true on success
-     */
-    @API(status = STABLE, since = "1.1")
-    boolean setConfigurationFile(String configuration);
+    String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
 
     /**
      * Create a Log-Entry with the given message for the configured Log-Level.
@@ -67,4 +58,13 @@ public interface Logger {
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
+
+    /**
+     * Set the LogLevel programmatically. Log-Level: TRACE | DEBUG | INFO | WARN
+     * | ERROR
+     *
+     * @param level as LogLevel
+     */
+    @API(status = STABLE, since = "1.1")
+    void setLoggingLevel(LogLevel level);
 }

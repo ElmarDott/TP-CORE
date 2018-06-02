@@ -72,7 +72,8 @@ public final class LoggingService {
     }
 
     /**
-     * Write a configuration to a file.
+     * Write a configuration to a file. The file will only written when the XML
+     * is well formed.
      *
      * @param content as String
      * @param file as String
@@ -81,21 +82,16 @@ public final class LoggingService {
     public void writeLogConfiguration(final String content, final String file) {
 
         try {
-
             XmlTools xmlTools = new XmlToolsImpl();
-            xmlTools.writeXmlToFile(content, file);
+            xmlTools.parseXmlString(content);
             LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);
 
-            File verify = new File(file);
-            if (verify.exists()) {
-                xmlTools.parseXmlFile(verify);
-                if (!xmlTools.isWellFormed()) {
-                    LOGGER.log("xml is not wellformed, file can not updated.", LogLevel.WARN);
-                    verify.delete();
-                } else {
-                    xmlTools.writeXmlToFile(xmlTools.prettyPrintXml(), file);
-                }
+            if (!xmlTools.isWellFormed()) {
+                LOGGER.log("xml is not wellformed, file can not updated.", LogLevel.WARN);
+            } else {
+                xmlTools.writeXmlToFile(xmlTools.prettyPrintXml(), file);
             }
+
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

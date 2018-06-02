@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import ch.qos.logback.classic.Level;
 import java.io.File;
 import java.util.Arrays;
 import org.europa.together.business.Logger;
@@ -31,22 +32,8 @@ public final class LoggerImpl implements Logger {
 
         //FALLBACK
         if (new File(configurationFile).exists()) {
-            System.setProperty("logback.configurationFile", configurationFile);
+            System.setProperty("configurationFile", configurationFile);
         }
-    }
-
-    @Override
-    public boolean setConfigurationFile(final String configuration) {
-        boolean success = false;
-        try {
-            if (new File(configuration).exists()) {
-                System.setProperty("logback.configurationFile", configuration);
-                success = true;
-            }
-        } catch (Exception ex) {
-            catchException(ex);
-        }
-        return success;
     }
 
     @Override
@@ -73,8 +60,6 @@ public final class LoggerImpl implements Logger {
                 break;
         }
 
-        logger.trace("Logging Configuration: "
-                + System.getProperty("logback.configurationFile"));
         return level;
     }
 
@@ -84,19 +69,21 @@ public final class LoggerImpl implements Logger {
         instaceLogger();
         LogLevel level = null;
 
-        if (logger.isTraceEnabled()) {
-            level = LogLevel.TRACE;
-        } else if (logger.isDebugEnabled()) {
-            level = LogLevel.DEBUG;
-        } else if (logger.isInfoEnabled()) {
-            level = LogLevel.INFO;
-        } else if (logger.isWarnEnabled()) {
-            level = LogLevel.WARN;
-        } else if (logger.isErrorEnabled()) {
+        if (logger.isErrorEnabled()) {
             level = LogLevel.ERROR;
         }
-
-        logger.trace("LogLevel: " + level);
+        if (logger.isWarnEnabled()) {
+            level = LogLevel.WARN;
+        }
+        if (logger.isInfoEnabled()) {
+            level = LogLevel.INFO;
+        }
+        if (logger.isDebugEnabled()) {
+            level = LogLevel.DEBUG;
+        }
+        if (logger.isTraceEnabled()) {
+            level = LogLevel.TRACE;
+        }
         return level;
     }
 
@@ -114,13 +101,36 @@ public final class LoggerImpl implements Logger {
         return ex.getMessage();
     }
 
+    @Override
+    public void setLoggingLevel(final LogLevel level) {
+
+        instaceLogger();
+        ch.qos.logback.classic.Logger root
+                = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
+                        ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+
+        Level filter = Level.OFF;
+        if (level == LogLevel.TRACE) {
+            filter = Level.TRACE;
+        }
+        if (level == LogLevel.DEBUG) {
+            filter = Level.DEBUG;
+        }
+        if (level == LogLevel.INFO) {
+            filter = Level.INFO;
+        }
+        if (level == LogLevel.WARN) {
+            filter = Level.WARN;
+        }
+        if (level == LogLevel.ERROR) {
+            filter = Level.ERROR;
+        }
+        root.setLevel(filter);
+    }
+
     private void instaceLogger() {
         if (logger == null) {
-            if (instance == null) {
-                logger = LoggerFactory.getLogger("");
-            } else {
-                logger = LoggerFactory.getLogger(instance);
-            }
+            logger = LoggerFactory.getILoggerFactory().getLogger(instance.getName());
         }
     }
 }

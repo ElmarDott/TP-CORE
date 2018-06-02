@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration debug="true" scan="false">
+<configuration debug="false" scan="false">
 
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
 
