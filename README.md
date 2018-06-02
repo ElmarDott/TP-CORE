@@ -42,6 +42,7 @@ hosting restriction on Sonatype Open Source Project Repository Hosting was neces
 to change the POM GAV. As Result the java packages do not fit with the pom GAV. SO you
 are be able to use TP-CORE in your project as dependency wit the following entry:
 
+Please check the Release Notes for published Artifact Versions.
 **Maven**
 ```
 <dependency>
@@ -67,10 +68,13 @@ like this project, let me know it an rate it with a star.
 ## Release Notes
 
 |Version | Comment
-+--------+----------------------------------------------------------------------
+|--------|----------------------------------------------------------------------
 | 1.0    | Rejected : not published
-+--------+----------------------------------------------------------------------
-| 1.0.1  | published 04/2018
+|--------|----------------------------------------------------------------------
+| 1.0.1  | Rejected : not published
 |        | - change Maven POM GAV for Open Source Project Repository Hosting
-+--------+----------------------------------------------------------------------
+|--------|----------------------------------------------------------------------
+| 1.0.2  | published 04/2018
+|        | - include PGP signing for all
+|--------|----------------------------------------------------------------------
 | 1.1    | in process
