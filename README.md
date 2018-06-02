@@ -78,3 +78,9 @@ like this project, let me know it an rate it with a star.
 |        | - include PGP signing for all
 |--------|----------------------------------------------------------------------
 | 1.1    | in process
+|        | - optimize overall Test Coverage
+|        | - Fix (medium) :: MailClient.loadConfigFromDatabase() {MODUL_VERSION}
+|        | - Add Functionality: XmlTools:transformXslt()
+|        | - REFRACTOR XmlToolsImpl
+|        | - Add Functionality: PdFRenderer.removePage()
+|        | - Add Functionality: Logger.setLogLevel()

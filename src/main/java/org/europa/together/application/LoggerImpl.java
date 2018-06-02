@@ -102,7 +102,7 @@ public final class LoggerImpl implements Logger {
     }
 
     @Override
-    public void setLoggingLevel(final LogLevel level) {
+    public void setLogLevel(final LogLevel level) {
 
         instaceLogger();
         ch.qos.logback.classic.Logger root

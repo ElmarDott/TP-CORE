@@ -99,23 +99,23 @@ public class LoggerImplTest {
 
         Logger logger = new LoggerImpl(Logger.class);
 
-        logger.setLoggingLevel(LogLevel.ERROR);
+        logger.setLogLevel(LogLevel.ERROR);
         assertEquals(LogLevel.ERROR, logger.getConfiguredLogLevel());
         LOGGER.log("case 5: ERROR", LogLevel.ERROR);
 
-        logger.setLoggingLevel(LogLevel.WARN);
+        logger.setLogLevel(LogLevel.WARN);
         assertEquals(LogLevel.WARN, logger.getConfiguredLogLevel());
         LOGGER.log("case 4: WARN", LogLevel.ERROR);
 
-        logger.setLoggingLevel(LogLevel.INFO);
+        logger.setLogLevel(LogLevel.INFO);
         assertEquals(LogLevel.INFO, logger.getConfiguredLogLevel());
         LOGGER.log("case 3: INFO", LogLevel.ERROR);
 
-        logger.setLoggingLevel(LogLevel.DEBUG);
+        logger.setLogLevel(LogLevel.DEBUG);
         assertEquals(LogLevel.DEBUG, logger.getConfiguredLogLevel());
         LOGGER.log("case 2: DEBUG", LogLevel.ERROR);
 
-        logger.setLoggingLevel(LogLevel.TRACE);
+        logger.setLogLevel(LogLevel.TRACE);
         assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
         LOGGER.log("case 1: TRACE", LogLevel.ERROR);
     }

@@ -66,5 +66,5 @@ public interface Logger {
      * @param level as LogLevel
      */
     @API(status = STABLE, since = "1.1")
-    void setLoggingLevel(LogLevel level);
+    void setLogLevel(LogLevel level);
 }
