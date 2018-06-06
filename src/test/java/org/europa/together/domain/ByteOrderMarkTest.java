@@ -49,16 +49,16 @@ public class ByteOrderMarkTest {
         assertEquals("NONE",
                 ByteOrderMark.NONE.toString());
 
-        assertEquals("UTF_8",
+        assertEquals("UTF-8",
                 ByteOrderMark.UTF_8.toString());
-        assertEquals("UTF_16LE",
+        assertEquals("UTF-16LE",
                 ByteOrderMark.UTF_16LE.toString());
-        assertEquals("UTF_16BE",
+        assertEquals("UTF-16BE",
                 ByteOrderMark.UTF_16BE.toString());
 
-        assertEquals("UTF_32LE",
+        assertEquals("UTF-32LE",
                 ByteOrderMark.UTF_32LE.toString());
-        assertEquals("UTF_32BE",
+        assertEquals("UTF-32BE",
                 ByteOrderMark.UTF_32BE.toString());
     }
 }

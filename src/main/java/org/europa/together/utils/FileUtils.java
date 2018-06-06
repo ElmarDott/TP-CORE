@@ -3,7 +3,11 @@ package org.europa.together.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
 
 /**
@@ -21,7 +26,8 @@ import org.europa.together.domain.LogLevel;
 public final class FileUtils {
 
     private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
-    private static final Charset CHARSET = Charset.forName("US-ASCII");
+    private static final Charset CHARSET = Charset.forName("UTF-8");
+    private static final int BYTES = 1024;
 
     /**
      * Constructor.
@@ -47,18 +53,13 @@ public final class FileUtils {
                     = Files.newBufferedWriter(Paths.get(destinationFile), CHARSET);
             writer.append(content, 0, content.length());
             writer.close();
+            success = true;
+
             LOGGER.log("writeStringToFile() count of characters:"
                     + content.length(), LogLevel.DEBUG);
 
             if (StringUtils.isEmpty(content)) {
-                LOGGER.log("Filecontent is empty.", LogLevel.WARN);
-            }
-
-            File testFile = new File(destinationFile);
-            if (testFile.exists()) {
-                success = true;
-            } else {
-                LOGGER.log(destinationFile + " don't exst.", LogLevel.ERROR);
+                LOGGER.log("File content is empty.", LogLevel.WARN);
             }
 
         } catch (Exception ex) {
@@ -77,7 +78,7 @@ public final class FileUtils {
      * @return fileSize as double
      */
     public static long getFileSize(final String filePath, final String dimension) {
-        String mode = " ";
+        String mode = "default";
         if (!StringUtils.isEmpty(dimension)) {
             mode = dimension;
         }
@@ -114,17 +115,30 @@ public final class FileUtils {
     }
 
     /**
-     * Reads the full content of a text file.
+     * Reads the full content of a text file in UTF-8. The second parameter
+     * charset is optional.
      *
      * @param file as File
+     * @param charset as ByteOrderMark (Optional)
      * @return fileContent as String
      */
-    public static String readFileStream(final File file) {
+    public static String readFileStream(final File file, final ByteOrderMark... charset) {
         StringBuilder content = new StringBuilder();
         InputStreamReader inputStreamReader = null;
+        Charset encoding = CHARSET;
+
+        if (charset.length > 0) {
+            String encodingName = charset[0].toString();
+            if (encodingName.equals("NONE")) {
+                LOGGER.log("ByteOrderMark.NONE converted to UTF-8.", LogLevel.DEBUG);
+            } else {
+                encoding = Charset.forName(encodingName);
+            }
+        }
+        LOGGER.log("String encoded as " + encoding.displayName(), LogLevel.DEBUG);
 
         try {
-            inputStreamReader = new InputStreamReader(new FileInputStream(file), CHARSET);
+            inputStreamReader = new InputStreamReader(new FileInputStream(file), encoding);
             int line;
             while ((line = inputStreamReader.read()) != -1) {
                 content.append((char) line);
@@ -137,7 +151,7 @@ public final class FileUtils {
     }
 
     /**
-     * Append content to a given text file at the end of the file.
+     * Append content to a given text file at the end of the file in UTF-8.
      *
      * @param filePath as String
      * @param content as String
@@ -150,6 +164,50 @@ public final class FileUtils {
                     LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
+        }
+    }
+
+    /**
+     * Copy a File A from a source to a destination.
+     *
+     * @param source as File
+     * @param destination as File
+     * @throws java.io.IOException on failure
+     */
+    public static void copyFile(final File source, final File destination)
+            throws IOException {
+
+        if (source == null || destination == null) {
+            throw new NullPointerException("parameters of copyFile = NULL");
+        }
+        if (!source.exists()) {
+            throw new IOException("Source " + source.getPath() + " don't exist.");
+        }
+
+        InputStream is = null;
+        OutputStream os = null;
+
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(destination);
+
+            byte[] buffer = new byte[BYTES];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+
+        } catch (Exception ex) {
+
+            LOGGER.catchException(ex);
+        } finally {
+
+            if (is != null) {
+                is.close();
+            }
+            if (os != null) {
+                os.close();
+            }
         }
     }
 

@@ -282,7 +282,7 @@ public class StringUtilsTest {
 
     @Test
     void testRemoveUtf32BeBom() {
-        String check = " UTF-16 BOM BE";
+        String check = " UTF-32 BOM BE";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
         String bom = FileUtils.readFileStream(new File(FILE_PATH + "/utf-32-BOM_BE"),

@@ -1,5 +1,6 @@
 package org.europa.together.utils;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public final class StringUtils {
 
     private static final int LIMES = 9;
     private static final int LIMIT = 2100;
+    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
@@ -264,42 +266,32 @@ public final class StringUtils {
         bomList.add(ByteOrderMark.UTF_32BE);
 
         String clean = content;
+        byte[] array = content.getBytes(CHARSET);
 
-        try {
-            byte[] array = content.getBytes("UTF-8");
+        for (ByteOrderMark entry : bomList) {
 
-            for (ByteOrderMark entry : bomList) {
+            boolean hasBOM = true;
+            for (int i = 0; i < entry.getBytes().length; i++) {
 
-                boolean hasBOM = true;
-                for (int i = 0; i < entry.getBytes().length; i++) {
+                byte[] s = {array[i]};
+                byte[] d = {entry.getBytes()[i]};
+                LOGGER.log(i + "> " + byteToString(s) + " : " + byteToString(d),
+                        LogLevel.TRACE);
 
-                    byte[] s = {array[i]};
-                    byte[] d = {entry.getBytes()[i]};
-                    LOGGER.log(i + "> " + byteToString(s) + " : " + byteToString(d),
-                            LogLevel.TRACE);
-
-                    if (array[i] != entry.getBytes()[i]) {
-                        hasBOM = false;
-                        break;
-                    }
-                }
-
-                if (hasBOM) {
-                    if (entry.toString().startsWith("UTF-32")) {
-                        clean = content.substring(2);
-                    } else {
-                        clean = content.substring(1);
-                    }
-                    LOGGER.log("BOM: " + entry.toString() + " detected and removed.",
-                            LogLevel.DEBUG);
+                if (array[i] != entry.getBytes()[i]) {
+                    hasBOM = false;
                     break;
-                } else {
-                    LOGGER.log("No BOM detected for: " + entry.toString(), LogLevel.DEBUG);
                 }
             }
 
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+            if (hasBOM) {
+                clean = content.substring(1);
+                LOGGER.log("BOM: " + entry.toString() + " detected and removed.",
+                        LogLevel.DEBUG);
+                break;
+            } else {
+                LOGGER.log("No BOM detected for: " + entry.toString(), LogLevel.DEBUG);
+            }
         }
 
         return clean;

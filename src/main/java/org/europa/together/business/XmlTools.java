@@ -31,6 +31,15 @@ public interface XmlTools {
     String parseXmlFile(File xmlFile);
 
     /**
+     * Parse a given XML String to grab the content.
+     *
+     * @param xml as String
+     * @return content as String
+     */
+    @API(status = STABLE, since = "1.1")
+    String parseXmlString(String xml);
+
+    /**
      * Before you write a XML Document on a file, especially computer generated
      * XML Content, the content should formated by a CodeBeautifier. This
      * function Beautifies the XML Sources with the following rules:<br>
