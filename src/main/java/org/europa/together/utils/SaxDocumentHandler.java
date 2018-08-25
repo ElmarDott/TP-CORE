@@ -46,7 +46,6 @@ public class SaxDocumentHandler extends DefaultHandler2 {
      * @return xmlBeautified as String
      */
     public String prettyPrintXml() {
-        LOGGER.log("prettyPrintXml() => \n" + this.formattedXml.toString(), LogLevel.TRACE);
         return this.formattedXml.toString();
     }
 

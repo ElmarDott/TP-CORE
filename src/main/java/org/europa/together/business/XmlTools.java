@@ -81,6 +81,14 @@ public interface XmlTools {
     String transformXslt(File xml, File xslt);
 
     /**
+     * Check if a external Schema File s configured.
+     *
+     * @return true on success
+     */
+    @API(status = STABLE, since = "1.1")
+    boolean hasExternalSchemaFile();
+
+    /**
      * Validate well formed XML content (XML 1.0) against a given grammar.
      * Grammar files can be DTD or XML Schema. THe validation contains also a
      * well formed test for the XML file.
@@ -109,6 +117,12 @@ public interface XmlTools {
      */
     @API(status = STABLE, since = "1.0")
     boolean isWellFormed();
+
+    /**
+     * Reset the external Schema File to NULL.
+     */
+    @API(status = STABLE, since = "1.1")
+    void resetExternalSchema();
 
     /**
      * Set explicit the schema file for the validation option. This method

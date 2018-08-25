@@ -2,12 +2,10 @@ package org.europa.together.application;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
@@ -15,6 +13,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -24,7 +23,6 @@ import org.europa.together.business.XmlTools;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
-import org.xml.sax.SAXException;
 
 /**
  * Implementation of the XML Tools.
@@ -86,6 +84,7 @@ public class XmlToolsImpl implements XmlTools {
         if (!StringUtils.isEmpty(prettyPrint)) {
             content = prettyPrint;
         }
+        LOGGER.log("prettyPrintXml() => \n" + prettyPrint, LogLevel.TRACE);
         return content;
     }
 
@@ -109,53 +108,63 @@ public class XmlToolsImpl implements XmlTools {
     }
 
     @Override
+    public boolean hasExternalSchemaFile() {
+        boolean success = false;
+        if (this.schemaFile != null) {
+            success = true;
+        }
+        return success;
+    }
+
+    @Override
     public boolean isValid() {
         boolean success = false;
 
         if (schemaFile != null && !schemaFile.exists()) {
             LOGGER.log("Schema file RESET TO NULL: " + schemaFile.getName() + " not exist.",
                     LogLevel.WARN);
-            schemaFile = null;
+            resetExternalSchema();
         }
 
         try {
+            LOGGER.log("Start Validation. ", LogLevel.DEBUG);
+
             parser.reset();
+            parserFactory.setNamespaceAware(true);
             parserFactory.setValidating(true);
             parser = parserFactory.newSAXParser();
 
-            SchemaFactory schemaFactory
-                    = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            LOGGER.log("Start Validation. ", LogLevel.DEBUG);
+            parser.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
+            parser.setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
+
+            //External XSD
+            if (schemaFile != null && schemaFile.exists()) {
+
+                LOGGER.log("Validate by explizit XSD (" + this.schemaFile.getName() + ") :: "
+                        + this.schemaFile.getAbsolutePath(), LogLevel.DEBUG);
+
+                parserFactory.setSchema(SchemaFactory.newInstance(
+                        XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(this.schemaFile));
+
+            }
 
             //Internal XSD [reference inside XML Document]
             if (schemaFile == null && saxHandler.getSchemaFiles() != null) {
                 LOGGER.log("Validate by implizit XSD (" + saxHandler.getSchemaFiles().length + ")",
                         LogLevel.DEBUG);
+
                 parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
                         XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                parserFactory.setSchema(schemaFactory.newSchema(saxHandler.getSchemaFiles()));
+                parserFactory.setSchema(SchemaFactory.newInstance(
+                        XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(saxHandler.getSchemaFiles()));
             }
 
-            //External XSD
-            if (schemaFile != null && schemaFile.exists()) {
-
-                LOGGER.log("Validate by explizit XSD (" + this.schemaFile.getName() + ")",
-                        LogLevel.DEBUG);
-                parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-                        XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                parserFactory.setSchema(schemaFactory.newSchema(this.schemaFile));
-            }
-
-            parser.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
-            parser.setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
             parser.parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)),
                     saxHandler);
 
             success = true;
             LOGGER.log("XML validation successful", LogLevel.DEBUG);
 
-        } catch (IOException | ParserConfigurationException | SAXException ex) {
-            LOGGER.catchException(ex);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -169,13 +178,19 @@ public class XmlToolsImpl implements XmlTools {
     }
 
     @Override
+    public void resetExternalSchema() {
+        this.schemaFile = null;
+        LOGGER.log("External Schema File is reset to NULL.", LogLevel.DEBUG);
+    }
+
+    @Override
     public void setSchemaFile(final File schema) {
         if (schema == null || !schema.exists()) {
             LOGGER.log("Schema file does not exist.", LogLevel.ERROR);
         } else {
 
             schemaFile = schema;
-            LOGGER.log(schemaFile.getName() + " schema file added. " + schemaFile.getPath(),
+            LOGGER.log(schemaFile.getName() + " schema file added.",
                     LogLevel.DEBUG);
         }
     }

@@ -26,19 +26,21 @@ public class XmlToolsImplTest {
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
     private static final Logger LOGGER = new LoggerImpl(XmlToolsImplTest.class);
-    private XmlTools xmlTools = new XmlToolsImpl();
-
+    private XmlTools xmlTools;
     private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
+    private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         try {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.dtd"), DTD);
+            FileUtils.copyFile(new File(DIRECTORY + "/simple.xsd"), SCHEMA);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -46,6 +48,7 @@ public class XmlToolsImplTest {
         if (DTD.exists()) {
             DTD.delete();
         }
+
         LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
@@ -55,20 +58,27 @@ public class XmlToolsImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
-
-        //reset schema
-        xmlTools.setSchemaFile(null);
+        if (xmlTools.hasExternalSchemaFile()) {
+            xmlTools.resetExternalSchema();
+        }
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
+        LOGGER.log("regular call", LogLevel.DEBUG);
         assertThat(XmlToolsImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testParseXmlString() {
+        LOGGER.log("TEST CASE: parseXmlString()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         String xml = FileUtils.readFileStream(new File(DIRECTORY + "/test_wellformed.xml"));
         String output = xmlTools.parseXmlString(xml);
         String compare = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -102,11 +112,17 @@ public class XmlToolsImplTest {
 
     @Test
     void testFailParseXmlString() {
+        LOGGER.log("TEST CASE: failParseXmlString()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         assertNull(xmlTools.parseXmlString(null));
     }
 
     @Test
     void testParseXmlFile() {
+        LOGGER.log("TEST CASE: parseXmlFile()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         String output = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
         String compare = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "\n"
@@ -139,38 +155,62 @@ public class XmlToolsImplTest {
 
     @Test
     void testFailParsingXmlFile() {
+        LOGGER.log("TEST CASE: failParseXmlFile()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         assertNull(xmlTools.parseXmlFile(null));
     }
 
     @Test
     void testIsWellFormed() {
+        LOGGER.log("TEST CASE: isWellFormed()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
         assertTrue(xmlTools.isWellFormed());
     }
 
     @Test
     void testIsNotWellFormed() {
+        LOGGER.log("TEST CASE: isNotWellFormed()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
+
+        LOGGER.log("Case Sensitive call", LogLevel.DEBUG);
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_non_wellformed_01.xml"));
         assertFalse(xmlTools.isWellFormed());
+
+        LOGGER.log("Missing close TAG call", LogLevel.DEBUG);
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_non_wellformed_02.xml"));
         assertFalse(xmlTools.isWellFormed());
+
+        LOGGER.log("Mixted TAG order call", LogLevel.DEBUG);
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_non_wellformed_03.xml"));
         assertFalse(xmlTools.isWellFormed());
+
+        LOGGER.log("no ROOT Element call", LogLevel.DEBUG);
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_non_wellformed_04.xml"));
         assertFalse(xmlTools.isWellFormed());
+
+        LOGGER.log("character escape failure call", LogLevel.DEBUG);
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_non_wellformed_05.xml"));
         assertFalse(xmlTools.isWellFormed());
     }
 
     @Test
     void testFailPrettyPrint() {
+        LOGGER.log("TEST CASE: failPrettyPrint()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(null);
         assertNull(xmlTools.prettyPrintXml());
     }
 
     @Test
     void testPrettyPrintXml() {
+        LOGGER.log("TEST CASE: prettyPrint()", LogLevel.DEBUG);
 
+        xmlTools = new XmlToolsImpl();
         String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_01.xml"));
 
         assertNotNull(input);
@@ -207,7 +247,10 @@ public class XmlToolsImplTest {
 
     @Test
     void testPrettyPrintXmlInlineDtd() {
+        LOGGER.log("TEST CASE: prettyPrintXmlInlineDtd()", LogLevel.DEBUG);
+
         try {
+            xmlTools = new XmlToolsImpl();
             String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_02.xml"));
             assertTrue(xmlTools.isWellFormed());
 
@@ -244,6 +287,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testWriteXmlToFile() {
+        LOGGER.log("TEST CASE: writeXmlToFile()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         String newFilePath = DIRECTORY + "/new_xml_file.xml";
         String xmlFileContent = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
 
@@ -257,6 +303,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testNoGrammar() {
+        LOGGER.log("TEST CASE: noGrammar()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_no_grammar.xml"));
         assertTrue(xmlTools.isWellFormed());
         assertFalse(xmlTools.isValid());
@@ -264,6 +313,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testFailValidation() {
+        LOGGER.log("TEST CASE: failValidation()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(""));
         assertFalse(xmlTools.isWellFormed());
         assertFalse(xmlTools.isValid());
@@ -271,6 +323,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testValidInternalDtd() {
+        LOGGER.log("TEST CASE: validInternalDtd()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_valid_internal.xml"));
         assertTrue(xmlTools.isWellFormed());
         assertTrue(xmlTools.isValid());
@@ -278,6 +333,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testInvalidDtd() {
+        LOGGER.log("TEST CASE: invalidDtd()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_invalid.xml"));
         assertTrue(xmlTools.isWellFormed());
         assertFalse(xmlTools.isValid());
@@ -285,6 +343,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testValidDtd() {
+        LOGGER.log("TEST CASE: invalidDtd()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_valid.xml"));
         assertTrue(xmlTools.isWellFormed());
         assertTrue(xmlTools.isValid());
@@ -292,27 +353,57 @@ public class XmlToolsImplTest {
 
     @Test
     void testSetSchema() {
+        LOGGER.log("TEST CASE: setSchema()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
+        LOGGER.log("regular call with internal Schema", LogLevel.DEBUG);
         assertTrue(xmlTools.isWellFormed());
+        assertFalse(xmlTools.hasExternalSchemaFile());
+        assertTrue(xmlTools.isValid());
+
+        LOGGER.log("regular call with extrnal Schema", LogLevel.DEBUG);
         xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
+        assertTrue(xmlTools.hasExternalSchemaFile());
         assertTrue(xmlTools.isValid());
     }
 
     @Test
     void testFailSetSchema() {
+        LOGGER.log("TEST CASE: failSetSchema()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
         assertTrue(xmlTools.isWellFormed());
-        assertFalse(xmlTools.isValid());
 
+        LOGGER.log("NULL call", LogLevel.DEBUG);
         xmlTools.setSchemaFile(null);
-        assertFalse(xmlTools.isValid());
+        assertFalse(xmlTools.hasExternalSchemaFile());
 
+        LOGGER.log("Schema File not exist  call", LogLevel.DEBUG);
         xmlTools.setSchemaFile(new File(DIRECTORY + "/no_schema.xsd"));
-        assertFalse(xmlTools.isValid());
+        assertFalse(xmlTools.hasExternalSchemaFile());
+    }
+
+    @Test
+    void testResetExternalSchemaFile() {
+        LOGGER.log("TEST CASE: resetExternalSchemaFile()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
+        assertFalse(xmlTools.hasExternalSchemaFile());
+
+        xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
+        assertTrue(xmlTools.hasExternalSchemaFile());
+
+        xmlTools.resetExternalSchema();
+        assertFalse(xmlTools.hasExternalSchemaFile());
     }
 
     @Test
     void testInvalidSchema() {
+        LOGGER.log("TEST CASE: invalidSchema()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_invalid.xml"));
         xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
         assertTrue(xmlTools.isWellFormed());
@@ -321,6 +412,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testValidSchemaByWebResorce() {
+        LOGGER.log("TEST CASE: validSchemaByWebResorce()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         //check spring config
         String xmlFile = Constraints.SYSTEM_APP_DIR
                 + "/target/test-classes/org/europa/together/configuration/spring-dao-test.xml";
@@ -334,6 +428,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testXsltTransformation() {
+        LOGGER.log("TEST CASE: xsltTransformation()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         String xml = DIRECTORY + "/xml_datasource.xml";
         String xslt = DIRECTORY + "/template.xslt";
         String out = xmlTools.transformXslt(new File(xml), new File(xslt));
@@ -344,6 +441,9 @@ public class XmlToolsImplTest {
 
     @Test
     void testFailTransformation() {
+        LOGGER.log("TEST CASE: failXsltTransformation()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
         assertEquals("", xmlTools.transformXslt(null, null));
     }
 }
