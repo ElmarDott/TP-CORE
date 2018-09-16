@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level;
 import java.io.File;
 import java.util.Arrays;
 import org.europa.together.business.Logger;
-import static org.europa.together.business.Logger.SYSTEM_APP_DIR;
 import org.europa.together.domain.LogLevel;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public final class LoggerImpl implements Logger {
     @Override
     public LogLevel log(final String message, final LogLevel level) {
 
-        instaceLogger();
+        instanceLogger();
         switch (level) {
             case TRACE:
                 logger.trace(message);
@@ -66,7 +65,7 @@ public final class LoggerImpl implements Logger {
     @Override
     public LogLevel getConfiguredLogLevel() {
 
-        instaceLogger();
+        instanceLogger();
         LogLevel level = null;
 
         if (logger.isErrorEnabled()) {
@@ -90,7 +89,7 @@ public final class LoggerImpl implements Logger {
     @Override
     public String catchException(final Exception ex) {
 
-        instaceLogger();
+        instanceLogger();
         String exceptionType = ex.getClass().getSimpleName();
         logger.error(exceptionType + ": " + ex.getMessage());
 
@@ -104,7 +103,7 @@ public final class LoggerImpl implements Logger {
     @Override
     public void setLogLevel(final LogLevel level) {
 
-        instaceLogger();
+        instanceLogger();
         ch.qos.logback.classic.Logger root
                 = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
                         ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -128,7 +127,7 @@ public final class LoggerImpl implements Logger {
         root.setLevel(filter);
     }
 
-    private void instaceLogger() {
+    private void instanceLogger() {
         if (logger == null) {
             logger = LoggerFactory.getILoggerFactory().getLogger(instance.getName());
         }

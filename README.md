@@ -84,3 +84,5 @@ like this project, let me know it an rate it with a star.
 |        | - REFRACTOR XmlToolsImpl
 |        | - Add Functionality: PdFRenderer.removePage()
 |        | - Add Functionality: Logger.setLogLevel()
+|        | - Add Functionality: DatabaseActions.getMetaData
+|        | - Migrate DAO to Hibernate 5.3 (JPA 2.1)

@@ -56,7 +56,7 @@ public interface MailClient {
     void addRecipientList(List<String> recipientList);
 
     /**
-     * Reset the Attchment List.
+     * Reset the Attachment List.
      *
      */
     @API(status = STABLE, since = "1.0")
@@ -67,6 +67,12 @@ public interface MailClient {
      */
     @API(status = STABLE, since = "1.0")
     void clearRecipents();
+
+    /**
+     * Population the database with the MailClient Configuration.
+     */
+    @API(status = STABLE, since = "1.1")
+    void populateConfiguration();
 
     /**
      * Allow a re-connection to the configured SMTP Server.

@@ -1,6 +1,5 @@
 package org.europa.together.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -11,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.MailClientImpl;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -69,7 +69,7 @@ public final class MailClientService {
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
-                        Constraints.MODULE_NAME, Constraints.MODULE_VERSION, MailClient.CONFIG_SET);
+                        Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
 
         for (ConfigurationDO configEntry : configurationEntries) {
 
@@ -159,51 +159,15 @@ public final class MailClientService {
 
     /**
      * Get the Configuration for the E-Mail Service from the Database and return
-     * the result as Map
+     * the result as Map.
      *
      * @return mailConfiguration as Map
      */
     @API(status = STABLE, since = "1.1")
     public Map<String, String> getDbConfiguration() {
 
-        Map<String, String> configuration = new HashMap<>();
-        List<ConfigurationDO> configurationEntries
-                = configurationDAO.getAllConfigurationSetEntries(
-                        Constraints.MODULE_NAME, Constraints.MODULE_VERSION, MailClient.CONFIG_SET);
-
-        for (ConfigurationDO entry : configurationEntries) {
-
-            if (StringUtils.calculateHash("mailer.host", HashAlgorithm.SHA256).equals(entry.getKey())) {
-                configuration.put("mailer.host", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.port", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.port", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.sender", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.sender", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.ssl", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.ssl", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.tls", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.tls", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.debug", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.debug", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.user", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.user", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.passwort", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.passwort", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.count", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.count", entry.getValue());
-            }
-            if (entry.getKey().equals(StringUtils.calculateHash("mailer.wait", HashAlgorithm.SHA256))) {
-                configuration.put("mailer.wait", entry.getValue());
-            }
-        }
-        return configuration;
+        MailClient client = new MailClientImpl();
+        client.loadConfigurationFromDatabase();
+        return client.getConfiguration();
     }
 }

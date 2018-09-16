@@ -54,7 +54,7 @@ public interface Logger {
      * NullPointerException is thrown, the StackTrace will be logged too.
      *
      * @param ex as Exception
-     * @return exception MEssage as String
+     * @return exception Message as String
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);

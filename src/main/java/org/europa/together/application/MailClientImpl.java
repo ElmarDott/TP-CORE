@@ -19,6 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.business.PropertyReader;
@@ -96,6 +97,20 @@ public class MailClientImpl implements MailClient {
     @Override
     public void clearRecipents() {
         recipients.clear();
+    }
+
+    @Override
+    public void populateConfiguration() {
+
+        DatabaseActions actions = new DatabaseActionsImpl();
+
+        String properties
+                = "classpath://org/europa/together/configuration/jdbc.properties";
+        String sql
+                = "org/europa/together/sql/mail-configuration.sql";
+
+        actions.connect(properties);
+        actions.executeSqlFromClasspath(sql);
     }
 
     @Override

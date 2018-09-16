@@ -322,7 +322,6 @@ public class MailClientImplTest {
     @Test
     void testLoadConfigurationFromDatabase() {
         try {
-            System.out.println("\n\n ## \n");
             assertTrue(mailer.loadConfigurationFromDatabase());
 
             assertEquals("smtp.gmail.com", mailer.getConfiguration().get("mailer.host"));
