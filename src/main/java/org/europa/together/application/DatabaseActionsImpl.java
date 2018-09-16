@@ -4,7 +4,9 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -32,16 +34,24 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private Statement statement = null;
 
     private boolean testMode = false;
-    private String user;
-    private String pwd;
-    private String connectionUrl;
-    private String driverClass;
-
-    private String uri;
     private int port;
+    private int resultCount;
 
     private ResultSet resultSet;
-    private int resultCount;
+
+    private String connectionUrl;
+    private String driverClass;
+    private String metaCatalog;
+    private String metaDbmsName;
+    private String metaDbmsVersion;
+    private String metaJdbcDriverName;
+    private String metaJdbcDriverVersion;
+    private String metaJdbcVersion;
+    private String metaUrl;
+    private String metaUser;
+    private String pwd;
+    private String uri;
+    private String user;
 
     /**
      * Constructor.
@@ -157,6 +167,41 @@ public class DatabaseActionsImpl implements DatabaseActions {
     }
 //  ----------------------------------------------------------------------------
 
+    private boolean connectionTimeout() {
+        // extract uri & port
+        // jdbc:postgresql://172.17.0.1:5432/together-test
+        String[] extraction01 = connectionUrl.split("//");
+        String[] extraction02 = extraction01[1].split("/");
+        String[] extraction03 = extraction02[0].split(":");
+        this.uri = extraction03[0];
+        this.port = Integer.parseInt(extraction03[1]);
+
+        return SocketTimeout.timeout(TIMEOUT, uri, port);
+    }
+
+    private void establishPooledConnection() {
+
+        try {
+            LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
+            if (!connectionTimeout()) {
+                throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
+            }
+            //test if the JDBC Driver is available
+            Class.forName(this.driverClass);
+
+            ComboPooledDataSource cpds = new ComboPooledDataSource();
+            cpds.setDriverClass(driverClass);
+            cpds.setJdbcUrl(connectionUrl);
+            cpds.setUser(user);
+            cpds.setPassword(pwd);
+            this.jdbcConnetion = cpds.getConnection();
+
+            getMetaData();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
     private void fetchProperties(final String propertyFile) {
 
         PropertyReader reader = new PropertyReaderImpl();
@@ -181,37 +226,67 @@ public class DatabaseActionsImpl implements DatabaseActions {
         driverClass = reader.getPropertyAsString("jdbc.driverClassName");
     }
 
-    private void establishPooledConnection() {
+    private void getMetaData() throws SQLException {
+        DatabaseMetaData metadata = jdbcConnetion.getMetaData();
 
-        try {
-            LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
-            if (!connectionTimeout()) {
-                throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
-            }
-            //test if the JDBC Driver is available
-            Class.forName(this.driverClass);
-
-            ComboPooledDataSource cpds = new ComboPooledDataSource();
-            cpds.setDriverClass(driverClass);
-            cpds.setJdbcUrl(connectionUrl);
-            cpds.setUser(user);
-            cpds.setPassword(pwd);
-            this.jdbcConnetion = cpds.getConnection();
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+        metaJdbcVersion
+                = metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion();
+        metaJdbcDriverName
+                = metadata.getDriverName();
+        metaJdbcDriverVersion
+                = metadata.getDriverVersion();
+        metaDbmsName
+                = metadata.getDatabaseProductName();
+        metaDbmsVersion
+                = metadata.getDatabaseProductVersion();
+        metaUser
+                = metadata.getUserName();
+        metaUrl
+                = metadata.getURL();
+        metaCatalog
+                = metadata.getConnection().getCatalog();
     }
 
-    private boolean connectionTimeout() {
-        // extract uri & port
-        // jdbc:postgresql://172.17.0.1:5432/together-test
-        String[] extraction01 = connectionUrl.split("//");
-        String[] extraction02 = extraction01[1].split("/");
-        String[] extraction03 = extraction02[0].split(":");
-        this.uri = extraction03[0];
-        this.port = Integer.parseInt(extraction03[1]);
-
-        return SocketTimeout.timeout(TIMEOUT, uri, port);
+// -----------------------------------------------------------------------------
+    //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
+    @Override
+    public String getMetaCatalog() {
+        return metaCatalog;
     }
+
+    @Override
+    public String getMetaDbmsName() {
+        return metaDbmsName;
+    }
+
+    @Override
+    public String getMetaDbmsVersion() {
+        return metaDbmsVersion;
+    }
+
+    @Override
+    public String getMetaJdbcDriverName() {
+        return metaJdbcDriverName;
+    }
+
+    @Override
+    public String getMetaJdbcDriverVersion() {
+        return metaJdbcDriverVersion;
+    }
+
+    @Override
+    public String getMetaJdbcVersion() {
+        return metaJdbcVersion;
+    }
+
+    @Override
+    public String getMetaUrl() {
+        return metaUrl;
+    }
+
+    @Override
+    public String getMetaUser() {
+        return metaUser;
+    }
+    //</editor-fold>
 }
