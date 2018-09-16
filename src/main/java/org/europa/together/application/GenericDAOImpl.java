@@ -7,6 +7,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -21,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @param <PK> as PrimaryKey
  */
 @SuppressWarnings("unchecked")
-@Transactional
 @Repository
+@Transactional
 public abstract class GenericDAOImpl<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 
@@ -49,6 +51,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     @Override
     public final boolean create(final T object) {
         boolean success = false;
+
         try {
             mainEntityManagerFactory.persist(object);
             LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") save",
@@ -66,11 +69,10 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
         boolean success = false;
         try {
             T foundObject = find(id);
-            if (foundObject != null) {
-                mainEntityManagerFactory.remove(foundObject);
-                LOGGER.log("DAO (" + genericType.getSimpleName() + ") delete", LogLevel.TRACE);
-                success = true;
-            }
+            mainEntityManagerFactory.remove(foundObject);
+            LOGGER.log("DAO (" + genericType.getSimpleName() + ") delete", LogLevel.TRACE);
+            success = true;
+
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -110,12 +112,13 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     @Override
     @Transactional(readOnly = true)
     public final List<T> listAllElements() {
-        List<T> results;
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        results = session.createCriteria(genericType).list();
-        LOGGER.log("DAO (" + genericType.getSimpleName() + ") listElements : "
-                + results.size() + " Objects", LogLevel.TRACE);
-        return results;
+
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(genericType);
+
+        // create Criteria
+        query.from(genericType);
+        return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
     @Override
