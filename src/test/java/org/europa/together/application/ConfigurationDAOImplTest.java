@@ -33,15 +33,14 @@ public class ConfigurationDAOImplTest {
 
     private static final Logger LOGGER = new LoggerImpl(ConfigurationDAOImplTest.class);
 
+    private static final String FLUSH_TABLE = "TRUNCATE TABLE app_config;";
+    private static final String FILE = "org/europa/together/sql/configuration-test.sql";
+    private static DatabaseActions actions = new DatabaseActionsImpl(true);
+
     @Autowired
     @Qualifier("configurationDAOImpl")
     private ConfigurationDAO configurationDAO;
-
     private ConfigurationDO configDO;
-
-    private static final String flush_table = "TRUNCATE TABLE app_config;";
-    private static final String file = "org/europa/together/sql/configuration-test.sql";
-    private static DatabaseActions actions = new DatabaseActionsImpl(true);
 
     public ConfigurationDAOImplTest() {
         configDO = new ConfigurationDO();
@@ -57,6 +56,7 @@ public class ConfigurationDAOImplTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         actions.connect("default");
         boolean check = SocketTimeout.timeout(2000, actions.getUri(), actions.getPort());
         LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
@@ -70,58 +70,71 @@ public class ConfigurationDAOImplTest {
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
-        actions.executeSqlFromClasspath(file);
+        actions.executeSqlFromClasspath(FILE);
     }
 
     @AfterAll
     static void tearDown() {
-        actions.executeQuery(flush_table);
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
     void testCaseInitialization() {
+        actions.executeSqlFromClasspath(FILE);
     }
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+        actions.executeQuery(FLUSH_TABLE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(ConfigurationDAOImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testListAll() {
+        LOGGER.log("TEST CASE: listAll()", LogLevel.DEBUG);
+
         List<ConfigurationDO> result = configurationDAO.listAllElements();
         assertEquals(14, result.size());
     }
 
     @Test
     void testFlushTable() {
+        LOGGER.log("TEST CASE: flushTable()", LogLevel.DEBUG);
+
         configurationDAO.flushTable(ConfigurationDO.TABLE_NAME);
         assertEquals(0, configurationDAO.countEntries(ConfigurationDO.TABLE_NAME));
 
-        actions.executeSqlFromClasspath(file);
+        actions.executeSqlFromClasspath(FILE);
         assertEquals(14, configurationDAO.countEntries(ConfigurationDO.TABLE_NAME));
     }
 
     @Test
     void testGetPrimaryKeyOfObject() {
+        LOGGER.log("TEST CASE: GetPrimaryKeyOfObject()", LogLevel.DEBUG);
+
         assertEquals("QWERTZ", configurationDAO.getPrimaryKeyOfObject(configDO));
         assertNull(configurationDAO.getPrimaryKeyOfObject(null));
     }
 
     @Test
     void testCountEntries() {
+        LOGGER.log("TEST CASE: CountEntries()", LogLevel.DEBUG);
+
         assertEquals(14, configurationDAO.countEntries(ConfigurationDO.TABLE_NAME));
     }
 
     @Test
     void testFind() {
+        LOGGER.log("TEST CASE: Find()", LogLevel.DEBUG);
+
         ConfigurationDO config = configurationDAO.find("88888888-4444-4444-4444-cccccccccc");
         assertEquals("key", config.getKey());
 
@@ -130,23 +143,27 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testCreate() {
+        LOGGER.log("TEST CASE: Create()", LogLevel.DEBUG);
+
         configurationDAO.create(configDO);
         assertEquals(configDO, configurationDAO.find("QWERTZ"));
     }
 
     @Test
-    void testFailCreate() {
-        assertThrows(Exception.class, () -> {
-            configurationDAO.create(null);
-        });
+    void testFailCreate() throws IllegalArgumentException {
+        LOGGER.log("TEST CASE: FailCreate()", LogLevel.DEBUG);
+
+        assertFalse(configurationDAO.create(null));
     }
 
     @Test
     void testUpdate() {
+        LOGGER.log("TEST CASE: Update()", LogLevel.DEBUG);
+
+        configurationDAO.create(configDO);
         configDO.setValue("changed value");
         configurationDAO.update("QWERTZ", configDO);
-        ConfigurationDO config = configurationDAO.find("QWERTZ");
-        assertEquals("changed value", configDO.getValue());
+        assertEquals("changed value", configurationDAO.find("QWERTZ").getValue());
 
         assertFalse(configurationDAO.update("QWERTZ", null));
         assertFalse(configurationDAO.update("DumDiDumm", configDO));
@@ -154,14 +171,18 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testDelete() {
-        configurationDAO.delete("QWERTZ");
-        assertNull(configurationDAO.find("QWERTZ"));
+        LOGGER.log("TEST CASE: Delete()", LogLevel.DEBUG);
 
-        assertFalse(configurationDAO.delete("DumDiDum"));
+        assertTrue(configurationDAO.create(configDO));
+        assertNotNull(configurationDAO.find("QWERTZ"));
+        assertTrue(configurationDAO.delete("QWERTZ"));
+        assertNull(configurationDAO.find("QWERTZ"));
     }
 
     @Test
-    void testFailDelete() {
+    void testFailDelete() throws Exception {
+        LOGGER.log("TEST CASE: FailDelete()", LogLevel.DEBUG);
+
         assertThrows(Exception.class, () -> {
             configurationDAO.delete(null);
         });
@@ -169,6 +190,8 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testSerilizeAsJson() {
+        LOGGER.log("TEST CASE: SerilizeAsJson()", LogLevel.DEBUG);
+
         String json
                 = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
         assertEquals(json, configurationDAO.serializeAsJson(configDO));
@@ -178,6 +201,8 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testDeserializeJson() {
+        LOGGER.log("TEST CASE: DeserilizeAsJson()", LogLevel.DEBUG);
+
         String json
                 = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
         ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json);
@@ -186,34 +211,49 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testGetConfigurationByKey() {
+        LOGGER.log("TEST CASE: GetConfigurationByKey()", LogLevel.DEBUG);
+
         ConfigurationDO config = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0.1");
         assertEquals("Y.1", config.getValue());
     }
 
     @Test
-    void testGetConfigurationByKeyNoExist() {
-        assertNull(configurationDAO.getConfigurationByKey("noope", "Module", "1"));
+    void testGetConfigurationByKeyNoExist() throws Exception {
+        LOGGER.log("TEST CASE: GetConfigurationByKeyNoExist()", LogLevel.DEBUG);
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.getConfigurationByKey("noope", "Module", "1");
+        });
     }
 
     @Test
     void testGetValueByKey() {
+        LOGGER.log("TEST CASE: GetValueByKey()", LogLevel.DEBUG);
+
         String value = configurationDAO.getValueByKey("key", "Module_A", "2.0.1");
         assertEquals("Y.1", value);
     }
 
     @Test
-    void testGetValueByKeyNoExist() {
-        assertNull(configurationDAO.getValueByKey("key", "Module", "1"));
+    void testGetValueByKeyNoExist() throws Exception {
+        LOGGER.log("TEST CASE: GetValueByKeyNoExist()", LogLevel.DEBUG);
+        assertThrows(Exception.class, () -> {
+            configurationDAO.getValueByKey("key", "Module", "1");
+        });
     }
 
     @Test
     void testGetValueByKeyFallbackToDefault() {
+        LOGGER.log("TEST CASE: GetValueByKeyFallbackToDefault()", LogLevel.DEBUG);
+
         String value = configurationDAO.getValueByKey("key", "Module", "1.0.1");
         assertEquals("default enry", value);
     }
 
     @Test
     void testRestoreKeyToDefault() {
+        LOGGER.log("TEST CASE: RestoreKeyToDefault()", LogLevel.DEBUG);
+
         ConfigurationDO before = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0");
         assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", before.getUuid());
         assertEquals("Y.1", before.getValue());
@@ -229,6 +269,8 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testGetAllSetEntries() {
+        LOGGER.log("TEST CASE: GetAllSetEntries()", LogLevel.DEBUG);
+
         List<ConfigurationDO> set
                 = configurationDAO.getAllConfigurationSetEntries("Module_A", "1.0", "Set_1");
 
@@ -249,6 +291,8 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testGetHistoryOfAEntry() {
+        LOGGER.log("TEST CASE: GetHistoryOfAEntry()", LogLevel.DEBUG);
+
         List<ConfigurationDO> set
                 = configurationDAO.getHistoryOfAEntry("Module_A", "key", "none");
 
@@ -277,6 +321,8 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testUpdateConfigurationEntries() {
+        LOGGER.log("TEST CASE: UpdateConfigurationEntries()", LogLevel.DEBUG);
+
         List<ConfigurationDO> set
                 = configurationDAO.getAllConfigurationSetEntries("Module_B", "1.0", "Set_2");
 
@@ -307,20 +353,24 @@ public class ConfigurationDAOImplTest {
 
     @Test
     void testGetDeprecatedEntries() {
-        List<ConfigurationDO> set = configurationDAO.getAllDepecatedEntries();
-        assertEquals(2, set.size());
+        LOGGER.log("TEST CASE: GetDeprecatedEntries()", LogLevel.DEBUG);
 
-        if (set.get(0).getUuid().equals("1de21a70-591b-4af8-8706-fc5581e90b0a")) {
-            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(0).getUuid());
-            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(1).getUuid());
+        List<ConfigurationDO> result = configurationDAO.getAllDepecatedEntries();
+        assertEquals(2, result.size());
+
+        if (result.get(0).getUuid().equals("1de21a70-591b-4af8-8706-fc5581e90b0a")) {
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", result.get(0).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", result.get(1).getUuid());
         } else {
-            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", set.get(1).getUuid());
-            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", set.get(0).getUuid());
+            assertEquals("1de21a70-591b-4af8-8706-fc5581e90b0a", result.get(1).getUuid());
+            assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", result.get(0).getUuid());
         }
     }
 
     @Test
     void testGetAllModuleEntries() {
+        LOGGER.log("TEST CASE: GetAllModuleEntries()", LogLevel.DEBUG);
+
         List<ConfigurationDO> set = configurationDAO.getAllModuleEntries("Module_A");
         assertEquals(10, set.size());
     }

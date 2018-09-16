@@ -1,11 +1,9 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import java.util.List;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
-import org.europa.together.domain.ConfigurationDO;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
