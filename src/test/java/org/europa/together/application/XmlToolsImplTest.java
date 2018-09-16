@@ -3,19 +3,19 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.io.File;
 import org.europa.together.business.Logger;
+import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-import org.europa.together.business.XmlTools;
 import org.europa.together.utils.FileUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
@@ -26,7 +26,6 @@ public class XmlToolsImplTest {
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
     private static final Logger LOGGER = new LoggerImpl(XmlToolsImplTest.class);
-    private XmlTools xmlTools;
     private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
     private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 
@@ -48,9 +47,13 @@ public class XmlToolsImplTest {
         if (DTD.exists()) {
             DTD.delete();
         }
+        if (SCHEMA.exists()) {
+            SCHEMA.delete();
+        }
 
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
+    private XmlTools xmlTools;
 
     @BeforeEach
     void testCaseInitialization() {

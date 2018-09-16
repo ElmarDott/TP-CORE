@@ -266,7 +266,8 @@ public class SaxDocumentHandler extends DefaultHandler2 {
                 attribute.append("Scanned Attributes: ");
                 for (String schema : xsdExtraction) {
                     if (!StringUtils.isEmpty(schema)) {
-                        attribute.append("\n\t" + schema);
+                        attribute.append("\n\t");
+                        attribute.append(schema);
                         if (schema.endsWith(".xsd")) {
                             schemaList.add(schema);
                         }

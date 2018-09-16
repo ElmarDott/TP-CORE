@@ -13,7 +13,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -140,7 +139,7 @@ public class XmlToolsImpl implements XmlTools {
             //External XSD
             if (schemaFile != null && schemaFile.exists()) {
 
-                LOGGER.log("Validate by explizit XSD (" + this.schemaFile.getName() + ") :: "
+                LOGGER.log("Validate by explicit XSD (" + this.schemaFile.getName() + ") :: "
                         + this.schemaFile.getAbsolutePath(), LogLevel.DEBUG);
 
                 parserFactory.setSchema(SchemaFactory.newInstance(
@@ -150,7 +149,7 @@ public class XmlToolsImpl implements XmlTools {
 
             //Internal XSD [reference inside XML Document]
             if (schemaFile == null && saxHandler.getSchemaFiles() != null) {
-                LOGGER.log("Validate by implizit XSD (" + saxHandler.getSchemaFiles().length + ")",
+                LOGGER.log("Validate by implicit XSD (" + saxHandler.getSchemaFiles().length + ")",
                         LogLevel.DEBUG);
 
                 parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",

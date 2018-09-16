@@ -41,7 +41,7 @@ public interface XmlTools {
 
     /**
      * Before you write a XML Document on a file, especially computer generated
-     * XML Content, the content should formated by a CodeBeautifier. This
+     * XML Content, the content should formatted by a CodeBeautifier. This
      * function Beautifies the XML Sources with the following rules:<br>
      * <li> set content to UTF-8 without BOM (Byte Order Mark)
      * <li> automated line breaks and indents
@@ -66,7 +66,7 @@ public interface XmlTools {
      */
     @API(status = EXPERIMENTAL, since = "1.1")
     default String shrinkContent() throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
+        throw new UnsupportedVersionException("Method not implemented in this Version.");
     }
 
     /**
@@ -75,7 +75,6 @@ public interface XmlTools {
      * @param xml as File
      * @param xslt as File
      * @return transformation as String
-     * @throws UnsupportedVersionException for missing implementation
      */
     @API(status = EXPERIMENTAL, since = "1.1")
     String transformXslt(File xml, File xslt);
