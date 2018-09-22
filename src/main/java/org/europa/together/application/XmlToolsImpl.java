@@ -119,12 +119,6 @@ public class XmlToolsImpl implements XmlTools {
     public boolean isValid() {
         boolean success = false;
 
-        if (schemaFile != null && !schemaFile.exists()) {
-            LOGGER.log("Schema file RESET TO NULL: " + schemaFile.getName() + " not exist.",
-                    LogLevel.WARN);
-            resetExternalSchema();
-        }
-
         try {
             LOGGER.log("Start Validation. ", LogLevel.DEBUG);
 
@@ -137,25 +131,26 @@ public class XmlToolsImpl implements XmlTools {
             parser.setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
 
             //External XSD
-            if (schemaFile != null && schemaFile.exists()) {
+            if (hasExternalSchemaFile()) {
 
                 LOGGER.log("Validate by explicit XSD (" + this.schemaFile.getName() + ") :: "
                         + this.schemaFile.getAbsolutePath(), LogLevel.DEBUG);
 
-                parserFactory.setSchema(SchemaFactory.newInstance(
-                        XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(this.schemaFile));
+                parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                        "http://www.w3.org/2001/XMLSchema");
+                parserFactory.setSchema(SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+                        .newSchema(schemaFile));
 
-            }
-
-            //Internal XSD [reference inside XML Document]
-            if (schemaFile == null && saxHandler.getSchemaFiles() != null) {
+            } else if (saxHandler.getSchemaFiles() != null) {
                 LOGGER.log("Validate by implicit XSD (" + saxHandler.getSchemaFiles().length + ")",
                         LogLevel.DEBUG);
 
                 parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
                         XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                parserFactory.setSchema(SchemaFactory.newInstance(
-                        XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(saxHandler.getSchemaFiles()));
+                parserFactory.setSchema(SchemaFactory
+                        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+                        .newSchema(saxHandler.getSchemaFiles()));
             }
 
             parser.parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)),
@@ -185,7 +180,8 @@ public class XmlToolsImpl implements XmlTools {
     @Override
     public void setSchemaFile(final File schema) {
         if (schema == null || !schema.exists()) {
-            LOGGER.log("Schema file does not exist.", LogLevel.ERROR);
+            LOGGER.log("External Schema not add Schema because file does not exist.",
+                    LogLevel.ERROR);
         } else {
 
             schemaFile = schema;

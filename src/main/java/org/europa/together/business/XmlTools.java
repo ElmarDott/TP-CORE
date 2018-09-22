@@ -58,7 +58,7 @@ public interface XmlTools {
      * in automated processing.The following option will be executed:
      * <li>remove XML comments</li>
      * <li>remove whitespace</li>
-     * <li>remove linebreaks</li>
+     * <li>remove linebreak</li>
      * The final result is an XML in one row without comments and whitespace.
      *
      * @return content as String
@@ -66,6 +66,7 @@ public interface XmlTools {
      */
     @API(status = EXPERIMENTAL, since = "1.1")
     default String shrinkContent() throws UnsupportedVersionException {
+        //TODO: shrinkContent()
         throw new UnsupportedVersionException("Method not implemented in this Version.");
     }
 

@@ -61,9 +61,6 @@ public class XmlToolsImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        if (xmlTools.hasExternalSchemaFile()) {
-            xmlTools.resetExternalSchema();
-        }
         LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
@@ -355,23 +352,6 @@ public class XmlToolsImplTest {
     }
 
     @Test
-    void testSetSchema() {
-        LOGGER.log("TEST CASE: setSchema()", LogLevel.DEBUG);
-
-        xmlTools = new XmlToolsImpl();
-        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
-        LOGGER.log("regular call with internal Schema", LogLevel.DEBUG);
-        assertTrue(xmlTools.isWellFormed());
-        assertFalse(xmlTools.hasExternalSchemaFile());
-        assertTrue(xmlTools.isValid());
-
-        LOGGER.log("regular call with extrnal Schema", LogLevel.DEBUG);
-        xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
-        assertTrue(xmlTools.hasExternalSchemaFile());
-        assertTrue(xmlTools.isValid());
-    }
-
-    @Test
     void testFailSetSchema() {
         LOGGER.log("TEST CASE: failSetSchema()", LogLevel.DEBUG);
 
@@ -379,13 +359,28 @@ public class XmlToolsImplTest {
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
         assertTrue(xmlTools.isWellFormed());
 
-        LOGGER.log("NULL call", LogLevel.DEBUG);
+        LOGGER.log("CASE 1: NULL", LogLevel.DEBUG);
         xmlTools.setSchemaFile(null);
         assertFalse(xmlTools.hasExternalSchemaFile());
 
-        LOGGER.log("Schema File not exist  call", LogLevel.DEBUG);
+        LOGGER.log("CASE 2: Schema File not exist", LogLevel.DEBUG);
         xmlTools.setSchemaFile(new File(DIRECTORY + "/no_schema.xsd"));
         assertFalse(xmlTools.hasExternalSchemaFile());
+    }
+
+    @Test
+    void testSetSchema() {
+        LOGGER.log("TEST CASE: setSchema()", LogLevel.DEBUG);
+
+        xmlTools = new XmlToolsImpl();
+        xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
+        assertFalse(xmlTools.hasExternalSchemaFile());
+
+        xmlTools.setSchemaFile(new File(DIRECTORY + "/simple.xsd"));
+        assertTrue(xmlTools.hasExternalSchemaFile());
+
+        assertTrue(xmlTools.isWellFormed());
+        assertTrue(xmlTools.isValid());
     }
 
     @Test
