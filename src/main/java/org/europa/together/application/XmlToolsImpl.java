@@ -88,6 +88,11 @@ public class XmlToolsImpl implements XmlTools {
     }
 
     @Override
+    public String shrinkContent(final String content) {
+        return StringUtils.shrink(content);
+    }
+
+    @Override
     public String transformXslt(final File xml, final File xslt) {
         Writer writer = new StringWriter();
         try {

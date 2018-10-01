@@ -293,4 +293,16 @@ public class StringUtilsTest {
                 StringUtils.skipBom(bom));
     }
 
+    @Test
+    void testShrinkContent() {
+        LOGGER.log("TEST CASE: shrinkContent()", LogLevel.DEBUG);
+
+        String shrink = " = \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy \" + \"eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam \" + \"voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet \" + \"clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit \" + \"amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam \" + \"nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed \" + \"diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. \" + \"Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor \" + \"sitView Generated Project Site amet. Lorem ipsum dolor sit amet, consetetur \" + \"sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore \" + \"magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo \" + \"dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus \" + \"est Lorem ipsum dolor sit amet.\\n\" function createCache() { var keys = []; function cache(key, value) { if (keys.push(key + \" \") ><catalog><cd><title></title><artist></artist><country></country><company></company><price></price><year></year></cd></catalog>";
+        String content = FileUtils.readFileStream(new File(Constraints.SYSTEM_APP_DIR + "/target/test-classes/shrink.txt"));
+
+        LOGGER.log("Shrink:", LogLevel.DEBUG);
+        LOGGER.log(StringUtils.shrink(content), LogLevel.DEBUG);
+
+        assertEquals(shrink, StringUtils.shrink(content));
+    }
 }

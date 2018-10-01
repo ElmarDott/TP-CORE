@@ -444,4 +444,22 @@ public class XmlToolsImplTest {
         xmlTools = new XmlToolsImpl();
         assertEquals("", xmlTools.transformXslt(null, null));
     }
+
+    @Test
+    void testShrinkXml() {
+        LOGGER.log("TEST CASE: shrinkXml()", LogLevel.DEBUG);
+
+        String file = Constraints.SYSTEM_APP_DIR
+                + "/target/test-classes/org/europa/together/xml/shrink.xml";
+        String orgin = FileUtils.readFileStream(new File(file));
+
+        xmlTools = new XmlToolsImpl();
+        String transform = xmlTools.shrinkContent(orgin);
+        xmlTools.parseXmlString(transform);
+
+        LOGGER.log("Shrink: " + transform, LogLevel.DEBUG);
+
+        assertNotEquals(orgin, transform);
+        assertTrue(xmlTools.isWellFormed());
+    }
 }

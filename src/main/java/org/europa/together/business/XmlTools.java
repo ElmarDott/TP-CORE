@@ -2,9 +2,7 @@ package org.europa.together.business;
 
 import java.io.File;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,16 +57,14 @@ public interface XmlTools {
      * <li>remove XML comments</li>
      * <li>remove whitespace</li>
      * <li>remove linebreak</li>
-     * The final result is an XML in one row without comments and whitespace.
+     * The final result is an XML in one row without comments and whitespace in
+     * one line. input and output is not parsed or checked for well formed.
      *
-     * @return content as String
-     * @throws UnsupportedVersionException for missing implementation
+     * @param content as String
+     * @return shrink content as String
      */
-    @API(status = EXPERIMENTAL, since = "1.1")
-    default String shrinkContent() throws UnsupportedVersionException {
-        //TODO: shrinkContent()
-        throw new UnsupportedVersionException("Method not implemented in this Version.");
-    }
+    @API(status = STABLE, since = "1.1")
+    String shrinkContent(String content);
 
     /**
      * Transform an XML File by a given XSLT to a new Output.
@@ -77,7 +73,7 @@ public interface XmlTools {
      * @param xslt as File
      * @return transformation as String
      */
-    @API(status = EXPERIMENTAL, since = "1.1")
+    @API(status = STABLE, since = "1.1")
     String transformXslt(File xml, File xslt);
 
     /**

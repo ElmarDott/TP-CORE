@@ -163,8 +163,8 @@ public final class StringUtils {
 
     /**
      * Produce a lorem ipsum Text with 4 paragraphs and 2100 characters. The
-     * paameter chars reduce the output to the given count of characters. To get
-     * the whole text set chars to 0.
+     * parameter chars reduce the output to the given count of characters. To
+     * get the whole text set chars to 0.
      *
      * @param chars as int
      * @return out as String
@@ -244,6 +244,26 @@ public final class StringUtils {
         UUID uuid = UUID.randomUUID();
         LOGGER.log("generateUUID() " + uuid, LogLevel.DEBUG);
         return uuid.toString();
+    }
+
+    /**
+     * Shrink XML, JS and CSS Files to reduce the payload for network traffic.
+     * The shrinker removes comments and unnecessary whitespace and line breaks.
+     *
+     * @param content as String
+     * @return shrink content as String
+     */
+    public static String shrink(final String content) {
+        //Comments
+        String shrink = content
+                .replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", "");
+        shrink = shrink.replaceAll("(?s)<!--.*?-->", "");
+        //whitespace
+        shrink = shrink.replaceAll("\\s+", " ");
+        shrink = shrink.replaceAll("  ", " ");
+        shrink = shrink.replaceAll(">.*?<", "><");
+
+        return shrink;
     }
 
     /**
