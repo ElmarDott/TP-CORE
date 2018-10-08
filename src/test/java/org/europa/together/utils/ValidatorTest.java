@@ -23,7 +23,7 @@ public class ValidatorTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be executed.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -77,7 +77,7 @@ public class ValidatorTest {
     }
 
     @Test
-    void testCaracterRegex() {
+    void testCharacterRegex() {
         assertTrue(Validator.validate("abcdefghijklmnopqrstuvwxyz", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("ABCDEFGHIJKLMNOPQRSTUVWXYZ", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("abc XYZ", Validator.ASCII_CHARACTER));
@@ -97,6 +97,18 @@ public class ValidatorTest {
         assertTrue(Validator.validate("Symbols 02: ¬&§$@€#", Validator.TEXT));
 
         assertFalse(Validator.validate("äöüÄÖÜß", Validator.TEXT));
+    }
+
+    @Test
+    void testRegexLetters() {
+        assertTrue(Validator.validate("abcdefXYZ", Validator.LETTERS));
+        assertTrue(Validator.validate("a", Validator.LETTERS));
+        assertTrue(Validator.validate("A", Validator.LETTERS));
+        assertTrue(Validator.validate("ABCxyz", Validator.LETTERS));
+
+        assertFalse(Validator.validate("äöüÄÖÜß", Validator.LETTERS));
+        assertFalse(Validator.validate("12345678890", Validator.LETTERS));
+        assertFalse(Validator.validate("!§$%", Validator.LETTERS));
     }
 
     @Test

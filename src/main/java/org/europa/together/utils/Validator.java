@@ -43,10 +43,14 @@ public final class Validator {
      */
     public static final String FLOATING_POINT = "-?[0-9 ]+(.[0-9]+)?";
 
-    public static final String LETTERS = "[a-zA-Z]";
+    /**
+     * Letters a-z A-Z upper case and lower case. No digits, space or special
+     * characters.
+     */
+    public static final String LETTERS = "[a-zA-Z]+";
 
     /**
-     * RGB Colorschema in HEX: #000000 to #ffffff.
+     * RGB Color schema in HEX: #000000 to #ffffff.
      */
     public static final String RGB_COLOR
             = "#[0-9a-fA-F]{3,3}([0-9a-fA-F]{3,3})?";
