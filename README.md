@@ -88,6 +88,9 @@ like this project, let me know it an rate it with a star.
 |        | - Add Functionality: DatabaseActions.getMetaData
 |        | - Migrate DAO to Hibernate 5.3 (JPA 2.1)
 |        | - Add swagger support
+|--------|----------------------------------------------------------------------
+| 1.2    | in process
+|        | - 
 
 
 
