@@ -127,7 +127,7 @@ public class FileUtilsTest {
 
     @Test
     void testFailAppendFile() {
-        FileUtils.appendFile("no_file_to_append", "apending string.");
+        FileUtils.appendFile("no_file_to_append", "appending string.");
     }
 
     @Test

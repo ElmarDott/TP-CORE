@@ -11,7 +11,7 @@ import org.europa.together.exceptions.MisconfigurationException;
 import org.imgscalr.Scalr;
 
 /**
- * Implementation of a smple Image Processor.
+ * Implementation of a simple Image Processor.
  */
 public class ImageProcessorImpl implements ImageProcessor {
 
@@ -59,7 +59,7 @@ public class ImageProcessorImpl implements ImageProcessor {
             this.width = image.getWidth();
             this.fileName = imageFile.getName();
             success = true;
-            LOGGER.log("Image " + imageFile.getName() + " successful readed.", LogLevel.DEBUG);
+            LOGGER.log("Image " + imageFile.getName() + " successful read.", LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -81,7 +81,8 @@ public class ImageProcessorImpl implements ImageProcessor {
             throws MisconfigurationException {
 
         boolean success = false;
-        if (!(format.equals("jpg") || format.equals("png") || format.equals("gif"))) {
+        if (!(format.equalsIgnoreCase("jpg") || format.equalsIgnoreCase("png")
+                || format.equalsIgnoreCase("gif"))) {
             throw new MisconfigurationException(format + " is not supported.");
         }
 
@@ -133,22 +134,22 @@ public class ImageProcessorImpl implements ImageProcessor {
         this.fileName = null;
         this.height = 0;
         this.width = 0;
-        LOGGER.log("Loaded image reseted.", LogLevel.TRACE);
+        LOGGER.log("Loaded image reset.", LogLevel.TRACE);
     }
 
     @Override
     public BufferedImage crop(final int x, final int y, final int height, final int width)
             throws MisconfigurationException {
 
-        BufferedImage renderdImg;
+        BufferedImage renderedImg;
         try {
-            renderdImg = Scalr.crop(this.image, x, y, width, height);
+            renderedImg = Scalr.crop(this.image, x, y, width, height);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
             throw new MisconfigurationException(ex.getMessage());
         }
-        return renderdImg;
+        return renderedImg;
     }
 
     @Override
@@ -195,7 +196,7 @@ public class ImageProcessorImpl implements ImageProcessor {
 
                 String msg = "Image " + this.fileName + " resize (" + percentage + "%)"
                         + " to height:" + newHeight
-                        + " widht:" + newWidth;
+                        + " width:" + newWidth;
                 LOGGER.log(msg, LogLevel.DEBUG);
 
                 renderdImg = Scalr.resize(this.image, newWidth, newHeight);
@@ -210,14 +211,14 @@ public class ImageProcessorImpl implements ImageProcessor {
 
     @Override
     public BufferedImage rotateRight() throws MisconfigurationException {
-        BufferedImage renderdImg;
+        BufferedImage renderedImg;
         try {
-            renderdImg = Scalr.rotate(this.image, Scalr.Rotation.CW_90);
+            renderedImg = Scalr.rotate(this.image, Scalr.Rotation.CW_90);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
             throw new MisconfigurationException(ex.getMessage());
         }
-        return renderdImg;
+        return renderedImg;
     }
 
 }

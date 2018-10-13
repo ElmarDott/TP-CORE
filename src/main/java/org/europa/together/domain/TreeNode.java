@@ -4,10 +4,10 @@ import java.util.Objects;
 import org.europa.together.utils.StringUtils;
 
 /**
- * Datastructure for a tree. A node is unique by is UUID, but in real
+ * Data structure for a tree. A node is unique by is UUID, but in real
  * environments is a more specified definition necessary. A parent node can not
  * have two child nods with the same name. for a user is then hard to
- * distinguish which child node is the right one. (e.g. Files and FOlders)
+ * distinguish which child node is the right one. (e.g. Files and Folders)
  */
 public class TreeNode {
 

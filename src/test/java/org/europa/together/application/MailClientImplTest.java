@@ -1,6 +1,6 @@
 package org.europa.together.application;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -50,20 +50,22 @@ public class MailClientImplTest {
 
     private static DatabaseActions actions = new DatabaseActionsImpl(true);
     private static GreenMail greenMail;
+    private static boolean check = false;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         actions.connect("default");
-        boolean check = SocketTimeout.timeout(2000, actions.getUri(), actions.getPort());
+        check = SocketTimeout.timeout(2000, actions.getUri(), actions.getPort());
         LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
         String out;
         if (check) {
             out = "executed.";
         } else {
-            out = "skiped.";
+            out = "skipped.";
         }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
         //SMTP Test Server
@@ -78,9 +80,11 @@ public class MailClientImplTest {
 
     @AfterAll
     static void tearDown() {
-        greenMail.stop();
-        actions.executeQuery("TRUNCATE TABLE app_config;");
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        if (check) {
+            greenMail.stop();
+            actions.executeQuery("TRUNCATE TABLE app_config;");
+        }
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -89,12 +93,14 @@ public class MailClientImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(MailClientImpl.class, hasValidBeanConstructor());
     }
 

@@ -24,7 +24,7 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of the XML Tools.
+ * Implementation of useful XML Tools.
  */
 @Repository
 public class XmlToolsImpl implements XmlTools {

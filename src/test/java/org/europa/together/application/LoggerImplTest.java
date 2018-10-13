@@ -24,7 +24,7 @@ public class LoggerImplTest {
     @BeforeAll
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
     }
 
     @AfterAll

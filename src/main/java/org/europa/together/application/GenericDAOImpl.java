@@ -143,7 +143,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
             JSONSerializer serializer = new JSONSerializer();
             json = serializer.serialize(object);
         } else {
-            LOGGER.log("Can't create JSON String, because the Entity is emty.", LogLevel.ERROR);
+            LOGGER.log("Can't create JSON String, because the Entity is empty.", LogLevel.ERROR);
         }
         return json;
     }

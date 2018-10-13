@@ -160,7 +160,7 @@ public final class FileUtils {
         try {
             Files.write(Paths.get(filePath), content.getBytes(CHARSET), StandardOpenOption.APPEND);
 
-            LOGGER.log(filePath + " extende with " + content.length() + " characters",
+            LOGGER.log(filePath + " extended with " + content.length() + " characters",
                     LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);

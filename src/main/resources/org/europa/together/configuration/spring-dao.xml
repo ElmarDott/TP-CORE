@@ -62,7 +62,6 @@
 
     <!-- ENTITY MANAGER for MAIN Database Schemata (JPA Standard) -->
     <bean id="mainEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="dataSource" ref="mainSchemata" />
         <property name="packagesToScan">
             <list>
@@ -98,7 +97,6 @@
 
     <!-- TRANSACTION MANAGER -->
     <bean id="mainTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <!-- property name="persistenceUnitName" value="defaultPersistenceUnit"/ -->
         <property name="entityManagerFactory" ref="mainEntityManagerFactory" />
     </bean>
 

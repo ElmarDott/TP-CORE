@@ -32,12 +32,13 @@ public class PdfRendererImplTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -46,12 +47,14 @@ public class PdfRendererImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(PdfRendererImpl.class, hasValidBeanConstructor());
 
         pdf.setAuthor("John Doe");

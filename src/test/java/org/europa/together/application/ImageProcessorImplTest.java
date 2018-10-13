@@ -1,6 +1,6 @@
 package org.europa.together.application;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import org.europa.together.business.ImageProcessor;
@@ -31,12 +31,13 @@ public class ImageProcessorImplTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -46,23 +47,29 @@ public class ImageProcessorImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(ImageProcessorImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testLoadImageAsFile() {
+        LOGGER.log("TEST CASE: loadImageAsFile()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
     }
 
     @Test
-    void testLoadImageAsBufferdImage() {
+    void testLoadImageAsBufferedImage() {
+        LOGGER.log("TEST CASE: loadImageAsBufferedImage()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
         assertNotNull(img);
@@ -71,6 +78,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailLoadImage() {
+        LOGGER.log("TEST CASE: failLoadImage()", LogLevel.DEBUG);
+
         assertFalse(processor.loadImage(new File(DIRECTORY + "No_Image.gif")));
         BufferedImage img = null;
         assertFalse(processor.loadImage(img));
@@ -78,6 +87,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testSaveImageAsJpg() {
+        LOGGER.log("TEST CASE: saveImageAsJpg()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
         try {
@@ -90,6 +101,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testSaveImageAsGif() {
+        LOGGER.log("TEST CASE: saveImageAsGif()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
         try {
@@ -102,6 +115,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testSaveImageAsPng() {
+        LOGGER.log("TEST CASE: saveImageAsPng()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
         try {
@@ -114,6 +129,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testSaveImageWrongType() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: saveImageWrongType()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
 
@@ -123,16 +140,16 @@ public class ImageProcessorImplTest {
     }
 
     @Test
-    void testFailSaveImage() {
-        try {
-            processor.saveImage(null, new File(""), "bpm");
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+    void testFailSaveImage() throws Exception {
+        LOGGER.log("TEST CASE: failSaveImage()", LogLevel.DEBUG);
+
+        assertFalse(processor.saveImage(null, null, "jpg"));
     }
 
     @Test
     void testImageDimensions() {
+        LOGGER.log("TEST CASE: imageDimensions()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertEquals(407, processor.getHeight());
         assertEquals(226, processor.getWidth());
@@ -140,6 +157,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testCalculateImageSize() {
+        LOGGER.log("TEST CASE: calculateImageSize()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
         assertEquals(1471712, processor.getImageSize(img));
@@ -147,6 +166,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testIsImageSet() {
+        LOGGER.log("TEST CASE: isImageSet()", LogLevel.DEBUG);
+
         assertFalse(processor.isImageSet());
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertTrue(processor.isImageSet());
@@ -154,6 +175,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testReset() {
+        LOGGER.log("TEST CASE: reset()", LogLevel.DEBUG);
+
         assertFalse(processor.isImageSet());
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertTrue(processor.isImageSet());
@@ -163,6 +186,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testResizeImageReduce() {
+        LOGGER.log("TEST CASE: resizeImageReduce()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -181,6 +206,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testResizeImageNoEffect() {
+        LOGGER.log("TEST CASE: resizeImageNoEffect()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -199,6 +226,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testResizeImageInflate() {
+        LOGGER.log("TEST CASE: resizeImageInflate()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -217,6 +246,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailResize() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failResize()", LogLevel.DEBUG);
+
         assertThrows(MisconfigurationException.class, () -> {
             processor.resize(50);
         });
@@ -224,6 +255,7 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailResizeImage() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failResizeImage()", LogLevel.DEBUG);
 
         processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
         assertTrue(processor.isImageSet());
@@ -235,6 +267,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testImageRotate() {
+        LOGGER.log("TEST CASE: imageRotate()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -254,6 +288,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailImageRotate() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failImageRotate()", LogLevel.DEBUG);
+
         assertThrows(MisconfigurationException.class, () -> {
             processor.rotateRight();
         });
@@ -261,6 +297,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testImageFlipVertical() {
+        LOGGER.log("TEST CASE: imageFlipVertical()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -274,7 +312,9 @@ public class ImageProcessorImplTest {
     }
 
     @Test
-    void testFailFlipVerticall() throws MisconfigurationException {
+    void testFailFlipVertical() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failFlipVertical()", LogLevel.DEBUG);
+
         assertThrows(MisconfigurationException.class, () -> {
             processor.flipVertical();
         });
@@ -282,6 +322,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testImageFlipHorizontal() {
+        LOGGER.log("TEST CASE: imageFlipHorizontal()", LogLevel.DEBUG);
+
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
             assertTrue(processor.isImageSet());
@@ -296,6 +338,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailFlipHorizontal() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failFlipHorizontal()", LogLevel.DEBUG);
+
         assertThrows(MisconfigurationException.class, () -> {
             processor.flipHorizontal();
         });
@@ -303,6 +347,7 @@ public class ImageProcessorImplTest {
 
     @Test
     void testCropImage() {
+        LOGGER.log("TEST CASE: cropImage()", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -323,6 +368,8 @@ public class ImageProcessorImplTest {
 
     @Test
     void testFailCropImage() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failCropImage()", LogLevel.DEBUG);
+
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertThrows(MisconfigurationException.class, () -> {
             processor.crop(0, 0, 0, 0);

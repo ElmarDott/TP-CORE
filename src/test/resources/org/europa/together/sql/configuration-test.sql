@@ -6,38 +6,38 @@
 --- #### SIMPLE FIND
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('88888888-4444-4444-4444-cccccccccc', 'key', 'empty', 'X',
-'none', 'Module_A', '1.0', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '1.0', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, different versions for the same key');
 
 --- #### SAMPLE for empty value fallback to default
 --- key = 2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
-VALUES ('6a173a15-185f-6838-ab49-5de2c704d029', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'default enry',
+VALUES ('6a173a15-185f-6838-ab49-5de2c704d029', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'default entry',
 'none', 'Module', '1.0.1', false, false, 'Fallback sample for empty values to use default entry.');
 
 --- #### SAMPLE for History
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('69173a15-185f-4338-ab49-5de2c704d029', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'X',
-'none', 'Module_A', '1.0', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '1.0', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, different versions for the same key');
 
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('b82ea5d2-f682-4309-b229-f6fe835bf69c', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'X',
-'none', 'Module_A', '1.1', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '1.1', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, different versions for the same key');
 
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('1e6c8151-831c-4eae-97fb-3c60846ba2a0', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'X',
-'none', 'Module_A', '1.2', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '1.2', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, different versions for the same key');
 
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('1a59f6fd-0300-40b1-ad41-5b77e3766b50', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', '', 'X',
-'none', 'Module_A', '1.3', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '1.3', false, false, 'confKey=key, defaultValue=X, MODULE A, no confSet, different versions for the same key');
 
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('6ff62a22-9820-406d-b55a-a86fa1c5a033', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', 'Y.1', 'Y',
-'none', 'Module_A', '2.0', false, true, 'deprecated, confKey=key, change defaultValue to Y, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '2.0', false, true, 'deprecated, confKey=key, change defaultValue to Y, MODULE A, no confSet, different versions for the same key');
 
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('1de21a70-591b-4af8-8706-fc5581e90b0a', '2c70e12b7a0646f92279f427c7b38e7334d8e5389cff167a1dc30e73f826b683', 'Y.1', 'Y',
-'none', 'Module_A', '2.0.1', false, true, 'deprecated, confKey=key, change defaultValue to Y, MODULE A, no confSet, diffrent versions for the same key');
+'none', 'Module_A', '2.0.1', false, true, 'deprecated, confKey=key, change defaultValue to Y, MODULE A, no confSet, different versions for the same key');
 
 --- #### SAMPLE for confSet
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)

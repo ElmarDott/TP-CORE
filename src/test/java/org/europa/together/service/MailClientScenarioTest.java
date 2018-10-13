@@ -66,7 +66,7 @@ public class MailClientScenarioTest extends
         if (check) {
             out = "executed.";
         } else {
-            out = "skiped.";
+            out = "skipped.";
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);

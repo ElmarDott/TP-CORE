@@ -68,7 +68,7 @@ public class PdfRendererImpl implements PdfRenderer {
             document.open();
             document.addCreationDate();
 
-            //Meta Informaion
+            //Meta Information
             document.addTitle(title);
             document.addSubject(subject);
             document.addAuthor(author);
@@ -118,7 +118,7 @@ public class PdfRendererImpl implements PdfRenderer {
             }
             newPDF.selectPages(allPages);
 
-            LOGGER.log("Document cointains " + newPDF.getNumberOfPages() + " Pages",
+            LOGGER.log("Document contains " + newPDF.getNumberOfPages() + " Pages",
                     LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);

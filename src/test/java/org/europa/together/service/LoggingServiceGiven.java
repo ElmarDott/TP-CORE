@@ -45,7 +45,7 @@ public class LoggingServiceGiven extends Stage<LoggingServiceGiven> {
                 assertFalse(config.exists());
 
             } else {
-                LOGGER.log("Directory is not clean. Configurationfile logback.xml detected.", LogLevel.DEBUG);
+                LOGGER.log("Directory is not clean. Configuration file logback.xml detected.", LogLevel.DEBUG);
                 assertTrue(false);
             }
 

@@ -86,7 +86,7 @@ public final class MailClientService {
 
     /**
      * Send an composed (single) e-mail which is configured in a MailClient. An
-     * E-Mail can be configured as follwed:  <br>
+     * E-Mail can be configured as followed:  <br>
      * <code>
      *  MailClient mailer = new MailCLientImpl();
      *  mailer.loadConfigurationFromDatabase();
@@ -111,7 +111,7 @@ public final class MailClientService {
             postman.connect();
             postman.sendMessage(msg, addresses);
             postman.close();
-            LOGGER.log("E-Mail schould be sended.", LogLevel.TRACE);
+            LOGGER.log("E-Mail should be send.", LogLevel.TRACE);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -122,8 +122,8 @@ public final class MailClientService {
      * Send a bulk of composed mails to a configured list of recipients. The
      * Bulk Mail supports a special feature, to interrupt the sending after an
      * defined amount of mails fo a configured time (milliseconds) until the
-     * next bulk can be send. After the termination the methot return th count
-     * of the sended mails.
+     * next bulk can be send. After the termination the method return th count
+     * of the send mails.
      *
      * @param mail as MailClient
      * @return sendedEmails as int
@@ -153,7 +153,7 @@ public final class MailClientService {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log(countSendedMails + " E-Mails was sended", LogLevel.DEBUG);
+        LOGGER.log(countSendedMails + " E-Mails was send", LogLevel.DEBUG);
         return countSendedMails;
     }
 

@@ -128,16 +128,16 @@ public interface MailClient {
     boolean addAttachment(final String resource);
 
     /**
-     * Add an Recipient to the Recipent List. The implementation check if the
+     * Add an Recipient to the Recipient List. The implementation check if the
      * recipient already exist in the List. Also the format of an valid e-mail
      * address will be tested. If an given E-Mail address is not valid it will
      * not added to the List.
      *
-     * @param recipent as String
+     * @param recipient as String
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean addRecipent(final String recipent);
+    boolean addRecipent(final String recipient);
 
     /**
      *
@@ -233,7 +233,7 @@ public interface MailClient {
     /**
      * Compose a full E-Mail, ready to send.
      *
-     * @param recipient as InternetAdress
+     * @param recipient as InternetAddress
      * @return e-mail as MimeMessage
      */
     @API(status = STABLE, since = "1.0")

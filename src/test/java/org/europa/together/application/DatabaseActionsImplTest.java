@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 public class DatabaseActionsImplTest {
 
     private final String sql_create
-            = "CREATE TABLE IF NOT EXISTS test (clolumn_01 int, clolumn_02 char(255));";
+            = "CREATE TABLE IF NOT EXISTS test (column_01 int, column_02 char(255));";
     private final String sql_drop = "DROP TABLE IF EXISTS test;";
 
     private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImplTest.class);
@@ -65,12 +65,14 @@ public class DatabaseActionsImplTest {
     @Test
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(DatabaseActionsImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testGetter() {
         LOGGER.log("TEST CASE: getter()", LogLevel.DEBUG);
+
         DatabaseActions dbms = new DatabaseActionsImpl();
         assertEquals(null, dbms.getMetaCatalog());
         assertEquals(null, dbms.getMetaDbmsName());

@@ -247,7 +247,7 @@ public class ConfigurationDAOImplTest {
         LOGGER.log("TEST CASE: GetValueByKeyFallbackToDefault()", LogLevel.DEBUG);
 
         String value = configurationDAO.getValueByKey("key", "Module", "1.0.1");
-        assertEquals("default enry", value);
+        assertEquals("default entry", value);
     }
 
     @Test

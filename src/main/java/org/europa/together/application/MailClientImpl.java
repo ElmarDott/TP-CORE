@@ -84,8 +84,8 @@ public class MailClientImpl implements MailClient {
 
     @Override
     public void addRecipientList(final List<String> recipientList) {
-        for (String recipent : recipientList) {
-            addRecipent(recipent);
+        for (String recipient : recipientList) {
+            addRecipent(recipient);
         }
     }
 
@@ -170,27 +170,27 @@ public class MailClientImpl implements MailClient {
     }
 
     @Override
-    public boolean addRecipent(final String recipent) {
+    public boolean addRecipent(final String recipient) {
 
         boolean success = false;
         InternetAddress mailAdress;
         try {
 
-            if (!Validator.validate(recipent, Validator.E_MAIL_ADDRESS)) {
-                throw new AddressException("[" + recipent + "] is not a valid email Adress.");
+            if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
+                throw new AddressException("[" + recipient + "] is not a valid email Adress.");
             }
-            mailAdress = new InternetAddress(recipent);
+            mailAdress = new InternetAddress(recipient);
             mailAdress.validate();
 
             //detect duplicate entries
             if (getRecipentList().contains(mailAdress)) {
-                LOGGER.log("Address " + recipent + " allready exist and will be ignored.",
+                LOGGER.log("Address " + recipient + " already exist and will be ignored.",
                         LogLevel.WARN);
             } else {
 
                 recipients.add(mailAdress);
                 success = true;
-                LOGGER.log("Add " + recipent + " to the recipient list.", LogLevel.DEBUG);
+                LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
             }
 
         } catch (Exception ex) {

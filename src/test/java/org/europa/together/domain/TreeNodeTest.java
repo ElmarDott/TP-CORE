@@ -23,11 +23,13 @@ public class TreeNodeTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -36,19 +38,21 @@ public class TreeNodeTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testDomainObject() {
+        LOGGER.log("TEST CASE: domainObject()", LogLevel.DEBUG);
+
         assertThat(TreeNode.class, hasValidBeanConstructor());
         assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName", "parent"));
     }
 
     @Test
     void testEqualByClone() {
-        LOGGER.log("TEST EQUALITY (clone): TRUE", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: equalByClone()", LogLevel.DEBUG);
 
         TreeNode node_01 = new TreeNode("node 1");
         node_01.setNodeName("node 1");
@@ -67,7 +71,7 @@ public class TreeNodeTest {
 
     @Test
     void testNotEqual() {
-        LOGGER.log("TEST EQUALITY: FALSE", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: notEqual()", LogLevel.DEBUG);
 
         TreeNode node_01 = new TreeNode("node A");
         assertNotNull(node_01.getUuid());
@@ -95,6 +99,8 @@ public class TreeNodeTest {
 
     @Test
     void testToString() {
+        LOGGER.log("TEST CASE: toString()", LogLevel.DEBUG);
+
         TreeNode node = new TreeNode("NODE");
         String out = node.toString();
         LOGGER.log("toString() " + out, LogLevel.DEBUG);
@@ -103,6 +109,8 @@ public class TreeNodeTest {
 
     @Test
     void testCreateDomainObjectBySetter() {
+        LOGGER.log("TEST CASE: createDomainObjectBySetter()", LogLevel.DEBUG);
+
         TreeNode parent = new TreeNode();
         TreeNode node = new TreeNode();
         node.setNodeName("name");
@@ -116,6 +124,8 @@ public class TreeNodeTest {
 
     @Test
     void testCorrectBeanConstruction() {
+        LOGGER.log("TEST CASE: correctBeanConstruction()", LogLevel.DEBUG);
+
         TreeNode node_00 = new TreeNode();
         assertNotNull(node_00.getUuid());
 

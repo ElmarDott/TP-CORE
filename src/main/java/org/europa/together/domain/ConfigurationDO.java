@@ -311,23 +311,19 @@ public class ConfigurationDO implements Serializable {
 
     @Override
     public boolean equals(final Object obj) {
+
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
+
         final ConfigurationDO other = (ConfigurationDO) obj;
-        if (!Objects.equals(this.key, other.key)) {
-            return false;
-        }
-        if (!Objects.equals(this.modulName, other.modulName)) {
-            return false;
-        }
-        if (!Objects.equals(this.version, other.version)) {
+        if (!Objects.equals(this.key, other.key)
+                || !Objects.equals(this.modulName, other.modulName)
+                || !Objects.equals(this.version, other.version)) {
             return false;
         }
         return true;

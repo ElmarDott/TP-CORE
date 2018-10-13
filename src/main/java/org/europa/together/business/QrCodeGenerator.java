@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Generates Quick Response Codes (QR Codes) with the Zxing Library. The
- * Generator provides DataStructures like Calendar Entry or Contact Informations
- * (PIM). It's implemeted an encoder and also an decoder.
+ * Generator provides DataStructures like Calendar Entry or Contact Information
+ * (PIM). It's implemented an encoder and also an decoder.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -124,5 +124,4 @@ public interface QrCodeGenerator {
      */
     @API(status = STABLE, since = "1.0")
     String generateDataForGeoLocation(String latitude, String longitude);
-
 }

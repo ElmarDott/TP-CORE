@@ -27,6 +27,7 @@ public class VelocityRendererImplTest {
 
     private static final Logger LOGGER = new LoggerImpl(VelocityRendererImplTest.class);
     private VelocityRenderer instance = new VelocityRendererImpl();
+    private Map<String, String> properties = new HashMap<>();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -39,7 +40,6 @@ public class VelocityRendererImplTest {
     static void tearDown() {
         LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
-    Map<String, String> properties = new HashMap<>();
 
     @BeforeEach
     void testCaseInitialization() {
@@ -54,12 +54,14 @@ public class VelocityRendererImplTest {
     @Test
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(VelocityRendererImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testGenerateContent() {
         LOGGER.log("TEST CASE: generateContent()", LogLevel.DEBUG);
+
         instance = new VelocityRendererImpl();
 
         if (properties != null) {
@@ -74,6 +76,7 @@ public class VelocityRendererImplTest {
     @Test
     void testLoadContentByClasspathResource() {
         LOGGER.log("TEST CASE: loadContentByClasspathResource()", LogLevel.DEBUG);
+
         instance = new VelocityRendererImpl();
         if (properties != null) {
             properties.clear();
@@ -100,6 +103,7 @@ public class VelocityRendererImplTest {
     @Test
     void testLoadContentByFileResource() {
         LOGGER.log("TEST CASE: loadContentByFileResource()", LogLevel.DEBUG);
+
         instance = new VelocityRendererImpl();
         System.out.println("\n PATH: " + DIRECTORY + "\n");
 

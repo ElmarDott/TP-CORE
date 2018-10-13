@@ -1,5 +1,7 @@
 package org.europa.together.domain;
 
+import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
@@ -9,8 +11,12 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class ByteOrderMarkTest {
 
+    private static final Logger LOGGER = new LoggerImpl(ByteOrderMarkTest.class);
+
     @Test
     void testEnumName() {
+        LOGGER.log("TEST CASE: enumName()", LogLevel.DEBUG);
+
         assertEquals("NONE",
                 ByteOrderMark.NONE.name());
 
@@ -29,6 +35,8 @@ public class ByteOrderMarkTest {
 
     @Test
     public void testGetBytes() {
+        LOGGER.log("TEST CASE: getBytes()", LogLevel.DEBUG);
+
         assertArrayEquals(new byte[]{},
                 ByteOrderMark.NONE.getBytes());
 
@@ -46,6 +54,8 @@ public class ByteOrderMarkTest {
 
     @Test
     void testEnumValues() {
+        LOGGER.log("TEST CASE: enumValues()", LogLevel.DEBUG);
+
         assertEquals("NONE",
                 ByteOrderMark.NONE.toString());
 

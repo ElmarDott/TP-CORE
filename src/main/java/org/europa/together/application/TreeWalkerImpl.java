@@ -10,7 +10,7 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implemention of a TreeWalker.
+ * Implementation of a TreeWalker.
  */
 @Repository
 public final class TreeWalkerImpl implements TreeWalker {

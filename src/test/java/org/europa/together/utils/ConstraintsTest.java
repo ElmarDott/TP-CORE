@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class ConstraintsTest {
 
-    @Test//(expected = Exception.class)
+    @Test
     void testPrivateConstructor() throws Exception {
         Constructor<Constraints> clazz
                 = Constraints.class.getDeclaredConstructor();

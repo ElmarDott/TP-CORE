@@ -28,11 +28,13 @@ public class ConfigurationDOTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -44,7 +46,7 @@ public class ConfigurationDOTest {
     @AfterEach
     void testCaseTermination() {
         validatorFactory.close();
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
@@ -59,7 +61,9 @@ public class ConfigurationDOTest {
     private String comment = "no comment";
 
     @Test
-    void prePersist() {
+    void testPrePersist() {
+        LOGGER.log("TEST CASE: prePersist()", LogLevel.DEBUG);
+
         ConfigurationDO domainObject = new ConfigurationDO();
         domainObject.prePersist();
 
@@ -72,6 +76,8 @@ public class ConfigurationDOTest {
 
     @Test
     void testDomainObject() {
+        LOGGER.log("TEST CASE: domainObject()", LogLevel.DEBUG);
+
         assertThat(ConfigurationDO.class, hasValidBeanConstructor());
         assertThat(ConfigurationDO.class, hasValidBeanToString());
         assertThat(ConfigurationDO.class, hasValidBeanHashCodeFor("key", "modulName", "version"));
@@ -80,6 +86,8 @@ public class ConfigurationDOTest {
 
     @Test
     void testCreateDomainObjectBySetter() {
+        LOGGER.log("TEST CASE: createDomainObjectBySetter()", LogLevel.DEBUG);
+
         ConfigurationDO domainObject = new ConfigurationDO();
         domainObject.setKey(key);
         domainObject.setModulName(modulName);
@@ -95,6 +103,7 @@ public class ConfigurationDOTest {
 
     @Test
     void testCorrectBeanConstruction() {
+        LOGGER.log("TEST CASE: correctBeanConstruction()", LogLevel.DEBUG);
 
         ConfigurationDO domainObject;
 
@@ -112,11 +121,12 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    void testIncorrectBenaConstruction() {
+    void testIncorrectBeanConstruction() {
+        LOGGER.log("TEST CASE: incorrectBeanConstruction()", LogLevel.DEBUG);
 
         ConfigurationDO domainObject;
 
-        LOGGER.log("Create DOmainObject with empty KEY", LogLevel.DEBUG);
+        LOGGER.log("Create DomainObject with empty KEY", LogLevel.DEBUG);
         domainObject = new ConfigurationDO(null, value, modulName, version);
         domainObject.prePersist();
         assertNotNull(domainObject);
@@ -125,7 +135,7 @@ public class ConfigurationDOTest {
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
 
-        LOGGER.log("Create DOmainObject with empty MODULE_NAME", LogLevel.DEBUG);
+        LOGGER.log("Create DomainObject with empty MODULE_NAME", LogLevel.DEBUG);
         domainObject = new ConfigurationDO(key, value, null, version);
         domainObject.prePersist();
         assertNotNull(domainObject);
@@ -134,7 +144,7 @@ public class ConfigurationDOTest {
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
 
-        LOGGER.log("Create DOmainObject with empty VERSION", LogLevel.DEBUG);
+        LOGGER.log("Create DomainObject with empty VERSION", LogLevel.DEBUG);
         domainObject = new ConfigurationDO(key, value, modulName, null);
         domainObject.prePersist();
         assertNotNull(domainObject);
@@ -143,7 +153,7 @@ public class ConfigurationDOTest {
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
 
-        LOGGER.log("Create DOmainObject with empty CONF_SET", LogLevel.DEBUG);
+        LOGGER.log("Create DomainObject with empty CONF_SET", LogLevel.DEBUG);
         domainObject = new ConfigurationDO(key, value, modulName, version);
         domainObject.prePersist();
         domainObject.setConfigurationSet(null);
@@ -155,7 +165,7 @@ public class ConfigurationDOTest {
         assertEquals("{validation.notnull}",
                 validate.validate(domainObject).iterator().next().getMessage());
 
-        LOGGER.log("Create DOmainObject with empty DEFAULT_VALUE", LogLevel.DEBUG);
+        LOGGER.log("Create DomainObject with empty DEFAULT_VALUE", LogLevel.DEBUG);
         domainObject = new ConfigurationDO(key, value, modulName, version);
         domainObject.prePersist();
         domainObject.setDefaultValue(null);
@@ -170,6 +180,8 @@ public class ConfigurationDOTest {
 
     @Test
     void testValidationEmptyComment() {
+        LOGGER.log("TEST CASE: validationEmptyComment()", LogLevel.DEBUG);
+
         ConfigurationDO domainObject
                 = new ConfigurationDO(key, value, modulName, version);
         domainObject.prePersist();
@@ -181,6 +193,8 @@ public class ConfigurationDOTest {
 
     @Test
     void testValidationEmptyValue() {
+        LOGGER.log("TEST CASE: validationEmptyValue()", LogLevel.DEBUG);
+
         ConfigurationDO domainObject
                 = new ConfigurationDO(key, null, modulName, version);
         domainObject.prePersist();

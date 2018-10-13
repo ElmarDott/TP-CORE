@@ -28,7 +28,7 @@ public interface PdfRenderer {
 
     /**
      * Generate a PDF Document in the size A4 from a HTML String. The file
-     * parameter define the path were the PDF will sored an how the documed is
+     * parameter define the path were the PDF will sored an how the document is
      * named.
      *
      * @param file as String
