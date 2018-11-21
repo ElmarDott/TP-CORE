@@ -36,6 +36,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
      * JPA Entity Manager for Transactions.
      */
     @PersistenceContext
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     public transient EntityManager mainEntityManagerFactory;
 
     private final Class<T> genericType;
