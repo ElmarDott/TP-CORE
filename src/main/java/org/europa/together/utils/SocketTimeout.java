@@ -48,6 +48,9 @@ public final class SocketTimeout {
 
             } catch (Exception ex) {
                 LOGGER.catchException(ex);
+                if (ex.getClass().getSimpleName().equals("ConnectException")) {
+                    break;
+                }
             }
         }
         return success;
