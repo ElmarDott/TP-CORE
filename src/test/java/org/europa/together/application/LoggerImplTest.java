@@ -5,9 +5,11 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.service.LoggingService;
 import org.europa.together.utils.Constraints;
+import org.europa.together.utils.TogglePreProcessor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,22 @@ public class LoggerImplTest {
     @BeforeAll
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(Logger.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        boolean check;
+        String out;
+        if (!toggle) {
+            out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
+        }
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        Assumptions.assumeTrue(check);
     }
 
     @AfterAll
@@ -44,6 +61,7 @@ public class LoggerImplTest {
 
     @Test
     void testConstructor() {
+
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         LOGGER.log("regular call", LogLevel.DEBUG);

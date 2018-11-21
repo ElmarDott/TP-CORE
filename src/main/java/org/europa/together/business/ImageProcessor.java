@@ -24,6 +24,18 @@ import org.springframework.stereotype.Component;
 public interface ImageProcessor {
 
     /**
+     * List of all dependencies.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.2")
+    String[] DEPENDENCIES = {"Logger", "FeatureToggle"};
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0012";
+
+    /**
      * Supported JPG file format.
      */
     @API(status = STABLE, since = "1.0")

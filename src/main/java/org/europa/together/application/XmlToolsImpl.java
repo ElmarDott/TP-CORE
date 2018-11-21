@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
@@ -44,6 +45,7 @@ public class XmlToolsImpl implements XmlTools {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public XmlToolsImpl() {
         this.parserFactory = SAXParserFactory.newInstance();
         LOGGER.log("instance class", LogLevel.INFO);
@@ -197,6 +199,7 @@ public class XmlToolsImpl implements XmlTools {
 
     @Override
     public void writeXmlToFile(final String content, final String destinationFile) {
+
         FileUtils.writeStringToFile(content, destinationFile);
     }
 

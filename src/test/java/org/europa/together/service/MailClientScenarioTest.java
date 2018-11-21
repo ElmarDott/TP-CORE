@@ -20,6 +20,7 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.StringUtils;
+import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -58,20 +59,30 @@ public class MailClientScenarioTest extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(MailClient.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         CONNECTION.connect("default");
-        boolean check = SocketTimeout.timeout(2000, CONNECTION.getUri(), CONNECTION.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
+        boolean socket = SocketTimeout.timeout(800, CONNECTION.getUri(), CONNECTION.getPort());
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
         String out;
-        if (check) {
-            out = "executed.";
+        if (!toggle || !socket) {
+            out = "skiped.";
+            check = false;
         } else {
-            out = "skipped.";
+            out = "executed.";
+            check = true;
         }
+
         LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
-        //DATABASE CONFIGURATION ENTIES FOR E-MAIL
+        //DBMS Table setup
         CONNECTION.executeSqlFromClasspath(SQL_FILE);
 
         //SMTP Test Server

@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
@@ -42,6 +43,7 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public QrCodeGeneratorImpl() {
         errorMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         charset = "UTF-8";

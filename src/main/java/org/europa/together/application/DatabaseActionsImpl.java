@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.europa.together.business.DatabaseActions;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
@@ -30,7 +31,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
 
     private static final int TIMEOUT = 2000;
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
-    private Connection jdbcConnetion = null;
+    private Connection jdbcConnection = null;
     private Statement statement = null;
 
     private boolean testMode = false;
@@ -56,6 +57,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public DatabaseActionsImpl() {
         resultCount = 0;
         resultSet = null;
@@ -67,6 +69,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
      *
      * @param activateTestMode as boolean
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public DatabaseActionsImpl(final boolean activateTestMode) {
         this.testMode = activateTestMode;
         LOGGER.log("instance class (TEST MODE)", LogLevel.INFO);
@@ -76,10 +79,10 @@ public class DatabaseActionsImpl implements DatabaseActions {
     public boolean connect(final String propertyFile) {
 
         boolean connected = false;
-        if (jdbcConnetion == null) {
+        if (jdbcConnection == null) {
             fetchProperties(propertyFile);
             establishPooledConnection();
-            if (jdbcConnetion != null) {
+            if (jdbcConnection != null) {
                 connected = true;
                 LOGGER.log("Connection already established.", LogLevel.DEBUG);
             }
@@ -125,9 +128,9 @@ public class DatabaseActionsImpl implements DatabaseActions {
         resultSet = null;
         resultCount = 0;
         try {
-            if (jdbcConnetion != null) {
+            if (jdbcConnection != null) {
 
-                statement = jdbcConnetion.createStatement();
+                statement = jdbcConnection.createStatement();
                 statement.execute(sql);
                 if (statement.getResultSet() != null) {
                     resultSet = statement.getResultSet();
@@ -194,7 +197,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
             cpds.setJdbcUrl(connectionUrl);
             cpds.setUser(user);
             cpds.setPassword(pwd);
-            this.jdbcConnetion = cpds.getConnection();
+            this.jdbcConnection = cpds.getConnection();
 
             getMetaData();
         } catch (Exception ex) {
@@ -227,7 +230,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
     }
 
     private void getMetaData() throws SQLException {
-        DatabaseMetaData metadata = jdbcConnetion.getMetaData();
+        DatabaseMetaData metadata = jdbcConnection.getMetaData();
 
         metaJdbcVersion
                 = metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion();

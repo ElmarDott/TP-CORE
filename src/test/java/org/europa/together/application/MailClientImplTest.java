@@ -15,6 +15,7 @@ import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.SocketTimeout;
+import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterAll;
@@ -48,43 +49,58 @@ public class MailClientImplTest {
     @Qualifier("mailClientImpl")
     private MailClient mailer;
 
-    private static DatabaseActions actions = new DatabaseActionsImpl(true);
-    private static GreenMail greenMail;
+    private static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    private static GreenMail SMTP_SERVER;
     private static boolean check = false;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        actions.connect("default");
-        check = SocketTimeout.timeout(2000, actions.getUri(), actions.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
-        String out;
-        if (check) {
-            out = "executed.";
-        } else {
-            out = "skipped.";
-        }
+
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(MailClient.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        CONNECTION.connect("default");
+        boolean socket = SocketTimeout.timeout(800, CONNECTION.getUri(), CONNECTION.getPort());
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
+        String out;
+        if (!toggle || !socket) {
+            out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
+        }
+
+        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
         //SMTP Test Server
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
-        greenMail = new GreenMail(ServerSetupTest.SMTPS);
-        greenMail.start();
-        greenMail.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
+        SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
+        SMTP_SERVER.start();
+        SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
 
         //DBMS Table setup
-        actions.executeSqlFromClasspath(SQL_FILE);
+        CONNECTION.executeSqlFromClasspath(SQL_FILE);
     }
 
     @AfterAll
     static void tearDown() {
-        if (check) {
-            greenMail.stop();
-            actions.executeQuery("TRUNCATE TABLE app_config;");
+        try {
+            SMTP_SERVER.stop();
+            CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
+
+            LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach

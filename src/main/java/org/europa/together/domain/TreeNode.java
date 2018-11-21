@@ -1,6 +1,7 @@
 package org.europa.together.domain;
 
 import java.util.Objects;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.utils.StringUtils;
 
 /**
@@ -21,6 +22,7 @@ public class TreeNode {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = "CM-0009.DO")
     public TreeNode() {
         this.uuid = StringUtils.generateUUID();
     }
@@ -30,6 +32,7 @@ public class TreeNode {
      *
      * @param name as String
      */
+    @FeatureToggle(featureID = "CM-0009.DO")
     public TreeNode(final String name) {
         this.uuid = StringUtils.generateUUID();
         this.nodeName = name;

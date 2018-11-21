@@ -9,6 +9,7 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.SocketTimeout;
+import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -56,16 +57,25 @@ public class ConfigurationDAOImplTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        actions.connect("default");
-        boolean check = SocketTimeout.timeout(2000, actions.getUri(), actions.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
-        String out;
-        if (check) {
-            out = "executed.";
 
-        } else {
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(ConfigurationDAO.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        actions.connect("default");
+        boolean socket = SocketTimeout.timeout(800, actions.getUri(), actions.getPort());
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
+        String out;
+        if (!toggle || !socket) {
             out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);

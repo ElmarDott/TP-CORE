@@ -17,6 +17,18 @@ import org.springframework.stereotype.Component;
 public interface VelocityRenderer {
 
     /**
+     * List of all dependencies.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.2")
+    String[] DEPENDENCIES = {"Logger", "FeatureToggle"};
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0003";
+
+    /**
      * Generate a String from a Template in the classpath and a Map with
      * Variables.
      *

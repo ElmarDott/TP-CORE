@@ -24,12 +24,24 @@ import org.springframework.stereotype.Component;
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface GenericDAO<T, PK extends Serializable> extends Serializable {
+
+    /**
+     * List of all dependencies.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.2")
+    String[] DEPENDENCIES = {"Logger", "FeatureToggle"};
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0002";
 
     /**
      * Persist a new Entity and return TRUE if it was successful. In the case

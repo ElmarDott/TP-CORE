@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
@@ -83,6 +84,7 @@ public class ConfigurationDO implements Serializable {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = "CM-0005.DO")
     public ConfigurationDO() {
         //PreSet
         this.uuid = StringUtils.generateUUID();
@@ -96,6 +98,7 @@ public class ConfigurationDO implements Serializable {
      * @param modulName as String
      * @param version as String
      */
+    @FeatureToggle(featureID = "CM-0005.DO")
     public ConfigurationDO(final String key, final String value, final String modulName,
             final String version) {
 

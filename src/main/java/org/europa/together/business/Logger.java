@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Wrapper for the SLF4j and Logback Logging Framework.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
@@ -22,6 +22,18 @@ public interface Logger {
      */
     @API(status = STABLE, since = "1.1")
     String CONFIG_SET = "logger";
+
+    /**
+     * List of all dependencies.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.2")
+    String[] DEPENDENCIES = {"FeatureToggle"};
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0001";
 
     /**
      * Detect the Directory where the application is running.

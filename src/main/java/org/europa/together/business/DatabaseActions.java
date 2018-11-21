@@ -12,12 +12,24 @@ import org.springframework.stereotype.Component;
  * DatabaseActions(boolean activateTestMode);
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface DatabaseActions {
+
+    /**
+     * List of all dependencies.
+     */
+    @API(status = API.Status.INTERNAL, since = "1.2")
+    String[] DEPENDENCIES = {"Logger", "FeatureToggle", "PropertyReader", "StringUtils"};
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0008";
 
     /**
      * Establish an JDBC Connection. If the propertyFile Parameter is empty,

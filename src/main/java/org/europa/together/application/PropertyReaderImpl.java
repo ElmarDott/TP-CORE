@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
@@ -32,6 +33,7 @@ public class PropertyReaderImpl implements PropertyReader {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public PropertyReaderImpl() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

@@ -12,6 +12,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.application.MailClientImpl;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.ConfigurationDO;
@@ -45,6 +46,7 @@ public final class MailClientService {
      * Constructor.
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = MailClient.FEATURE_ID)
     public MailClientService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -66,6 +68,7 @@ public final class MailClientService {
      * @param configurationList as Map
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S001")
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
@@ -101,6 +104,7 @@ public final class MailClientService {
      * @param mail as MailClient
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S002")
     public void sendEmail(final MailClient mail) {
         try {
             Address[] addresses = new Address[1];
@@ -129,6 +133,7 @@ public final class MailClientService {
      * @return sendedEmails as int
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S003")
     public int sendBulkMail(final MailClient mail) {
 
         int countSendedMails = 0;
@@ -164,6 +169,7 @@ public final class MailClientService {
      * @return mailConfiguration as Map
      */
     @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = "CM-0006.S004")
     public Map<String, String> getDbConfiguration() {
 
         MailClient client = new MailClientImpl();

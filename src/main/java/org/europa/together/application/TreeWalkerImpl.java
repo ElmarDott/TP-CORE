@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
@@ -24,6 +25,7 @@ public final class TreeWalkerImpl implements TreeWalker {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public TreeWalkerImpl() {
         this.tree = new ArrayList<>();
         LOGGER.log("instance class", LogLevel.INFO);
@@ -34,6 +36,7 @@ public final class TreeWalkerImpl implements TreeWalker {
      *
      * @param root as TreeNode
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public TreeWalkerImpl(final TreeNode root) {
         this.tree = new ArrayList<>();
         this.addRoot(root);

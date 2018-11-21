@@ -20,6 +20,7 @@ Components - Release: 1.0
  * [CORE-0010] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0010%5D-XML-Tools)
  * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
+ * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
 
 ### Prerequisites
 
@@ -48,7 +49,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -90,7 +91,9 @@ like this project, let me know it an rate it with a star.
 |        | - Add swagger support
 |--------|----------------------------------------------------------------------
 | 1.2    | in process
-|        | - 
+|        | - Add Functionality: Feature Toggle
+|        | 
+
 
 
 

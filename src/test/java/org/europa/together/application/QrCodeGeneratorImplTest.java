@@ -8,11 +8,13 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
+import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +35,24 @@ public class QrCodeGeneratorImplTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(QrCodeGenerator.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        boolean check;
+        String out;
+        if (!toggle) {
+            out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
+        }
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        Assumptions.assumeTrue(check);
     }
 
     @AfterAll

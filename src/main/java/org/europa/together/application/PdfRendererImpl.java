@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
@@ -38,6 +39,7 @@ public class PdfRendererImpl implements PdfRenderer {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public PdfRendererImpl() {
         creator = "Together Platform PDF Renderer";
         LOGGER.log("instance class", LogLevel.INFO);

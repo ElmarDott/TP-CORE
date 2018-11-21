@@ -8,6 +8,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.application.XmlToolsImpl;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
@@ -32,6 +33,7 @@ public final class LoggingService {
      * Constructor.
      */
     @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = Logger.FEATURE_ID)
     public LoggingService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -42,6 +44,7 @@ public final class LoggingService {
      * directory.
      */
     @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = "CM-0001.S001")
     public void createLogConfiguration() {
         try {
             String destination = Constraints.SYSTEM_APP_DIR + "/logback.xml";
@@ -61,6 +64,7 @@ public final class LoggingService {
      * @return configuration as String
      */
     @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = "CM-0001.S002")
     public String readLogConfiguration(final String file) {
         String configuration = null;
         try {
@@ -79,6 +83,7 @@ public final class LoggingService {
      * @param file as String
      */
     @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = "CM-0001.S003")
     public void writeLogConfiguration(final String content, final String file) {
 
         try {

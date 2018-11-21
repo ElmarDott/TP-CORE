@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -42,6 +43,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public GenericDAOImpl() {
         this.genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];

@@ -10,6 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.VelocityRenderer;
 import org.europa.together.domain.LogLevel;
@@ -29,6 +30,7 @@ public class VelocityRendererImpl implements VelocityRenderer {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public VelocityRendererImpl() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

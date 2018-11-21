@@ -4,15 +4,18 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.io.File;
 import javax.imageio.ImageIO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.ImageProcessor;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.imgscalr.Scalr;
+import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of a simple Image Processor.
  */
+@Repository
 public class ImageProcessorImpl implements ImageProcessor {
 
     private static final long serialVersionUID = 12L;
@@ -28,6 +31,7 @@ public class ImageProcessorImpl implements ImageProcessor {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public ImageProcessorImpl() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

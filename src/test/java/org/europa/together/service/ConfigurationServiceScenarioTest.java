@@ -4,10 +4,12 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import org.europa.together.application.DatabaseActionsImpl;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.SocketTimeout;
+import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -32,16 +34,26 @@ public class ConfigurationServiceScenarioTest extends
     @BeforeAll
     static void setUp() {
 
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        TogglePreProcessor feature = new TogglePreProcessor();
+        boolean toggle = feature.testCaseActivator(ConfigurationDAO.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
         CONNECTION.connect("default");
-        boolean check = SocketTimeout.timeout(2000, CONNECTION.getUri(), CONNECTION.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
+        boolean socket = SocketTimeout.timeout(800, CONNECTION.getUri(), CONNECTION.getPort());
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
         String out;
-        if (check) {
-            out = "executed.";
-        } else {
+        if (!toggle || !socket) {
             out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
         }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 

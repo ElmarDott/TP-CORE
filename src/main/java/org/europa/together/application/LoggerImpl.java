@@ -3,6 +3,7 @@ package org.europa.together.application;
 import ch.qos.logback.classic.Level;
 import java.io.File;
 import java.util.Arrays;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public final class LoggerImpl implements Logger {
      *
      * @param instance The instance of the logged CLASS
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public LoggerImpl(final Class<?> instance) {
         this.instance = instance;
 

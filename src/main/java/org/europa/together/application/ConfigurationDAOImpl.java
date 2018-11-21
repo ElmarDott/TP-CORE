@@ -5,6 +5,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of the ConfigurationDAO.
  */
 @Repository
+@Transactional
 public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String>
         implements ConfigurationDAO {
 
@@ -26,6 +28,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = ConfigurationDAO.FEATURE_ID)
     public ConfigurationDAOImpl() {
         super();
         LOGGER.log("instance class", LogLevel.INFO);

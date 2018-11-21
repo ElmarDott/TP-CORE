@@ -20,6 +20,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.business.PropertyReader;
@@ -63,6 +64,7 @@ public class MailClientImpl implements MailClient {
     /**
      * Constructor.
      */
+    @FeatureToggle(featureID = FEATURE_ID)
     public MailClientImpl() {
         initConfig();
         attachments = new ArrayList<>();
