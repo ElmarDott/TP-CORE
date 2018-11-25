@@ -1,13 +1,13 @@
-<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" height="50%" />
+<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
 
 # together Platform :: CORE
 
-[![License GPL-3.0]https://img.shields.io/badge/license-GNU-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![License GPL-3.0](https://img.shields.io/badge/license-GNU-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
-[![Javadocs](https://www.javadoc.io/badge/io.github.together/core.svg)](https://www.javadoc.io/doc/io.github.together/core)
-[![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-aspects)
-[//]: [![Build status](https://ci.appveyor.com/api/projects/status/ut87e89ykj3v269x/branch/master?svg=true)](https://travis-ci.org/ElmarDott/TP-CORE)
-[![Coverage Status](https://coveralls.io/github/ElmarDott/TP-CORE/badge.svg?branch=master&service=github)](https://coveralls.io/github/jcabi/jcabi-aspects?branch=master)
+[![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
+[![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
+[![Build status](https://ci.appveyor.com/api/projects/status/ut87e89ykj3v269x/branch/master?svg=true)](https://ci.appveyor.com/project/ElmarDott/tp-core)
+[![Coverage Status](https://coveralls.io/github/ElmarDott/TP-CORE/badge.svg?branch=master&service=github)](https://coveralls.io/github/ElmarDott/TP-CORE)
 
 
 The CORE Artifact contains typical basic functions for Java Applications. The
