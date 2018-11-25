@@ -7,8 +7,7 @@
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
 [![Build status](https://ci.appveyor.com/api/projects/status/ut87e89ykj3v269x/branch/master?svg=true)](https://ci.appveyor.com/project/ElmarDott/tp-core)
-[![Coverage Status](https://coveralls.io/github/ElmarDott/TP-CORE/badge.svg?branch=master&service=github)](https://coveralls.io/github/ElmarDott/TP-CORE)
-
+[![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg)](https://coveralls.io/github/ElmarDott/TP-CORE)
 
 The CORE Artifact contains typical basic functions for Java Applications. The
 Module is elaborated as library and packed as JAR file. It is possible to use
