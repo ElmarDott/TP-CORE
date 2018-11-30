@@ -27,7 +27,7 @@ public final class Constraints {
     /**
      * Version of the module.
      */
-    public static final String MODULE_VERSION = "1.1";
+    public static final String MODULE_VERSION = "1.2";
 
     /**
      * A short description of the module.

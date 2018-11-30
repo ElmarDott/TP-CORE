@@ -3,6 +3,10 @@
 /nbactions.xml
 /nb-configuration.xml
 /.idea/
+/.classpath
+/.project
 /*.iml
 /*.log
+/*.log.*
 /.project
+/.settings
