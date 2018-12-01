@@ -79,9 +79,13 @@ like this project, let me know it an rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
-| 1.2    | in process
-|        | - Add Functionality: Feature Toggle
-|        |
+| 1.0    | Rejected : not published
+|--------|----------------------------------------------------------------------
+| 1.0.1  | Rejected : not published
+|        | - change Maven POM GAV for Open Source Project Repository Hosting
+|--------|----------------------------------------------------------------------
+| 1.0.2  | published 04/2018
+|        | - include PGP signing for all
 |--------|----------------------------------------------------------------------
 | 1.1    | published 10/2018
 |        | - optimize overall Test Coverage
@@ -95,17 +99,9 @@ like this project, let me know it an rate it with a star.
 |        | - Migrate DAO to Hibernate 5.3 (JPA 2.1)
 |        | - Add swagger support
 |--------|----------------------------------------------------------------------
-| 1.0.2  | published 04/2018
-|        | - include PGP signing for all
-|--------|----------------------------------------------------------------------
-| 1.0.1  | Rejected : not published
-|        | - change Maven POM GAV for Open Source Project Repository Hosting
-|--------|----------------------------------------------------------------------
-| 1.0    | Rejected : not published
-|--------|----------------------------------------------------------------------
-
-
-
+| 1.2    | in process
+|        | - Add Functionality: Feature Toggle
+|        |
 
 
 
