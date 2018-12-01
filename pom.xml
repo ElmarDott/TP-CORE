@@ -36,6 +36,17 @@
         <url>scm:git:https://github.com/ElmarDott/TP-CORE.git</url>
     </scm>
 
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/ElmarDott/TP-CORE</url>
+    </ciManagement>
+
+    <!-- Jira issue management -->
+    <issueManagement>
+        <system>IssueTracking@Github</system>
+        <url><![CDATA[https://github.com/ElmarDott/TP-CORE/issues?sort=created&direction=desc&state=open]]></url>
+    </issueManagement>
+
     <build>
         <filters>
             <filter>src/main/filter/database.properties</filter>
@@ -122,6 +133,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>cobertura</goal>
+                        </goals>
+                        <configuration>
+                            <format>xml</format>
+                            <maxmem>256m</maxmem>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <!-- TODO: remove version after release buildworkflow 1.0.9 -->
+                <version>4.3.0</version>
+                <configuration>
+                    <coberturaReports>${project.build.directory}/cobertura/cobertura.ser</coberturaReports>
+                </configuration>
             </plugin>
         </plugins>
     </build>
