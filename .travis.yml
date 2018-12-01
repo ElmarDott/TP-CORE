@@ -2,6 +2,8 @@ language: java
 sudo: false
 jdk:
   - oraclejdk8
+install:
+  - mvn package
 script:
   - mvn test jacoco:report
 after_success:
