@@ -123,16 +123,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <!-- TODO: remove version after release buildworkflow 1.0.9 -->
-                <version>4.3.0</version>
-                <configuration>
-                    <repoToken>oBgPhLGyhpIgFUtEKIe2jISq9DIYlxJZg</repoToken>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
