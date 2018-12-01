@@ -6,7 +6,7 @@
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
-[![Build status](https://ci.appveyor.com/api/projects/status/ut87e89ykj3v269x/branch/master?svg=true)](https://ci.appveyor.com/project/ElmarDott/tp-core)
+[![Build status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://ci.appveyor.com/project/ElmarDott/tp-core)
 [![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg)](https://coveralls.io/github/ElmarDott/TP-CORE)
 
 The CORE Artifact contains typical basic functions for Java Applications. The
