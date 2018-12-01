@@ -1,6 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-install: travis_wait 5 mvn install
+install: travis_wait 20 mvn install
 after_success:
 - mvn clean test cobertura:cobertura coveralls:report
