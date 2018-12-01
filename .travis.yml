@@ -1,6 +1,10 @@
 language: java
+sudo: false
 jdk:
   - oraclejdk8
+install:
+  - mvn package
+script:
+  - mvn test jacoco:report
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
-  - mvn clean test jacoco:report coveralls:report
+  - mvn coveralls:report
