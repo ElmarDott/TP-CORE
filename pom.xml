@@ -36,6 +36,17 @@
         <url>scm:git:https://github.com/ElmarDott/TP-CORE.git</url>
     </scm>
 
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/ElmarDott/TP-CORE</url>
+    </ciManagement>
+
+    <!-- Jira issue management -->
+    <issueManagement>
+        <system>IssueTracking@Github</system>
+        <url><![CDATA[https://github.com/ElmarDott/TP-CORE/issues?sort=created&direction=desc&state=open]]></url>
+    </issueManagement>
+
     <build>
         <filters>
             <filter>src/main/filter/database.properties</filter>
@@ -129,9 +140,23 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <!-- TODO: remove version after release buildworkflow 1.0.9 -->
                 <version>4.3.0</version>
-                <configuration>
-                    <repoToken>oBgPhLGyhpIgFUtEKIe2jISq9DIYlxJZg</repoToken>
-                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
