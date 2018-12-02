@@ -156,8 +156,16 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <!-- TODO: remove version after release buildworkflow 1.0.9 -->
                 <version>4.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <coberturaReports>${project.build.directory}/cobertura/cobertura.ser</coberturaReports>
+                    <coberturaReports>${project.build.directory}/site/cobertura/coverage.xml</coberturaReports>
                 </configuration>
             </plugin>
         </plugins>

@@ -3,4 +3,4 @@ jdk:
   - oraclejdk8
 install: travis_wait 10 mvn install
 after_success:
-- mvn cobertura:cobertura coveralls:report
+- mvn coveralls:report
