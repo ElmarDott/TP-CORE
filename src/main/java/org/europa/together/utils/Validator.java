@@ -75,6 +75,12 @@ public final class Validator {
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     /**
+     * Version number (semantic versioning) Major.Minor.Patch-SNAPSHOT : 1.0;
+     * 1.0-SNAPSHOT; 1.0.0-SNAPSHOT
+     */
+    public static final String VERSION_NUMBER = "[0-9]{1,3}.[0-9]{1,3}(.[0-9]{1,3})?(-[A-Za-z]{1,10})?";
+
+    /**
      * Check if the Variable test inside the range of the borders min and max.
      * The borders and all numbers between are allowed values for the variable.
      *

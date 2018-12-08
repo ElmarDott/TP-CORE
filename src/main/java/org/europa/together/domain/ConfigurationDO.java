@@ -23,8 +23,10 @@ import org.europa.together.utils.StringUtils;
 @Entity
 @Table(name = "APP_CONFIG",
         indexes = {
-            @Index(columnList = "CONF_KEY", name = "configuration_key"),
-            @Index(columnList = "MODUL_NAME", name = "modul_name"),
+            @Index(columnList = "CONF_KEY", name = "configuration_key")
+            ,
+            @Index(columnList = "MODUL_NAME", name = "modul_name")
+            ,
             @Index(columnList = "CONF_SET", name = "configuration_set")
         },
         uniqueConstraints = {
@@ -84,7 +86,7 @@ public class ConfigurationDO implements Serializable {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = "CM-0005.DO")
+    @FeatureToggle(featureID = "CM-0005.DO01")
     public ConfigurationDO() {
         //PreSet
         this.uuid = StringUtils.generateUUID();
@@ -98,7 +100,7 @@ public class ConfigurationDO implements Serializable {
      * @param modulName as String
      * @param version as String
      */
-    @FeatureToggle(featureID = "CM-0005.DO")
+    @FeatureToggle(featureID = "CM-0005.DO01")
     public ConfigurationDO(final String key, final String value, final String modulName,
             final String version) {
 
