@@ -2,7 +2,9 @@ package org.europa.together.utils;
 
 import java.nio.file.Paths;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.PropertyReaderImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
 
 /**
@@ -11,6 +13,7 @@ import org.europa.together.domain.LogLevel;
 public final class Constraints {
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
+    private static final PropertyReader propertyReader = new PropertyReaderImpl();
 
     /**
      * Constructor.
@@ -27,7 +30,7 @@ public final class Constraints {
     /**
      * Version of the module.
      */
-    public static final String MODULE_VERSION = "1.2";
+    public static final String MODULE_VERSION = getVersion();
 
     /**
      * A short description of the module.
@@ -85,5 +88,12 @@ public final class Constraints {
 
         LOGGER.log(moduleInfo, LogLevel.DEBUG);
         return moduleInfo;
+    }
+
+    private static String getVersion() {
+        String FILE_PATH
+                = "org/europa/together/properties/version.properties";
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+        return propertyReader.getPropertyAsString("version");
     }
 }
