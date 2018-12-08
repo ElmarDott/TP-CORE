@@ -1,18 +1,20 @@
 package org.europa.together.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.business.Logger;
-import org.europa.together.domain.LogLevel;
+import org.europa.together.business.FeatureToggle;
 import org.ff4j.FF4j;
 import org.ff4j.conf.XmlConfig;
 import org.ff4j.core.Feature;
@@ -26,41 +28,90 @@ import org.ff4j.exception.FeatureNotFoundException;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class TogglePreProcessor extends AbstractProcessor {
 
-    private static final Logger LOGGER = new LoggerImpl(TogglePreProcessor.class);
     private FF4j toggles;
-    private final String configurationFile
-            = "org/europa/together/configuration/FeatureToggles.xml";
 
     /**
      * Constructor.
      */
     public TogglePreProcessor() {
-        toggles = new FF4j(configurationFile);
-        LOGGER.log("instance class", LogLevel.INFO);
+
+        String path = Paths.get("").toAbsolutePath().toString();
+        String execution = "/target/classes";
+        String configurationFile
+                = "/org/europa/together/configuration/FeatureToggles.xml";
+
+        String configuration;
+        try {
+
+            //guess where the toggle config is located
+            File check = new File(configurationFile);
+            if (check.exists()) {
+                configuration = configurationFile;
+                print("INFO: FeatureToggle configuration file detected.\n\t" + configuration);
+
+            } else {
+
+                configuration = path + configurationFile;
+                if (new File(configuration).exists()) {
+                    print("INFO: FeatureToggle configuration file detected.\n\t" + configuration);
+
+                } else {
+
+                    configuration = path + execution + configurationFile;
+                    if (new File(configuration).exists()) {
+                        print("INFO: FeatureToggle configuration file detected.\n\t"
+                                + configuration);
+
+                    } else {
+                        print("ERROR: " + configuration);
+                        print("ERROR: FeatureToggle configuration file not found.");
+                    }
+                }
+            }
+
+            InputStream source = new FileInputStream(configuration);
+            toggles = new FF4j(source);
+            print("INFO: FeatureToggle Annotation Processor inctanciated.");
+
+        } catch (Exception ex) {
+            print("ERROR: Instanciation of Feature Toggle Processor failed.");
+            print(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public boolean process(final Set<? extends TypeElement> annotations,
             final RoundEnvironment roundEnv) {
 
-        for (TypeElement annotation : annotations) {
-            for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
+        try {
+            for (TypeElement annotation : annotations) {
+                for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
 
-                try {
-                    String featureID = "CM-0000";
-//annotation.getAnnotation(FeatureToggle.class).featureID();
+                    if (annotation == null) {
+                        print("WARN: no @FeatureToggle annotations detected.");
+                    }
+                    if (element == null) {
+                        print("WARN: no anotation element");
+                    }
+                    if (FeatureToggle.class == null) {
+                        print("ERROR: annotation class not exist");
+                    }
+
+                    String featureID = element.getAnnotation(FeatureToggle.class).featureID();
                     Feature feature = toggle(featureID);
-                    String message = "@FeatureToggle(" + feature.getUid() + ") at: "
-                            + element.toString();
+
                     //
                     // TODO: @FeatureToggle: Code generation
                     //
-                    LOGGER.log(message, LogLevel.INFO);
-
-                } catch (Exception ex) {
-                    LOGGER.catchException(ex);
+                    print("@FeatureToggle(" + feature.getUid() + ") at: " + element.toString());
                 }
             }
+
+        } catch (Exception ex) {
+            print("ERROR: Process annotation @FeatureToggle failed.");
+            print(ex.getMessage());
+            ex.printStackTrace();
         }
         return true;
     }
@@ -73,11 +124,13 @@ public class TogglePreProcessor extends AbstractProcessor {
     @API(status = INTERNAL, since = "1.2")
     public void loadConfigurationFile(final String configurationFile) {
 
-        XmlConfig config = toggles.parseXmlConfig(configurationFile);
-        toggles.getFeatureStore().importFeatures(config.getFeatures().values());
-        toggles.getPropertiesStore().importProperties(config.getProperties().values());
-
-        LOGGER.log("Config File overwritten by: " + configurationFile, LogLevel.DEBUG);
+        try {
+            XmlConfig config = toggles.parseXmlConfig(configurationFile);
+            toggles.getFeatureStore().importFeatures(config.getFeatures().values());
+            toggles.getPropertiesStore().importProperties(config.getProperties().values());
+        } catch (Exception ex) {
+            print(ex.getMessage());
+        }
     }
 
     /**
@@ -93,7 +146,7 @@ public class TogglePreProcessor extends AbstractProcessor {
             activate = toggle(featureId).isEnable();
 
         } catch (Exception ex) {
-            LOGGER.catchException(ex);
+            print(ex.getMessage());
         }
         return activate;
     }
@@ -116,9 +169,17 @@ public class TogglePreProcessor extends AbstractProcessor {
             throw new FeatureNotFoundException(featureId + " dosn't exist.");
         }
 
-        feature = toggles.getFeature(featureId);
-        LOGGER.log("Feature: " + feature.getDescription()
-                + " (" + feature.getUid() + ") " + feature.isEnable(), LogLevel.DEBUG);
+        try {
+            feature = toggles.getFeature(featureId);
+            print("Feature: " + feature.getDescription()
+                    + " (" + feature.getUid() + ") " + feature.isEnable());
+        } catch (Exception ex) {
+            print(ex.getMessage());
+        }
         return feature;
+    }
+
+    private void print(final String message) {
+        System.out.println(message);
     }
 }
