@@ -24,6 +24,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <skipCoveralls>true</skipCoveralls>
         <skipJarSigner>false</skipJarSigner>
         <skipJavaDoc>false</skipJavaDoc>
         <skipTests>false</skipTests>
@@ -88,24 +89,50 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-compile</id>
+                        <id>processor-compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                         <configuration>
-                            <compilerArgument>-proc:none</compilerArgument>
+                            <proc>none</proc>
                             <includes>
-                                <include>org/europa/together/utils/TogglePreProcessor.java</include>
                                 <include>org/europa/together/business/FeatureToggle.java</include>
-                                <include>org/europa/together/application/LoggerImpl.java</include>
-                                <include>org/europa/together/business/Logger.java</include>
-                                <include>org/europa/together/domain/LogLevel.java</include>
+                                <include>org/europa/together/utils/TogglePreProcessor.java</include>
+                                <include>org/europa/together/configuration/FeatureToggles.xml</include>
                             </includes>
+                            <!--outputDirectory>${project.build.directory}/classes/META-INF</outputDirectory-->
                         </configuration>
                     </execution>
                     <execution>
-                        <id>compile-project</id>
+                        <id>process-annotations</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <proc>only</proc>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <excludes>
+                                <exclude>org/europa/together/business/FeatureToggle.java</exclude>
+                                <exclude>org/europa/together/utils/TogglePreProcessor.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-compile</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <proc>none</proc>
+                            <excludes>
+                                <exclude>org/europa/together/business/FeatureToggle.java</exclude>
+                                <exclude>org/europa/together/utils/TogglePreProcessor.java</exclude>
+                            </excludes>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -145,6 +172,7 @@
                             <goal>cobertura</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipCoveralls}</skip>
                             <format>xml</format>
                             <maxmem>256m</maxmem>
                         </configuration>
@@ -165,6 +193,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>${skipCoveralls}</skip>
                     <coberturaReports>${project.build.directory}/site/cobertura/coverage.xml</coberturaReports>
                 </configuration>
             </plugin>
@@ -225,7 +254,7 @@
         <dependency>
             <groupId>org.ff4j</groupId>
             <artifactId>ff4j-core</artifactId>
-            <version>1.7.2</version>
+            <version>1.7.3</version>
         </dependency>
 
         <!-- Bundels -->

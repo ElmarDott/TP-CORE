@@ -5,8 +5,8 @@
 /.idea/
 /.classpath
 /.project
+/.settings
 /*.iml
 /*.log
 /*.log.*
-/.project
-/.settings
+/cobertura.ser
