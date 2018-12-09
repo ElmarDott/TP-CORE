@@ -177,7 +177,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
     @Override
     public JdbcConnection getJdbcMetaData() {
 
-        Map<String, String> properties = new HashMap();
+        Map<String, String> properties = new HashMap<>();
         try {
             metadata = jdbcConnection.getMetaData();
 

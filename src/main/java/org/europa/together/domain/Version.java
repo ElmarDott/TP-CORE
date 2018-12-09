@@ -32,7 +32,7 @@ import org.europa.together.utils.Validator;
  * both artifacts with the same name have the same version it is impossible to
  * distinguish them.
  */
-public class Version implements Comparable {
+public class Version implements Comparable<Version> {
 
     private static final Logger LOGGER = new LoggerImpl(Version.class);
 
@@ -146,28 +146,27 @@ public class Version implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Version o) {
         // -1:smaller | 0:equal | 1:greater
         int compare;
-        Version version = (Version) o;
 
         if (this.equals(o)) {
             compare = 0;
-        } else if (this.MAJOR > version.MAJOR) {
+        } else if (this.MAJOR > o.MAJOR) {
             compare = 1;
-        } else if (this.MAJOR < version.MAJOR) {
+        } else if (this.MAJOR < o.MAJOR) {
             compare = -1;
         } else {
 
-            if (this.MINOR > version.MINOR) {
+            if (this.MINOR > o.MINOR) {
                 compare = 1;
-            } else if (this.MINOR < version.MINOR) {
+            } else if (this.MINOR < o.MINOR) {
                 compare = -1;
             } else {
 
-                if (this.PATCH > version.PATCH) {
+                if (this.PATCH > o.PATCH) {
                     compare = 1;
-                } else if (this.PATCH < version.PATCH) {
+                } else if (this.PATCH < o.PATCH) {
                     compare = -1;
                 } else {
                     //equal, because lables will not sorted
@@ -177,5 +176,4 @@ public class Version implements Comparable {
         }
         return compare;
     }
-
 }
