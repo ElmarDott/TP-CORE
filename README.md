@@ -80,7 +80,8 @@ like this project, let me know it an rate it with a star.
 |--------|----------------------------------------------------------------------
 | 1.2    | in process
 |        | - Add Functionality: Feature Toggle
-|        |
+|        | - Extend Application Configuration
+|        | - provide JDBC connection object in DatabaseActions
 |--------|----------------------------------------------------------------------
 | 1.1    | published 10/2018
 |        | - optimize overall Test Coverage

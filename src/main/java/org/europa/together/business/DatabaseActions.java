@@ -2,7 +2,9 @@ package org.europa.together.business;
 
 import java.sql.ResultSet;
 import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.domain.JdbcConnection;
 import org.springframework.stereotype.Component;
 
 /**
@@ -94,12 +96,20 @@ public interface DatabaseActions {
     ResultSet getResultSet();
 
     /**
+     * Return a object with all JDBC Connection meta date.
+     *
+     * @return JdbcConnection as Object
+     */
+    @API(status = STABLE, since = "1.2")
+    JdbcConnection getJdbcMetaData();
+
+    /**
      * Return the name of the connected catalog. Also known as DBMS Schemata or
      * Database.
      *
      * @return catalogNeame as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaCatalog();
 
     /**
@@ -107,7 +117,7 @@ public interface DatabaseActions {
      *
      * @return dbms as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaDbmsName();
 
     /**
@@ -115,7 +125,7 @@ public interface DatabaseActions {
      *
      * @return dbmsVersion as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaDbmsVersion();
 
     /**
@@ -123,7 +133,7 @@ public interface DatabaseActions {
      *
      * @return driverName as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaJdbcDriverName();
 
     /**
@@ -131,7 +141,7 @@ public interface DatabaseActions {
      *
      * @return driverVersion as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaJdbcDriverVersion();
 
     /**
@@ -139,7 +149,7 @@ public interface DatabaseActions {
      *
      * @return jdbcVersion as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaJdbcVersion();
 
     /**
@@ -147,7 +157,7 @@ public interface DatabaseActions {
      *
      * @return as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaUrl();
 
     /**
@@ -155,7 +165,7 @@ public interface DatabaseActions {
      *
      * @return user as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = DEPRECATED, since = "1.1")
     String getMetaUser();
 
     /**
