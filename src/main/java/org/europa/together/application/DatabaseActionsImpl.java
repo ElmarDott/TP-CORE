@@ -8,10 +8,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
+import org.europa.together.domain.JdbcConnection;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.TimeOutException;
 import org.europa.together.utils.SocketTimeout;
@@ -39,9 +42,14 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private int resultCount;
 
     private ResultSet resultSet;
-
+    private DatabaseMetaData metadata;
     private String connectionUrl;
     private String driverClass;
+    private String pwd;
+    private String uri;
+    private String user;
+
+    //DEPECATED
     private String metaCatalog;
     private String metaDbmsName;
     private String metaDbmsVersion;
@@ -50,9 +58,6 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private String metaJdbcVersion;
     private String metaUrl;
     private String metaUser;
-    private String pwd;
-    private String uri;
-    private String user;
 
     /**
      * Constructor.
@@ -168,7 +173,38 @@ public class DatabaseActionsImpl implements DatabaseActions {
     public String getUri() {
         return this.uri;
     }
-//  ----------------------------------------------------------------------------
+
+    @Override
+    public JdbcConnection getJdbcMetaData() {
+
+        Map<String, String> properties = new HashMap();
+        try {
+            metadata = jdbcConnection.getMetaData();
+
+            properties.put("metaJdbcVersion",
+                    metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion());
+            properties.put("metaJdbcDriverName",
+                    metadata.getDriverName());
+            properties.put("metaJdbcDriverVersion",
+                    metadata.getDriverVersion());
+            properties.put("metaDbmsName",
+                    metadata.getDatabaseProductName());
+            properties.put("metaDbmsVersion",
+                    metadata.getDatabaseProductVersion());
+            properties.put("metaUser",
+                    metadata.getUserName());
+            properties.put("metaUrl",
+                    metadata.getURL());
+            properties.put("metaCatalog",
+                    metadata.getConnection().getCatalog());
+            properties.put("metaPort", Integer.toString(port));
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return new JdbcConnection(properties);
+    }
+    //  ----------------------------------------------------------------------------
 
     private boolean connectionTimeout() {
         // extract uri & port
@@ -229,8 +265,9 @@ public class DatabaseActionsImpl implements DatabaseActions {
         driverClass = reader.getPropertyAsString("jdbc.driverClassName");
     }
 
+    //DEPECATED for delete
     private void getMetaData() throws SQLException {
-        DatabaseMetaData metadata = jdbcConnection.getMetaData();
+        metadata = jdbcConnection.getMetaData();
 
         metaJdbcVersion
                 = metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion();
