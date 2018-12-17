@@ -115,8 +115,6 @@ public class TreeNode {
     public int hashCode() {
         int hash = HASH * 3;
         hash = hash + Objects.hashCode(this.uuid);
-        hash = hash + Objects.hashCode(this.nodeName);
-        hash = hash + Objects.hashCode(this.parent);
         return hash;
     }
 
