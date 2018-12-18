@@ -22,6 +22,7 @@ import org.europa.together.utils.StringUtils;
  */
 @Entity
 @Table(name = "APP_CONFIG",
+        //CHECKSTYLE:OFF
         indexes = {
             @Index(columnList = "CONF_KEY", name = "configuration_key")
             ,
@@ -29,6 +30,7 @@ import org.europa.together.utils.StringUtils;
             ,
             @Index(columnList = "CONF_SET", name = "configuration_set")
         },
+        //CHECKSTYLE:ON
         uniqueConstraints = {
             @UniqueConstraint(columnNames
                     = {"MODUL_NAME", "MODUL_VERSION", "CONF_KEY"})
