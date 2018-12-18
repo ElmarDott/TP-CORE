@@ -8,6 +8,7 @@ import java.util.Map;
  */
 public final class JdbcConnection {
 
+    //CHECKSTYLE:OFF
     public final String JDBC_VERSION;
     public final String DBMS_NAME;
     public final String DBMS_VERSION;
@@ -17,6 +18,7 @@ public final class JdbcConnection {
     public final String URL;
     public final String PORT;
     public final String CATALOG;
+    //CHECKSTYLE:ON
 
     /**
      * Constructor.

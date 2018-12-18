@@ -73,8 +73,11 @@
 	<property name="message" value="Line has trailing spaces."/>
     </module>
 
+    <module name="SuppressionCommentFilter"/>
     <module name="TreeWalker">
 
+        <module name="FileContentsHolder"/>
+        
         <module name="SuppressWarningsHolder" />
 	<!-- Checks for Javadoc comments.                     -->
 	<!-- See http://checkstyle.sf.net/config_javadoc.html -->
