@@ -10,11 +10,11 @@ import org.europa.together.utils.StringUtils;
  * have two child nods with the same name. for a user is then hard to
  * distinguish which child node is the right one. (e.g. Files and Folders)
  */
-public class TreeNode {
+public final class TreeNode {
 
     private static final int HASH = 97;
 
-    private final String uuid;
+    private String uuid;
     private String nodeName;
     private String parent;
     private Object attributes;
@@ -103,6 +103,23 @@ public class TreeNode {
     }
     //</editor-fold>
 
+    /**
+     * Clone (copy) a TreeNode to a we instance.
+     *
+     * @param node as TreeNode
+     * @return a copy of the TreeNode
+     */
+    public TreeNode copy(TreeNode node) {
+        TreeNode copy = new TreeNode();
+
+        copy.uuid = node.uuid;
+        copy.nodeName = node.nodeName;
+        copy.parent = node.parent;
+        copy.attributes = node.attributes;
+
+        return copy;
+    }
+
     @Override
     public String toString() {
         return "TreeNode{" + "uuid=" + uuid
@@ -113,27 +130,22 @@ public class TreeNode {
 
     @Override
     public int hashCode() {
-        int hash = HASH * 3;
-        hash = hash + Objects.hashCode(this.uuid);
-        return hash;
+        return HASH + Objects.hashCode(this.nodeName);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        boolean success = true;
 
-        if (obj == null) {
-            success = false;
-        } else {
+        boolean success = false;
+        if (obj != null) {
 
             if (this == obj) {
                 success = true;
-            } else if (getClass() != obj.getClass()) {
-                success = false;
             } else {
                 final TreeNode other = (TreeNode) obj;
-                if (!Objects.equals(this.uuid, other.uuid)) {
-                    success = false;
+                if (Objects.equals(this.parent, other.parent)
+                        && Objects.equals(this.nodeName, other.nodeName)) {
+                    success = true;
                 }
             }
         }
