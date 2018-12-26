@@ -47,26 +47,51 @@ public class TreeNodeTest {
         LOGGER.log("TEST CASE: domainObject()", LogLevel.DEBUG);
 
         assertThat(TreeNode.class, hasValidBeanConstructor());
-        assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName", "parent"));
+        assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName"));
     }
 
     @Test
-    void testEqualByClone() {
-        LOGGER.log("TEST CASE: equalByClone()", LogLevel.DEBUG);
+    void testEqualByCopy() {
+        LOGGER.log("TEST CASE: equalByCopy()", LogLevel.DEBUG);
 
-        TreeNode node_01 = new TreeNode("node 1");
-        node_01.setNodeName("node 1");
+        TreeNode node_01 = new TreeNode("cloend");
         node_01.setParent(StringUtils.generateUUID());
-        LOGGER.log(node_01.toString(), LogLevel.DEBUG);
 
-        TreeNode node_02 = node_01;
-        node_02.setNodeName("node 2");
-        node_01.setParent(StringUtils.generateUUID());
-        LOGGER.log(node_02.toString(), LogLevel.DEBUG);
-
+        TreeNode node_02 = node_01.copy(node_01);
         assertEquals(node_01, node_02);
-        assertTrue(node_01.equals(node_02));
-        assertTrue(node_02.equals(node_01));
+
+        node_01.setNodeName("rename");
+        LOGGER.log("Node: " + node_02.toString(), LogLevel.DEBUG);
+        LOGGER.log("Node: " + node_01.toString(), LogLevel.DEBUG);
+        assertNotEquals(node_01, node_02);
+    }
+
+    @Test
+    void testNotEqualByCopy() {
+        LOGGER.log("TEST CASE: equalNotByCopy()", LogLevel.DEBUG);
+
+        try {
+            TreeNode node_01 = new TreeNode("node x");
+            node_01.setNodeName("node 1");
+            node_01.setParent(StringUtils.generateUUID());
+
+            TreeNode node_02 = node_01.copy(node_01);
+            node_02.setNodeName("node 2");
+            node_01.setParent(StringUtils.generateUUID());
+
+            LOGGER.log("Node: " + node_02.toString(), LogLevel.DEBUG);
+            LOGGER.log("Node: " + node_01.toString(), LogLevel.DEBUG);
+
+            assertNotEquals(node_01, node_02);
+            assertFalse(node_01.equals(node_02));
+            assertFalse(node_02.equals(node_01));
+
+            assertTrue(node_01.equals(node_01));
+            assertTrue(node_02.equals(node_02));
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
     }
 
     @Test
@@ -93,8 +118,8 @@ public class TreeNodeTest {
         LOGGER.log("ASSERT FALSE BY new()", LogLevel.DEBUG);
         assertFalse(node_01.equals(new TreeNode()));
 
-        LOGGER.log("ASSERT FALSE BY wrong Object Type", LogLevel.DEBUG);
-        assertFalse(node_01.equals(new Object()));
+        LOGGER.log("ASSERT FALSE BY new(UUID)", LogLevel.DEBUG);
+        assertFalse(node_01.getUuid().equals(new TreeNode("node C").getUuid()));
     }
 
     @Test
