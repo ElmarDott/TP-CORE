@@ -99,6 +99,7 @@ public interface DatabaseActions {
      * Return a object with all JDBC Connection meta date.
      *
      * @return JdbcConnection as Object
+     * @throws java.sql.SQLException
      */
     @API(status = STABLE, since = "1.2")
     JdbcConnection getJdbcMetaData();

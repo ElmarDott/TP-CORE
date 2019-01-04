@@ -26,4 +26,5 @@ public class HashAlgorithmTest {
         assertEquals("SHA-512",
                 HashAlgorithm.SHA512.toString());
     }
+
 }

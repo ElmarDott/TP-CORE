@@ -80,8 +80,11 @@ like this project, let me know it an rate it with a star.
 |--------|----------------------------------------------------------------------
 | 1.2    | in process
 |        | - Add Functionality: Feature Toggle
-|        | - Extend Application Configuration
+|        | - Extend Application Configuration by Version() data class
 |        | - provide JDBC connection object in DatabaseActions
+|        | - refactor pom
+|        | - fix TreeNode hashCode() & equals()
+|        | - add TreeNode.copy()
 |--------|----------------------------------------------------------------------
 | 1.1    | published 10/2018
 |        | - optimize overall Test Coverage

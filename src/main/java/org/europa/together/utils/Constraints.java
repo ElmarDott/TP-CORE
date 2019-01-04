@@ -13,7 +13,7 @@ import org.europa.together.domain.LogLevel;
 public final class Constraints {
 
     private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
-    private static final PropertyReader propertyReader = new PropertyReaderImpl();
+    private static final PropertyReader PROPERTY_READER = new PropertyReaderImpl();
 
     /**
      * Constructor.
@@ -91,9 +91,9 @@ public final class Constraints {
     }
 
     private static String getVersion() {
-        String FILE_PATH
+        String filePath
                 = "org/europa/together/properties/version.properties";
-        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
-        return propertyReader.getPropertyAsString("version");
+        PROPERTY_READER.appendPropertiesFromClasspath(filePath);
+        return PROPERTY_READER.getPropertyAsString("version");
     }
 }
