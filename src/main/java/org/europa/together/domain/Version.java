@@ -1,6 +1,5 @@
 package org.europa.together.domain;
 
-import java.util.Objects;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
@@ -13,6 +12,7 @@ import org.europa.together.utils.Validator;
  * Pattern: Major.Minor.Patch-Label (Patch and Label are optional)<br>
  * <code>
  *  true:  equals(1.2.3-SNAPSHOT : 1.2.3-SNAPSHOT);
+ *  true:  equals(1.2.3-LABLE : 1.2.3-SNAPSHOT);
  *  true:  equals(1.0 : 1.0.0);
  *  false: equals(1.0 : 1.0.1);
  *  false: equals(1.0-LABEL : 1.0);
@@ -36,38 +36,57 @@ public class Version implements Comparable<Version> {
 
     private static final Logger LOGGER = new LoggerImpl(Version.class);
 
-    private final int MAJOR;
-    private final int MINOR;
-    private int PATCH = -1;
-    private String LABEL = null;
+    private int major = -1;
+    private int minor = -1;
+    private int patch = -1;
+    private String label = null;
 
     /**
      * Constructor.
      *
      * @param version as String
-     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @FeatureToggle(featureID = "CM-0005.DO02")
-    public Version(String version) throws MisconfigurationException {
+    public Version(final String version) {
 
-        if (!Validator.validate(version, Validator.VERSION_NUMBER)) {
-            throw new MisconfigurationException("The version number " + version
-                    + " do not match the Pattern: [000].[000].[000]-[LABEL]");
-        }
+        try {
 
-        String[] fragments = version.split(".");
-
-        MAJOR = new Integer(fragments[0]);
-        MINOR = new Integer(fragments[1]);
-
-        if (fragments.length > 2) {
-            String[] optional = fragments[3].split("-");
-
-            PATCH = new Integer(optional[0]);
-            if (optional.length == 2) { //prevent index out of bound exception
-                LABEL = optional[1];
+            if (!Validator.validate(version, Validator.VERSION_NUMBER)) {
+                String msg = "The version number " + version
+                        + " do not match the Pattern: [000].[000].[000]-[LABEL].";
+                throw new MisconfigurationException(msg);
             }
+
+            String[] fragments = version.split("\\.");
+            LOGGER.log("Fragments: " + fragments.length, LogLevel.DEBUG);
+
+            major = Integer.parseInt(fragments[0]);
+
+            if (!fragments[1].contains("-")) {
+                minor = Integer.parseInt(fragments[1]);
+            } else {
+                LOGGER.log("Lable after minor.", LogLevel.DEBUG);
+
+                String[] optional = fragments[1].split("-");
+                minor = Integer.parseInt(optional[0]);
+                label = optional[1];
+            }
+
+            if (fragments.length > 2) {
+                String[] optional = fragments[2].split("-");
+
+                patch = Integer.parseInt(optional[0]);
+                if (optional.length == 2) { //prevent index out of bound exception
+                    label = optional[1];
+                }
+            }
+
+            LOGGER.log("Version: " + toString(), LogLevel.DEBUG);
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
+
     }
 
     /**
@@ -76,7 +95,7 @@ public class Version implements Comparable<Version> {
      * @return Major as int
      */
     public int getMajor() {
-        return MAJOR;
+        return major;
     }
 
     /**
@@ -85,7 +104,7 @@ public class Version implements Comparable<Version> {
      * @return Minor as int
      */
     public int getMinor() {
-        return MINOR;
+        return minor;
     }
 
     /**
@@ -95,7 +114,7 @@ public class Version implements Comparable<Version> {
      * @return Patch as int
      */
     public int getPatch() {
-        return PATCH;
+        return patch;
     }
 
     /**
@@ -105,75 +124,85 @@ public class Version implements Comparable<Version> {
      * @return Label as String
      */
     public String getLabel() {
-        return LABEL;
+        return label;
+    }
+
+    /**
+     * Return the whole version number as String.
+     *
+     * @return version as String
+     */
+    public String getVersion() {
+
+        String version = null;
+        version = major + "." + minor;
+        if (patch != -1) {
+            version = version + "." + patch;
+        }
+        if (label != null) {
+            version = version + "-" + label;
+        }
+        return version;
     }
 
     @Override
-    public int hashCode() {
-        return 91;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Version other = (Version) obj;
-        if (this.MAJOR != other.MAJOR) {
-            return false;
-        }
-        if (this.MINOR != other.MINOR) {
-            return false;
-        }
-        if (this.PATCH != other.PATCH) {
-            return false;
-        }
-        if (!Objects.equals(this.LABEL, other.LABEL)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return MAJOR + "." + MINOR + "." + PATCH + "-" + LABEL;
-    }
-
-    @Override
-    public int compareTo(Version o) {
+    public int compareTo(final Version o) {
         // -1:smaller | 0:equal | 1:greater
-        int compare;
+        int compare = 2;
 
-        if (this.equals(o)) {
-            compare = 0;
-        } else if (this.MAJOR > o.MAJOR) {
+        if (this.major > o.major) {
             compare = 1;
-        } else if (this.MAJOR < o.MAJOR) {
+        } else if (this.major < o.major) {
             compare = -1;
         } else {
 
-            if (this.MINOR > o.MINOR) {
+            if (this.minor > o.minor) {
                 compare = 1;
-            } else if (this.MINOR < o.MINOR) {
+            } else if (this.minor < o.minor) {
                 compare = -1;
             } else {
 
-                if (this.PATCH > o.PATCH) {
+                if (this.patch > o.patch) {
                     compare = 1;
-                } else if (this.PATCH < o.PATCH) {
+                } else if (this.patch < o.patch) {
                     compare = -1;
                 } else {
-                    //equal, because lables will not sorted
                     compare = 0;
                 }
             }
         }
         return compare;
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+
+        boolean success = false;
+        if (this == object) {
+            success = true;
+        } else if (object != null) {
+
+            final Version other = (Version) object;
+            if (this.major == other.major
+                    && this.minor == other.minor) {
+
+                if ((this.patch == -1 || this.patch == 0)
+                        && (other.patch == -1 || other.patch == 0)
+                        || (this.patch == other.patch)) {
+                    success = true;
+                }
+            }
+        }
+        return success;
+    }
+
+    @Override
+    public int hashCode() {
+        return major + minor + patch;
+    }
+
+    @Override
+    public String toString() {
+        return "Version{" + getVersion() + "}";
     }
 }
