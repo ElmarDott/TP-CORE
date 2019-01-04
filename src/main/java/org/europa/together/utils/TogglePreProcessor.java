@@ -2,16 +2,21 @@ package org.europa.together.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.Set;
+import javax.annotation.processing.*;
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.tools.JavaFileObject;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import org.europa.together.business.FeatureToggle;
@@ -20,6 +25,7 @@ import org.ff4j.conf.XmlConfig;
 import org.ff4j.core.Feature;
 import org.ff4j.exception.FeatureAccessException;
 import org.ff4j.exception.FeatureNotFoundException;
+import sun.reflect.generics.scope.Scope;
 
 /**
  * PreProcessor for the @FeatureToggle Annotation.
@@ -90,12 +96,15 @@ public class TogglePreProcessor extends AbstractProcessor {
 
                     if (annotation == null) {
                         print("WARN: no @FeatureToggle annotations detected.");
+                        break;
                     }
                     if (element == null) {
                         print("WARN: no anotation element");
+                        break;
                     }
                     if (FeatureToggle.class == null) {
                         print("ERROR: annotation class not exist");
+                        break;
                     }
 
                     String featureID = element.getAnnotation(FeatureToggle.class).featureID();
@@ -165,10 +174,6 @@ public class TogglePreProcessor extends AbstractProcessor {
             throws FeatureAccessException, FeatureNotFoundException {
 
         Feature feature = null;
-        if (!toggles.exist(featureId)) {
-            throw new FeatureNotFoundException(featureId + " dosn't exist.");
-        }
-
         try {
             feature = toggles.getFeature(featureId);
             print("Feature: " + feature.getDescription()
@@ -182,4 +187,21 @@ public class TogglePreProcessor extends AbstractProcessor {
     private void print(final String message) {
         System.out.println(message);
     }
+
+    private void classWriter(Element element, Scope scope) throws IOException {
+        Filer filer = processingEnv.getFiler();
+        JavaFileObject fileObject
+                = filer.createSourceFile(scope.getTargetClassNameWithPackage(), element);
+        try (Writer writer = fileObject.openWriter()) {
+            template.execute(writer, scope);
+        }
+    }
+
+    private String replacement(String featureId) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("throw new FeatureNotFoundException(featureId + \" dosn't exist.\");");
+
+        return builder.toString();
+    }
+
 }

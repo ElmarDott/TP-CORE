@@ -206,4 +206,5 @@ public class ConfigurationDOTest {
         domainObject.setValue("");
         assertEquals("", domainObject.getValue());
     }
+
 }

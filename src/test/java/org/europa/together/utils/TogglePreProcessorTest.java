@@ -5,7 +5,6 @@ import org.europa.together.application.LoggerImpl;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.ff4j.exception.FeatureAccessException;
 import org.ff4j.exception.FeatureNotFoundException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;

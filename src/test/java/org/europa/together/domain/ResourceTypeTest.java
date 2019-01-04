@@ -28,4 +28,5 @@ public class ResourceTypeTest {
         assertEquals("ldap",
                 ResourceType.LDAP.toString());
     }
+
 }

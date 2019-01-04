@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.JdbcConnection;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.SocketTimeout;
@@ -82,7 +83,7 @@ public class DatabaseActionsImplTest {
     }
 
     @Test
-    void testGetter() {
+    void testGetter() {//DEPECATED
         LOGGER.log("TEST CASE: getter()", LogLevel.DEBUG);
 
         DatabaseActions dbms = new DatabaseActionsImpl();
@@ -173,5 +174,14 @@ public class DatabaseActionsImplTest {
         assertTrue(actions.executeQuery("SELECT * FROM app_config;"));
         assertNotNull(actions.getResultSet());
         assertEquals(14, actions.getResultCount());
+    }
+
+    @Test
+    void testJdbcMetaData() {
+        LOGGER.log("TEST CASE: getJdbcMetaData()", LogLevel.DEBUG);
+
+        JdbcConnection metaData = actions.getJdbcMetaData();
+        LOGGER.log(metaData.toString(), LogLevel.DEBUG);
+        assertNotNull(metaData);
     }
 }

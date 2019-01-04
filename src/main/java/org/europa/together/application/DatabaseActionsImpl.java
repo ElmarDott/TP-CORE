@@ -265,6 +265,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
         driverClass = reader.getPropertyAsString("jdbc.driverClassName");
     }
 
+// -----------------------------------------------------------------------------
     //DEPECATED for delete
     private void getMetaData() throws SQLException {
         metadata = jdbcConnection.getMetaData();
@@ -287,7 +288,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
                 = metadata.getConnection().getCatalog();
     }
 
-// -----------------------------------------------------------------------------
+    //DEPECATED
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
     @Override
     public String getMetaCatalog() {

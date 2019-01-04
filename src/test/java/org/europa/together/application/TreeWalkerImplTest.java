@@ -136,6 +136,15 @@ public class TreeWalkerImplTest {
     }
 
     @Test
+    void testFailIsLeaf() {
+        LOGGER.log("TEST CASE: failIsLeaf()", LogLevel.DEBUG);
+
+        TreeWalker emptyTree = new TreeWalkerImpl();
+        assertFalse(emptyTree.isLeaf(new TreeNode("mock")));
+
+    }
+
+    @Test
     void testGetLeafs() {
         LOGGER.log("TEST CASE: getLeafs()", LogLevel.DEBUG);
 
@@ -159,6 +168,14 @@ public class TreeWalkerImplTest {
     }
 
     @Test
+    void testFailGetNodeByUuid() {
+        LOGGER.log("TEST CASE: failGetNodeByUuid()", LogLevel.DEBUG);
+
+        TreeWalker emptyTree = new TreeWalkerImpl();
+        assertNull(emptyTree.getNodeByUuid("uuid"));
+    }
+
+    @Test
     void testIsNodeElementOfTree() {
         LOGGER.log("TEST CASE: isNodeElementOfTree()", LogLevel.DEBUG);
 
@@ -167,6 +184,14 @@ public class TreeWalkerImplTest {
 
         assertTrue(treeWalker.isElementOfTree(node));
         assertFalse(treeWalker.isElementOfTree(new TreeNode("BLUBB")));
+    }
+
+    @Test
+    void testFailNodeIsElementOfTree() {
+        LOGGER.log("TEST CASE: failNodeIsElementOfTree()", LogLevel.DEBUG);
+
+        TreeWalker emptyTree = new TreeWalkerImpl();
+        assertFalse(emptyTree.isElementOfTree(new TreeNode("mock")));
     }
 
     @Test
@@ -190,6 +215,14 @@ public class TreeWalkerImplTest {
         treeWalker.addNode(node);
 
         assertEquals(2, treeWalker.isNameUnique("05"));
+    }
+
+    @Test
+    void testFailIsNameUnique() {
+        LOGGER.log("TEST CASE: failIsNameUnique()", LogLevel.DEBUG);
+
+        TreeWalker emptyTree = new TreeWalkerImpl();
+        assertEquals(0, emptyTree.isNameUnique("node"));
     }
 
     @Test
