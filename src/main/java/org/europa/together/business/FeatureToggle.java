@@ -17,7 +17,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  * @since 1.2
  */
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Documented
 @API(status = EXPERIMENTAL, since = "1.2")
 public @interface FeatureToggle {
