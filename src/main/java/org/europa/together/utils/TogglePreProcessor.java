@@ -1,22 +1,22 @@
 package org.europa.together.utils;
 
+import com.google.auto.service.AutoService;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.*;
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.tools.JavaFileObject;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import org.europa.together.business.FeatureToggle;
@@ -25,14 +25,14 @@ import org.ff4j.conf.XmlConfig;
 import org.ff4j.core.Feature;
 import org.ff4j.exception.FeatureAccessException;
 import org.ff4j.exception.FeatureNotFoundException;
-import sun.reflect.generics.scope.Scope;
 
 /**
  * PreProcessor for the @FeatureToggle Annotation.
  */
 @SupportedAnnotationTypes("org.europa.together.business.FeatureToggle")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class TogglePreProcessor extends AbstractProcessor {
+@AutoService(Processor.class)
+public final class TogglePreProcessor extends AbstractProcessor {
 
     private FF4j toggles;
 
@@ -41,40 +41,14 @@ public class TogglePreProcessor extends AbstractProcessor {
      */
     public TogglePreProcessor() {
 
-        String path = Paths.get("").toAbsolutePath().toString();
-        String execution = "/target/classes";
-        String configurationFile
-                = "/org/europa/together/configuration/FeatureToggles.xml";
-
-        String configuration;
         try {
+            String configuration = this.loadToggleConfiguration();
 
-            //guess where the toggle config is located
-            File check = new File(configurationFile);
-            if (check.exists()) {
-                configuration = configurationFile;
-                print("INFO: FeatureToggle configuration file detected.\n\t" + configuration);
+            //test mode
+            configuration = Paths.get("").toAbsolutePath().toString()
+                    + "/src/test/resources/org/europa/together/configuration/DeactivatedFeatureToggles.xml";
 
-            } else {
-
-                configuration = path + configurationFile;
-                if (new File(configuration).exists()) {
-                    print("INFO: FeatureToggle configuration file detected.\n\t" + configuration);
-
-                } else {
-
-                    configuration = path + execution + configurationFile;
-                    if (new File(configuration).exists()) {
-                        print("INFO: FeatureToggle configuration file detected.\n\t"
-                                + configuration);
-
-                    } else {
-                        print("ERROR: " + configuration);
-                        print("ERROR: FeatureToggle configuration file not found.");
-                    }
-                }
-            }
-
+            print("INFO: FeatureToggle configuration: " + configuration);
             InputStream source = new FileInputStream(configuration);
             toggles = new FF4j(source);
             print("INFO: FeatureToggle Annotation Processor inctanciated.");
@@ -86,43 +60,22 @@ public class TogglePreProcessor extends AbstractProcessor {
         }
     }
 
-    @Override
-    public boolean process(final Set<? extends TypeElement> annotations,
-            final RoundEnvironment roundEnv) {
-
+    /**
+     * Toggel to deactivate the test case execution.
+     *
+     * @param featureId as string
+     * @return true on success
+     */
+    @API(status = INTERNAL, since = "1.2")
+    public boolean testCaseActivator(final String featureId) {
+        boolean activate = false;
         try {
-            for (TypeElement annotation : annotations) {
-                for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-
-                    if (annotation == null) {
-                        print("WARN: no @FeatureToggle annotations detected.");
-                        break;
-                    }
-                    if (element == null) {
-                        print("WARN: no anotation element");
-                        break;
-                    }
-                    if (FeatureToggle.class == null) {
-                        print("ERROR: annotation class not exist");
-                        break;
-                    }
-
-                    String featureID = element.getAnnotation(FeatureToggle.class).featureID();
-                    Feature feature = toggle(featureID);
-
-                    //
-                    // TODO: @FeatureToggle: Code generation
-                    //
-                    print("@FeatureToggle(" + feature.getUid() + ") at: " + element.toString());
-                }
-            }
+            activate = toggle(featureId).isEnable();
 
         } catch (Exception ex) {
-            print("ERROR: Process annotation @FeatureToggle failed.");
             print(ex.getMessage());
-            ex.printStackTrace();
         }
-        return true;
+        return activate;
     }
 
     /**
@@ -142,22 +95,47 @@ public class TogglePreProcessor extends AbstractProcessor {
         }
     }
 
-    /**
-     * Toggel to deactivate test case execution.
-     *
-     * @param featureId as string
-     * @return true on success
-     */
-    @API(status = INTERNAL, since = "1.2")
-    public boolean testCaseActivator(final String featureId) {
-        boolean activate = false;
+    @Override
+    public boolean process(final Set<? extends TypeElement> annotations,
+            final RoundEnvironment roundEnv) {
+
+        boolean successs = true;
+        List<Element> deactivatedFeatures = new ArrayList<>();
         try {
-            activate = toggle(featureId).isEnable();
+
+            for (TypeElement annotation : annotations) {
+                for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
+
+                    if (annotation == null) {
+                        print("WARN: no @FeatureToggle annotations detected.");
+                        break;
+                    }
+                    if (element == null) {
+                        print("WARN: no anotation element");
+                        break;
+                    }
+                    if (FeatureToggle.class == null) {
+                        print("ERROR: annotation class not exist");
+                        break;
+                    }
+
+                    String featureID = element.getAnnotation(FeatureToggle.class).featureID();
+                    Feature feature = toggle(featureID);
+                    if (!feature.isEnable()) {
+                        deactivatedFeatures.add(element);
+                    }
+                }
+            }
+
+            this.replacement(deactivatedFeatures);
 
         } catch (Exception ex) {
+            successs = false;
+            print("ERROR: Process annotation @FeatureToggle failed.");
             print(ex.getMessage());
+            ex.printStackTrace();
         }
-        return activate;
+        return successs;
     }
 
     /**
@@ -188,20 +166,76 @@ public class TogglePreProcessor extends AbstractProcessor {
         System.out.println(message);
     }
 
-    private void classWriter(Element element, Scope scope) throws IOException {
-        Filer filer = processingEnv.getFiler();
-        JavaFileObject fileObject
-                = filer.createSourceFile(scope.getTargetClassNameWithPackage(), element);
-        try (Writer writer = fileObject.openWriter()) {
-            template.execute(writer, scope);
+    private String loadToggleConfiguration() {
+
+        String configuration = null;
+
+        String path = Paths.get("").toAbsolutePath().toString();
+        String execution = "/target/classes";
+        String configurationFile
+                = "/org/europa/together/configuration/FeatureToggles.xml";
+
+        //guess where the toggle config is located
+        File check = new File(configurationFile);
+        if (check.exists()) {
+            configuration = configurationFile;
+            print("INFO: FeatureToggle configuration [FILE] detected.");
+
+        } else {
+
+            configuration = path + configurationFile;
+            if (new File(configuration).exists()) {
+                print("INFO: FeatureToggle configuration [PATH + FILE] detected.");
+
+            } else {
+
+                configuration = path + execution + configurationFile;
+                if (new File(configuration).exists()) {
+                    print("INFO: FeatureToggle configuration [PATH + BUILD_DIR + FILE] detected."
+                            + configuration);
+
+                } else {
+                    print("ERROR: " + configuration);
+                    print("ERROR: FeatureToggle configuration file not found.");
+                }
+            }
+        }
+        return configuration;
+    }
+
+    private void replacement(List<Element> elements) {
+
+        if (elements.size() < 1) {
+            print("No decatvated features detected. Processor quit.");
+        } else {
+
+            for (Element element : elements) {
+
+                Element constructorElement = element.getEnclosingElement();
+                Element packageElement = constructorElement.getEnclosingElement();
+
+                print("INFO : deactivated element is " + element.getKind().name());
+                String clazzName = null;
+                String packageName = null;
+                List<String> methodName = new ArrayList<>();
+
+                if (packageElement.getKind() == ElementKind.PACKAGE) {
+                    packageName = packageElement.toString();
+                }
+
+                if (element.getKind() == ElementKind.CONSTRUCTOR) {
+                    clazzName = element.toString().replace("()", "");
+                }
+                if (element.getKind() == ElementKind.METHOD) {
+                    clazzName = constructorElement.getSimpleName().toString();
+                    methodName.add(element.getSimpleName().toString());
+                }
+
+                print("INFO : \t Package: " + packageName);
+                print("INFO : \t Clazz: " + clazzName);
+                print("INFO : \t Method: " + methodName.toString());
+            }
+
         }
     }
-
-    private String replacement(String featureId) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("throw new FeatureNotFoundException(featureId + \" dosn't exist.\");");
-
-        return builder.toString();
-    }
-
 }

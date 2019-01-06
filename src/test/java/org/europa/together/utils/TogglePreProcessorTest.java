@@ -117,14 +117,4 @@ public class TogglePreProcessorTest {
         assertFalse(toggle.toggle("ABCD").isEnable());
     }
 
-    @Test
-    void testDeactivatedFeatureNotExist() throws FeatureNotFoundException {
-        LOGGER.log("TEST CASE: Test Case Activator - deactivatedFeaturNotExist", LogLevel.DEBUG);
-
-        String config
-                = "org/europa/together/configuration/TestFeatureToggles.xml";
-        TogglePreProcessor toggle = new TogglePreProcessor();
-
-        assertFalse(toggle.testCaseActivator("2121"));
-    }
 }

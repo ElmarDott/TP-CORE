@@ -27,7 +27,7 @@
         <skipCoveralls>true</skipCoveralls>
         <skipJarSigner>false</skipJarSigner>
         <skipJavaDoc>false</skipJavaDoc>
-        <skipTests>false</skipTests>
+        <skipTests>true</skipTests>
         <skipEnforcer>false</skipEnforcer>
     </properties>
 
@@ -229,6 +229,17 @@
             <groupId>org.ff4j</groupId>
             <artifactId>ff4j-core</artifactId>
             <version>1.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+            <version>1.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <version>1.0-rc4</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- Bundels -->

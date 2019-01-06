@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ff4j xmlns="http://www.ff4j.org/schema/ff4j"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.ff4j.org/schema/ff4j http://ff4j.org/schema/ff4j-1.6.xsd">
+
+    <features>
+        <feature uid="CM-0000" enable="true" description="Test entry for feature toggls" />
+
+        <feature-group name="Release_1.0">
+            <feature-group name="CM-0001">
+                <feature uid="CM-0001"      enable="true" description="Application Logger" />
+                <feature uid="CM-0001.S001" enable="true" description="Create logging Configuration." />
+                <feature uid="CM-0001.S002" enable="true" description="Read logging Configuration." />
+                <feature uid="CM-0001.S003" enable="true" description="Write logging Configuration." />
+            </feature-group>
+            <feature uid="CM-0002" enable="true" description="generic Data Access Object" />
+            <feature uid="CM-0003" enable="false" description="Velocity Template Engine" />
+            <feature uid="CM-0004" enable="true" description="Property Reader" />
+            <feature-group name="CM-0005">
+                <feature uid="CM-0005"       enable="true" description="Application Configuration" />
+                <feature uid="CM-0005.DO01"  enable="true" description="Configuration Domain Object" />
+                <feature uid="CM-0005.DO02"  enable="true" description="Version Number Object" />
+                <feature uid="CM-0005.S001"  enable="false" description="Reset module to default." />
+                <feature uid="CM-0005.S002"  enable="true" description="Filter mandatory fields of ConfigSets." />
+            </feature-group>
+            <feature-group name="CM-0006">
+                <feature uid="CM-0006"      enable="false" description="SMTP E-Mail Client" />
+                <feature uid="CM-0006.S001" enable="false" description="Update Database Configuration." />
+                <feature uid="CM-0006.S002" enable="true" description="Send E-Mail." />
+                <feature uid="CM-0006.S003" enable="false" description="Send Bulk E-Mail." />
+                <feature uid="CM-0006.S004" enable="false" description="Get DB Configuration." />
+            </feature-group>
+            <feature uid="CM-0007" enable="true" description="QR Code Reader / Writer" />
+            <feature uid="CM-0008" enable="true" description="Database Actions" />
+            <feature-group name="CM-0009">
+                <feature uid="CM-0009"    enable="true" description="Tree Walker" />
+                <feature uid="CM-0009.DO" enable="true" description="Tree Node Domain Object" />
+            </feature-group>
+            <feature uid="CM-0010" enable="true" description="XML Tools" />
+            <feature uid="CM-0011" enable="true" description="PDF Renderer" />
+            <feature uid="CM-0012" enable="true" description="Image Processor" />
+        </feature-group>
+
+        <feature-group name="Release_1.2">
+            <feature uid="CM-0013" enable="true" description="FeatureToggle" />
+        </feature-group>
+    </features>
+</ff4j>
