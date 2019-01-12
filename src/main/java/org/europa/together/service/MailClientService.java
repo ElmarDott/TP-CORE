@@ -19,7 +19,7 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.StringUtils;
+import org.europa.together.utils.JavaCryptoTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -78,7 +78,7 @@ public final class MailClientService {
 
             for (Map.Entry<String, String> entry : configurationList.entrySet()) {
                 if (configEntry.getKey().equals(
-                        StringUtils.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
+                        JavaCryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
 
                     configEntry.setValue(entry.getValue());
                     configurationDAO.update(configEntry.getUuid(), configEntry);

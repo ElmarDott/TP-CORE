@@ -10,6 +10,7 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.utils.JavaCryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     public ConfigurationDO getConfigurationByKey(final String key,
             final String module, final String version) {
 
-        String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
+        String hash = JavaCryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
 
@@ -113,7 +114,7 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     public List<ConfigurationDO> getHistoryOfAEntry(final String module,
             final String key, final String configSet) {
 
-        String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
+        String hash = JavaCryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
 
