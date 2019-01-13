@@ -27,7 +27,7 @@
         <skipCoveralls>true</skipCoveralls>
         <skipJarSigner>false</skipJarSigner>
         <skipJavaDoc>false</skipJavaDoc>
-        <skipTests>true</skipTests>
+        <skipTests>false</skipTests>
         <skipEnforcer>false</skipEnforcer>
     </properties>
 

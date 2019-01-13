@@ -1,14 +1,12 @@
 package org.europa.together.utils;
 
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
-import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 
 /**

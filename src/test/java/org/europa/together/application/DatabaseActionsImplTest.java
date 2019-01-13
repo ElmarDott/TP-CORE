@@ -6,7 +6,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.JdbcConnection;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -40,8 +39,7 @@ public class DatabaseActionsImplTest {
         boolean toggle = feature.testCaseActivator(DatabaseActions.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
-        actions.connect("default");
-        boolean socket = SocketTimeout.timeout(800, actions.getUri(), actions.getPort());
+        boolean socket = actions.connect("default");
         LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
 
         boolean check;
@@ -95,6 +93,22 @@ public class DatabaseActionsImplTest {
         assertEquals(null, dbms.getMetaJdbcVersion());
         assertEquals(null, dbms.getMetaUrl());
         assertEquals(null, dbms.getMetaUser());
+    }
+
+    @Test
+    void testGetPort() {
+        LOGGER.log("TEST CASE: getPort()", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new DatabaseActionsImpl();
+        assertEquals(0, dbms.getPort());
+    }
+
+    @Test
+    void testGetUri() {
+        LOGGER.log("TEST CASE: getUri()", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new DatabaseActionsImpl();
+        assertEquals(null, dbms.getUri());
     }
 
     @Test

@@ -85,7 +85,7 @@ public class TogglePreProcessorTest {
         assertNotNull(toggle.toggle("1111"));
     }
 
-    @Test
+//    @Test
     void testFeatureNotExist() throws FeatureNotFoundException {
         LOGGER.log("TEST CASE: featureNotExist", LogLevel.DEBUG);
 

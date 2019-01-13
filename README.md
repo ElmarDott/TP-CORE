@@ -85,6 +85,7 @@ like this project, let me know it an rate it with a star.
 |        | - refactor pom
 |        | - fix TreeNode hashCode() & equals()
 |        | - add TreeNode.copy()
+|        | - Add Functionality: (Utils) JavaCryptoTool
 |--------|----------------------------------------------------------------------
 | 1.1    | published 10/2018
 |        | - optimize overall Test Coverage

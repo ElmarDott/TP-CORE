@@ -8,7 +8,6 @@ import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -64,8 +63,7 @@ public class ConfigurationDAOImplTest {
         boolean toggle = feature.testCaseActivator(ConfigurationDAO.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
-        actions.connect("default");
-        boolean socket = SocketTimeout.timeout(800, actions.getUri(), actions.getPort());
+        boolean socket = actions.connect("default");
         LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
 
         boolean check;
