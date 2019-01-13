@@ -188,7 +188,7 @@ public class Version implements Comparable<Version> {
 
                 if ((this.patch == -1 || this.patch == 0)
                         && (other.patch == -1 || other.patch == 0)
-                        || (this.patch == other.patch)) {
+                        || this.patch == other.patch) {
                     success = true;
                 }
             }

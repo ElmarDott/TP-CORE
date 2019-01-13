@@ -84,15 +84,19 @@ public class DatabaseActionsImpl implements DatabaseActions {
     public boolean connect(final String propertyFile) {
 
         boolean connected = false;
-        if (jdbcConnection == null) {
-            fetchProperties(propertyFile);
-            establishPooledConnection();
-            if (jdbcConnection != null) {
+        try {
+            if (jdbcConnection == null) {
+                fetchProperties(propertyFile);
+                establishPooledConnection();
+                if (jdbcConnection != null) {
+                    connected = true;
+                    LOGGER.log("Connection already established.", LogLevel.DEBUG);
+                }
+            } else {
                 connected = true;
-                LOGGER.log("Connection already established.", LogLevel.DEBUG);
             }
-        } else {
-            connected = true;
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return connected;
     }
@@ -218,13 +222,14 @@ public class DatabaseActionsImpl implements DatabaseActions {
         return SocketTimeout.timeout(TIMEOUT, uri, port);
     }
 
-    private void establishPooledConnection() {
+    private void establishPooledConnection() throws TimeOutException {
+
+        LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
+        if (!connectionTimeout()) {
+            throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
+        }
 
         try {
-            LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
-            if (!connectionTimeout()) {
-                throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
-            }
             //test if the JDBC Driver is available
             Class.forName(this.driverClass);
 

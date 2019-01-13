@@ -119,8 +119,9 @@ public class PropertyReaderImpl implements PropertyReader {
     public boolean appendPropertiesFromFile(final String resource) {
         boolean success = false;
 
-        try (Stream<String> stream = Files.lines(Paths.get(resource))) {
+        try {
 
+            Stream<String> stream = Files.lines(Paths.get(resource));
             List<String> content = stream
                     .filter(line -> !line.startsWith("#"))
                     .filter(line -> !line.isEmpty())

@@ -34,24 +34,17 @@ public final class SocketTimeout {
     public static boolean timeout(final int milliseconds, final String uri, final int port) {
 
         boolean success = false;
-        for (int i = 1; i <= 3; i++) {
-            try {
-                Socket socket = new Socket(uri, port);
-                socket.setSoTimeout(milliseconds);
-                socket.close();
+        try {
+            Socket socket = new Socket(uri, port);
+            socket.setSoTimeout(milliseconds);
+            socket.close();
 
-                success = true;
-                LOGGER.log("[After " + i + " tries] Socket connection to " + uri
-                        + ":" + port + " can be established.",
-                        LogLevel.DEBUG);
-                break;
+            success = true;
+            LOGGER.log("Socket connection  can be established.",
+                    LogLevel.DEBUG);
 
-            } catch (Exception ex) {
-                LOGGER.catchException(ex);
-                if (ex.getClass().getSimpleName().equals("ConnectException")) {
-                    break;
-                }
-            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }

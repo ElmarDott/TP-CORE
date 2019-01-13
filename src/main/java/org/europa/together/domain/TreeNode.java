@@ -109,7 +109,7 @@ public final class TreeNode {
      * @param node as TreeNode
      * @return a copy of the TreeNode
      */
-    public TreeNode copy(TreeNode node) {
+    public TreeNode copy(final TreeNode node) {
         TreeNode copy = new TreeNode();
 
         copy.uuid = node.uuid;

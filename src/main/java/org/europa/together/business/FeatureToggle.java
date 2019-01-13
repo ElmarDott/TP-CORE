@@ -9,8 +9,11 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
- * Feature Toggle Annotation to activate or deactivate constructors, functions
- * and attributes (fields).
+ * Feature Toggle Annotation to activate or deactivate constructors and
+ * functions.<br>
+ * When a Constructor get deactivated the whole class is deactivated, no matter
+ * how many Constructors defined. In the case it exist an overloaded method, all
+ * those methods get deactivated.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0

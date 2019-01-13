@@ -14,7 +14,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,8 +62,7 @@ public class MailClientImplTest {
         boolean toggle = feature.testCaseActivator(MailClient.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
-        CONNECTION.connect("default");
-        boolean socket = SocketTimeout.timeout(800, CONNECTION.getUri(), CONNECTION.getPort());
+        boolean socket = CONNECTION.connect("default");
         LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
 
         boolean check;

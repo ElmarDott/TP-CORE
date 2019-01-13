@@ -9,7 +9,7 @@ import org.europa.together.domain.LogLevel;
 /**
  * A collection of java cryptography implementations.
  */
-public class JavaCryptoTools {
+public final class JavaCryptoTools {
 
     private static final Logger LOGGER = new LoggerImpl(JavaCryptoTools.class);
 
