@@ -137,11 +137,13 @@ public final class TreeNode {
     public boolean equals(final Object obj) {
 
         boolean success = false;
-        if (obj != null) {
+        if (obj != null
+                && obj.getClass().isInstance(TreeNode.class)) {
 
             if (this == obj) {
                 success = true;
             } else {
+
                 final TreeNode other = (TreeNode) obj;
                 if (Objects.equals(this.parent, other.parent)
                         && Objects.equals(this.nodeName, other.nodeName)) {

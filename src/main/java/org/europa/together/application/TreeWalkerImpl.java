@@ -313,15 +313,14 @@ public final class TreeWalkerImpl implements TreeWalker {
     public void merge(final String parentUuid, final TreeWalker appendingTree) {
         if (appendingTree != null && !appendingTree.isEmpty()) {
 
-            TreeNode root = appendingTree.getRoot();
-            List<TreeNode> newTree = appendingTree.getTree();
+            TreeNode appendingRoot = appendingTree.getRoot();
+            appendingRoot.setParent(parentUuid);
 
-            newTree.remove(root);
-            root.setParent(parentUuid);
-            newTree.add(root);
+            List<TreeNode> newTree = new ArrayList<>();
+            newTree.addAll(appendingTree.getTree());
 
-            this.tree.addAll(appendingTree.getTree());
-            LOGGER.log("Append " + appendingTree.countNodes()
+            this.tree.addAll(newTree);
+            LOGGER.log("Append " + newTree.size()
                     + " Nodes to the new Tree.", LogLevel.DEBUG);
         }
     }
