@@ -1,7 +1,9 @@
 package org.europa.together.domain;
 
 import java.util.Objects;
+import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.FeatureToggle;
+import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
 /**
@@ -11,6 +13,8 @@ import org.europa.together.utils.StringUtils;
  * distinguish which child node is the right one. (e.g. Files and Folders)
  */
 public final class TreeNode {
+
+    private static final Logger LOGGER = new LoggerImpl(TreeNode.class);
 
     private static final int HASH = 97;
 
@@ -137,14 +141,14 @@ public final class TreeNode {
     public boolean equals(final Object obj) {
 
         boolean success = false;
-        if (obj != null
-                && obj.getClass().isInstance(TreeNode.class)) {
+        if (obj != null && obj instanceof TreeNode) {
 
             if (this == obj) {
                 success = true;
             } else {
 
                 final TreeNode other = (TreeNode) obj;
+                LOGGER.log(this.toString() + " == " + obj.toString(), LogLevel.DEBUG);
                 if (Objects.equals(this.parent, other.parent)
                         && Objects.equals(this.nodeName, other.nodeName)) {
                     success = true;

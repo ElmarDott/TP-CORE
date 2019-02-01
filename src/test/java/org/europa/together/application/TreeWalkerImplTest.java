@@ -180,10 +180,8 @@ public class TreeWalkerImplTest {
         LOGGER.log("TEST CASE: isNodeElementOfTree()", LogLevel.DEBUG);
 
         buildTree();
-        TreeNode node = treeWalker.getTree().get(4);
-
+        TreeNode node = treeWalker.getElementByName("07").get(0);
         assertTrue(treeWalker.isElementOfTree(node));
-        assertFalse(treeWalker.isElementOfTree(new TreeNode("BLUBB")));
     }
 
     @Test
@@ -256,9 +254,7 @@ public class TreeWalkerImplTest {
 
         buildTree();
 
-        TreeNode node = treeWalker.getElementByName("01").get(0);
-        assertEquals("01", node.getNodeName());
-        treeWalker.prune(node);
+        treeWalker.prune(treeWalker.getElementByName("01").get(0));
         assertEquals(8, treeWalker.countNodes());
         LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
 
@@ -278,6 +274,19 @@ public class TreeWalkerImplTest {
         LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
 
         assertEquals(16, treeWalker.countNodes());
+    }
+
+    @Test
+    void testFailMerge() {
+        LOGGER.log("TEST CASE: failMerge()", LogLevel.DEBUG);
+
+        buildTree();
+
+        treeWalker.merge("node", null);
+        assertEquals(12, treeWalker.countNodes());
+
+        treeWalker.merge("node", new TreeWalkerImpl());
+        assertEquals(12, treeWalker.countNodes());
     }
 
     private void buildTree() {

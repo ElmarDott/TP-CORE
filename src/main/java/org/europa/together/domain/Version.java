@@ -1,5 +1,6 @@
 package org.europa.together.domain;
 
+import java.util.Objects;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
@@ -89,6 +90,7 @@ public class Version implements Comparable<Version> {
 
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
     /**
      * Return the Major section of a version number as int. MANDANTORY.
      *
@@ -144,6 +146,7 @@ public class Version implements Comparable<Version> {
         }
         return version;
     }
+    //</editor-fold>
 
     @Override
     public int compareTo(final Version o) {
@@ -178,18 +181,21 @@ public class Version implements Comparable<Version> {
     public boolean equals(final Object object) {
 
         boolean success = false;
-        if (this == object) {
-            success = true;
-        } else if (object != null) {
+        if (object != null && object instanceof Version) {
 
-            final Version other = (Version) object;
-            if (this.major == other.major
-                    && this.minor == other.minor) {
+            if (this == object) {
+                success = true;
+            } else {
 
-                if ((this.patch == -1 || this.patch == 0)
-                        && (other.patch == -1 || other.patch == 0)
-                        || this.patch == other.patch) {
-                    success = true;
+                final Version other = (Version) object;
+                if (Objects.equals(this.major, other.major)
+                        && Objects.equals(this.minor, other.minor)) {
+
+                    if ((this.patch == -1 || this.patch == 0)
+                            && (other.patch == -1 || other.patch == 0)
+                            || Objects.equals(this.patch, other.patch)) {
+                        success = true;
+                    }
                 }
             }
         }
@@ -198,7 +204,10 @@ public class Version implements Comparable<Version> {
 
     @Override
     public int hashCode() {
-        return major + minor + patch;
+        int hash = Objects.hashCode(this.major);
+        hash += Objects.hashCode(this.minor);
+        hash += Objects.hashCode(this.patch);
+        return hash;
     }
 
     @Override

@@ -64,7 +64,7 @@ public final class TreeWalkerImpl implements TreeWalker {
         boolean success = false;
         if (!tree.isEmpty()) {
             for (TreeNode element : this.tree) {
-                if (element.equals(node)) {
+                if (node.equals(element)) {
                     success = true;
                 }
             }
@@ -322,6 +322,9 @@ public final class TreeWalkerImpl implements TreeWalker {
             this.tree.addAll(newTree);
             LOGGER.log("Append " + newTree.size()
                     + " Nodes to the new Tree.", LogLevel.DEBUG);
+        } else {
+            LOGGER.log("Merging tree is empty - no merge applied.", LogLevel.DEBUG);
+
         }
     }
 

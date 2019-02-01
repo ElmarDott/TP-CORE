@@ -179,6 +179,18 @@ public class ConfigurationDOTest {
     }
 
     @Test
+    void testIsEqual() {
+        LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
+
+    }
+
+    @Test
+    void testIsNotEqual() {
+        LOGGER.log("TEST CASE: isNotEqual()", LogLevel.DEBUG);
+
+    }
+
+    @Test
     void testValidationEmptyComment() {
         LOGGER.log("TEST CASE: validationEmptyComment()", LogLevel.DEBUG);
 
