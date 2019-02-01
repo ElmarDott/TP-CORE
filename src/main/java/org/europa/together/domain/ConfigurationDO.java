@@ -24,10 +24,8 @@ import org.europa.together.utils.StringUtils;
 @Table(name = "APP_CONFIG",
         //CHECKSTYLE:OFF
         indexes = {
-            @Index(columnList = "CONF_KEY", name = "configuration_key")
-            ,
-            @Index(columnList = "MODUL_NAME", name = "modul_name")
-            ,
+            @Index(columnList = "CONF_KEY", name = "configuration_key"),
+            @Index(columnList = "MODUL_NAME", name = "modul_name"),
             @Index(columnList = "CONF_SET", name = "configuration_set")
         },
         //CHECKSTYLE:ON
@@ -40,7 +38,6 @@ public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 102L;
     private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
-    private static final int HASH = 43;
 
     /**
      * The name of the used database table for this domain object.
@@ -319,29 +316,29 @@ public class ConfigurationDO implements Serializable {
     @Override
     public boolean equals(final Object obj) {
 
-        if (this == obj) {
-            return true;
-        }
+        boolean success = false;
+        if (obj != null && obj instanceof ConfigurationDO) {
 
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
+            if (this == obj) {
+                success = true;
+            } else {
 
-        final ConfigurationDO other = (ConfigurationDO) obj;
-        if (!Objects.equals(this.key, other.key)
-                || !Objects.equals(this.modulName, other.modulName)
-                || !Objects.equals(this.version, other.version)) {
-            return false;
+                final ConfigurationDO other = (ConfigurationDO) obj;
+                if (Objects.equals(this.key, other.key)
+                        && Objects.equals(this.modulName, other.modulName)
+                        && Objects.equals(this.version, other.version)) {
+                    success = true;
+                }
+            }
         }
-        return true;
+        return success;
     }
 
     @Override
     public int hashCode() {
-        int hash = HASH * 5;
-        hash = hash + Objects.hashCode(this.key);
-        hash = hash + Objects.hashCode(this.modulName);
-        hash = hash + Objects.hashCode(this.version);
+        int hash = Objects.hashCode(this.key);
+        hash += Objects.hashCode(this.modulName);
+        hash += Objects.hashCode(this.version);
         return hash;
     }
 
