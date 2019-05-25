@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.0")
 @Service
+@FeatureToggle(featureID = ConfigurationDAO.FEATURE_ID)
 public final class ConfigurationService {
 
     private static final long serialVersionUID = 205L;
@@ -36,7 +37,6 @@ public final class ConfigurationService {
      * Constructor.
      */
     @API(status = STABLE, since = "1.0")
-    @FeatureToggle(featureID = ConfigurationDAO.FEATURE_ID)
     public ConfigurationService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

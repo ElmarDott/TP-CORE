@@ -18,22 +18,22 @@ import org.springframework.stereotype.Component;
 public interface Logger {
 
     /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0001";
+
+    /**
      * Define the Configuration Set for the Logger.
      */
     @API(status = STABLE, since = "1.1")
     String CONFIG_SET = "logger";
 
     /**
-     * List of all dependencies.
+     * Defines for which MODULE_VERSION the configuration will work.
      */
-    @API(status = API.Status.INTERNAL, since = "1.2")
-    String[] DEPENDENCIES = {"FeatureToggle"};
-
-    /**
-     * Identifier for the given feature to enable toggles.
-     */
-    @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0001";
+    @API(status = STABLE, since = "1.1")
+    String CONFIG_VERSION = "0";
 
     /**
      * Detect the Directory where the application is running.

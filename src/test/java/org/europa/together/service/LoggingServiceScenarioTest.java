@@ -3,11 +3,11 @@ package org.europa.together.service;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.io.File;
+import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,9 +29,11 @@ public class LoggingServiceScenarioTest extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(Logger.FEATURE_ID);
+
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(Logger.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;

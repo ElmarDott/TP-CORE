@@ -5,6 +5,7 @@ import java.util.List;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
+import static org.europa.together.business.TreeWalker.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
 import org.europa.together.utils.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of a TreeWalker.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public final class TreeWalkerImpl implements TreeWalker {
 
     private static final long serialVersionUID = 9L;
@@ -25,7 +27,6 @@ public final class TreeWalkerImpl implements TreeWalker {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public TreeWalkerImpl() {
         this.tree = new ArrayList<>();
         LOGGER.log("instance class", LogLevel.INFO);
@@ -36,7 +37,6 @@ public final class TreeWalkerImpl implements TreeWalker {
      *
      * @param root as TreeNode
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public TreeWalkerImpl(final TreeNode root) {
         this.tree = new ArrayList<>();
         this.addRoot(root);

@@ -8,7 +8,6 @@ import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -59,8 +58,8 @@ public class ConfigurationDAOImplTest {
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(ConfigurationDAO.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(ConfigurationDAO.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean socket = actions.connect("default");

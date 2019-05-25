@@ -20,6 +20,7 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.SaxDocumentHandler;
 import org.europa.together.business.XmlTools;
+import static org.europa.together.business.XmlTools.FEATURE_ID;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of useful XML Tools.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public class XmlToolsImpl implements XmlTools {
 
     private static final long serialVersionUID = 10L;
@@ -45,7 +47,6 @@ public class XmlToolsImpl implements XmlTools {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public XmlToolsImpl() {
         this.parserFactory = SAXParserFactory.newInstance();
         LOGGER.log("instance class", LogLevel.INFO);

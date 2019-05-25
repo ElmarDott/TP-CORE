@@ -12,6 +12,7 @@ import org.europa.together.utils.StringUtils;
  * have two child nods with the same name. for a user is then hard to
  * distinguish which child node is the right one. (e.g. Files and Folders)
  */
+@FeatureToggle(featureID = "CM-0009.DO")
 public final class TreeNode {
 
     private static final Logger LOGGER = new LoggerImpl(TreeNode.class);
@@ -26,7 +27,6 @@ public final class TreeNode {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = "CM-0009.DO")
     public TreeNode() {
         this.uuid = StringUtils.generateUUID();
     }
@@ -36,7 +36,6 @@ public final class TreeNode {
      *
      * @param name as String
      */
-    @FeatureToggle(featureID = "CM-0009.DO")
     public TreeNode(final String name) {
         this.uuid = StringUtils.generateUUID();
         this.nodeName = name;

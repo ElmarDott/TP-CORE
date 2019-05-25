@@ -7,7 +7,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -33,8 +32,8 @@ public class TreeWalkerImplTest {
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(TreeWalker.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(TreeWalker.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;

@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Feature Toggle Annotation to activate or deactivate constructors and
@@ -19,10 +19,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
  * @version 1.0
  * @since 1.2
  */
-@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.CLASS)
 @Documented
-@API(status = EXPERIMENTAL, since = "1.2")
+@API(status = STABLE, since = "1.2")
 public @interface FeatureToggle {
 
     /**

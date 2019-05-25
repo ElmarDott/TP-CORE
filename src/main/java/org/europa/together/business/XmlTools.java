@@ -20,12 +20,6 @@ import org.springframework.stereotype.Component;
 public interface XmlTools {
 
     /**
-     * List of all dependencies.
-     */
-    @API(status = API.Status.INTERNAL, since = "1.2")
-    String[] DEPENDENCIES = {"Logger", "FeatureToggle", "StringUtils"};
-
-    /**
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")

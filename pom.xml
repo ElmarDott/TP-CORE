@@ -98,7 +98,9 @@
                             <proc>none</proc>
                             <includes>
                                 <include>org/europa/together/business/FeatureToggle.java</include>
-                                <include>org/europa/together/utils/TogglePreProcessor.java</include>
+                                <include>org/europa/together/domain/AnnotatedClass.java</include>
+                                <include>org/europa/together/application/FF4jProcessor.java</include>
+                                <include>org/europa/together/utils/ToggleAnnotationPreProcessor.java</include>
                                 <include>org/europa/together/configuration/FeatureToggles.xml</include>
                             </includes>
                         </configuration>
@@ -113,7 +115,9 @@
                             <proc>only</proc>
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
-                                <exclude>org/europa/together/utils/TogglePreProcessor.java</exclude>
+                                <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
+                                <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
+                                <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -127,7 +131,9 @@
                             <proc>none</proc>
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
-                                <exclude>org/europa/together/utils/TogglePreProcessor.java</exclude>
+                                <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
+                                <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
+                                <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -228,18 +234,13 @@
         <dependency>
             <groupId>org.ff4j</groupId>
             <artifactId>ff4j-core</artifactId>
-            <version>1.7.3</version>
+            <version>1.8</version>
         </dependency>
+        <!-- JavaPoet is a Java API for generating .java source files. -->
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
             <version>1.11.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <version>1.0-rc4</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- Bundels -->

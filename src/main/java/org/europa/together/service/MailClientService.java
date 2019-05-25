@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.0")
 @Service
+@FeatureToggle(featureID = MailClient.FEATURE_ID)
 public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
@@ -46,7 +47,6 @@ public final class MailClientService {
      * Constructor.
      */
     @API(status = STABLE, since = "1.0")
-    @FeatureToggle(featureID = MailClient.FEATURE_ID)
     public MailClientService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

@@ -5,7 +5,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.service.LoggingService;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.TogglePreProcessor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,8 +26,8 @@ public class LoggerImplTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(Logger.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(Logger.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;
@@ -61,7 +60,6 @@ public class LoggerImplTest {
 
     @Test
     void testConstructor() {
-
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         LOGGER.log("regular call", LogLevel.DEBUG);

@@ -14,7 +14,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterAll;
@@ -50,7 +49,6 @@ public class MailClientImplTest {
 
     private static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
     private static GreenMail SMTP_SERVER;
-    private static boolean check = false;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -58,8 +56,8 @@ public class MailClientImplTest {
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(MailClient.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean socket = CONNECTION.connect("default");
@@ -83,9 +81,6 @@ public class MailClientImplTest {
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
-
-        //DBMS Table setup
-        CONNECTION.executeSqlFromClasspath(SQL_FILE);
     }
 
     @AfterAll
@@ -120,6 +115,8 @@ public class MailClientImplTest {
 
     @Test
     void testInitialConfiguration() {
+        LOGGER.log("TEST CASE: initialConfiguration", LogLevel.DEBUG);
+
         MailClient client = new MailClientImpl();
         assertEquals(-1, client.getBulkMailLimiter());
         assertEquals(-1, client.getWaitTime());
@@ -128,6 +125,8 @@ public class MailClientImplTest {
 
     @Test
     void testMimeType() {
+        LOGGER.log("TEST CASE: mimeType", LogLevel.DEBUG);
+
         assertEquals("plain", mailer.getMimeType());
         mailer.setMimeTypeToHTML();
         assertEquals("html", mailer.getMimeType());
@@ -137,6 +136,8 @@ public class MailClientImplTest {
 
     @Test
     void testSetContent() {
+        LOGGER.log("TEST CASE: setContent", LogLevel.DEBUG);
+
         String content = "<h1>E Mail>/h1><p>this is the content of the email.";
         mailer.setContent(content);
         assertEquals(content, mailer.getContent());
@@ -145,6 +146,8 @@ public class MailClientImplTest {
 
     @Test
     void testSubject() {
+        LOGGER.log("TEST CASE: subject", LogLevel.DEBUG);
+
         String subject = "E-MAil Topic";
         mailer.setSubject(subject);
         assertEquals(subject, mailer.getSubject());
@@ -153,6 +156,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddRecipent() {
+        LOGGER.log("TEST CASE: addRecipent", LogLevel.DEBUG);
+
         assertEquals(0, mailer.getRecipentList().size());
 
         List<String> success = new ArrayList<>();
@@ -170,6 +175,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddRecipentDetectDoubleEntries() {
+        LOGGER.log("TEST CASE: addRecipentDetectDoubleEntries", LogLevel.DEBUG);
+
         assertEquals(0, mailer.getRecipentList().size());
 
         List<String> success = new ArrayList<>();
@@ -187,6 +194,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddRecipentValidationFail() {
+        LOGGER.log("TEST CASE: addRecipentValidationFail", LogLevel.DEBUG);
+
         assertEquals(0, mailer.getRecipentList().size());
 
         List<String> failure = new ArrayList<>();
@@ -205,6 +214,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddRecipientList() {
+        LOGGER.log("TEST CASE: addRecipientList", LogLevel.DEBUG);
+
         List<String> recipients = new ArrayList<>();
         recipients.add("fail");
         recipients.add("test@sample.com");
@@ -221,6 +232,8 @@ public class MailClientImplTest {
 
     @Test
     void testAttachmentSize() {
+        LOGGER.log("TEST CASE: attachmentSize", LogLevel.DEBUG);
+
         assertEquals(0, mailer.getAttachmentSize());
         mailer.setAttachmentSize(100);
         assertEquals(100, mailer.getAttachmentSize());
@@ -230,6 +243,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddAttachmentLimitSize() {
+        LOGGER.log("TEST CASE: addAttachmentLimitSize", LogLevel.DEBUG);
+
         mailer.setAttachmentSize(100);
         assertFalse(mailer.addAttachment(DIRECTORY + "/Attachment.pdf"));
         assertTrue(mailer.addAttachment(DIRECTORY + "/TestFile"));
@@ -240,6 +255,7 @@ public class MailClientImplTest {
 
     @Test
     void testAddEmptyAttachment() {
+        LOGGER.log("TEST CASE: addEmptyAttachment", LogLevel.DEBUG);
         assertEquals(0, mailer.getAttachmentList().size());
 
         assertFalse(mailer.addAttachment(DIRECTORY + "/empty.attachment"));
@@ -250,6 +266,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddAttachment() {
+        LOGGER.log("TEST CASE: addAttachment", LogLevel.DEBUG);
+
         assertEquals(0, mailer.getAttachmentList().size());
 
         assertTrue(mailer.addAttachment(DIRECTORY + "/Attachment.pdf"));
@@ -260,7 +278,9 @@ public class MailClientImplTest {
     }
 
     @Test
-    void addAttachmentList() {
+    void testaddAttachmentList() {
+        LOGGER.log("TEST CASE: addAttachmentList", LogLevel.DEBUG);
+
         List<String> attachments = new ArrayList<>();
         attachments.add(DIRECTORY + "/Attachment.pdf");
         attachments.add(DIRECTORY + "/TestFile");
@@ -271,6 +291,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddAttachmentSizeLimit() {
+        LOGGER.log("TEST CASE: addAttachmentSizeLimit", LogLevel.DEBUG);
+
         mailer.setAttachmentSize(500);
         assertFalse(mailer.addAttachment(DIRECTORY + "/Attachment.pdf"));
         assertEquals(0, mailer.getAttachmentList().size());
@@ -280,6 +302,8 @@ public class MailClientImplTest {
 
     @Test
     void testAddAttachmentFail() {
+        LOGGER.log("TEST CASE: addAttachmentFail", LogLevel.DEBUG);
+
         mailer.clearAttachments();
         assertFalse(mailer.addAttachment(DIRECTORY + "/File.pdf"));
         assertEquals(0, mailer.getAttachmentList().size());
@@ -287,12 +311,16 @@ public class MailClientImplTest {
 
     @Test
     void testLoadConfigurationFromClasspath() {
+        LOGGER.log("TEST CASE: loadConfigurationFromClasspath", LogLevel.DEBUG);
+
         assertFalse(mailer.loadConfigurationFromProperties("mailer.properties"));
         assertTrue(mailer.loadConfigurationFromProperties("org/europa/together/properties/mail-test-classpath.properties"));
     }
 
     @Test
     void testLoadConfigurationFromFileSystem() {
+        LOGGER.log("TEST CASE: loadConfigurationFromFileSystem", LogLevel.DEBUG);
+
         assertFalse(mailer.loadConfigurationFromProperties("mailer.properties"));
         assertTrue(mailer.loadConfigurationFromProperties(DIRECTORY
                 + "/org/europa/together/properties/mail-test-filesystem.properties"));
@@ -300,6 +328,8 @@ public class MailClientImplTest {
 
     @Test
     void testFailSMTPConnection() throws Exception {
+        LOGGER.log("TEST CASE: failSMTPConnection", LogLevel.DEBUG);
+
         mailer.clearRecipents();
         mailer.clearAttachments();
 
@@ -309,6 +339,8 @@ public class MailClientImplTest {
 
     @Test
     void testConnectSMTPServer() throws Exception {
+        LOGGER.log("TEST CASE: connectSMTPServer", LogLevel.DEBUG);
+
         mailer.clearRecipents();
         mailer.clearAttachments();
 
@@ -319,6 +351,8 @@ public class MailClientImplTest {
 
     @Test
     void testComposeTextMail() throws Exception {
+        LOGGER.log("TEST CASE: composeTextMail", LogLevel.DEBUG);
+
         mailer.clearRecipents();
         mailer.clearAttachments();
 
@@ -341,6 +375,11 @@ public class MailClientImplTest {
 
     @Test
     void testLoadConfigurationFromDatabase() {
+        LOGGER.log("TEST CASE: loadConfigurationFromDatabase", LogLevel.DEBUG);
+
+        //DBMS Table setup
+        CONNECTION.executeSqlFromClasspath(SQL_FILE);
+
         try {
             assertTrue(mailer.loadConfigurationFromDatabase());
 
@@ -358,5 +397,4 @@ public class MailClientImplTest {
             LOGGER.catchException(ex);
         }
     }
-
 }

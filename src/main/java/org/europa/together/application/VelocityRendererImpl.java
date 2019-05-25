@@ -13,6 +13,7 @@ import org.apache.velocity.runtime.resource.util.StringResourceRepository;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.VelocityRenderer;
+import static org.europa.together.business.VelocityRenderer.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of a VelocityRenderer.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public class VelocityRendererImpl implements VelocityRenderer {
 
     private static final long serialVersionUID = 3L;
@@ -30,7 +32,6 @@ public class VelocityRendererImpl implements VelocityRenderer {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public VelocityRendererImpl() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

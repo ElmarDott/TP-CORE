@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.europa.together.application.DatabaseActionsImpl;
+import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.application.MailClientImpl;
 import org.europa.together.business.DatabaseActions;
@@ -19,7 +20,6 @@ import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -58,10 +58,11 @@ public class MailClientScenarioTest extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(MailClient.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean socket = CONNECTION.connect("default");

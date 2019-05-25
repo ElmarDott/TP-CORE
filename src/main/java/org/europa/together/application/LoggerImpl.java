@@ -5,12 +5,14 @@ import java.io.File;
 import java.util.Arrays;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
+import static org.europa.together.business.Logger.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the Logger as Wrapper for SLF4j and logback Framework.
  */
+@FeatureToggle(featureID = FEATURE_ID)
 public final class LoggerImpl implements Logger {
 
     private final String configurationFile = SYSTEM_APP_DIR + "/logback.xml";
@@ -27,7 +29,6 @@ public final class LoggerImpl implements Logger {
      *
      * @param instance The instance of the logged CLASS
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public LoggerImpl(final Class<?> instance) {
         this.instance = instance;
 

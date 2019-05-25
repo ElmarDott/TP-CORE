@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.DatabaseActions;
+import static org.europa.together.business.DatabaseActions.FEATURE_ID;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of Database JDBC Actions.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public class DatabaseActionsImpl implements DatabaseActions {
 
     private static final long serialVersionUID = 8L;
@@ -62,7 +64,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
+    @FeatureToggle(featureID = "CM-0008.CO01")
     public DatabaseActionsImpl() {
         resultCount = 0;
         resultSet = null;
@@ -74,7 +76,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
      *
      * @param activateTestMode as boolean
      */
-    @FeatureToggle(featureID = FEATURE_ID)
+    @FeatureToggle(featureID = "CM-0008.CO02")
     public DatabaseActionsImpl(final boolean activateTestMode) {
         this.testMode = activateTestMode;
         LOGGER.log("instance class (TEST MODE)", LogLevel.INFO);

@@ -1,11 +1,13 @@
 package org.europa.together.domain;
 
 import java.util.Map;
+import org.europa.together.business.FeatureToggle;
 
 /**
  * Contains all information about a JDBC connection. Immutable and read only
  * access.
  */
+@FeatureToggle(featureID = "CM-0008.DO01")
 public final class JdbcConnection {
 
     //CHECKSTYLE:OFF

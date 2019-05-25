@@ -8,7 +8,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterAll;
@@ -38,8 +37,8 @@ public class QrCodeGeneratorImplTest {
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(QrCodeGenerator.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(QrCodeGenerator.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;

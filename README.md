@@ -7,8 +7,9 @@
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
 [![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg?branch=master)](https://coveralls.io/github/ElmarDott/TP-CORE)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f00b311bb51247c1ac215b699b52e5ed)](https://app.codacy.com/app/ElmarDott/TP-CORE?utm_source=github.com&utm_medium=referral&utm_content=ElmarDott/TP-CORE&utm_campaign=Badge_Grade_Dashboard)
 
-The CORE Artifact contains typical basic functions for Java Applications. The
+The TP-CORE Artifact contains typical basic functions for Java Applications. The
 Module is elaborated as library and packed as JAR file. It is possible to use
 this Artifact in Java EE and Java SE (Desktop) Applications. The implementation
 of these library has the goal, to create an useful and compact toolbox.
@@ -30,25 +31,45 @@ Components - Release: 1.0
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
 
+Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
+over configurations) and DRY (Don't repeat yourself). Also we following the programming
+paradigms of: Test Driven Development (TDD), Behavirol Driven Development (BDD)
+and Domain Driven Development (DDD).
+
 ### Prerequisites
 
-The CORE Module is build with NetBeans 8.2, Maven 3.5.3 and Java 8 SE. The
+The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 8 SE. The
 implementation is also designed to run in Java EE 7 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
-Database Server (DBMS) we recommend PostgeSQL.
+Database Server (DBMS) we recommend PostgeSQL DBMS 11.
+
+We decided to use docker for an easy database setup. After on your system docker
+is running you are be able to setup the database by the following steps:
+
+  * docker pull postgres
+  * docker run -d -p 5432:5432 --name postgres -v /home/user/docker/postgreSQL:/var/lib/postgresql/data postgres
+  * docker start postgres
+  * docker stop postgres
+
+  URI/>  172.17.0.1:5432   User: postgres PWD: n/a
+  DOC/>  https://docs.docker.com/samples/library/postgres/
+
+To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
+script.
 
 ### Build
 
-To build the Project you will need the parent-pom from the TP-CM project. The
-project configurations are available in src/main/filter/ directory.
+To build the Project you will need the parent-pom from the TP-CM project
+(build-workflow). The project configurations are available in src/main/filter/
+directory.
 
 In the case there is no DBMS available, all test cases which depend on Database
 access will skipped.
 
 ### Installing
 All released Artifacts will be available on Maven Central for usage. To fit with the
-hosting restriction on Sonatype Open Source Project Repository Hosting was necessary
-to change the POM GAV. As Result the java packages do not fit with the pom GAV. SO you
+hosting restriction on Sonatype Open Source Project Repository Hosting, it was necessary
+to change the POM GAV. As Result the java packages do not fit with the pom GAV. So you
 are be able to use TP-CORE in your project as dependency wit the following entry:
 
 Please check the Release Notes for published Artifact Versions.
@@ -71,8 +92,11 @@ This project is licensed under the General Public License GPL-3.0
 
 ## Contributors
 
-Feel free to send a request by e-mail to contribute the project. In the case you
-like this project, let me know it an rate it with a star.
+Feel free to send a request by e-mail in the case you want to contribute the
+project. Everyone is welcome, even beginners in programming. We also appreciate
+help by optimizing our documentation and creating tutorials.
+
+In the case you like this project, let me know it and rate it with a star.
 
 ## Release Notes
 

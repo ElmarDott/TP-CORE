@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.1")
 @Service
+@FeatureToggle(featureID = Logger.FEATURE_ID)
 public final class LoggingService {
 
     private static final Logger LOGGER = new LoggerImpl(LoggingService.class);
@@ -33,7 +34,6 @@ public final class LoggingService {
      * Constructor.
      */
     @API(status = STABLE, since = "1.1")
-    @FeatureToggle(featureID = Logger.FEATURE_ID)
     public LoggingService() {
         LOGGER.log("instance class", LogLevel.INFO);
     }

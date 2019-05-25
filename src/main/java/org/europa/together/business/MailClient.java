@@ -25,23 +25,16 @@ import org.springframework.stereotype.Component;
 public interface MailClient {
 
     /**
-     * Define the Configuration Set for the MailClient.
-     */
-    @API(status = STABLE, since = "1.0")
-    String CONFIG_SET = "email";
-
-    /**
-     * List of all dependencies.
-     */
-    @API(status = API.Status.INTERNAL, since = "1.2")
-    String[] DEPENDENCIES = {"Logger", "FeatureToggle", "ConfigurationDAO", "DatabaseActions",
-        "PropertyReader", "StringUtils", "Validator"};
-
-    /**
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-0006";
+
+    /**
+     * Define the Configuration Set for the MailClient.
+     */
+    @API(status = STABLE, since = "1.0")
+    String CONFIG_SET = "email";
 
     /**
      * Defines for which MODULE_VERSION the configuration will work.

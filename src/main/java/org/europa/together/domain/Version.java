@@ -33,6 +33,7 @@ import org.europa.together.utils.Validator;
  * both artifacts with the same name have the same version it is impossible to
  * distinguish them.
  */
+@FeatureToggle(featureID = "CM-0005.DO02")
 public class Version implements Comparable<Version> {
 
     private static final Logger LOGGER = new LoggerImpl(Version.class);
@@ -47,7 +48,6 @@ public class Version implements Comparable<Version> {
      *
      * @param version as String
      */
-    @FeatureToggle(featureID = "CM-0005.DO02")
     public Version(final String version) {
 
         try {

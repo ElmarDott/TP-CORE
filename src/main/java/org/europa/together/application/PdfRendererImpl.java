@@ -14,6 +14,7 @@ import java.util.List;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
+import static org.europa.together.business.PdfRenderer.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of a simple PDF Renderer.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public class PdfRendererImpl implements PdfRenderer {
 
     private static final long serialVersionUID = 11L;
@@ -39,7 +41,6 @@ public class PdfRendererImpl implements PdfRenderer {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public PdfRendererImpl() {
         creator = "Together Platform PDF Renderer";
         LOGGER.log("instance class", LogLevel.INFO);

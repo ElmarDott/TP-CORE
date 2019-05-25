@@ -23,6 +23,7 @@ import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
+import static org.europa.together.business.MailClient.FEATURE_ID;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
@@ -39,6 +40,7 @@ import org.springframework.stereotype.Repository;
  * Implementation of a simple SMTP Mailer.
  */
 @Repository
+@FeatureToggle(featureID = FEATURE_ID)
 public class MailClientImpl implements MailClient {
 
     private static final long serialVersionUID = 6L;
@@ -65,7 +67,6 @@ public class MailClientImpl implements MailClient {
     /**
      * Constructor.
      */
-    @FeatureToggle(featureID = FEATURE_ID)
     public MailClientImpl() {
         initConfig();
         attachments = new ArrayList<>();
@@ -237,6 +238,7 @@ public class MailClientImpl implements MailClient {
                     = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
                             CONFIG_VERSION, CONFIG_SET);
 
+            LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
             for (ConfigurationDO entry : configurationEntries) {
 
                 String value;

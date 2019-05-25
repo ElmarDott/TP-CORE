@@ -8,7 +8,6 @@ import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
-import org.europa.together.utils.TogglePreProcessor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -37,8 +36,8 @@ public class PdfRendererImplTest {
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
-        TogglePreProcessor feature = new TogglePreProcessor();
-        boolean toggle = feature.testCaseActivator(PdfRenderer.FEATURE_ID);
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(PdfRenderer.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;
@@ -52,7 +51,6 @@ public class PdfRendererImplTest {
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
-
     }
 
     @AfterAll
@@ -91,12 +89,16 @@ public class PdfRendererImplTest {
 
     @Test
     void testFailRenderHtmlToPdf() {
+        LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
+
         pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
         assertFalse(new File(DIRECTORY + "fail.pdf").exists());
     }
 
     @Test
     void testLoadAndWritePdf() {
+        LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
+
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
         PdfReader document = pdf.readDocument(file);
         assertNotNull(document);
@@ -109,6 +111,8 @@ public class PdfRendererImplTest {
 
     @Test
     void testRenderHtmlToPdf() {
+        LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
+
         String html = "<h1>My First PDF Document</h1 > <p>"
                 + StringUtils.generateLoremIpsum(0) + "</p>";
 
@@ -118,6 +122,8 @@ public class PdfRendererImplTest {
 
     @Test
     void testRemovePages() {
+        LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
+
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
         PdfReader document = pdf.readDocument(file);
         assertEquals(5, document.getNumberOfPages());
@@ -128,6 +134,5 @@ public class PdfRendererImplTest {
         pdf.writeDocument(reduced, out);
 
         assertEquals(2, reduced.getNumberOfPages());
-
     }
 }
