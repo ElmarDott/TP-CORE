@@ -182,12 +182,36 @@ public class ConfigurationDOTest {
     void testIsEqual() {
         LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
 
+        ConfigurationDO A
+                = new ConfigurationDO(key, "111", modulName, version);
+        ConfigurationDO B
+                = new ConfigurationDO(key, "000", modulName, version);
+
+        assertTrue(A.equals(B));
+        assertTrue(B.equals(A));
     }
 
     @Test
     void testIsNotEqual() {
         LOGGER.log("TEST CASE: isNotEqual()", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
 
+        ConfigurationDO A
+                = new ConfigurationDO("AAA", "000", "test", "1.0.1");
+        ConfigurationDO B
+                = new ConfigurationDO("BBB", "001", "test", "1.0.1");
+        ConfigurationDO C
+                = new ConfigurationDO("BBB", "010", "module", "1.0.1");
+        ConfigurationDO D
+                = new ConfigurationDO("BBB", "011", "test", "2.0");
+
+        //KEY
+        assertFalse(A.equals(B));
+        assertFalse(B.equals(A));
+        //MODULE
+        assertFalse(B.equals(C));
+        //VERION
+        assertFalse(B.equals(D));
     }
 
     @Test
