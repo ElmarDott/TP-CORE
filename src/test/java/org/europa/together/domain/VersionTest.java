@@ -186,7 +186,7 @@ public class VersionTest {
     void testSort() {
         LOGGER.log("TEST CASE: sort()", LogLevel.DEBUG);
 
-        List<Version> list = new ArrayList();
+        List<Version> list = new ArrayList<>();
         list.add(new Version("3.1.2"));
         list.add(new Version("1.2"));
         list.add(new Version("3.2.2"));

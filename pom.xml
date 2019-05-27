@@ -15,7 +15,7 @@
     <parent>
         <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.0.9-SNAPSHOT</version>
+        <version>1.1.0</version>
     </parent>
 
     <groupId>io.github.together.modules</groupId>
@@ -24,11 +24,11 @@
     <packaging>jar</packaging>
 
     <properties>
-        <skipCoveralls>false</skipCoveralls>
+        <skipCoveralls>true</skipCoveralls>
         <skipJarSigner>false</skipJarSigner>
         <skipJavaDoc>false</skipJavaDoc>
         <skipTests>false</skipTests>
-        <skipEnforcer>false</skipEnforcer>
+        <skipEnforcer>true</skipEnforcer>
     </properties>
 
     <scm>
@@ -166,16 +166,11 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
+                <configuration>
+                    <repoToken>${coveralls.token.tpCore}</repoToken>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -189,7 +184,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.10.1</version>
+            <version>2.10.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -219,12 +214,12 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.3</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.3.3</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.imgscalr</groupId>
