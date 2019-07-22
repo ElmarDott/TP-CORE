@@ -3,6 +3,7 @@ package org.europa.together.application;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import org.europa.together.utils.AnnotationProcessingHelper;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
 
@@ -22,13 +23,11 @@ public class FF4jProcessor {
      */
     public FF4jProcessor() {
 
-        configFile
-                = "/src/main/resources"
+        configFile = "/src/main/resources"
                 + "/org/europa/together/configuration/FeatureToggles.xml";
-//              = "/src/test/resources"
-//              + "/org/europa/together/configuration/DeactivatedFeatureToggles.xml";
-        print("INFO: FeatureToggle PATH: " + this.path);
-        print("INFO: FeatureToggle configuration: " + this.configFile);
+
+        AnnotationProcessingHelper.print("INFO: FeatureToggle PATH: " + this.path);
+        AnnotationProcessingHelper.print("INFO: FeatureToggle configuration: " + this.configFile);
     }
 
     /**
@@ -48,15 +47,11 @@ public class FF4jProcessor {
             toggles = new FF4j(source);
             feature = toggles.getFeature(featureId);
 
-            print("Feature: " + feature.getDescription()
-                    + " (" + feature.getUid() + ") " + feature.isEnable());
+            AnnotationProcessingHelper.print("INFO: Feature(" + feature.getUid() + ") "
+                    + feature.isEnable() + " " + feature.getDescription());
 
         } catch (Exception ex) {
-            print(ex.getMessage());
-
-            if (ex.getClass().getSimpleName().equals("NullPointerException")) {
-                ex.printStackTrace();
-            }
+            AnnotationProcessingHelper.print("ERROR: " + ex.getMessage());
         }
         return feature;
     }
@@ -69,7 +64,7 @@ public class FF4jProcessor {
     public void setConfigFile(final String configuration) {
         this.configFile = configuration;
 
-        print("INFO: change configuration to: " + this.configFile);
+        AnnotationProcessingHelper.print("INFO: change configuration to: " + configuration);
     }
 
     /**
@@ -81,14 +76,5 @@ public class FF4jProcessor {
      */
     public boolean deactivateUnitTests(final String featureId) {
         return scanToggels(featureId).isEnable();
-    }
-
-    /**
-     * Write logging information on the command line.
-     *
-     * @param message as String
-     */
-    public void print(final String message) {
-        System.out.println(message);
     }
 }

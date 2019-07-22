@@ -374,6 +374,16 @@ public class MailClientImplTest {
     }
 
     @Test
+    void testPopulateDatabaseConfiguration() {
+        LOGGER.log("TEST CASE: populateDatabaseConfiguratio", LogLevel.DEBUG);
+
+        mailer.populateConfiguration();
+
+        // test implemetation
+        CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
+    }
+
+    @Test
     void testLoadConfigurationFromDatabase() {
         LOGGER.log("TEST CASE: loadConfigurationFromDatabase", LogLevel.DEBUG);
 
@@ -383,7 +393,7 @@ public class MailClientImplTest {
         try {
             assertTrue(mailer.loadConfigurationFromDatabase());
 
-            assertEquals("smtp.gmail.com", mailer.getConfiguration().get("mailer.host"));
+            assertEquals("smtp.sample.org", mailer.getConfiguration().get("mailer.host"));
             assertEquals("465", mailer.getConfiguration().get("mailer.port"));
             assertEquals("noreply@sample.org", mailer.getConfiguration().get("mailer.sender"));
             assertEquals("JohnDoe", mailer.getConfiguration().get("mailer.user"));
@@ -396,5 +406,7 @@ public class MailClientImplTest {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+
+        CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
     }
 }

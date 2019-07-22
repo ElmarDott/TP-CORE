@@ -151,7 +151,7 @@ public class Version implements Comparable<Version> {
     @Override
     public int compareTo(final Version o) {
         // -1:smaller | 0:equal | 1:greater
-        int compare = 2;
+        int compare;
 
         if (this.major > o.major) {
             compare = 1;
@@ -178,6 +178,7 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
+    @SuppressWarnings("PMD.CollapsibleIfStatements")
     public boolean equals(final Object object) {
 
         boolean success = false;

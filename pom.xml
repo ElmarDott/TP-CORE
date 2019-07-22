@@ -99,6 +99,7 @@
                             <includes>
                                 <include>org/europa/together/business/FeatureToggle.java</include>
                                 <include>org/europa/together/domain/AnnotatedClass.java</include>
+                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
                                 <include>org/europa/together/application/FF4jProcessor.java</include>
                                 <include>org/europa/together/utils/ToggleAnnotationPreProcessor.java</include>
                                 <include>org/europa/together/configuration/FeatureToggles.xml</include>
@@ -116,6 +117,7 @@
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
                                 <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
+                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
                                 <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
                             </excludes>
@@ -132,6 +134,7 @@
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
                                 <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
+                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
                                 <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
                             </excludes>
@@ -230,12 +233,6 @@
             <groupId>org.ff4j</groupId>
             <artifactId>ff4j-core</artifactId>
             <version>1.8</version>
-        </dependency>
-        <!-- JavaPoet is a Java API for generating .java source files. -->
-        <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-            <version>1.11.1</version>
         </dependency>
 
         <!-- Bundels -->

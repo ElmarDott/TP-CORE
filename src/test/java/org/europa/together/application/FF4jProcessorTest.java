@@ -70,13 +70,23 @@ public class FF4jProcessorTest {
     }
 
     @Test
-    void testSetConfigfile() {
-        LOGGER.log("TEST CASE: appendFF4jFeatureStore", LogLevel.DEBUG);
+    void testSetNewConfigFile() {
+        LOGGER.log("TEST CASE: setNewConfigFile", LogLevel.DEBUG);
 
         FF4jProcessor toggle = new FF4jProcessor();
         toggle.setConfigFile(path + testConfiguration);
 
         assertTrue(toggle.scanToggels("1111").isEnable());
+        assertNull(toggle.scanToggels("CM-0000"));
+    }
+
+    @Test
+    void testFailSetConfiguration() {
+        LOGGER.log("TEST CASE: failSetNewConfigFile", LogLevel.DEBUG);
+
+        FF4jProcessor toggle = new FF4jProcessor();
+        toggle.setConfigFile("wrong/configuration/path/");
+
         assertNull(toggle.scanToggels("CM-0000"));
     }
 
@@ -104,7 +114,6 @@ public class FF4jProcessorTest {
 
         FF4jProcessor toggle = new FF4jProcessor();
         toggle.setConfigFile(path + testConfiguration);
-        assertNull(toggle.scanToggels("2121"));
     }
 
     @Test

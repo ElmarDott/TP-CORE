@@ -38,6 +38,8 @@
             <feature uid="CM-0007" enable="true" description="QR Code Reader / Writer" />
             <feature-group name="CM-0008">
                 <feature uid="CM-0008"      enable="true" description="Database Actions" />
+                <feature uid="CM-0008.CO01" enable="true" description="DB Actions Constructor 01" />
+                <feature uid="CM-0008.CO02" enable="true" description="DB Actions Constructor 02" />
                 <feature uid="CM-0008.DO01" enable="true" description="JDBC Connection Info" />
             </feature-group>
             <feature-group name="CM-0009">

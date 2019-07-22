@@ -3,13 +3,16 @@ package org.europa.together.domain;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.lang.reflect.Constructor;
 import org.europa.together.application.DatabaseActionsImpl;
+import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +24,32 @@ import org.junit.runner.RunWith;
 public class JdbcConnectionTest {
 
     private static final Logger LOGGER = new LoggerImpl(JdbcConnectionTest.class);
+    private static DatabaseActions actions = new DatabaseActionsImpl(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
+
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests("CM-0008.DO01");
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        boolean socket = actions.connect("default");
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
+        String out;
+        if (!toggle || !socket) {
+            out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
+        }
+
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        Assumptions.assumeTrue(check);
     }
 
     @AfterAll

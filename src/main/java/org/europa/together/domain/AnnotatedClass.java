@@ -1,18 +1,26 @@
 package org.europa.together.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * Data structure to storrage annotaed elements. Implements te functionality to
- * compare and sort the elements to process a code generation.
+ * Data structure to storage annotated FeatureToggle elements. Implements the
+ * functionality to compare and sort the elements to process a code generation.
+ * Classname & constructor name are the same. Types: CLASS | ENUM | CONSTRUCTOR
+ * | METHOD
  */
 public class AnnotatedClass {
+
+    public static final String CLASS = "CLASS";
+    public static final String ENUM = "ENUM";
+    public static final String CONSTRUCTOR = "CONSTRUCTOR";
+    public static final String METHOD = "METHOD";
 
     private final String annotation;
     private final String packageName;
     private final String clazzName;
-    private final String constructorName;
-    private final String methodName;
+    private final List<String> methodNames = new ArrayList<>();
 
     /**
      * Constructor.
@@ -20,17 +28,20 @@ public class AnnotatedClass {
      * @param type as String
      * @param namespace as String
      * @param clazz as String
-     * @param constructor as String
-     * @param method as String
+     * @param methods as List
      */
     public AnnotatedClass(final String type, final String namespace, final String clazz,
-            final String constructor, final String method) {
+            final List<String> methods) {
 
         annotation = type;
         packageName = namespace;
         clazzName = clazz;
-        constructorName = constructor;
-        methodName = method;
+
+        if (methods != null && !methods.isEmpty()) {
+            for (String method : methods) {
+                methodNames.add(method);
+            }
+        }
     }
 
     @Override
@@ -66,12 +77,12 @@ public class AnnotatedClass {
                 + "TYPE=" + annotation
                 + ", Package=" + packageName
                 + ", Class=" + clazzName
-                + ", Constructor=" + constructorName
-                + ", Method=" + methodName + "}";
+                + ", Method=[" + getMethodNames() + "]}";
     }
 
     /**
-     * Get the annotation type.
+     * Get the annotation type. <br/>
+     * CLASS | ENUM | CONSTRUCTOR | METHOD
      *
      * @return annotation as String
      */
@@ -98,20 +109,20 @@ public class AnnotatedClass {
     }
 
     /**
-     * Get the constructor.
-     *
-     * @return constructorName as String
-     */
-    public String getConstructorName() {
-        return constructorName;
-    }
-
-    /**
      * Get the method.
      *
      * @return methodName as String
      */
-    public String getMethodName() {
-        return methodName;
+    public String getMethodNames() {
+        return String.join(" ", this.methodNames);
+    }
+
+    /**
+     * Extend the List of Methods.
+     *
+     * @param methodName as String
+     */
+    public void addMethodName(final String methodName) {
+        this.methodNames.add(methodName);
     }
 }

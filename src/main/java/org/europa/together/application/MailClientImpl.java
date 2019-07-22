@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
+import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.JavaCryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.europa.together.utils.Validator;
@@ -106,15 +108,16 @@ public class MailClientImpl implements MailClient {
     @Override
     public void populateConfiguration() {
 
-        DatabaseActions actions = new DatabaseActionsImpl();
+        String configurationFile = "org/europa/together/sql/mail-configuration.sql";
 
-        String properties
-                = "classpath://org/europa/together/configuration/jdbc.properties";
-        String sql
-                = "org/europa/together/sql/mail-configuration.sql";
+        try {
+            String sql = FileUtils.readFileStream(new File(configurationFile));
+            DatabaseActions connection = new DatabaseActionsImpl();
+            connection.executeSqlFromClasspath(sql);
 
-        actions.connect(properties);
-        actions.executeSqlFromClasspath(sql);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
     }
 
     @Override
