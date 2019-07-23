@@ -66,6 +66,29 @@ public class AnnotationProcessingHelperTest {
 
     @Test
     @Disabled
+    public void testPerformComplexCombinations() {
+        LOGGER.log("TEST CASE: performComplexCombinations", LogLevel.DEBUG);
+
+        List<AnnotatedClass> set = new ArrayList<>();
+        set.addAll(this.annotatedEnums());
+        set.addAll(this.annotatedClasses());
+        set.addAll(this.annotatedConstructors());
+        set.addAll(this.annotatedMethods());
+        set.addAll(this.updateAnnotatedClasses());
+        set.addAll(this.mergeConstructorsOfOneClass());
+        set.addAll(this.mergeMetodsOfOneClass());
+        set.addAll(this.mergeConstructorAndMethod());
+
+        AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
+        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+
+        for (AnnotatedClass item : merged) {
+            LOGGER.log(item.toString(), LogLevel.DEBUG);
+        }
+        assertEquals(15, merged.size());
+    }
+
+    @Test
     public void testMergeConstructorsAndMethods() {
         LOGGER.log("TEST CASE: mergeConstructorsAndMethods", LogLevel.DEBUG);
 
@@ -78,14 +101,13 @@ public class AnnotationProcessingHelperTest {
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
-
         assertEquals(1, merged.size());
+        assertEquals(AnnotatedClass.CONSTRUCTOR, merged.get(0).getType());
     }
 
     @Test
-    @Disabled
-    public void testMergeMethodnamesToOneClass() {
-        LOGGER.log("TEST CASE: mergeMethodnamesToOneClass", LogLevel.DEBUG);
+    public void testMergeMethodsToOneElement() {
+        LOGGER.log("TEST CASE: mergeMethodsToOneElement", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
         set.addAll(this.mergeMetodsOfOneClass());
@@ -96,13 +118,30 @@ public class AnnotationProcessingHelperTest {
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
-
         assertEquals(1, merged.size());
+        assertEquals("methodA methodB methodC", merged.get(0).getMethodNames());
     }
 
     @Test
-    public void testMergeMethodsToClass() {
-        LOGGER.log("TEST CASE: simpleClassesAndEnums", LogLevel.DEBUG);
+    public void testMergeConstructorsToOneElement() {
+        LOGGER.log("TEST CASE: mergeConstructorsToOneElement", LogLevel.DEBUG);
+
+        List<AnnotatedClass> set = new ArrayList<>();
+        set.addAll(this.mergeConstructorsOfOneClass());
+
+        AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
+        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+
+        for (AnnotatedClass item : merged) {
+            LOGGER.log(item.toString(), LogLevel.DEBUG);
+        }
+        assertEquals(1, merged.size());
+//        assertEquals("methodA methodB methodC", merged.get(0).getMethodNames());
+    }
+
+    @Test
+    public void testMergeMethodsAndConstructorsToClass() {
+        LOGGER.log("TEST CASE: mergeMethodsAndConstructorsToClass", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
         set.addAll(this.updateAnnotatedClasses());
@@ -113,13 +152,29 @@ public class AnnotationProcessingHelperTest {
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
-
-        assertEquals(4, merged.size());
+        assertEquals(3, merged.size());
     }
 
     @Test
-    public void testSimpleconstructors() {
-        LOGGER.log("TEST CASE: simpleconstructors", LogLevel.DEBUG);
+    public void testSimpleMethods() {
+        LOGGER.log("TEST CASE: simpleMethods", LogLevel.DEBUG);
+
+        List<AnnotatedClass> set = new ArrayList<>();
+        set.addAll(this.annotatedMethods());
+
+        AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
+        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+
+        for (AnnotatedClass item : merged) {
+            LOGGER.log(item.toString(), LogLevel.DEBUG);
+        }
+        assertEquals(set.size(), merged.size());
+
+    }
+
+    @Test
+    public void testSimpleConstructors() {
+        LOGGER.log("TEST CASE: simpleConstructors", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
         set.addAll(this.annotatedConstructors());
@@ -130,17 +185,14 @@ public class AnnotationProcessingHelperTest {
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
-
-        assertEquals(4, merged.size());
+        assertEquals(set.size(), merged.size());
     }
 
     @Test
-    public void testSimpleClassesAndEnums() {
-        LOGGER.log("TEST CASE: simpleClassesAndEnums", LogLevel.DEBUG);
+    public void testSimpleEnums() {
+        LOGGER.log("TEST CASE: simpleEnums", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
-        set.addAll(this.annotatedClassesOfSamePackage());
-        set.addAll(this.annotatedClassesOfDiffrentPackage());
         set.addAll(this.annotatedEnums());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
@@ -149,7 +201,22 @@ public class AnnotationProcessingHelperTest {
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
+        assertEquals(set.size(), merged.size());
+    }
 
+    @Test
+    public void testSimpleClasses() {
+        LOGGER.log("TEST CASE: simpleClasses", LogLevel.DEBUG);
+
+        List<AnnotatedClass> set = new ArrayList<>();
+        set.addAll(this.annotatedClasses());
+
+        AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
+        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+
+        for (AnnotatedClass item : merged) {
+            LOGGER.log(item.toString(), LogLevel.DEBUG);
+        }
         assertEquals(set.size(), merged.size());
     }
 
@@ -180,28 +247,20 @@ public class AnnotationProcessingHelperTest {
         LOGGER.log("out stream restored.", LogLevel.INFO);
     }
 
-    private List<AnnotatedClass> annotatedClassesOfSamePackage() {
+    private List<AnnotatedClass> annotatedClasses() {
         List<AnnotatedClass> set = new ArrayList<>();
 
         set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test", "ClassA", null));
         set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test", "ClassB", null));
-        set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test", "ClassC", null));
-        return set;
-    }
-
-    private List<AnnotatedClass> annotatedClassesOfDiffrentPackage() {
-        List<AnnotatedClass> set = new ArrayList<>();
-
-        set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test.a", "ClassZ", null));
-        set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test.b", "ClassZ", null));
-        set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test.c", "ClassZ", null));
+        set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test.a", "ClassA", null));
         return set;
     }
 
     private List<AnnotatedClass> annotatedEnums() {
         List<AnnotatedClass> set = new ArrayList<>();
 
-        set.add(new AnnotatedClass(AnnotatedClass.ENUM, "org.sample.test", "Enum1", null));
+        set.add(new AnnotatedClass(AnnotatedClass.ENUM, "org.sample.test", "Enum", null));
+        set.add(new AnnotatedClass(AnnotatedClass.ENUM, "org.sample.test.a", "Enum", null));
         return set;
     }
 
@@ -210,8 +269,19 @@ public class AnnotationProcessingHelperTest {
 
         set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "ConstructorA", null));
         set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "ConstructorB", null));
-        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test.a", "ConstructorZ", null));
-        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test.b", "ConstructorZ", null));
+        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test.a", "ConstructorA", null));
+        return set;
+    }
+
+    private List<AnnotatedClass> annotatedMethods() {
+        List<AnnotatedClass> set = new ArrayList<>();
+
+        List<String> methodName = new ArrayList<>();
+        methodName.add("methodName");
+
+        set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "MethodA", methodName));
+        set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "MethodB", methodName));
+        set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test.a", "MethodA", methodName));
         return set;
     }
 
@@ -234,7 +304,14 @@ public class AnnotationProcessingHelperTest {
         set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "Class", methodName_1));
         set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "Class", methodName_2));
         set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "Class", methodName_3));
-        set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "Method", methodName_1));
+        return set;
+    }
+
+    private List<AnnotatedClass> mergeConstructorsOfOneClass() {
+        List<AnnotatedClass> set = new ArrayList<>();
+        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "Constructor", null));
+        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "Constructor", null));
+        set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "Constructor", null));
         return set;
     }
 
@@ -258,7 +335,7 @@ public class AnnotationProcessingHelperTest {
         List<AnnotatedClass> set = new ArrayList<>();
 
         List<String> methodName = new ArrayList<>();
-        methodName.add("methodA");
+        methodName.add("method");
 
         set.add(new AnnotatedClass(AnnotatedClass.CONSTRUCTOR, "org.sample.test", "ConstuctorMethod", null));
         set.add(new AnnotatedClass(AnnotatedClass.METHOD, "org.sample.test", "ConstuctorMethod", methodName));

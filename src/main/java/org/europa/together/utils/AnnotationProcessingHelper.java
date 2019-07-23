@@ -86,23 +86,22 @@ public class AnnotationProcessingHelper {
 
         if (!collection.isEmpty()) {
             //collect Clazz & Enum
-            List<AnnotatedClass> firstRound
+            List<AnnotatedClass> initial
                     = this.processClazzTypes(collection);
 
-            if (!firstRound.isEmpty()) {
+            if (!initial.isEmpty()) {
                 //update Clazz with Constructors & Methods
-                List<AnnotatedClass> secondRound
-                        = this.updateClazzByMethods(firstRound);
+                List<AnnotatedClass> firstRound
+                        = this.updateClazzByMethods(initial);
 
-                if (!secondRound.isEmpty()) {
-                    //merge Methods to Classes
-                    List<AnnotatedClass> thirdRound
-                            = this.mergeMethodNames(secondRound);
+                if (!firstRound.isEmpty()) {
+                    //merge Methods & Constructors together
+                    List<AnnotatedClass> secondRound
+                            = this.mergeMethodsAndConstructors(firstRound);
 
-                    if (!thirdRound.isEmpty()) {
-                        for (AnnotatedClass item : thirdRound) {
-                            annotations.add(item);
-                        }
+                    if (!secondRound.isEmpty()) {
+                        // add merge methods
+                        this.mergeMethods(secondRound);
                     }
                 }
             }
@@ -119,46 +118,81 @@ public class AnnotationProcessingHelper {
         System.out.println(message);
     }
 
-    private List<AnnotatedClass> mergeMethodNames(final List<AnnotatedClass> collection) {
-        List<AnnotatedClass> temp = new ArrayList<>();
-
-        //Copy List
+    private void mergeMethods(final List<AnnotatedClass> collection) {
+        //copy elements
         List<AnnotatedClass> orgin = new ArrayList<>();
-        List<AnnotatedClass> merge = new ArrayList<>();
+        List<AnnotatedClass> temp = new ArrayList<>();
         for (AnnotatedClass item : collection) {
-            merge.add(item);
             orgin.add(item);
+            temp.add(item);
         }
 
         for (AnnotatedClass element : orgin) {
+
+            temp.remove(element);
             List<AnnotatedClass> skip = new ArrayList<>();
-            merge.remove(element);
-
-            if (merge.isEmpty()) {
-                temp.add(element);
-                break;
-            }
-
-            for (AnnotatedClass item : merge) {
-                if (item.equals(element)) {
-                    if (item.getType().equals("CONSTRUCTOR")) {
-                        element.addMethodName(item.getClazzName());
-                    } else {
-                        element.addMethodName(item.getMethodNames());
-                    }
-                    this.annotations.add(element);
+            for (AnnotatedClass item : temp) {
+                if (element.equals(item)) {
+                    element.addMethodName(item.getMethodNames());
                     skip.add(item);
                 }
             }
-
             if (!skip.isEmpty()) {
-                for (AnnotatedClass item : skip) {
-                    merge.remove(item);
+                for (AnnotatedClass del : skip) {
+                    temp.remove(del);
                 }
-            } else {
-                temp.add(element);
+            }
+            annotations.add(element);
+            if (temp.isEmpty()) {
+                break;
             }
         }
+    }
+
+    private List<AnnotatedClass> mergeMethodsAndConstructors(final List<AnnotatedClass> collection) {
+        List<AnnotatedClass> temp = new ArrayList<>();
+
+        //split constructors & methods
+        List<AnnotatedClass> constructors = new ArrayList<>();
+        List<AnnotatedClass> methods = new ArrayList<>();
+        for (AnnotatedClass item : collection) {
+            if (AnnotatedClass.CONSTRUCTOR.equals(item.getType())) {
+                constructors.add(item);
+            } else {
+                methods.add(item);
+            }
+        }
+
+        if (!constructors.isEmpty() && methods.isEmpty()) {
+            temp.addAll(constructors);
+        } else if (!methods.isEmpty() && constructors.isEmpty()) {
+            temp.addAll(methods);
+        } else {
+            //MERGE
+            for (AnnotatedClass element : constructors) {
+                List<AnnotatedClass> skip = new ArrayList<>();
+                if (!methods.isEmpty()) {
+                    for (AnnotatedClass item : methods) {
+                        if (element.equals(item)) {
+                            element.addMethodName(item.getMethodNames());
+                            skip.add(item);
+                        }
+                    }
+                    if (!skip.isEmpty()) {
+                        element.addMethodName(element.getClazzName());
+                        for (AnnotatedClass del : skip) {
+                            methods.remove(del);
+                        }
+                    }
+                }
+                annotations.add(element);
+            }
+
+            if (!methods.isEmpty()) {
+                temp.addAll(methods);
+            }
+        }
+
         return temp;
     }
 
@@ -169,7 +203,7 @@ public class AnnotationProcessingHelper {
             boolean skip = false;
             for (AnnotatedClass item : this.annotations) {
                 if (item.equals(element)) {
-                    if (element.getType().equals("CONSTRUCTOR")) {
+                    if (AnnotatedClass.CONSTRUCTOR.equals(element.getType())) {
                         item.addMethodName(element.getClazzName());
                     } else {
                         item.addMethodName(element.getMethodNames());
@@ -188,8 +222,8 @@ public class AnnotationProcessingHelper {
     private List<AnnotatedClass> processClazzTypes(final List<AnnotatedClass> collection) {
         List<AnnotatedClass> temp = new ArrayList<>();
         for (AnnotatedClass element : collection) {
-            if (element.getType().equals("ENUM")
-                    || element.getType().equals("CLASS")) {
+            if (element.getType().equals(AnnotatedClass.ENUM)
+                    || element.getType().equals(AnnotatedClass.CLASS)) {
                 this.annotations.add(element);
             } else {
                 temp.add(element);

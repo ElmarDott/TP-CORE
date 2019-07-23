@@ -157,4 +157,15 @@ public class AnnotatedClassTest {
         assertEquals("Test", element.getClazzName());
         assertEquals("MethodName", element.getMethodNames());
     }
+
+    @Test
+    public void testChangeAnnotationType() {
+        LOGGER.log("TEST CASE: changeAnnotationType()", LogLevel.DEBUG);
+
+        AnnotatedClass element = new AnnotatedClass(AnnotatedClass.METHOD, "eu.freeplace.test", "Test", null);
+        assertEquals(AnnotatedClass.METHOD, element.getType());
+
+        element.updateAnnotationType(AnnotatedClass.CONSTRUCTOR);
+        assertEquals(AnnotatedClass.CONSTRUCTOR, element.getType());
+    }
 }

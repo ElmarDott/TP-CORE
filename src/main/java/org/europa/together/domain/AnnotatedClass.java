@@ -17,7 +17,7 @@ public class AnnotatedClass {
     public static final String CONSTRUCTOR = "CONSTRUCTOR";
     public static final String METHOD = "METHOD";
 
-    private final String annotation;
+    private String annotation;
     private final String packageName;
     private final String clazzName;
     private final List<String> methodNames = new ArrayList<>();
@@ -124,5 +124,16 @@ public class AnnotatedClass {
      */
     public void addMethodName(final String methodName) {
         this.methodNames.add(methodName);
+    }
+
+    /**
+     * Allows to update the annotation type of the collection. This is needed,
+     * when cunstructor and method elements exists and the collection item has
+     * the type of method. then it needed to change to a new type constructor.
+     *
+     * @param newType
+     */
+    public void updateAnnotationType(final String newType) {
+        this.annotation = newType;
     }
 }
