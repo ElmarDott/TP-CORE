@@ -9,7 +9,7 @@
         <menu ref="parent" />
         <menu name="Resources">
             <item name="JGiven BDD Report" href="jgiven/index.html" target="_blank" />
-            <item name="Cobertura Report" href="cobertura/index.html" target="_blank" />
+            <item name="jaCoCo Report" href="jacoco/index.html" target="_blank" />
             <item name="Clover Report" href="clover/index.html" target="_blank" />
             <item name="Java Doc - API" href="apidocs/index.html" target="_blank" />
             <item name="GitHub Repository" href="https://github.com/ElmarDott/TP-CORE" target="_blank" />
