@@ -86,19 +86,14 @@ public final class LoggingService {
     @FeatureToggle(featureID = "CM-0001.S003")
     public void writeLogConfiguration(final String content, final String file) {
 
-        try {
-            XmlTools xmlTools = new XmlToolsImpl();
-            xmlTools.parseXmlString(content);
-            LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);
+        XmlTools xmlTools = new XmlToolsImpl();
+        xmlTools.parseXmlString(content);
+        LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);
 
-            if (!xmlTools.isWellFormed()) {
-                LOGGER.log("xml is not wellformed, file can not updated.", LogLevel.WARN);
-            } else {
-                xmlTools.writeXmlToFile(xmlTools.prettyPrintXml(), file);
-            }
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+        if (!xmlTools.isWellFormed()) {
+            LOGGER.log("xml is not wellformed, file can not updated.", LogLevel.WARN);
+        } else {
+            xmlTools.writeXmlToFile(xmlTools.prettyPrintXml(), file);
         }
     }
 }

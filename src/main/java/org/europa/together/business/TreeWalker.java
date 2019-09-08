@@ -144,9 +144,10 @@ public interface TreeWalker {
      * will not be added to the tree.
      *
      * @param node as TreeNode
+     * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    void addNode(TreeNode node);
+    boolean addNode(TreeNode node);
 
     /**
      * Reset al internal data of the TreeWalker.

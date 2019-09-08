@@ -15,24 +15,21 @@ public class FF4jProcessor {
     private static final long serialVersionUID = 13L;
 
     private FF4j toggles = null;
-    private String configFile;
     private String path = Paths.get("").toAbsolutePath().toString();
+    private String configFile = "/src/main/resources"
+            + "/org/europa/together/configuration/FeatureToggles.xml";
 
     /**
      * Constructor.
      */
     public FF4jProcessor() {
-
-        configFile = "/src/main/resources"
-                + "/org/europa/together/configuration/FeatureToggles.xml";
-
         AnnotationProcessingHelper.print("INFO: FeatureToggle PATH: " + this.path);
         AnnotationProcessingHelper.print("INFO: FeatureToggle configuration: " + this.configFile);
     }
 
     /**
      * Process if a feature exist and is activated. If a feature is deactivated
-     * or not exist teh return will ne null.
+     * or not exist the return will ne null.
      *
      * @param featureId as String
      * @return feature as Feature

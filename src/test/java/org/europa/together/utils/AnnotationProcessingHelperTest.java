@@ -1,7 +1,9 @@
 package org.europa.together.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.application.FF4jProcessor;
@@ -80,7 +82,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.mergeConstructorAndMethod());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -96,7 +98,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.mergeConstructorAndMethod());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -113,7 +115,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.mergeMetodsOfOneClass());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -130,7 +132,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.mergeConstructorsOfOneClass());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -147,12 +149,12 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.updateAnnotatedClasses());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
         }
-        assertEquals(3, merged.size());
+        assertEquals(2, merged.size());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.annotatedMethods());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -180,7 +182,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.annotatedConstructors());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -196,7 +198,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.annotatedEnums());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -212,7 +214,7 @@ public class AnnotationProcessingHelperTest {
         set.addAll(this.annotatedClasses());
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        List<AnnotatedClass> merged = helper.mergedAnnotatedElements(set);
+        List<AnnotatedClass> merged = helper.mergeAnnotatedElements(set);
 
         for (AnnotatedClass item : merged) {
             LOGGER.log(item.toString(), LogLevel.DEBUG);
@@ -225,7 +227,7 @@ public class AnnotationProcessingHelperTest {
         LOGGER.log("TEST CASE: failMergeAnnotations", LogLevel.DEBUG);
 
         AnnotationProcessingHelper helper = new AnnotationProcessingHelper();
-        assertEquals(0, helper.mergedAnnotatedElements(new ArrayList()).size());
+        assertEquals(0, helper.mergeAnnotatedElements(new ArrayList<>()).size());
     }
 
     @Test
@@ -245,6 +247,20 @@ public class AnnotationProcessingHelperTest {
 
         assertEquals("H311o W0r1d.\n", test);
         LOGGER.log("out stream restored.", LogLevel.INFO);
+    }
+
+    @Test
+    @Disabled
+    public void testRegExReplaceImport() {
+        LOGGER.log("TEST CASE: regexReplaceImport", LogLevel.DEBUG);
+
+        String file
+                = Paths.get("").toAbsolutePath().toString()
+                + "/target/test-classes/org/europa/together/Class.java";
+        String regex = "///*.*?///*";
+        String content = FileUtils.readFileStream(new File(file));
+
+        assertEquals("", AnnotationProcessingHelper.textProcessor(content, regex));
     }
 
     private List<AnnotatedClass> annotatedClasses() {
@@ -288,7 +304,6 @@ public class AnnotationProcessingHelperTest {
     private List<AnnotatedClass> updateAnnotatedClasses() {
         List<AnnotatedClass> set = new ArrayList<>();
 
-        set.add(new AnnotatedClass(AnnotatedClass.ENUM, "org.sample.test", "Enum", null));
         set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test", "Class", null));
         set.add(new AnnotatedClass(AnnotatedClass.CLASS, "org.sample.test.sub", "Class", null));
 

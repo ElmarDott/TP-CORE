@@ -109,8 +109,9 @@ public class PdfRendererImpl implements PdfRenderer {
 
     @Override
     public PdfReader removePage(final PdfReader pdf, final int... pages) {
-        PdfReader newPDF = new PdfReader(pdf);
+        PdfReader newPDF = null;
         try {
+            newPDF = new PdfReader(pdf);
             int pagesTotal = newPDF.getNumberOfPages();
             List<Integer> allPages = new ArrayList<>(pagesTotal);
             for (int i = 1; i <= pagesTotal; i++) {

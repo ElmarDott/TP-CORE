@@ -34,7 +34,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
     private static final long serialVersionUID = 8L;
     private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImpl.class);
 
-    private static final int TIMEOUT = 2000;
+    private static final int TIMEOUT = 1000;
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnection = null;
     private Statement statement = null;
@@ -85,19 +85,16 @@ public class DatabaseActionsImpl implements DatabaseActions {
     @Override
     public boolean connect(final String propertyFile) {
 
-        boolean connected = false;
+        boolean connected = true;
         try {
             if (jdbcConnection == null) {
                 fetchProperties(propertyFile);
                 establishPooledConnection();
-                if (jdbcConnection != null) {
-                    connected = true;
-                    LOGGER.log("Connection already established.", LogLevel.DEBUG);
-                }
             } else {
-                connected = true;
+                LOGGER.log("Connection already established.", LogLevel.DEBUG);
             }
         } catch (Exception ex) {
+            connected = false;
             LOGGER.catchException(ex);
         }
         return connected;

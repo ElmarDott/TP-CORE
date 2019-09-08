@@ -131,7 +131,7 @@ public class AnnotatedClass {
      * when cunstructor and method elements exists and the collection item has
      * the type of method. then it needed to change to a new type constructor.
      *
-     * @param newType
+     * @param newType as String
      */
     public void updateAnnotationType(final String newType) {
         this.annotation = newType;

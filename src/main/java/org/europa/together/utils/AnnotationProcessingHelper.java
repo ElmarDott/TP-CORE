@@ -9,9 +9,9 @@ import org.europa.together.domain.AnnotatedClass;
  * During the processing of annotations some simple functions are needed, wich
  * implemented for reuse in this class.
  *
- * Processing Annotations have achive several challenges. As first, everythin is
- * releated to annotation processing need to be compiled befor the code
- * manipulation is started. For that reason, tools like logges or template
+ * Processing Annotations have achive several challenges. As first, everything
+ * is related to annotation processing need to be compiled before the code
+ * manipulation is started. For that reason, tools like loggers or template
  * engine are just present, when this library is used as annotation processor,
  * not for it's functionality inside. This circumstances are reasons why we have
  * a explicit print method instead of the Logger.
@@ -82,7 +82,7 @@ public class AnnotationProcessingHelper {
      * @param collection as List
      * @return annotatedElements as List
      */
-    public List<AnnotatedClass> mergedAnnotatedElements(final List<AnnotatedClass> collection) {
+    public List<AnnotatedClass> mergeAnnotatedElements(final List<AnnotatedClass> collection) {
 
         if (!collection.isEmpty()) {
             //collect Clazz & Enum
@@ -101,7 +101,8 @@ public class AnnotationProcessingHelper {
 
                     if (!secondRound.isEmpty()) {
                         // add merge methods
-                        this.mergeMethods(secondRound);
+                        annotations.addAll(
+                                this.mergeDuplications(secondRound));
                     }
                 }
             }
@@ -118,7 +119,27 @@ public class AnnotationProcessingHelper {
         System.out.println(message);
     }
 
-    private void mergeMethods(final List<AnnotatedClass> collection) {
+    /**
+     * Process the content of a java class file and replace implementations by
+     * RegEx.
+     *
+     * @param source as String
+     * @param regex as String
+     *
+     * @return processedText as String
+     */
+    public static String textProcessor(final String source, final String regex) {
+        String input = StringUtils.shrink(source);
+
+        String imports = "import .*?;";
+        input = input.replaceAll(imports, " ");
+
+        return input.replaceAll(regex, " ");
+    }
+
+    //##########################################################################
+    private List<AnnotatedClass> mergeDuplications(final List<AnnotatedClass> collection) {
+        List<AnnotatedClass> result = new ArrayList<>();
         //copy elements
         List<AnnotatedClass> orgin = new ArrayList<>();
         List<AnnotatedClass> temp = new ArrayList<>();
@@ -142,14 +163,17 @@ public class AnnotationProcessingHelper {
                     temp.remove(del);
                 }
             }
-            annotations.add(element);
+            result.add(element);
             if (temp.isEmpty()) {
                 break;
             }
         }
+        return result;
     }
 
-    private List<AnnotatedClass> mergeMethodsAndConstructors(final List<AnnotatedClass> collection) {
+    private List<AnnotatedClass> mergeMethodsAndConstructors(
+            final List<AnnotatedClass> collection) {
+
         List<AnnotatedClass> temp = new ArrayList<>();
 
         //split constructors & methods

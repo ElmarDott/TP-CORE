@@ -88,6 +88,21 @@ public class PdfRendererImplTest {
     }
 
     @Test
+    void testReadPdf() {
+        LOGGER.log("TEST CASE: readPdf", LogLevel.DEBUG);
+
+        File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
+        PdfReader document = pdf.readDocument(file);
+        assertEquals(5, document.getNumberOfPages());
+    }
+
+    @Test
+    void testFailReadPdf() {
+        LOGGER.log("TEST CASE: failReadPdf", LogLevel.DEBUG);
+        assertNull(pdf.readDocument(null));
+    }
+
+    @Test
     void testFailRenderHtmlToPdf() {
         LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
 
@@ -101,12 +116,21 @@ public class PdfRendererImplTest {
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
         PdfReader document = pdf.readDocument(file);
-        assertNotNull(document);
 
         String out = DIRECTORY + FILE_PATH + "/copy.pdf";
         pdf.writeDocument(document, out);
 
         assertEquals(true, new File(out).exists());
+    }
+
+    @Test
+    void testFailWritePdf() {
+        LOGGER.log("TEST CASE: failWritePdf", LogLevel.DEBUG);
+
+        String out = DIRECTORY + FILE_PATH + "/fail.pdf";
+        pdf.writeDocument(null, out);
+
+        assertNull(pdf.readDocument(new File(out)));
     }
 
     @Test
@@ -134,5 +158,11 @@ public class PdfRendererImplTest {
         pdf.writeDocument(reduced, out);
 
         assertEquals(2, reduced.getNumberOfPages());
+    }
+
+    @Test
+    void testFailRemovePages() {
+        LOGGER.log("TEST CASE: failRemovePages", LogLevel.DEBUG);
+        assertNull(pdf.removePage(null, 1));
     }
 }

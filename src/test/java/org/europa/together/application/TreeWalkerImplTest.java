@@ -82,8 +82,28 @@ public class TreeWalkerImplTest {
         root.setNodeName("ROOT");
         TreeWalker walker = new TreeWalkerImpl(root);
 
+        assertEquals("ROOT", walker.getRoot().getNodeName());
+    }
+
+    @Test
+    void testFailAddRootTwice() {
+        LOGGER.log("TEST CASE: failAddRoot()", LogLevel.DEBUG);
+
+        TreeNode root = new TreeNode();
+        root.setNodeName("ROOT");
+        TreeWalker walker = new TreeWalkerImpl(root);
+
         assertFalse(walker.addRoot(root));
-        //new UUID && new name
+    }
+
+    @Test
+    void testFailAddSecondRoot() {
+        LOGGER.log("TEST CASE: failAddRoot()", LogLevel.DEBUG);
+
+        TreeNode root = new TreeNode();
+        root.setNodeName("ROOT");
+        TreeWalker walker = new TreeWalkerImpl(root);
+
         assertFalse(walker.addRoot(new TreeNode("node")));
     }
 
@@ -96,6 +116,14 @@ public class TreeWalkerImplTest {
 
         assertEquals("Root Node", walker.getRoot().getNodeName());
         assertEquals("-1", walker.getRoot().getParent());
+    }
+
+    @Test
+    void testFailGetRoot() {
+        LOGGER.log("TEST CASE: failGetRoot()", LogLevel.DEBUG);
+
+        TreeWalker walker = new TreeWalkerImpl();
+        assertNull(walker.getRoot());
     }
 
     @Test
@@ -112,6 +140,41 @@ public class TreeWalkerImplTest {
 
         buildTree();
         assertEquals(12, treeWalker.countNodes());
+    }
+
+    @Test
+    void testFailAddNodeOfNameAndParent() {
+        LOGGER.log("TEST CASE: failAddNodeOfNameAndParent()", LogLevel.DEBUG);
+
+        buildTree();
+        int count = treeWalker.countNodes();
+
+        TreeNode node = new TreeNode("01");
+        node.setParent(treeWalker.getRoot().getUuid());
+
+        LOGGER.log("CHK: " + treeWalker.getElementByName("01").get(0).toString(), LogLevel.DEBUG);
+        LOGGER.log("ADD: " + node.toString(), LogLevel.DEBUG);
+
+        assertFalse(treeWalker.addNode(node));
+        assertEquals(count, treeWalker.countNodes());
+    }
+
+    @Test
+    void testFailAddNodeOfSameUuid() {
+        LOGGER.log("TEST CASE: failAddNodeOfSameUuid()", LogLevel.DEBUG);
+
+        buildTree();
+        int count = treeWalker.countNodes();
+
+        TreeNode node = treeWalker.getElementByName("05").get(0);
+        TreeNode copy = node.copy(node);
+        copy.setNodeName("changed");
+
+        LOGGER.log("CHK: " + treeWalker.getElementByName("05").get(0).toString(), LogLevel.DEBUG);
+        LOGGER.log("ADD: " + node.toString(), LogLevel.DEBUG);
+
+        assertFalse(treeWalker.addNode(copy));
+        assertEquals(count, treeWalker.countNodes());
     }
 
     @Test
@@ -248,6 +311,22 @@ public class TreeWalkerImplTest {
     }
 
     @Test
+    void testGetElementByNameNotExist() {
+        LOGGER.log("TEST CASE: getElementsByNameNotExist()", LogLevel.DEBUG);
+
+        buildTree();
+        assertTrue(treeWalker.getElementByName("foo").isEmpty());
+    }
+
+    @Test
+    void testGetElementByNameInEmptyTree() {
+        LOGGER.log("TEST CASE: getElementsByNameInEmptyTree()", LogLevel.DEBUG);
+
+        TreeWalker emptyTree = new TreeWalkerImpl();
+        assertTrue(emptyTree.getElementByName("foo").isEmpty());
+    }
+
+    @Test
     void testPrune() {
         LOGGER.log("TEST CASE: prune()", LogLevel.DEBUG);
 
@@ -260,6 +339,27 @@ public class TreeWalkerImplTest {
         treeWalker.prune(treeWalker.getElementByName("10").get(0));
         assertEquals(7, treeWalker.countNodes());
         LOGGER.log("\n" + treeWalker.toString(), LogLevel.TRACE);
+    }
+
+    @Test
+    void testPruneRoot() {
+        LOGGER.log("TEST CASE: pruneRoot()", LogLevel.DEBUG);
+
+        buildTree();
+        treeWalker.prune(treeWalker.getRoot());
+
+        assertEquals(0, treeWalker.countNodes());
+    }
+
+    @Test
+    void testFailPrune() throws Exception {
+        LOGGER.log("TEST CASE: failPrune()", LogLevel.DEBUG);
+
+        buildTree();
+
+        assertThrows(Exception.class, () -> {
+            treeWalker.prune(null);
+        });
     }
 
     @Test

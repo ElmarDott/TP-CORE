@@ -200,11 +200,11 @@ public class PropertyReaderImplTest {
         assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(Float.valueOf(0), propertyReader.getPropertyAsFloat("test.type.float.01"));
         assertEquals(Float.valueOf(0), propertyReader.getPropertyAsFloat("test.type.float.02"));
-        assertEquals(new Float(-1.123), propertyReader.getPropertyAsFloat("test.type.float.03"));
-        assertEquals(new Float(345.21), propertyReader.getPropertyAsFloat("test.type.float.04"));
-        assertEquals(new Float(13E12), propertyReader.getPropertyAsFloat("test.type.float.05"));
-        assertEquals(new Float(-8E5), propertyReader.getPropertyAsFloat("test.type.float.06"));
-        assertEquals(new Float(-8.012E7), propertyReader.getPropertyAsFloat("test.type.float.07"));
+        assertEquals(Float.valueOf("-1.123"), propertyReader.getPropertyAsFloat("test.type.float.03"));
+        assertEquals(Float.valueOf("345.21"), propertyReader.getPropertyAsFloat("test.type.float.04"));
+        assertEquals(Float.valueOf("13E12"), propertyReader.getPropertyAsFloat("test.type.float.05"));
+        assertEquals(Float.valueOf("-8E5"), propertyReader.getPropertyAsFloat("test.type.float.06"));
+        assertEquals(Float.valueOf("-8.012E7"), propertyReader.getPropertyAsFloat("test.type.float.07"));
         assertNull(propertyReader.getPropertyAsFloat("float"));
     }
 

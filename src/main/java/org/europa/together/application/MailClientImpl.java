@@ -120,7 +120,7 @@ public class MailClientImpl implements MailClient {
         }
     }
 
-    @Override
+    @Override //TODO: depecated in 2.0 no test & usage
     public void reconnect() {
         this.connect();
     }

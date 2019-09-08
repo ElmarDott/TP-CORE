@@ -85,6 +85,29 @@ public class ConfigurationDOTest {
     }
 
     @Test
+    void testHasValidGetter() {
+        LOGGER.log("TEST CASE: hasValidGetter()", LogLevel.DEBUG);
+
+        ConfigurationDO domainObject = new ConfigurationDO();
+        domainObject.setComment("comment");
+        domainObject.setConfigurationSet(configSet);
+        domainObject.setDefaultValue(defaultValue);
+        domainObject.setKey(key);
+        domainObject.setModulName(modulName);
+        domainObject.setValue(value);
+        domainObject.setVersion(version);
+
+        assertEquals("comment", domainObject.getComment());
+        assertEquals(configSet, domainObject.getConfigurationSet());
+        assertEquals(defaultValue, domainObject.getDefaultValue());
+        assertEquals(key, domainObject.getKey());
+        assertEquals(modulName, domainObject.getModulName());
+        assertNotNull(domainObject.getUuid());
+        assertEquals(value, domainObject.getValue());
+        assertEquals(version, domainObject.getVersion());
+    }
+
+    @Test
     void testCreateDomainObjectBySetter() {
         LOGGER.log("TEST CASE: createDomainObjectBySetter()", LogLevel.DEBUG);
 

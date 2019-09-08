@@ -144,11 +144,12 @@ public final class TreeWalkerImpl implements TreeWalker {
                     elements.add(node);
                 }
             }
+
+            if (elements.isEmpty()) {
+                LOGGER.log("No Node(s) with the name " + nodeName + " found.", LogLevel.DEBUG);
+            }
         } else {
             LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
-        }
-        if (elements.isEmpty()) {
-            LOGGER.log("No Node(s) with the name " + nodeName + " found.", LogLevel.DEBUG);
         }
         return elements;
     }
@@ -204,33 +205,31 @@ public final class TreeWalkerImpl implements TreeWalker {
     }
 
     @Override
-    public void addNode(final TreeNode node) {
-        boolean add = false;
+    public boolean addNode(final TreeNode node) {
+        boolean add = true;
         if (!this.tree.isEmpty()
-                && node != null
-                && !node.getUuid().equals(this.rootUuid)) {
+                && node != null) {
 
             for (TreeNode check : this.tree) {
 
-                if (!node.getUuid().equals(check.getUuid())
-                        || !node.getParent().equals(check.getParent())
-                        && !node.getNodeName().equals(check.getNodeName())) {
+                if (node.getUuid().equals(check.getUuid())
+                        || node.getParent().equals(check.getParent())
+                        && node.getNodeName().equals(check.getNodeName())) {
 
-                    add = true;
-                    LOGGER.log("Node [" + node.getNodeName() + "] added.",
-                            LogLevel.DEBUG);
-                    break;
-
-                } else {
-                    LOGGER.log("Node with the same name and parent or the same UUID already exist.",
+                    LOGGER.log("Node with same name AND parent OR the same UUID already exist.",
                             LogLevel.WARN);
+                    add = false;
+                    break;
                 }
             }
 
             if (add) {
                 tree.add(node);
+                LOGGER.log("Node [" + node.getNodeName() + "] added.",
+                        LogLevel.DEBUG);
             }
         }
+        return add;
     }
 
     @Override
@@ -242,70 +241,66 @@ public final class TreeWalkerImpl implements TreeWalker {
 
     @Override
     public void prune(final TreeNode cutNode) {
-        try {
-            List<TreeNode> stack = new ArrayList<>();
-            LOGGER.log("Cut Tree by Node "
-                    + cutNode.getNodeName() + " ["
-                    + cutNode.getUuid() + "]", LogLevel.DEBUG);
+        List<TreeNode> stack = new ArrayList<>();
+        LOGGER.log("Cut Tree by Node "
+                + cutNode.getNodeName() + " ["
+                + cutNode.getUuid() + "]", LogLevel.DEBUG);
 
-            stack.addAll(tree);
-            if (cutNode.equals(getRoot())) {
-                clear();
-            } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
-                removeNode(cutNode);
-            } else {
+        stack.addAll(tree);
+        if (cutNode.equals(getRoot())) {
+            clear();
+        } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
+            removeNode(cutNode);
+        } else {
 
-                TreeNode node = cutNode;
-                List<TreeNode> cutted = new ArrayList<>();
-                List<TreeNode> helper = new ArrayList<>();
-                cutted.add(node);
+            TreeNode node = cutNode;
+            List<TreeNode> cutted = new ArrayList<>();
+            List<TreeNode> helper = new ArrayList<>();
+            cutted.add(node);
 
-                int loop = this.tree.size();
-                for (int i = 0; i < loop; i++) {
+            int loop = this.tree.size();
+            for (int i = 0; i < loop; i++) {
 
-                    if (!stack.isEmpty()) {
-                        for (TreeNode compare : stack) {
-                            if (i != 0) {
-                                node = compare;
-                            }
-                            for (int j = 0; j < tree.size(); j++) {
-                                if (node.getUuid().equals(compare.getUuid())) {
-                                    cutted.add(compare);
-                                    if (!isLeaf(compare)) {
-                                        helper.add(compare);
-                                    }
-                                    break;
+                if (!stack.isEmpty()) {
+                    for (TreeNode compare : stack) {
+                        if (i != 0) {
+                            node = compare;
+                        }
+                        for (int j = 0; j < tree.size(); j++) {
+                            if (node.getUuid().equals(compare.getUuid())) {
+                                cutted.add(compare);
+                                if (!isLeaf(compare)) {
+                                    helper.add(compare);
                                 }
+                                break;
                             }
                         }
                     }
+                }
 
-                    if (!helper.isEmpty()) {
-                        stack.clear();
-                        for (TreeNode compare : helper) {
-                            for (TreeNode element : this.tree) {
-                                if (compare.getUuid().equals(element.getParent())) {
-                                    stack.add(element);
-                                }
+                if (!helper.isEmpty()) {
+                    stack.clear();
+                    for (TreeNode compare : helper) {
+                        for (TreeNode element : this.tree) {
+                            if (compare.getUuid().equals(element.getParent())) {
+                                stack.add(element);
                             }
                         }
-                        cutted.addAll(stack);
-                        helper.clear();
-
-                    } else {
-                        break;
                     }
-                }
+                    cutted.addAll(stack);
+                    helper.clear();
 
-                if (!cutted.isEmpty()) {
-                    for (TreeNode item : cutted) {
-                        this.tree.remove(item);
-                    }
+                } else {
+                    break;
                 }
-
             }
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+
+            if (!cutted.isEmpty()) {
+                for (TreeNode item : cutted) {
+                    this.tree.remove(item);
+                }
+            }
+
         }
     }
 

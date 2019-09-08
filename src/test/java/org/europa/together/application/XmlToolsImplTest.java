@@ -453,7 +453,7 @@ public class XmlToolsImplTest {
         String out = xmlTools.transformXslt(new File(xml), new File(xslt));
 
         LOGGER.log(">>> XSLT; \n " + out, LogLevel.DEBUG);
-        assertEquals(1606, out.length());
+        assertEquals(2718, out.length());
     }
 
     @Test
