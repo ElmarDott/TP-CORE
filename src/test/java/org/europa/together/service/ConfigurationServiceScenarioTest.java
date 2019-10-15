@@ -82,7 +82,7 @@ public class ConfigurationServiceScenarioTest extends
     }
 
     @Test
-    void testResetModuleToDefault() {
+    void scenario_resetModuleToDefault() {
         LOGGER.log("Scenario A: Reset a full module to the default entries.", LogLevel.DEBUG);
 
         try {
@@ -101,7 +101,7 @@ public class ConfigurationServiceScenarioTest extends
     }
 
     @Test
-    void testFilterMandatoryFieldsOfConfigSet() {
+    void scenario_filterMandatoryFieldsOfConfigSet() {
         LOGGER.log("Scenario B: Filter the mandatory fields of a config set.", LogLevel.DEBUG);
 
         try {

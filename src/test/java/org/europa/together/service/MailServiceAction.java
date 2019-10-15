@@ -27,15 +27,6 @@ public class MailServiceAction extends Stage<MailServiceAction> {
 
     private final MailClientService service = new MailClientService();
 
-    public MailServiceAction smpt_server_is_available() {
-        try {
-            assertTrue(SMTP_SERVER.getSmtps().isRunning());
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return self();
-    }
-
     public MailServiceAction send_email(MailClient client) {
         try {
             assertEquals(1, client.getRecipentList().size());

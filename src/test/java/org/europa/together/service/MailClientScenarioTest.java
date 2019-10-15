@@ -155,8 +155,7 @@ public class MailClientScenarioTest extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().smpt_server_is_available()
-                    .and().send_bulk_email(client);
+            when().send_bulk_email(client);
 
             //PostCondition
             then().mass_emails_are_arrived(SMTP_SERVER.getReceivedMessages());
@@ -181,8 +180,7 @@ public class MailClientScenarioTest extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().smpt_server_is_available()
-                    .and().send_email(client);
+            when().send_email(client);
 
             //PostCondition
             then().email_is_arrived(SMTP_SERVER.getReceivedMessages()[0]);

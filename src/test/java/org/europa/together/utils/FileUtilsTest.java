@@ -154,11 +154,17 @@ public class FileUtilsTest {
 
     @Test
     void testFailCopyFile() throws Exception {
+
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(null, new File(""));
         });
+
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(new File(""), null);
+        });
+
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(null, null);
         });
 
         assertThrows(Exception.class, () -> {
