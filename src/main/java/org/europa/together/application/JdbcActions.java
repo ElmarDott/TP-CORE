@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,16 +49,6 @@ public class JdbcActions implements DatabaseActions {
     private String pwd;
     private String uri;
     private String user;
-
-    //DEPECATED
-    private String metaCatalog;
-    private String metaDbmsName;
-    private String metaDbmsVersion;
-    private String metaJdbcDriverName;
-    private String metaJdbcDriverVersion;
-    private String metaJdbcVersion;
-    private String metaUrl;
-    private String metaUser;
 
     /**
      * Constructor.
@@ -239,7 +228,6 @@ public class JdbcActions implements DatabaseActions {
             cpds.setPassword(pwd);
             this.jdbcConnection = cpds.getConnection();
 
-            getMetaData();
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -268,70 +256,4 @@ public class JdbcActions implements DatabaseActions {
 
         driverClass = reader.getPropertyAsString("jdbc.driverClassName");
     }
-
-// -----------------------------------------------------------------------------
-    //DEPECATED for delete
-    private void getMetaData() throws SQLException {
-        metadata = jdbcConnection.getMetaData();
-
-        metaJdbcVersion
-                = metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion();
-        metaJdbcDriverName
-                = metadata.getDriverName();
-        metaJdbcDriverVersion
-                = metadata.getDriverVersion();
-        metaDbmsName
-                = metadata.getDatabaseProductName();
-        metaDbmsVersion
-                = metadata.getDatabaseProductVersion();
-        metaUser
-                = metadata.getUserName();
-        metaUrl
-                = metadata.getURL();
-        metaCatalog
-                = metadata.getConnection().getCatalog();
-    }
-
-    //DEPECATED
-    //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
-    @Override
-    public String getMetaCatalog() {
-        return metaCatalog;
-    }
-
-    @Override
-    public String getMetaDbmsName() {
-        return metaDbmsName;
-    }
-
-    @Override
-    public String getMetaDbmsVersion() {
-        return metaDbmsVersion;
-    }
-
-    @Override
-    public String getMetaJdbcDriverName() {
-        return metaJdbcDriverName;
-    }
-
-    @Override
-    public String getMetaJdbcDriverVersion() {
-        return metaJdbcDriverVersion;
-    }
-
-    @Override
-    public String getMetaJdbcVersion() {
-        return metaJdbcVersion;
-    }
-
-    @Override
-    public String getMetaUrl() {
-        return metaUrl;
-    }
-
-    @Override
-    public String getMetaUser() {
-        return metaUser;
-    }
-    //</editor-fold>
 }

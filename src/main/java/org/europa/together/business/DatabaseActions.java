@@ -2,7 +2,6 @@ package org.europa.together.business;
 
 import java.sql.ResultSet;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JdbcConnection;
 import org.springframework.stereotype.Component;
@@ -97,71 +96,6 @@ public interface DatabaseActions {
      */
     @API(status = STABLE, since = "1.2")
     JdbcConnection getJdbcMetaData();
-
-    /**
-     * Return the name of the connected catalog. Also known as DBMS Schemata or
-     * Database.
-     *
-     * @return catalogNeame as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaCatalog();
-
-    /**
-     * Return the name of the connected Database System.
-     *
-     * @return dbms as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaDbmsName();
-
-    /**
-     * Return the version of the connected DBMS.
-     *
-     * @return dbmsVersion as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaDbmsVersion();
-
-    /**
-     * Return the driver name of the conected DBMS.
-     *
-     * @return driverName as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaJdbcDriverName();
-
-    /**
-     * Return the version of the used database driver.
-     *
-     * @return driverVersion as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaJdbcDriverVersion();
-
-    /**
-     * Return the JDBC Version of the current DBMS driver.
-     *
-     * @return jdbcVersion as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaJdbcVersion();
-
-    /**
-     * Return the connection URL to the DBMS.
-     *
-     * @return as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaUrl();
-
-    /**
-     * Return the current DBMS user.
-     *
-     * @return user as String
-     */
-    @API(status = DEPRECATED, since = "1.1")
-    String getMetaUser();
 
     /**
      * Get the host URL / IP of the configured Database connection.

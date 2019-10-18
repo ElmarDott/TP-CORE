@@ -80,21 +80,6 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void testGetter() {//DEPECATED
-        LOGGER.log("TEST CASE: getter()", LogLevel.DEBUG);
-
-        DatabaseActions dbms = new JdbcActions();
-        assertEquals(null, dbms.getMetaCatalog());
-        assertEquals(null, dbms.getMetaDbmsName());
-        assertEquals(null, dbms.getMetaDbmsVersion());
-        assertEquals(null, dbms.getMetaJdbcDriverName());
-        assertEquals(null, dbms.getMetaJdbcDriverVersion());
-        assertEquals(null, dbms.getMetaJdbcVersion());
-        assertEquals(null, dbms.getMetaUrl());
-        assertEquals(null, dbms.getMetaUser());
-    }
-
-    @Test
     void testGetPort() {
         LOGGER.log("TEST CASE: getPort()", LogLevel.DEBUG);
 
