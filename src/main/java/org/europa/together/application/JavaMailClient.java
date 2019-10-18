@@ -120,11 +120,6 @@ public class JavaMailClient implements MailClient {
         }
     }
 
-    @Override //TODO: depecated in 2.0 no test & usage
-    public void reconnect() {
-        this.connect();
-    }
-
     @Override
     public void setAttachmentSize(final long attachmentSize) {
         this.attachmentSize = attachmentSize;

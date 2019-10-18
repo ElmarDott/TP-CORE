@@ -7,7 +7,6 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
@@ -80,17 +79,6 @@ public interface MailClient {
      */
     @API(status = STABLE, since = "1.1")
     void populateConfiguration();
-
-    /**
-     * Allow a re-connection to the configured SMTP Server.
-     * <br/>
-     * Will be removed, because of missing testability & no usage.
-     *
-     * @deprecated in Version 2.0
-     */
-    @API(status = DEPRECATED, since = "1.0")
-    @Deprecated
-    void reconnect();
 
     /**
      * Limit the maximum file size for attachments.
