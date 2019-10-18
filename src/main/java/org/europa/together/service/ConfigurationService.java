@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 public final class ConfigurationService {
 
     private static final long serialVersionUID = 205L;
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationService.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationService.class);
 
     @Autowired
     @Qualifier("configurationDAOImpl")

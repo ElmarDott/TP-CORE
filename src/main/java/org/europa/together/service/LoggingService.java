@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.XmlToolsImpl;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.application.SaxTools;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.XmlTools;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @FeatureToggle(featureID = Logger.FEATURE_ID)
 public final class LoggingService {
 
-    private static final Logger LOGGER = new LoggerImpl(LoggingService.class);
+    private static final Logger LOGGER = new LogbackLogger(LoggingService.class);
 
     /**
      * Constructor.
@@ -86,7 +86,7 @@ public final class LoggingService {
     @FeatureToggle(featureID = "CM-0001.S003")
     public void writeLogConfiguration(final String content, final String file) {
 
-        XmlTools xmlTools = new XmlToolsImpl();
+        XmlTools xmlTools = new SaxTools();
         xmlTools.parseXmlString(content);
         LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);
 

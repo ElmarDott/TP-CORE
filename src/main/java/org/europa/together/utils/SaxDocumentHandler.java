@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -22,7 +22,7 @@ import org.xml.sax.ext.DefaultHandler2;
 @FeatureToggle(featureID = "CM-0010.H01")
 public class SaxDocumentHandler extends DefaultHandler2 {
 
-    private static final Logger LOGGER = new LoggerImpl(SaxDocumentHandler.class);
+    private static final Logger LOGGER = new LogbackLogger(SaxDocumentHandler.class);
 
     private StringBuilder formattedXml
             = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");

@@ -1,7 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ConfigurationServiceAction extends Stage<ConfigurationServiceAction> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceAction.class);
+            = new LogbackLogger(ConfigurationServiceAction.class);
 
     @Autowired
     @Qualifier("configurationDAOImpl")

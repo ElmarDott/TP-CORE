@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.europa.together.application.DatabaseActionsImpl;
+import org.europa.together.application.JdbcActions;
 import org.europa.together.application.FF4jProcessor;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.MailClientImpl;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.application.JavaMailClient;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -36,18 +36,18 @@ public class MailClientScenarioTest extends
         ScenarioTest<MailServiceGiven, MailServiceAction, MailServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(MailClientScenarioTest.class);
+            = new LogbackLogger(MailClientScenarioTest.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
 
-    public static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    public static DatabaseActions CONNECTION = new JdbcActions(true);
     public static GreenMail SMTP_SERVER = null;
     private MailClient client = null;
 
     public MailClientScenarioTest() {
-        client = new MailClientImpl();
+        client = new JavaMailClient();
         //COMPOSE MAIL
         client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
         client.setSubject("JGiven Test E-Mail");

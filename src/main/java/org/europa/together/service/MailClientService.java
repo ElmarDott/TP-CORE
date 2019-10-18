@@ -9,8 +9,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.MailClientImpl;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.application.JavaMailClient;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
@@ -37,7 +37,7 @@ import org.springframework.stereotype.Service;
 public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
-    private static final Logger LOGGER = new LoggerImpl(MailClientService.class);
+    private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
 
     @Autowired
     @Qualifier("configurationDAOImpl")
@@ -172,7 +172,7 @@ public final class MailClientService {
     @FeatureToggle(featureID = "CM-0006.S004")
     public Map<String, String> getDbConfiguration() {
 
-        MailClient client = new MailClientImpl();
+        MailClient client = new JavaMailClient();
         client.loadConfigurationFromDatabase();
         return client.getConfiguration();
     }

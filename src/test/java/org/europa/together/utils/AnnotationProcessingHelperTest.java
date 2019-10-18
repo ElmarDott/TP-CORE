@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.application.FF4jProcessor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.AnnotatedClass;
 import org.europa.together.domain.LogLevel;
@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class AnnotationProcessingHelperTest {
 
-    private static final Logger LOGGER = new LoggerImpl(AnnotationProcessingHelperTest.class);
+    private static final Logger LOGGER = new LogbackLogger(AnnotationProcessingHelperTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

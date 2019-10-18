@@ -30,10 +30,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class XmlToolsImpl implements XmlTools {
+public class SaxTools implements XmlTools {
 
     private static final long serialVersionUID = 10L;
-    private static final Logger LOGGER = new LoggerImpl(XmlToolsImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(SaxTools.class);
 
     private File schemaFile = null;
     private String prettyPrint = null;
@@ -47,7 +47,7 @@ public class XmlToolsImpl implements XmlTools {
     /**
      * Constructor.
      */
-    public XmlToolsImpl() {
+    public SaxTools() {
         this.parserFactory = SAXParserFactory.newInstance();
         LOGGER.log("instance class", LogLevel.INFO);
     }

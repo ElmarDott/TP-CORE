@@ -1,7 +1,7 @@
 package org.europa.together.domain;
 
 import java.util.Objects;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
@@ -15,7 +15,7 @@ import org.europa.together.utils.StringUtils;
 @FeatureToggle(featureID = "CM-0009.DO")
 public final class TreeNode {
 
-    private static final Logger LOGGER = new LoggerImpl(TreeNode.class);
+    private static final Logger LOGGER = new LogbackLogger(TreeNode.class);
 
     private static final int HASH = 97;
 

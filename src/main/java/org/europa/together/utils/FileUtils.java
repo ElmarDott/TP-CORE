@@ -16,7 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
@@ -26,7 +26,7 @@ import org.europa.together.domain.LogLevel;
  */
 public final class FileUtils {
 
-    private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(FileUtils.class);
     private static final Charset CHARSET = Charset.forName("UTF-8");
     private static final int BYTES = 1024;
 

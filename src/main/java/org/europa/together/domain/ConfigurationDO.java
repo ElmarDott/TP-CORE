@@ -10,7 +10,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
@@ -38,7 +38,7 @@ import org.europa.together.utils.StringUtils;
 public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 102L;
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDO.class);
 
     /**
      * The name of the used database table for this domain object.

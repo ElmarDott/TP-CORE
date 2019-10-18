@@ -41,13 +41,13 @@ public class MailClientImplTest {
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
 
-    private static final Logger LOGGER = new LoggerImpl(MailClientImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(MailClientImplTest.class);
 
     @Autowired
     @Qualifier("mailClientImpl")
     private MailClient mailer;
 
-    private static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    private static DatabaseActions CONNECTION = new JdbcActions(true);
     private static GreenMail SMTP_SERVER;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
@@ -110,14 +110,14 @@ public class MailClientImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(MailClientImpl.class, hasValidBeanConstructor());
+        assertThat(JavaMailClient.class, hasValidBeanConstructor());
     }
 
     @Test
     void testInitialConfiguration() {
         LOGGER.log("TEST CASE: initialConfiguration", LogLevel.DEBUG);
 
-        MailClient client = new MailClientImpl();
+        MailClient client = new JavaMailClient();
         assertEquals(-1, client.getBulkMailLimiter());
         assertEquals(-1, client.getWaitTime());
         assertEquals(10, client.getConfiguration().size());

@@ -2,9 +2,9 @@ package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.lang.reflect.Constructor;
-import org.europa.together.application.DatabaseActionsImpl;
+import org.europa.together.application.JdbcActions;
 import org.europa.together.application.FF4jProcessor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -23,8 +23,8 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class JdbcConnectionTest {
 
-    private static final Logger LOGGER = new LoggerImpl(JdbcConnectionTest.class);
-    private static DatabaseActions actions = new DatabaseActionsImpl(true);
+    private static final Logger LOGGER = new LogbackLogger(JdbcConnectionTest.class);
+    private static DatabaseActions actions = new JdbcActions(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -82,7 +82,7 @@ public class JdbcConnectionTest {
         LOGGER.log("TEST CASE: getJdbcMetaData()", LogLevel.DEBUG);
 
         try {
-            DatabaseActions actions = new DatabaseActionsImpl(true);
+            DatabaseActions actions = new JdbcActions(true);
             actions.connect("default");
             JdbcConnection metaData = actions.getJdbcMetaData();
 

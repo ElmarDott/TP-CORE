@@ -25,17 +25,17 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class PropertyReaderImpl implements PropertyReader {
+public class PropertyFileReader implements PropertyReader {
 
     private static final long serialVersionUID = 4L;
-    private static final Logger LOGGER = new LoggerImpl(PropertyReaderImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(PropertyFileReader.class);
 
     private Map<String, String> propertyList = new HashMap<>();
 
     /**
      * Constructor.
      */
-    public PropertyReaderImpl() {
+    public PropertyFileReader() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
 

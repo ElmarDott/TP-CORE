@@ -29,10 +29,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class QrCodeGeneratorImpl implements QrCodeGenerator {
+public class ZxingGenerator implements QrCodeGenerator {
 
     private static final long serialVersionUID = 7L;
-    private static final Logger LOGGER = new LoggerImpl(PropertyReaderImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(PropertyFileReader.class);
 
     private static final int SUBSTRING = 8;
 
@@ -45,7 +45,7 @@ public class QrCodeGeneratorImpl implements QrCodeGenerator {
     /**
      * Constructor.
      */
-    public QrCodeGeneratorImpl() {
+    public ZxingGenerator() {
         errorMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         charset = "UTF-8";
         LOGGER.log("instance class", LogLevel.INFO);

@@ -29,7 +29,7 @@ public class QrCodeGeneratorImplTest {
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LoggerImpl(QrCodeGeneratorImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(QrCodeGeneratorImplTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -73,7 +73,7 @@ public class QrCodeGeneratorImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(QrCodeGeneratorImpl.class, hasValidBeanConstructor());
+        assertThat(ZxingGenerator.class, hasValidBeanConstructor());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class QrCodeGeneratorImplTest {
         LOGGER.log("TEST CASE: qrCodeGenerator()", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "QrCode-0000.png";
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
         generator.encode("Test CODE.");
 
@@ -92,7 +92,7 @@ public class QrCodeGeneratorImplTest {
     void testFailEncode() {
         LOGGER.log("TEST CASE: failEncode()", LogLevel.DEBUG);
 
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup("/fail.png", 100);
 
         assertFalse(generator.encode(generator.generateDataForvCard(null)));
@@ -102,7 +102,7 @@ public class QrCodeGeneratorImplTest {
     void testFailDecode() {
         LOGGER.log("TEST CASE: failDecode()", LogLevel.DEBUG);
 
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         assertNull(generator.decode(null));
     }
 
@@ -135,7 +135,7 @@ public class QrCodeGeneratorImplTest {
         vCard.put("homepage", "http://www.sample.org");
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "300_vCard.png";
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 300);
         assertTrue(generator.encode(generator.generateDataForvCard(vCard)));
     }
@@ -144,7 +144,7 @@ public class QrCodeGeneratorImplTest {
     void testEmptyVCard() {
         LOGGER.log("TEST CASE: emptyVCard()", LogLevel.DEBUG);
 
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         assertNull(generator.generateDataForvCard(new HashMap<>()));
         assertNull(generator.generateDataForvCard(null));
     }
@@ -154,7 +154,7 @@ public class QrCodeGeneratorImplTest {
         LOGGER.log("TEST CASE: geoInfo()", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_geoInfo.png";
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
         assertTrue(generator.encode(
                 generator.generateDataForGeoLocation("40.71872", "-73.98905")));
@@ -165,7 +165,7 @@ public class QrCodeGeneratorImplTest {
         LOGGER.log("TEST CASE: url()", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_url.png";
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
         assertTrue(generator.encode(
                 generator.generateDataForUrl("http://www.sample.org")));
@@ -176,7 +176,7 @@ public class QrCodeGeneratorImplTest {
         LOGGER.log("TEST CASE: caledar()", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_event.png";
-        QrCodeGenerator generator = new QrCodeGeneratorImpl();
+        QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
         assertTrue(generator.encode(
                 generator.generateDataForCalenderEvent("Appointment",

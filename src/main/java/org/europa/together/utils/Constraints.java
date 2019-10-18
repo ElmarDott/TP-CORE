@@ -1,8 +1,8 @@
 package org.europa.together.utils;
 
 import java.nio.file.Paths;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.PropertyReaderImpl;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.application.PropertyFileReader;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
@@ -12,8 +12,8 @@ import org.europa.together.domain.LogLevel;
  */
 public final class Constraints {
 
-    private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
-    private static final PropertyReader PROPERTY_READER = new PropertyReaderImpl();
+    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
+    private static final PropertyReader PROPERTY_READER = new PropertyFileReader();
 
     /**
      * Constructor.

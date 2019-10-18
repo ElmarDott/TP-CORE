@@ -4,7 +4,7 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.io.File;
 import org.europa.together.application.FF4jProcessor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
@@ -24,7 +24,7 @@ public class LoggingServiceScenarioTest extends
         ScenarioTest<LoggingServiceGiven, LoggingServiceAction, LoggingServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceScenarioTest.class);
+            = new LogbackLogger(ConfigurationServiceScenarioTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

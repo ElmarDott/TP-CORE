@@ -25,9 +25,9 @@ public class ImageProcessorImplTest {
 
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/org/europa/together/images/";
-    private static final Logger LOGGER = new LoggerImpl(ImageProcessorImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ImageProcessorImplTest.class);
 
-    private ImageProcessor processor = new ImageProcessorImpl();
+    private ImageProcessor processor = new ImgSclrProcessor();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -72,7 +72,7 @@ public class ImageProcessorImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(ImageProcessorImpl.class, hasValidBeanConstructor());
+        assertThat(ImgSclrProcessor.class, hasValidBeanConstructor());
     }
 
     @Test

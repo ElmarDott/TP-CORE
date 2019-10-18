@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
@@ -18,7 +18,7 @@ public final class StringUtils {
     private static final int LIMIT = 2100;
     private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
 
     /**
      * Constructor.

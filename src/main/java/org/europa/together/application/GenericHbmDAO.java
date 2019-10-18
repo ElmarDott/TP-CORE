@@ -28,11 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 @FeatureToggle(featureID = FEATURE_ID)
-public abstract class GenericDAOImpl<T, PK extends Serializable>
+public abstract class GenericHbmDAO<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 
     private static final long serialVersionUID = 2L;
-    private static final Logger LOGGER = new LoggerImpl(GenericDAOImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(GenericHbmDAO.class);
 
     /**
      * JPA Entity Manager for Transactions.
@@ -46,7 +46,7 @@ public abstract class GenericDAOImpl<T, PK extends Serializable>
     /**
      * Constructor.
      */
-    public GenericDAOImpl() {
+    public GenericHbmDAO() {
         this.genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
         LOGGER.log("instance class", LogLevel.INFO);

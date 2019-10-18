@@ -25,8 +25,8 @@ public class DatabaseActionsImplTest {
             = "CREATE TABLE IF NOT EXISTS test (column_01 int, column_02 char(255));";
     private final String sql_drop = "DROP TABLE IF EXISTS test;";
 
-    private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImplTest.class);
-    private static final DatabaseActions actions = new DatabaseActionsImpl(true);
+    private static final Logger LOGGER = new LogbackLogger(DatabaseActionsImplTest.class);
+    private static final DatabaseActions actions = new JdbcActions(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -76,14 +76,14 @@ public class DatabaseActionsImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(DatabaseActionsImpl.class, hasValidBeanConstructor());
+        assertThat(JdbcActions.class, hasValidBeanConstructor());
     }
 
     @Test
     void testGetter() {//DEPECATED
         LOGGER.log("TEST CASE: getter()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertEquals(null, dbms.getMetaCatalog());
         assertEquals(null, dbms.getMetaDbmsName());
         assertEquals(null, dbms.getMetaDbmsVersion());
@@ -98,7 +98,7 @@ public class DatabaseActionsImplTest {
     void testGetPort() {
         LOGGER.log("TEST CASE: getPort()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertEquals(0, dbms.getPort());
     }
 
@@ -106,14 +106,14 @@ public class DatabaseActionsImplTest {
     void testGetUri() {
         LOGGER.log("TEST CASE: getUri()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertEquals(null, dbms.getUri());
     }
 
     @Test
     void testConnection() {
         LOGGER.log("TEST CASE: connection()", LogLevel.DEBUG);
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertTrue(dbms.connect("default"));
     }
 
@@ -121,7 +121,7 @@ public class DatabaseActionsImplTest {
     void testFailedConnection() {
         LOGGER.log("TEST CASE: faildConnection()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertFalse(dbms.connect(Constraints.SYSTEM_APP_DIR
                 + "/target/test-classes/"
                 + "org/europa/together/properties/jdbc-test-fail.properties"));
@@ -131,7 +131,7 @@ public class DatabaseActionsImplTest {
     void testFallbackLoadProperties() {
         LOGGER.log("TEST CASE: fallbackLoadProperties()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         assertTrue(dbms.connect(null));
     }
 
@@ -153,7 +153,7 @@ public class DatabaseActionsImplTest {
     void testFailExecuteQuery() {
         LOGGER.log("TEST CASE: failExecuteQuery()", LogLevel.DEBUG);
 
-        DatabaseActions dbms = new DatabaseActionsImpl();
+        DatabaseActions dbms = new JdbcActions();
         dbms.connect(Constraints.SYSTEM_APP_DIR
                 + "/target/test-classes/"
                 + "org/europa/together/properties/jdbc-test-fail.properties");

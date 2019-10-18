@@ -2,7 +2,7 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import java.util.Map;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import static org.europa.together.service.MailClientScenarioTest.SMTP_SERVER;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class MailServiceAction extends Stage<MailServiceAction> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(MailServiceAction.class);
+            = new LogbackLogger(MailServiceAction.class);
 
     private final MailClientService service = new MailClientService();
 

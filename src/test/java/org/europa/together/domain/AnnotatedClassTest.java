@@ -2,7 +2,7 @@ package org.europa.together.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.junit.Before;
 import static org.junit.Assert.*;
@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class AnnotatedClassTest {
 
-    private static final Logger LOGGER = new LoggerImpl(AnnotatedClassTest.class);
+    private static final Logger LOGGER = new LogbackLogger(AnnotatedClassTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

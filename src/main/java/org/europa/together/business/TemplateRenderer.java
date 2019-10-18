@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @API(status = STABLE, since = "1.0")
 @Component
-public interface VelocityRenderer {
+public interface TemplateRenderer {
 
     /**
      * Identifier for the given feature to enable toggles.

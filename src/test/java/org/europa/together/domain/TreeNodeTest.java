@@ -1,7 +1,7 @@
 package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class TreeNodeTest {
 
-    private static final Logger LOGGER = new LoggerImpl(TreeNodeTest.class);
+    private static final Logger LOGGER = new LogbackLogger(TreeNodeTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

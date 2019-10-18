@@ -1,7 +1,7 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class JavaCryptoToolsTest {
 
-    private static final Logger LOGGER = new LoggerImpl(JavaCryptoToolsTest.class);
+    private static final Logger LOGGER = new LogbackLogger(JavaCryptoToolsTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

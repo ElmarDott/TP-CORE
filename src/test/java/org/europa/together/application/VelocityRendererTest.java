@@ -4,7 +4,6 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.Logger;
-import org.europa.together.business.VelocityRenderer;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,17 +16,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.europa.together.business.TemplateRenderer;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class VelocityRendererImplTest {
+public class VelocityRendererTest {
 
     private static final String FILE_PATH = "org/europa/together/velocity";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LoggerImpl(VelocityRendererImplTest.class);
-    private VelocityRenderer instance = new VelocityRendererImpl();
+    private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
+    private TemplateRenderer instance = new VelocityRenderer();
     private Map<String, String> properties = new HashMap<>();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
@@ -37,7 +37,7 @@ public class VelocityRendererImplTest {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
         FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(VelocityRenderer.FEATURE_ID);
+        boolean toggle = feature.deactivateUnitTests(TemplateRenderer.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         boolean check;
@@ -73,14 +73,14 @@ public class VelocityRendererImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(VelocityRendererImpl.class, hasValidBeanConstructor());
+        assertThat(TemplateRenderer.class, hasValidBeanConstructor());
     }
 
     @Test
     void testGenerateContent() {
         LOGGER.log("TEST CASE: generateContent()", LogLevel.DEBUG);
 
-        instance = new VelocityRendererImpl();
+        instance = new VelocityRenderer();
 
         if (properties != null) {
             properties.clear();
@@ -95,7 +95,7 @@ public class VelocityRendererImplTest {
     void testLoadContentByClasspathResource() {
         LOGGER.log("TEST CASE: loadContentByClasspathResource()", LogLevel.DEBUG);
 
-        instance = new VelocityRendererImpl();
+        instance = new VelocityRenderer();
         if (properties != null) {
             properties.clear();
         }
@@ -122,7 +122,7 @@ public class VelocityRendererImplTest {
     void testLoadContentByFileResource() {
         LOGGER.log("TEST CASE: loadContentByFileResource()", LogLevel.DEBUG);
 
-        instance = new VelocityRendererImpl();
+        instance = new VelocityRenderer();
         System.out.println("\n PATH: " + DIRECTORY + "\n");
 
         if (properties != null) {

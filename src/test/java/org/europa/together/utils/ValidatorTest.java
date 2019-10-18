@@ -1,7 +1,7 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class ValidatorTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ValidatorTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ValidatorTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

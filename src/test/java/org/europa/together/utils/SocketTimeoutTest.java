@@ -1,7 +1,7 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.AfterAll;
@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class SocketTimeoutTest {
 
-    private static final Logger LOGGER = new LoggerImpl(SocketTimeoutTest.class);
+    private static final Logger LOGGER = new LogbackLogger(SocketTimeoutTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

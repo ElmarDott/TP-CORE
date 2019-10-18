@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.HashAlgorithm;
@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class StringUtilsTest {
 
-    private static final Logger LOGGER = new LoggerImpl(StringUtilsTest.class);
+    private static final Logger LOGGER = new LogbackLogger(StringUtilsTest.class);
 
     private static final String FILE_PATH
             = Constraints.SYSTEM_APP_DIR + "/src/test/resources/org/europa/together/bom";

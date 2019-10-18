@@ -22,16 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 @FeatureToggle(featureID = FEATURE_ID)
-public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String>
+public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         implements ConfigurationDAO {
 
     private static final long serialVersionUID = 5L;
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDAO.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDAO.class);
 
     /**
      * Constructor.
      */
-    public ConfigurationDAOImpl() {
+    public ConfigurationHbmDAO() {
         super();
         LOGGER.log("instance class", LogLevel.INFO);
     }

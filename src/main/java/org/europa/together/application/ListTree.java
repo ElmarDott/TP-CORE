@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public final class TreeWalkerImpl implements TreeWalker {
+public final class ListTree implements TreeWalker {
 
     private static final long serialVersionUID = 9L;
-    private static final Logger LOGGER = new LoggerImpl(TreeWalkerImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(ListTree.class);
 
     private List<TreeNode> tree;
     private String rootUuid;
@@ -27,7 +27,7 @@ public final class TreeWalkerImpl implements TreeWalker {
     /**
      * Constructor.
      */
-    public TreeWalkerImpl() {
+    public ListTree() {
         this.tree = new ArrayList<>();
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -37,7 +37,7 @@ public final class TreeWalkerImpl implements TreeWalker {
      *
      * @param root as TreeNode
      */
-    public TreeWalkerImpl(final TreeNode root) {
+    public ListTree(final TreeNode root) {
         this.tree = new ArrayList<>();
         this.addRoot(root);
         LOGGER.log("instance class (" + root.getNodeName() + ")", LogLevel.INFO);

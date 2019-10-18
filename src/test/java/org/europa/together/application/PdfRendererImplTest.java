@@ -27,8 +27,8 @@ public class PdfRendererImplTest {
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    private static final Logger LOGGER = new LoggerImpl(PdfRendererImplTest.class);
-    private PdfRenderer pdf = new PdfRendererImpl();
+    private static final Logger LOGGER = new LogbackLogger(PdfRendererImplTest.class);
+    private PdfRenderer pdf = new ITextRenderer();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -72,7 +72,7 @@ public class PdfRendererImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(PdfRendererImpl.class, hasValidBeanConstructor());
+        assertThat(ITextRenderer.class, hasValidBeanConstructor());
 
         pdf.setAuthor("John Doe");
         assertEquals(pdf.getAuthor(), "John Doe");

@@ -22,9 +22,9 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class TreeWalkerImplTest {
 
-    private static final Logger LOGGER = new LoggerImpl(TreeWalkerImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(TreeWalkerImplTest.class);
     private TreeWalker treeWalker
-            = new TreeWalkerImpl(new TreeNode("Root Node"));
+            = new ListTree(new TreeNode("Root Node"));
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -71,7 +71,7 @@ public class TreeWalkerImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(TreeWalkerImpl.class, hasValidBeanConstructor());
+        assertThat(ListTree.class, hasValidBeanConstructor());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TreeWalkerImplTest {
 
         TreeNode root = new TreeNode();
         root.setNodeName("ROOT");
-        TreeWalker walker = new TreeWalkerImpl(root);
+        TreeWalker walker = new ListTree(root);
 
         assertEquals("ROOT", walker.getRoot().getNodeName());
     }
@@ -91,7 +91,7 @@ public class TreeWalkerImplTest {
 
         TreeNode root = new TreeNode();
         root.setNodeName("ROOT");
-        TreeWalker walker = new TreeWalkerImpl(root);
+        TreeWalker walker = new ListTree(root);
 
         assertFalse(walker.addRoot(root));
     }
@@ -102,7 +102,7 @@ public class TreeWalkerImplTest {
 
         TreeNode root = new TreeNode();
         root.setNodeName("ROOT");
-        TreeWalker walker = new TreeWalkerImpl(root);
+        TreeWalker walker = new ListTree(root);
 
         assertFalse(walker.addRoot(new TreeNode("node")));
     }
@@ -112,7 +112,7 @@ public class TreeWalkerImplTest {
         LOGGER.log("TEST CASE: getRoot()", LogLevel.DEBUG);
 
         TreeWalker walker
-                = new TreeWalkerImpl(new TreeNode("Root Node"));
+                = new ListTree(new TreeNode("Root Node"));
 
         assertEquals("Root Node", walker.getRoot().getNodeName());
         assertEquals("-1", walker.getRoot().getParent());
@@ -122,7 +122,7 @@ public class TreeWalkerImplTest {
     void testFailGetRoot() {
         LOGGER.log("TEST CASE: failGetRoot()", LogLevel.DEBUG);
 
-        TreeWalker walker = new TreeWalkerImpl();
+        TreeWalker walker = new ListTree();
         assertNull(walker.getRoot());
     }
 
@@ -130,7 +130,7 @@ public class TreeWalkerImplTest {
     void testCountNodes() {
         LOGGER.log("TEST CASE: countNodes()", LogLevel.DEBUG);
 
-        TreeWalker walker = new TreeWalkerImpl();
+        TreeWalker walker = new ListTree();
         assertEquals(0, walker.countNodes());
     }
 
@@ -201,7 +201,7 @@ public class TreeWalkerImplTest {
     void testFailIsLeaf() {
         LOGGER.log("TEST CASE: failIsLeaf()", LogLevel.DEBUG);
 
-        TreeWalker emptyTree = new TreeWalkerImpl();
+        TreeWalker emptyTree = new ListTree();
         assertFalse(emptyTree.isLeaf(new TreeNode("mock")));
 
     }
@@ -233,7 +233,7 @@ public class TreeWalkerImplTest {
     void testFailGetNodeByUuid() {
         LOGGER.log("TEST CASE: failGetNodeByUuid()", LogLevel.DEBUG);
 
-        TreeWalker emptyTree = new TreeWalkerImpl();
+        TreeWalker emptyTree = new ListTree();
         assertNull(emptyTree.getNodeByUuid("uuid"));
     }
 
@@ -250,7 +250,7 @@ public class TreeWalkerImplTest {
     void testFailNodeIsElementOfTree() {
         LOGGER.log("TEST CASE: failNodeIsElementOfTree()", LogLevel.DEBUG);
 
-        TreeWalker emptyTree = new TreeWalkerImpl();
+        TreeWalker emptyTree = new ListTree();
         assertFalse(emptyTree.isElementOfTree(new TreeNode("mock")));
     }
 
@@ -281,7 +281,7 @@ public class TreeWalkerImplTest {
     void testFailIsNameUnique() {
         LOGGER.log("TEST CASE: failIsNameUnique()", LogLevel.DEBUG);
 
-        TreeWalker emptyTree = new TreeWalkerImpl();
+        TreeWalker emptyTree = new ListTree();
         assertEquals(0, emptyTree.isNameUnique("node"));
     }
 
@@ -322,7 +322,7 @@ public class TreeWalkerImplTest {
     void testGetElementByNameInEmptyTree() {
         LOGGER.log("TEST CASE: getElementsByNameInEmptyTree()", LogLevel.DEBUG);
 
-        TreeWalker emptyTree = new TreeWalkerImpl();
+        TreeWalker emptyTree = new ListTree();
         assertTrue(emptyTree.getElementByName("foo").isEmpty());
     }
 
@@ -384,7 +384,7 @@ public class TreeWalkerImplTest {
         treeWalker.merge("node", null);
         assertEquals(12, treeWalker.countNodes());
 
-        treeWalker.merge("node", new TreeWalkerImpl());
+        treeWalker.merge("node", new ListTree());
         assertEquals(12, treeWalker.countNodes());
     }
 
@@ -434,7 +434,7 @@ public class TreeWalkerImplTest {
     private TreeWalker appendTree() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        TreeWalker append = new TreeWalkerImpl(new TreeNode("sub tree"));
+        TreeWalker append = new ListTree(new TreeNode("sub tree"));
         //P:0
         TreeNode n_01 = new TreeNode("S-01");
         n_01.setParent(append.getRoot().getUuid());

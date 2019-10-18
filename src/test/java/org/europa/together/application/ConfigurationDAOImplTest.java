@@ -31,11 +31,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
     "file:./target/test-classes/org/europa/together/configuration/spring-dao-test.xml"})
 public class ConfigurationDAOImplTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDAOImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDAOImplTest.class);
 
     private static final String FLUSH_TABLE = "TRUNCATE TABLE app_config;";
     private static final String FILE = "org/europa/together/sql/configuration-test.sql";
-    private static DatabaseActions actions = new DatabaseActionsImpl(true);
+    private static DatabaseActions actions = new JdbcActions(true);
 
     @Autowired
     @Qualifier("configurationDAOImpl")
@@ -102,7 +102,7 @@ public class ConfigurationDAOImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(ConfigurationDAOImpl.class, hasValidBeanConstructor());
+        assertThat(ConfigurationHbmDAO.class, hasValidBeanConstructor());
     }
 
     @Test

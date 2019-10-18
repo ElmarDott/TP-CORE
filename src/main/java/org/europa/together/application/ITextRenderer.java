@@ -25,10 +25,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class PdfRendererImpl implements PdfRenderer {
+public class ITextRenderer implements PdfRenderer {
 
     private static final long serialVersionUID = 11L;
-    private static final Logger LOGGER = new LoggerImpl(PdfRendererImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(ITextRenderer.class);
 
     private final String creator;
     private Document document;
@@ -41,7 +41,7 @@ public class PdfRendererImpl implements PdfRenderer {
     /**
      * Constructor.
      */
-    public PdfRendererImpl() {
+    public ITextRenderer() {
         creator = "Together Platform PDF Renderer";
         LOGGER.log("instance class", LogLevel.INFO);
     }

@@ -2,7 +2,7 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import java.io.File;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.Constraints;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class LoggingServiceAction extends Stage<LoggingServiceAction> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(LoggingServiceAction.class);
+            = new LogbackLogger(LoggingServiceAction.class);
 
     private final String configFile = Constraints.SYSTEM_APP_DIR + "/logback.xml";
     private final LoggingService loggingService = new LoggingService();

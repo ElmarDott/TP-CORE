@@ -18,10 +18,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class ImageProcessorImpl implements ImageProcessor {
+public class ImgSclrProcessor implements ImageProcessor {
 
     private static final long serialVersionUID = 12L;
-    private static final Logger LOGGER = new LoggerImpl(ImageProcessorImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(ImgSclrProcessor.class);
 
     private static final long MULTIPLIER = 4L;
     private static final int DIVISOR = 100;
@@ -33,7 +33,7 @@ public class ImageProcessorImpl implements ImageProcessor {
     /**
      * Constructor.
      */
-    public ImageProcessorImpl() {
+    public ImgSclrProcessor() {
         LOGGER.log("instance class", LogLevel.INFO);
     }
 

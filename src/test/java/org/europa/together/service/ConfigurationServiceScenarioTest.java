@@ -2,9 +2,9 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.europa.together.application.DatabaseActionsImpl;
+import org.europa.together.application.JdbcActions;
 import org.europa.together.application.FF4jProcessor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -25,9 +25,9 @@ public class ConfigurationServiceScenarioTest extends
         ScenarioTest<ConfigurationServiceGiven, ConfigurationServiceAction, ConfigurationServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceScenarioTest.class);
+            = new LogbackLogger(ConfigurationServiceScenarioTest.class);
 
-    public static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    public static DatabaseActions CONNECTION = new JdbcActions(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

@@ -1,6 +1,6 @@
 package org.europa.together.utils;
 
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
@@ -14,7 +14,7 @@ public final class Validator {
     //  ###  * = 0 or more quantifier
     //  ###  + = 1 or more quantifier
     //  ###  ? = 0 or 1 quantifier
-    private static final Logger LOGGER = new LoggerImpl(Validator.class);
+    private static final Logger LOGGER = new LogbackLogger(Validator.class);
 
     /**
      * Constructor.

@@ -1,7 +1,7 @@
 package org.europa.together.utils;
 
 import java.net.Socket;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 
@@ -11,7 +11,7 @@ import org.europa.together.domain.LogLevel;
  */
 public final class SocketTimeout {
 
-    private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(FileUtils.class);
 
     /**
      * Constructor.

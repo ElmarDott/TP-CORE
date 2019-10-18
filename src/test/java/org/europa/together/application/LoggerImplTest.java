@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class LoggerImplTest {
 
-    private static final Logger LOGGER = new LoggerImpl(LoggerImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(LogbackLogger.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -63,7 +63,7 @@ public class LoggerImplTest {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         LOGGER.log("regular call", LogLevel.DEBUG);
-        Logger test_01 = new LoggerImpl(Logger.class);
+        Logger test_01 = new LogbackLogger(Logger.class);
         assertNotNull(test_01);
 
         LOGGER.log("fallback call", LogLevel.DEBUG);
@@ -72,7 +72,7 @@ public class LoggerImplTest {
 
         File config = new File(Constraints.SYSTEM_APP_DIR + "/logback.xml");
         assertTrue(config.exists());
-        Logger test_02 = new LoggerImpl(Logger.class);
+        Logger test_02 = new LogbackLogger(Logger.class);
         assertNotNull(test_02);
 
         //cleanUp
@@ -84,7 +84,7 @@ public class LoggerImplTest {
     void testLog() {
         LOGGER.log("TEST CASE: log()::  LogLevel.TRACE", LogLevel.DEBUG);
 
-        Logger logger = new LoggerImpl(Logger.class);
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.TRACE, logger.log("console logging test: trace", LogLevel.TRACE));
         assertEquals(LogLevel.DEBUG, logger.log("console logging test: debug", LogLevel.DEBUG));
         assertEquals(LogLevel.INFO, logger.log("console logging test: info", LogLevel.INFO));
@@ -99,7 +99,7 @@ public class LoggerImplTest {
     void testCatchException() {
         LOGGER.log("TEST CASE: catchException()", LogLevel.DEBUG);
 
-        Logger logger = new LoggerImpl(Logger.class);
+        Logger logger = new LogbackLogger(Logger.class);
         LOGGER.log("case A: any Exception", LogLevel.DEBUG);
         assertEquals("Logging exception test.",
                 logger.catchException(new Exception("Logging exception test.")));
@@ -113,7 +113,7 @@ public class LoggerImplTest {
     void testGetConfiguredLogLevel() throws InterruptedException {
         LOGGER.log("TEST CASE: getConfiguredLogLevel()", LogLevel.DEBUG);
 
-        Logger logger = new LoggerImpl(Logger.class);
+        Logger logger = new LogbackLogger(Logger.class);
 
         logger.setLogLevel(LogLevel.ERROR);
         assertEquals(LogLevel.ERROR, logger.getConfiguredLogLevel());

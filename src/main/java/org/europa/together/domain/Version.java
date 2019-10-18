@@ -1,7 +1,7 @@
 package org.europa.together.domain;
 
 import java.util.Objects;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.exceptions.MisconfigurationException;
@@ -36,7 +36,7 @@ import org.europa.together.utils.Validator;
 @FeatureToggle(featureID = "CM-0005.DO02")
 public class Version implements Comparable<Version> {
 
-    private static final Logger LOGGER = new LoggerImpl(Version.class);
+    private static final Logger LOGGER = new LogbackLogger(Version.class);
 
     private int major = -1;
     private int minor = -1;

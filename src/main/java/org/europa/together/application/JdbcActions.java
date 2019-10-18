@@ -29,10 +29,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class DatabaseActionsImpl implements DatabaseActions {
+public class JdbcActions implements DatabaseActions {
 
     private static final long serialVersionUID = 8L;
-    private static final Logger LOGGER = new LoggerImpl(DatabaseActionsImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(JdbcActions.class);
 
     private static final int TIMEOUT = 1000;
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
@@ -65,7 +65,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
      * Constructor.
      */
     @FeatureToggle(featureID = "CM-0008.CO01")
-    public DatabaseActionsImpl() {
+    public JdbcActions() {
         resultCount = 0;
         resultSet = null;
         LOGGER.log("instance class", LogLevel.INFO);
@@ -77,7 +77,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
      * @param activateTestMode as boolean
      */
     @FeatureToggle(featureID = "CM-0008.CO02")
-    public DatabaseActionsImpl(final boolean activateTestMode) {
+    public JdbcActions(final boolean activateTestMode) {
         this.testMode = activateTestMode;
         LOGGER.log("instance class (TEST MODE)", LogLevel.INFO);
     }
@@ -247,7 +247,7 @@ public class DatabaseActionsImpl implements DatabaseActions {
 
     private void fetchProperties(final String propertyFile) {
 
-        PropertyReader reader = new PropertyReaderImpl();
+        PropertyReader reader = new PropertyFileReader();
         //Default configuration
         reader.appendPropertiesFromClasspath(jdbcProperties);
 

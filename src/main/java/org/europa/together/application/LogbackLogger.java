@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Implementation of the Logger as Wrapper for SLF4j and logback Framework.
  */
 @FeatureToggle(featureID = FEATURE_ID)
-public final class LoggerImpl implements Logger {
+public final class LogbackLogger implements Logger {
 
     private final String configurationFile = SYSTEM_APP_DIR + "/logback.xml";
     private Class<?> instance = null;
@@ -29,7 +29,7 @@ public final class LoggerImpl implements Logger {
      *
      * @param instance The instance of the logged CLASS
      */
-    public LoggerImpl(final Class<?> instance) {
+    public LogbackLogger(final Class<?> instance) {
         this.instance = instance;
 
         //FALLBACK

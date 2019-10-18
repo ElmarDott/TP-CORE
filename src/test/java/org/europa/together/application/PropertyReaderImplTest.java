@@ -27,8 +27,8 @@ public class PropertyReaderImplTest {
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LoggerImpl(PropertyReaderImplTest.class);
-    private final PropertyReader propertyReader = new PropertyReaderImpl();
+    private static final Logger LOGGER = new LogbackLogger(PropertyReaderImplTest.class);
+    private final PropertyReader propertyReader = new PropertyFileReader();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -72,7 +72,7 @@ public class PropertyReaderImplTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(PropertyReaderImpl.class, hasValidBeanConstructor());
+        assertThat(PropertyFileReader.class, hasValidBeanConstructor());
     }
 
     @Test

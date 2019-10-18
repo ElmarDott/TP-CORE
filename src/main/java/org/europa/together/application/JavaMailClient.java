@@ -43,16 +43,16 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public class MailClientImpl implements MailClient {
+public class JavaMailClient implements MailClient {
 
     private static final long serialVersionUID = 6L;
-    private static final Logger LOGGER = new LoggerImpl(MailClientImpl.class);
+    private static final Logger LOGGER = new LogbackLogger(JavaMailClient.class);
 
     @Autowired
     @Qualifier("configurationDAOImpl")
     private ConfigurationDAO configurationDAO;
 
-    private PropertyReader propertyReader = new PropertyReaderImpl();
+    private PropertyReader propertyReader = new PropertyFileReader();
 
     private Map<String, String> mailConfiguration;
     private List<FileDataSource> attachments;
@@ -69,7 +69,7 @@ public class MailClientImpl implements MailClient {
     /**
      * Constructor.
      */
-    public MailClientImpl() {
+    public JavaMailClient() {
         initConfig();
         attachments = new ArrayList<>();
         recipients = new ArrayList<>();
@@ -112,7 +112,7 @@ public class MailClientImpl implements MailClient {
 
         try {
             String sql = FileUtils.readFileStream(new File(configurationFile));
-            DatabaseActions connection = new DatabaseActionsImpl();
+            DatabaseActions connection = new JdbcActions();
             connection.executeSqlFromClasspath(sql);
 
         } catch (Exception ex) {

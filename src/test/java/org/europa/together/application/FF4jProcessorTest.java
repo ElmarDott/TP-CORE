@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class FF4jProcessorTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ImageProcessorImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ImageProcessorImplTest.class);
     private final String path = "/src/test/resources";
     private final String testConfiguration
             = "/org/europa/together/configuration/TestFeatureToggles.xml";

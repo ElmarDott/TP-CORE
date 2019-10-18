@@ -3,7 +3,7 @@ package org.europa.together.service;
 import com.tngtech.jgiven.Stage;
 import javax.mail.Address;
 import javax.mail.internet.MimeMessage;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.MailClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class MailServiceOutcome extends Stage<MailServiceOutcome> {
 
     private static final org.europa.together.business.Logger LOGGER
-            = new LoggerImpl(MailServiceOutcome.class);
+            = new LogbackLogger(MailServiceOutcome.class);
 
     @Autowired
     @Qualifier("mailClientImpl")
