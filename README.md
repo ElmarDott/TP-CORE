@@ -1,7 +1,8 @@
 <img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
 
 # together Platform :: CORE
-[![License Apache 2.0](https://img.shields.io/badge/License-apache 2.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
+[![License GPL-3.0](https://img.shields.io/badge/license-GNU-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
@@ -37,7 +38,7 @@ and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 11.1, Maven 3.6.1 and Java 11 SE. The
+The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 8 SE. The
 implementation is also designed to run in Java EE 7 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL DBMS 11.
@@ -45,15 +46,13 @@ Database Server (DBMS) we recommend PostgeSQL DBMS 11.
 We decided to use docker for an easy database setup. After on your system docker
 is running you are be able to setup the database by the following steps:
 
-  * docker network create -d bridge --subnet=172.18.0.0/16 services
-  * docker run run -d --name postgres -p 5432:5432 --net services --ip 172.18.0.2 -e POSTGRES_PASSWORD=s3cr3t -e PGPASSWORD=s3cr3t -v /media/veracrypt1/Applications/docker/postgreSQL/data:/var/lib/postgresql/data postgres
+  * docker pull postgres
+  * docker run -d -p 5432:5432 --name postgres -v /home/user/docker/postgreSQL:/var/lib/postgresql/data postgres
   * docker start postgres
   * docker stop postgres
 
-  URI/>  172.18.0.2:5432   User: postgres PWD: s3cr3t
+  URI/>  172.17.0.1:5432   User: postgres PWD: n/a
   DOC/>  https://docs.docker.com/samples/library/postgres/
-
-Trouble shooting: if you can`t connet to the DBMS, check the status by **docker inspect postgres**
 
 To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
 script.
@@ -79,7 +78,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -103,13 +102,7 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
-| 2.0    | in process
-|        | - rename implementation classes in the application layer to more
-|        |   descriptive name
-|--------|----------------------------------------------------------------------
 | 1.2    | in process
-|        | - migrate to Java 11
-|        | - change license to Apache
 |        | - Add Functionality: Feature Toggle
 |        | - Extend Application Configuration by Version() data class
 |        | - provide JDBC connection object in DatabaseActions

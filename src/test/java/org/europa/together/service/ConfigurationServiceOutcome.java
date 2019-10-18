@@ -28,7 +28,7 @@ public class ConfigurationServiceOutcome extends Stage<ConfigurationServiceOutco
             = new LogbackLogger(ConfigurationServiceOutcome.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     public ConfigurationServiceOutcome check_default_entries() {

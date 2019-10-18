@@ -26,7 +26,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         implements ConfigurationDAO {
 
     private static final long serialVersionUID = 5L;
-    private static final Logger LOGGER = new LogbackLogger(ConfigurationDAO.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAO.class);
 
     /**
      * Constructor.

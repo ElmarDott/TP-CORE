@@ -21,11 +21,11 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class ImageProcessorImplTest {
+public class ImgSclrProcessorTest {
 
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/org/europa/together/images/";
-    private static final Logger LOGGER = new LogbackLogger(ImageProcessorImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ImgSclrProcessorTest.class);
 
     private ImageProcessor processor = new ImgSclrProcessor();
 

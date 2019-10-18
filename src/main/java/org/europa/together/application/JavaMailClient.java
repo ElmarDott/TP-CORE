@@ -49,7 +49,7 @@ public class JavaMailClient implements MailClient {
     private static final Logger LOGGER = new LogbackLogger(JavaMailClient.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     private PropertyReader propertyReader = new PropertyFileReader();

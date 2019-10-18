@@ -27,7 +27,7 @@ public class MailServiceOutcome extends Stage<MailServiceOutcome> {
             = new LogbackLogger(MailServiceOutcome.class);
 
     @Autowired
-    @Qualifier("mailClientImpl")
+    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     public MailServiceOutcome email_is_arrived(MimeMessage msg) {

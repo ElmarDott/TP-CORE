@@ -26,7 +26,7 @@ public class ConfigurationServiceAction extends Stage<ConfigurationServiceAction
             = new LogbackLogger(ConfigurationServiceAction.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     public ConfigurationServiceAction reset_module_to_default() {

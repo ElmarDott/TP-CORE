@@ -20,13 +20,13 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class XmlToolsImplTest {
+public class SaxToolsTest {
 
     private static final String FILE_PATH = "org/europa/together/xml";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(XmlToolsImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
     private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
     private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 

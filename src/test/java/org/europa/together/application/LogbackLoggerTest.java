@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class LoggerImplTest {
+public class LogbackLoggerTest {
 
     private static final Logger LOGGER = new LogbackLogger(LogbackLogger.class);
 

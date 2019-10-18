@@ -73,7 +73,7 @@ public class VelocityRendererTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(TemplateRenderer.class, hasValidBeanConstructor());
+        assertThat(VelocityRenderer.class, hasValidBeanConstructor());
     }
 
     @Test

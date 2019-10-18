@@ -40,7 +40,7 @@ public final class MailClientService {
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     /**

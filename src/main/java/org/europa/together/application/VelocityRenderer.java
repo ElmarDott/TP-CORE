@@ -25,7 +25,7 @@ import org.europa.together.business.TemplateRenderer;
 public class VelocityRenderer implements TemplateRenderer {
 
     private static final long serialVersionUID = 3L;
-    private static final Logger LOGGER = new LogbackLogger(TemplateRenderer.class);
+    private static final Logger LOGGER = new LogbackLogger(VelocityRenderer.class);
 
     private VelocityEngine engine = new VelocityEngine();
 

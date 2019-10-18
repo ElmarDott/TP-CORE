@@ -30,7 +30,7 @@ public final class ConfigurationService {
     private static final Logger LOGGER = new LogbackLogger(ConfigurationService.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     /**

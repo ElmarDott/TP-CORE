@@ -22,14 +22,14 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class QrCodeGeneratorImplTest {
+public class ZxingGeneratorTest {
 
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(QrCodeGeneratorImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

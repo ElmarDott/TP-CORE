@@ -34,17 +34,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
-public class MailClientImplTest {
+public class JavaMailClientTest {
 
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
 
-    private static final Logger LOGGER = new LogbackLogger(MailClientImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(JavaMailClientTest.class);
 
     @Autowired
-    @Qualifier("mailClientImpl")
+    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     private static DatabaseActions CONNECTION = new JdbcActions(true);

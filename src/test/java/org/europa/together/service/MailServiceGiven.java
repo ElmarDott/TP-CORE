@@ -29,7 +29,7 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
             = new LogbackLogger(MailServiceGiven.class);
 
     @Autowired
-    @Qualifier("mailClientImpl")
+    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     public MailServiceGiven service_has_database_connection() {

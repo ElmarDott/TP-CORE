@@ -11,7 +11,7 @@ import org.europa.together.domain.LogLevel;
  */
 public final class SocketTimeout {
 
-    private static final Logger LOGGER = new LogbackLogger(FileUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(SocketTimeout.class);
 
     /**
      * Constructor.

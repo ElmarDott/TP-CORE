@@ -29,20 +29,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:/org/europa/together/configuration/spring-dao-test.xml",
     "file:./target/test-classes/org/europa/together/configuration/spring-dao-test.xml"})
-public class ConfigurationDAOImplTest {
+public class ConfigurationHbmDAOTest {
 
-    private static final Logger LOGGER = new LogbackLogger(ConfigurationDAOImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
 
     private static final String FLUSH_TABLE = "TRUNCATE TABLE app_config;";
     private static final String FILE = "org/europa/together/sql/configuration-test.sql";
     private static DatabaseActions actions = new JdbcActions(true);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
     private ConfigurationDO configDO;
 
-    public ConfigurationDAOImplTest() {
+    public ConfigurationHbmDAOTest() {
         configDO = new ConfigurationDO();
         configDO.setUuid("QWERTZ");
         configDO.setKey("key");

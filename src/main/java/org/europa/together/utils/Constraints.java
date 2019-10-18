@@ -12,7 +12,7 @@ import org.europa.together.domain.LogLevel;
  */
 public final class Constraints {
 
-    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(Constraints.class);
     private static final PropertyReader PROPERTY_READER = new PropertyFileReader();
 
     /**

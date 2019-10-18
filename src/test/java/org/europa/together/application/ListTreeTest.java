@@ -20,9 +20,9 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class TreeWalkerImplTest {
+public class ListTreeTest {
 
-    private static final Logger LOGGER = new LogbackLogger(TreeWalkerImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ListTreeTest.class);
     private TreeWalker treeWalker
             = new ListTree(new TreeNode("Root Node"));
 

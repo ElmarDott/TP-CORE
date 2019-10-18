@@ -20,14 +20,14 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class PropertyReaderImplTest {
+public class PropertyFileReaderTest {
 
     private static final String FILE_PATH
             = "org/europa/together/properties/properties-test-classpath.properties";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(PropertyReaderImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(PropertyFileReaderTest.class);
     private final PropertyReader propertyReader = new PropertyFileReader();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">

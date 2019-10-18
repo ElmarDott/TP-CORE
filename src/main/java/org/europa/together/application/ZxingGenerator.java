@@ -32,7 +32,7 @@ import org.springframework.stereotype.Repository;
 public class ZxingGenerator implements QrCodeGenerator {
 
     private static final long serialVersionUID = 7L;
-    private static final Logger LOGGER = new LogbackLogger(PropertyFileReader.class);
+    private static final Logger LOGGER = new LogbackLogger(ZxingGenerator.class);
 
     private static final int SUBSTRING = 8;
 

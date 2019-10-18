@@ -19,13 +19,13 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class DatabaseActionsImplTest {
+public class JdbcActionsTest {
 
     private final String sql_create
             = "CREATE TABLE IF NOT EXISTS test (column_01 int, column_02 char(255));";
     private final String sql_drop = "DROP TABLE IF EXISTS test;";
 
-    private static final Logger LOGGER = new LogbackLogger(DatabaseActionsImplTest.class);
+    private static final Logger LOGGER = new LogbackLogger(JdbcActionsTest.class);
     private static final DatabaseActions actions = new JdbcActions(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
