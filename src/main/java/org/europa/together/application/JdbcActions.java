@@ -1,11 +1,13 @@
 package org.europa.together.application;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -210,27 +212,22 @@ public class JdbcActions implements DatabaseActions {
         return SocketTimeout.timeout(TIMEOUT, uri, port);
     }
 
-    private void establishPooledConnection() throws TimeOutException {
+    private void establishPooledConnection()
+            throws TimeOutException, ClassNotFoundException, PropertyVetoException, SQLException {
 
         LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
         if (!connectionTimeout()) {
             throw new TimeOutException("URI:" + this.uri + " Port:" + this.port);
         }
 
-        try {
-            //test if the JDBC Driver is available
-            Class.forName(this.driverClass);
+        Class.forName(this.driverClass);
 
-            ComboPooledDataSource cpds = new ComboPooledDataSource();
-            cpds.setDriverClass(driverClass);
-            cpds.setJdbcUrl(connectionUrl);
-            cpds.setUser(user);
-            cpds.setPassword(pwd);
-            this.jdbcConnection = cpds.getConnection();
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+        ComboPooledDataSource cpds = new ComboPooledDataSource();
+        cpds.setDriverClass(driverClass);
+        cpds.setJdbcUrl(connectionUrl);
+        cpds.setUser(user);
+        cpds.setPassword(pwd);
+        this.jdbcConnection = cpds.getConnection();
     }
 
     private void fetchProperties(final String propertyFile) {

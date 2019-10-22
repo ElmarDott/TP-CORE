@@ -313,17 +313,21 @@ public class JavaMailClientTest {
     void testLoadConfigurationFromClasspath() {
         LOGGER.log("TEST CASE: loadConfigurationFromClasspath", LogLevel.DEBUG);
 
+        mailer.clearConfiguration();
         assertFalse(mailer.loadConfigurationFromProperties("mailer.properties"));
         assertTrue(mailer.loadConfigurationFromProperties("org/europa/together/properties/mail-test-classpath.properties"));
+        assertEquals("localhost", mailer.getConfiguration().get("mailer.host"));
     }
 
     @Test
     void testLoadConfigurationFromFileSystem() {
         LOGGER.log("TEST CASE: loadConfigurationFromFileSystem", LogLevel.DEBUG);
 
+        mailer.clearConfiguration();
         assertFalse(mailer.loadConfigurationFromProperties("mailer.properties"));
         assertTrue(mailer.loadConfigurationFromProperties(DIRECTORY
                 + "/org/europa/together/properties/mail-test-filesystem.properties"));
+        assertEquals("www.sample.com", mailer.getConfiguration().get("mailer.host"));
     }
 
     @Test
@@ -370,16 +374,26 @@ public class JavaMailClientTest {
         assertEquals("noreply@sample.org", message.getFrom()[0].toString());
         assertEquals(new InternetAddress("noreply@sample.org"), message.getSender());
         assertEquals("otto@sample.org", message.getAllRecipients()[0].toString());
-
     }
 
     @Test
     void testPopulateDatabaseConfiguration() {
-        LOGGER.log("TEST CASE: populateDatabaseConfiguratio", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: populateDatabaseConfiguration", LogLevel.DEBUG);
 
-        mailer.populateConfiguration();
+        mailer.populateDbConfiguration(SQL_FILE, true);
+        assertTrue(mailer.loadConfigurationFromDatabase());
+        assertEquals("smtp.sample.org", mailer.getConfiguration().get("mailer.host"));
+        //Clean up
+        CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
+    }
 
-        // test implemetation
+    @Test
+    void testFailPopulateDatabaseConfiguration() {
+        LOGGER.log("TEST CASE: failPopulateDatabaseConfiguration", LogLevel.DEBUG);
+
+        mailer.populateDbConfiguration(null);
+        assertFalse(mailer.loadConfigurationFromDatabase());
+        //Clean up
         CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
     }
 
@@ -387,10 +401,9 @@ public class JavaMailClientTest {
     void testLoadConfigurationFromDatabase() {
         LOGGER.log("TEST CASE: loadConfigurationFromDatabase", LogLevel.DEBUG);
 
-        //DBMS Table setup
-        CONNECTION.executeSqlFromClasspath(SQL_FILE);
-
         try {
+            //DBMS Table setup
+            mailer.populateDbConfiguration(SQL_FILE, true);
             assertTrue(mailer.loadConfigurationFromDatabase());
 
             assertEquals("smtp.sample.org", mailer.getConfiguration().get("mailer.host"));

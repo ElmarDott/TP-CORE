@@ -6,7 +6,7 @@
 --- #### E-MAIL
 --- mailer.host
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
-VALUES ('8cbef5a9-81ee-496c-8486-4929f4a05749', '630fa1d4617b3f19bb631e93befc5462111f7e6ee927300b6778638cfcbdfae9', '', 'smtp.sample.org', 'email', 'core', '1.0', true, false, '');
+VALUES ('8cbef5a9-81ee-496c-8486-4929f4a05749', '630fa1d4617b3f19bb631e93befc5462111f7e6ee927300b6778638cfcbdfae9', 'smtp.sample.org', '', 'email', 'core', '1.0', true, false, '');
 -- mailer.port
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, MODUL_VERSION, MANDATORY, DEPECATED, COMMENT)
 VALUES ('01f05983-8f5c-4114-ad8a-7f4073c80f27', 'fca1f5a28199bae3e126181012f8e901f6746ff7c5204fc96c7a6a74698ad287', '', '${mailer.port}', 'email', 'core', '1.0', true, false, '');

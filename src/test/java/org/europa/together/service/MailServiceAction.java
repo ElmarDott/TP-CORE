@@ -55,4 +55,13 @@ public class MailServiceAction extends Stage<MailServiceAction> {
         }
         return self();
     }
+
+    public MailServiceAction load_service_database_configuration() {
+        try {
+            assertEquals(10, service.getDbConfiguration().size());
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return self();
+    }
 }

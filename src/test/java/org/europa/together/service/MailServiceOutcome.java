@@ -1,6 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
+import java.util.Map;
 import javax.mail.Address;
 import javax.mail.internet.MimeMessage;
 import org.europa.together.application.LogbackLogger;
@@ -64,6 +65,20 @@ public class MailServiceOutcome extends Stage<MailServiceOutcome> {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+        return self();
+    }
+
+    public MailServiceOutcome db_service_configuration_is_accessible() {
+
+        try {
+            MailClientService service = new MailClientService();
+            Map<String, String> config = service.getDbConfiguration();
+            // expected: <smtp.gmail.com> but was: <127.0.0.1>
+            assertEquals("smtp.gmail.com", config.get("mailer.host"));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+
         return self();
     }
 }

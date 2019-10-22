@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 @FeatureToggle(featureID = FEATURE_ID)
 public final class LogbackLogger implements Logger {
 
+    private static final long serialVersionUID = 1L;
     private final String configurationFile = SYSTEM_APP_DIR + "/logback.xml";
     private Class<?> instance = null;
     private org.slf4j.Logger logger = null;
@@ -41,27 +42,29 @@ public final class LogbackLogger implements Logger {
     @Override
     public LogLevel log(final String message, final LogLevel level) {
 
-        instanceLogger();
-        switch (level) {
-            case TRACE:
-                logger.trace(message);
-                break;
-            case DEBUG:
-                logger.debug(message);
-                break;
-            case INFO:
-                logger.info(message);
-                break;
-            case WARN:
-                logger.warn(message);
-                break;
-            case ERROR:
-                logger.error(message);
-                break;
-            default:
-                break;
+        if (level != null) {
+            instanceLogger();
+            switch (level) {
+                case TRACE:
+                    logger.trace(message);
+                    break;
+                case DEBUG:
+                    logger.debug(message);
+                    break;
+                case INFO:
+                    logger.info(message);
+                    break;
+                case WARN:
+                    logger.warn(message);
+                    break;
+                case ERROR:
+                    logger.error(message);
+                    break;
+                default:
+                    //can not accessed
+                    break;
+            }
         }
-
         return level;
     }
 

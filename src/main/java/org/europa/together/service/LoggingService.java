@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 @FeatureToggle(featureID = Logger.FEATURE_ID)
 public final class LoggingService {
 
+    private static final long serialVersionUID = 201L;
     private static final Logger LOGGER = new LogbackLogger(LoggingService.class);
 
     /**

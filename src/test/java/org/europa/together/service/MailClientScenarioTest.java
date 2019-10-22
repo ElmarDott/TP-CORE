@@ -198,8 +198,7 @@ public class MailClientScenarioTest extends
         config.put("mailer.host", "SMTPS.localhost:5432");
         try {
             // PreCondition
-            given().service_has_database_connection()
-                    .and().service_get_db_configuration();
+            given().service_has_database_connection();
 
             // Invariant
             when().update_email_database_config(config);
@@ -207,6 +206,24 @@ public class MailClientScenarioTest extends
             //PostCondition
             then().configuration_is_changed();
 
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void scenario_getDbConfiguration() {
+        LOGGER.log("Scenario D: Get Database Configuration", LogLevel.DEBUG);
+
+        try {
+            // PreCondition
+            given().service_has_database_connection();
+
+            // Invariant
+            when().load_service_database_configuration();
+
+            //PostCondition
+            then().db_service_configuration_is_accessible();
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

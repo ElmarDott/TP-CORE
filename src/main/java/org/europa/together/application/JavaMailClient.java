@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -30,7 +30,6 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.FileUtils;
 import org.europa.together.utils.JavaCryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.europa.together.utils.Validator;
@@ -106,18 +105,16 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public void populateConfiguration() {
-
-        String configurationFile = "org/europa/together/sql/mail-configuration.sql";
-
-        try {
-            String sql = FileUtils.readFileStream(new File(configurationFile));
-            DatabaseActions connection = new JdbcActions();
-            connection.executeSqlFromClasspath(sql);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+    public void populateDbConfiguration(final String sqlFile, final boolean... connectTestDb) {
+        LOGGER.log("Populate Configuration: " + sqlFile, LogLevel.DEBUG);
+        DatabaseActions connection;
+        if (connectTestDb.length != 0) {
+            connection = new JdbcActions(true);
+        } else {
+            connection = new JdbcActions();
         }
+        connection.connect("default");
+        connection.executeSqlFromClasspath(sqlFile);
     }
 
     @Override
@@ -202,6 +199,11 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
+    public void clearConfiguration() {
+        mailConfiguration.clear();
+    }
+
+    @Override
     public boolean loadConfigurationFromProperties(final String resource) {
 
         boolean success = false;
@@ -227,80 +229,18 @@ public class JavaMailClient implements MailClient {
     public boolean loadConfigurationFromDatabase() {
         boolean success = false;
 
-        try {
-            LOGGER.log("Load all configuration sets of: " + CONFIG_SET
-                    + " - Version: " + CONFIG_VERSION
-                    + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
+        LOGGER.log("Load all configuration sets of: " + CONFIG_SET
+                + " - Version: " + CONFIG_VERSION
+                + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
 
-            List<ConfigurationDO> configurationEntries
-                    = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
-                            CONFIG_VERSION, CONFIG_SET);
+        List<ConfigurationDO> configurationEntries
+                = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
+                        CONFIG_VERSION, CONFIG_SET);
 
-            LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
-            for (ConfigurationDO entry : configurationEntries) {
-
-                String value;
-                if (StringUtils.isEmpty(entry.getValue())) {
-                    value = entry.getDefaultValue();
-                } else {
-                    value = entry.getValue();
-                }
-
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.host",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.host", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.port",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.port", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.sender",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.sender", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.user",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.user", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.password",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.password", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.ssl",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.ssl", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.tls",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.tls", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.debug",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.debug", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.count",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.count", value);
-                }
-                if (entry.getKey()
-                        .equals(JavaCryptoTools.calculateHash("mailer.wait",
-                                HashAlgorithm.SHA256))) {
-                    mailConfiguration.replace("mailer.wait", value);
-                }
-            }
+        LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
+        if (configurationEntries.size() > 0) {
+            processConfiguration(configurationEntries);
             success = true;
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
         }
 
         return success;
@@ -357,48 +297,44 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public MimeMessage composeMail(final InternetAddress recipient) {
+    public MimeMessage composeMail(final InternetAddress recipient)
+            throws MessagingException {
         MimeMessage mail = null;
         LOGGER.log("Compose E-Mail", LogLevel.DEBUG);
-        try {
 
-            mail = new MimeMessage(connect());
-            //HEADER - EVENLOPE
-            mail.setHeader("From: ", mailConfiguration.get("mailer.sender"));
-            mail.setHeader("Return-Path: ", mailConfiguration.get("mailer.sender"));
-            mail.setSentDate(new Date());
-            mail.setSubject(subject);
-            mail.setFrom(new InternetAddress(mailConfiguration.get("mailer.sender")));
-            mail.setSender(new InternetAddress(mailConfiguration.get("mailer.sender")));
-            mail.addRecipient(Message.RecipientType.TO, recipient);
+        mail = new MimeMessage(connect());
+        //HEADER - EVENLOPE
+        mail.setHeader("From: ", mailConfiguration.get("mailer.sender"));
+        mail.setHeader("Return-Path: ", mailConfiguration.get("mailer.sender"));
+        mail.setSentDate(new Date());
+        mail.setSubject(subject);
+        mail.setFrom(new InternetAddress(mailConfiguration.get("mailer.sender")));
+        mail.setSender(new InternetAddress(mailConfiguration.get("mailer.sender")));
+        mail.addRecipient(Message.RecipientType.TO, recipient);
 
-            // CONTENT
-            MimeBodyPart bodypart = new MimeBodyPart();
-            if (mimeType.equals("html")) {
-                bodypart.setContent(content, "text/html; charset=utf-8");
-            } else {
-                bodypart.setText(content, "utf-8");
-            }
-
-            // ATTACHMENTS : http://www.jguru.com/faq/view.jsp?EID=30251
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(bodypart);
-
-            if (!attachments.isEmpty()) {
-                for (FileDataSource file : this.attachments) {
-
-                    DataSource source = file;
-                    bodypart.setDataHandler(new DataHandler(source));
-                    bodypart.setFileName(file.getName());
-                    multipart.addBodyPart(bodypart);
-                }
-            }
-
-            mail.setContent(multipart);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+        // CONTENT
+        MimeBodyPart bodypart = new MimeBodyPart();
+        if (mimeType.equals("html")) {
+            bodypart.setContent(content, "text/html; charset=utf-8");
+        } else {
+            bodypart.setText(content, "utf-8");
         }
+
+        // ATTACHMENTS : http://www.jguru.com/faq/view.jsp?EID=30251
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(bodypart);
+
+        if (!attachments.isEmpty()) {
+            for (FileDataSource file : this.attachments) {
+
+                DataSource source = file;
+                bodypart.setDataHandler(new DataHandler(source));
+                bodypart.setFileName(file.getName());
+                multipart.addBodyPart(bodypart);
+            }
+        }
+
+        mail.setContent(multipart);
         return mail;
     }
 
@@ -406,7 +342,7 @@ public class JavaMailClient implements MailClient {
 
         Session connection = null;
         try {
-            connection = Session.getInstance(this.processConfiguration(),
+            connection = Session.getInstance(this.wireConfigurationEntries(),
                     new javax.mail.Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -443,7 +379,70 @@ public class JavaMailClient implements MailClient {
         mailConfiguration.put("mailer.wait", "0");
     }
 
-    private Properties processConfiguration() {
+    private void processConfiguration(final List<ConfigurationDO> configurationEntries) {
+
+        for (ConfigurationDO entry : configurationEntries) {
+            String value;
+            if (StringUtils.isEmpty(entry.getValue())) {
+                value = entry.getDefaultValue();
+            } else {
+                value = entry.getValue();
+            }
+
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.host",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.host", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.port",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.port", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.sender",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.sender", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.user",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.user", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.password",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.password", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.ssl",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.ssl", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.tls",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.tls", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.debug",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.debug", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.count",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.count", value);
+            }
+            if (entry.getKey()
+                    .equals(JavaCryptoTools.calculateHash("mailer.wait",
+                            HashAlgorithm.SHA256))) {
+                mailConfiguration.replace("mailer.wait", value);
+            }
+        }
+    }
+
+    private Properties wireConfigurationEntries() {
         configCountWaitTime = Long.parseLong(mailConfiguration.get("mailer.wait"));
         configMaximumMailBulk = Integer.parseInt(mailConfiguration.get("mailer.count"));
 

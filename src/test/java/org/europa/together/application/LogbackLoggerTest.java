@@ -62,11 +62,14 @@ public class LogbackLoggerTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        LOGGER.log("regular call", LogLevel.DEBUG);
         Logger test_01 = new LogbackLogger(Logger.class);
         assertNotNull(test_01);
+    }
 
-        LOGGER.log("fallback call", LogLevel.DEBUG);
+    @Test
+    void testFallbackConstructor() {
+        LOGGER.log("TEST CASE: fallbackConstructor", LogLevel.DEBUG);
+
         LoggingService service = new LoggingService();
         service.createLogConfiguration();
 
@@ -82,7 +85,7 @@ public class LogbackLoggerTest {
 
     @Test
     void testLog() {
-        LOGGER.log("TEST CASE: log()::  LogLevel.TRACE", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: log", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.TRACE, logger.log("console logging test: trace", LogLevel.TRACE));
@@ -90,28 +93,37 @@ public class LogbackLoggerTest {
         assertEquals(LogLevel.INFO, logger.log("console logging test: info", LogLevel.INFO));
         assertEquals(LogLevel.WARN, logger.log("console logging test: warn", LogLevel.WARN));
         assertEquals(LogLevel.ERROR, logger.log("console logging test: error", LogLevel.ERROR));
+    }
 
-        //get the configured logLevel
-        assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
+    @Test
+    void testFailLog() {
+        LOGGER.log("TEST CASE: faiLog", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        assertNull(logger.log("console logging test: trace", null));
     }
 
     @Test
     void testCatchException() {
-        LOGGER.log("TEST CASE: catchException()", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: catchException", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
-        LOGGER.log("case A: any Exception", LogLevel.DEBUG);
         assertEquals("Logging exception test.",
                 logger.catchException(new Exception("Logging exception test.")));
-        LOGGER.log("case B: NullPointerException", LogLevel.DEBUG);
+    }
+
+    @Test
+    void testCatchNullpointerException() {
+        LOGGER.log("TEST CASE: catchNullpointerException", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals("Logging exception test.",
                 logger.catchException(new NullPointerException("Logging exception test.")));
-
     }
 
     @Test
     void testGetConfiguredLogLevel() throws InterruptedException {
-        LOGGER.log("TEST CASE: getConfiguredLogLevel()", LogLevel.DEBUG);
+        LOGGER.log("TEST CASE: getConfiguredLogLevel", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
 
@@ -121,19 +133,19 @@ public class LogbackLoggerTest {
 
         logger.setLogLevel(LogLevel.WARN);
         assertEquals(LogLevel.WARN, logger.getConfiguredLogLevel());
-        LOGGER.log("case 4: WARN", LogLevel.ERROR);
+        LOGGER.log("case 4: WARN", LogLevel.WARN);
 
         logger.setLogLevel(LogLevel.INFO);
         assertEquals(LogLevel.INFO, logger.getConfiguredLogLevel());
-        LOGGER.log("case 3: INFO", LogLevel.ERROR);
+        LOGGER.log("case 3: INFO", LogLevel.INFO);
 
         logger.setLogLevel(LogLevel.DEBUG);
         assertEquals(LogLevel.DEBUG, logger.getConfiguredLogLevel());
-        LOGGER.log("case 2: DEBUG", LogLevel.ERROR);
+        LOGGER.log("case 2: DEBUG", LogLevel.DEBUG);
 
         logger.setLogLevel(LogLevel.TRACE);
         assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
-        LOGGER.log("case 1: TRACE", LogLevel.ERROR);
+        LOGGER.log("case 1: TRACE", LogLevel.TRACE);
     }
 
     private String logConfiguration(final String logLevel) {

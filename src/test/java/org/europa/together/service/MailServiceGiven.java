@@ -41,18 +41,6 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
         return self();
     }
 
-    public MailServiceGiven service_get_db_configuration() {
-
-        try {
-            mailer.loadConfigurationFromDatabase();
-            assertEquals(10, mailer.getConfiguration().size());
-            assertEquals("smtp.gmail.com", mailer.getConfiguration().get("mailer.host"));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return self();
-    }
-
     public MailServiceGiven email_get_configuration(MailClient client) {
         try {
             assertEquals(10, client.getConfiguration().size());
