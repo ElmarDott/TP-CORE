@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -105,6 +106,7 @@ public class SaxTools implements XmlTools {
 
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(template);
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.transform(input, output);
 
         } catch (Exception ex) {

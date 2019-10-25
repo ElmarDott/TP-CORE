@@ -450,10 +450,13 @@ public class SaxToolsTest {
         xmlTools = new SaxTools();
         String xml = DIRECTORY + "/xml_datasource.xml";
         String xslt = DIRECTORY + "/template.xslt";
-        String out = xmlTools.transformXslt(new File(xml), new File(xslt));
+        String transformed = xmlTools.transformXslt(new File(xml), new File(xslt));
+
+        //fix problems with whitespace - just to see if the transformation works well
+        String out = xmlTools.shrinkContent(transformed);
 
         LOGGER.log(">>> XSLT; \n " + out, LogLevel.DEBUG);
-        assertEquals(1606, out.length());
+        assertEquals(857, out.length());
     }
 
     @Test
