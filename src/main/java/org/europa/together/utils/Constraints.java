@@ -92,7 +92,7 @@ public final class Constraints {
 
     private static String getVersion() {
         String filePath
-                = "org/europa/together/properties/version.properties";
+                = "org/europa/together/configuration/version.properties";
         PROPERTY_READER.appendPropertiesFromClasspath(filePath);
         return PROPERTY_READER.getPropertyAsString("version");
     }
