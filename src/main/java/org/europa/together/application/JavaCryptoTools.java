@@ -1,33 +1,27 @@
-package org.europa.together.utils;
+package org.europa.together.application;
 
 import java.security.MessageDigest;
-import org.europa.together.application.LogbackLogger;
+import static org.europa.together.business.ConfigurationDAO.FEATURE_ID;
+import org.europa.together.business.CryptoTools;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.utils.StringUtils;
+import org.springframework.stereotype.Repository;
 
 /**
- * A collection of java cryptography implementations.
+ * Implementation of java cryptography implementations.
  */
-public final class JavaCryptoTools {
+@Repository
+@FeatureToggle(featureID = FEATURE_ID)
+public class JavaCryptoTools implements CryptoTools {
 
+    private static final long serialVersionUID = 15L;
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoTools.class);
 
-    /**
-     * Constructor.
-     */
-    private JavaCryptoTools() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Calculates a hash from a given String.
-     *
-     * @param plainText as String
-     * @param algorithm as HashAlgorithm
-     * @return the calculated hash as String
-     */
-    public static String calculateHash(final String plainText,
+    @Override
+    public String calculateHash(final String plainText,
             final HashAlgorithm algorithm) {
 
         String hash = null;
