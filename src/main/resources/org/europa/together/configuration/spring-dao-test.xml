@@ -49,9 +49,10 @@
 
         <property name="jpaProperties">
             <props>
+                <prop key="javax.persistence.query.timeout">1000</prop>
                 <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.show_sql">${hibernate.test.show_sql}</prop>
             </props>
         </property>
     </bean>

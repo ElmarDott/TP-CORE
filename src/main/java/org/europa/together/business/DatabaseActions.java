@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * DatabaseActions(boolean activateTestMode);
  *
  * @author elmar.dott@gmail.com
- * @version 1.1
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")

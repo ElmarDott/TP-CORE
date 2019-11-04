@@ -7,6 +7,7 @@ import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.FileUtils;
+import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -30,15 +31,15 @@ public class SaxToolsTest {
     private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
     private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 
+    private XmlTools xmlTools;
+
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
+        boolean check = true;
+        String out = "executed";
         FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(XmlTools.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
         try {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.dtd"), DTD);
@@ -47,18 +48,15 @@ public class SaxToolsTest {
             LOGGER.catchException(ex);
         }
 
-        boolean check;
-        String out;
-        if (!toggle) {
+        boolean toggle = feature.deactivateUnitTests(XmlTools.FEATURE_ID);
+        boolean hasInternet
+                = SocketTimeout.isUrlAvailable("http://www.google.com");
+        if (!toggle || !hasInternet) {
             out = "skiped.";
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
-
     }
 
     @AfterAll
@@ -70,9 +68,8 @@ public class SaxToolsTest {
             SCHEMA.delete();
         }
 
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
-    private XmlTools xmlTools;
 
     @BeforeEach
     void testCaseInitialization() {
@@ -80,7 +77,7 @@ public class SaxToolsTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 
@@ -434,7 +431,7 @@ public class SaxToolsTest {
         xmlTools = new SaxTools();
         //check spring config
         String xmlFile = Constraints.SYSTEM_APP_DIR
-                + "/target/test-classes/org/europa/together/configuration/spring-dao-test.xml";
+                + "/target/test-classes/org/europa/together/xml/spring.xml";
         xmlTools.parseXmlFile(new File(xmlFile));
 
         xmlTools.prettyPrintXml();

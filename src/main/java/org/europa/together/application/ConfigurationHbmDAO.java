@@ -6,12 +6,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.ConfigurationDAO;
 import static org.europa.together.business.ConfigurationDAO.FEATURE_ID;
+import org.europa.together.business.CryptoTools;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.JavaCryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,14 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     private static final long serialVersionUID = 5L;
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAO.class);
 
+    private final transient CryptoTools cryptoTools;
+
     /**
      * Constructor.
      */
     public ConfigurationHbmDAO() {
         super();
+        cryptoTools = new JavaCryptoTools();
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
@@ -48,7 +51,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     public ConfigurationDO getConfigurationByKey(final String key,
             final String module, final String version) {
 
-        String hash = JavaCryptoTools.calculateHash(key, HashAlgorithm.SHA256);
+        String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
 
@@ -115,7 +118,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     public List<ConfigurationDO> getHistoryOfAEntry(final String module,
             final String key, final String configSet) {
 
-        String hash = JavaCryptoTools.calculateHash(key, HashAlgorithm.SHA256);
+        String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
 

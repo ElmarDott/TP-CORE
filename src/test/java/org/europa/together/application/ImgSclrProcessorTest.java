@@ -32,21 +32,15 @@ public class ImgSclrProcessorTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
+        boolean check = true;
+        String out = "executed";
         FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(ImageProcessor.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
 
-        boolean check;
-        String out;
+        boolean toggle = feature.deactivateUnitTests(ImageProcessor.FEATURE_ID);
         if (!toggle) {
             out = "skiped.";
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
@@ -54,7 +48,7 @@ public class ImgSclrProcessorTest {
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -64,7 +58,7 @@ public class ImgSclrProcessorTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

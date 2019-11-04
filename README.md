@@ -30,6 +30,8 @@ Components - Release: 1.0
  * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
+ * [CORE-0014]
+ * [CORE-0015] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0015%5D-Crypto-Tools)
 
 Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
 over configurations) and DRY (Don't repeat yourself). Also we following the programming
@@ -78,7 +80,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.2.0</version>
+    <version>2.0</version>
 </dependency>
 ```
 
@@ -100,16 +102,21 @@ In the case you like this project, let me know it and rate it with a star.
 
 ## Release Notes
 
-|Version | Comment
+|Version | Comment|-------------------------------------------------------------
+| 2.0    | in process
+|        | - Change bean validation to version 2.0
+|        | - API changes: renaming impl classes
+|        | - GenericDAO CRUD operations remove final
+|        | - Add Functionality: CryptoTool
 |--------|----------------------------------------------------------------------
 | 1.2    | in process
+|        | - change license to Apache License 2.0
 |        | - Add Functionality: Feature Toggle
 |        | - Extend Application Configuration by Version() data class
 |        | - provide JDBC connection object in DatabaseActions
 |        | - refactor pom
 |        | - fix TreeNode hashCode() & equals()
 |        | - add TreeNode.copy()
-|        | - Add Functionality: (Utils) JavaCryptoTool
 |--------|----------------------------------------------------------------------
 | 1.1    | published 10/2018
 |        | - optimize overall Test Coverage

@@ -19,7 +19,6 @@ import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
-import org.europa.together.utils.SaxDocumentHandler;
 import org.europa.together.business.XmlTools;
 import static org.europa.together.business.XmlTools.FEATURE_ID;
 import org.europa.together.exceptions.MisconfigurationException;

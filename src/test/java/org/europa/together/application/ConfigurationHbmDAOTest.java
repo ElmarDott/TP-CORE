@@ -27,13 +27,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:/org/europa/together/configuration/spring-dao-test.xml",
-    "file:./target/test-classes/org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:/org/europa/together/configuration/spring-dao-test.xml"})
 public class ConfigurationHbmDAOTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
-
-    private static final String FLUSH_TABLE = "TRUNCATE TABLE app_config;";
+    private static final String FLUSH_TABLE = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
     private static final String FILE = "org/europa/together/sql/configuration-test.sql";
     private static DatabaseActions actions = new JdbcActions(true);
 
@@ -56,24 +54,16 @@ public class ConfigurationHbmDAOTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
+        boolean check = true;
+        String out = "executed";
         FF4jProcessor feature = new FF4jProcessor();
+
         boolean toggle = feature.deactivateUnitTests(ConfigurationDAO.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
         boolean socket = actions.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
-
-        boolean check;
-        String out;
         if (!toggle || !socket) {
             out = "skiped.";
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
         LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
@@ -83,7 +73,7 @@ public class ConfigurationHbmDAOTest {
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -94,7 +84,7 @@ public class ConfigurationHbmDAOTest {
     @AfterEach
     void testCaseTermination() {
         actions.executeQuery(FLUSH_TABLE);
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 
@@ -111,17 +101,6 @@ public class ConfigurationHbmDAOTest {
 
         List<ConfigurationDO> result = configurationDAO.listAllElements();
         assertEquals(14, result.size());
-    }
-
-    @Test
-    void testFlushTable() {
-        LOGGER.log("TEST CASE: flushTable()", LogLevel.DEBUG);
-
-        configurationDAO.flushTable(ConfigurationDO.TABLE_NAME);
-        assertEquals(0, configurationDAO.countEntries(ConfigurationDO.TABLE_NAME));
-
-        actions.executeSqlFromClasspath(FILE);
-        assertEquals(14, configurationDAO.countEntries(ConfigurationDO.TABLE_NAME));
     }
 
     @Test

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
@@ -246,7 +246,7 @@ public interface MailClient {
      *
      * @param recipient as InternetAddress
      * @return e-mail as MimeMessage
-     * @throws javax.mail.MessagingException
+     * @throws javax.mail.MessagingException by error
      */
     @API(status = STABLE, since = "1.0")
     MimeMessage composeMail(InternetAddress recipient) throws MessagingException;

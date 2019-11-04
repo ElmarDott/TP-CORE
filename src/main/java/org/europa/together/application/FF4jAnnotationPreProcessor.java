@@ -1,7 +1,6 @@
-package org.europa.together.utils;
+package org.europa.together.application;
 
 import java.io.Writer;
-import org.europa.together.application.FF4jProcessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,18 +26,18 @@ import org.ff4j.core.Feature;
  * This Class can not use the Logger because of the pre compiling mode
  */
 @SupportedAnnotationTypes("org.europa.together.business.FeatureToggle")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @FeatureToggle(featureID = "CM-0013.H01")
-public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
+public class FF4jAnnotationPreProcessor extends AbstractProcessor {
 
     private FF4jProcessor ff4j;
-    private AnnotationProcessingHelper annotationHelper;
+    private FF4jAnnotationPreProcessorHelper annotationHelper;
     private Filer filer;
 
     /**
      * Constructor.
      */
-    public ToggleAnnotationPreProcessor() {
+    public FF4jAnnotationPreProcessor() {
 
         String testConfigFile = "/src/test/resources"
                 + "/org/europa/together/configuration/DeactivatedFeatureToggles.xml";
@@ -46,7 +45,7 @@ public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
         ff4j = new FF4jProcessor();
 //        ff4j.setConfigFile(testConfigFile);
 
-        annotationHelper = new AnnotationProcessingHelper();
+        annotationHelper = new FF4jAnnotationPreProcessorHelper();
     }
 
     @Override
@@ -66,17 +65,17 @@ public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
                 for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
 
                     if (annotation == null) {
-                        AnnotationProcessingHelper
+                        FF4jAnnotationPreProcessorHelper
                                 .print("WARN: no @FeatureToggle annotations detected.");
                         break;
                     }
                     if (element == null) {
-                        AnnotationProcessingHelper
+                        FF4jAnnotationPreProcessorHelper
                                 .print("WARN: no anotation element");
                         break;
                     }
                     if (FeatureToggle.class == null) {
-                        AnnotationProcessingHelper
+                        FF4jAnnotationPreProcessorHelper
                                 .print("ERROR: annotation class not exist");
                         break;
                     }
@@ -96,19 +95,19 @@ public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
                 List<AnnotatedClass> orderdElements = annotationHelper
                         .mergeAnnotatedElements(collection);
 
-                AnnotationProcessingHelper
+                FF4jAnnotationPreProcessorHelper
                         .print("DEBUG: Result > \n");
 
                 for (AnnotatedClass elemet : orderdElements) {
-                    AnnotationProcessingHelper.print("\t" + elemet.toString());
+                    FF4jAnnotationPreProcessorHelper.print("\t" + elemet.toString());
                     writeFiles(elemet);
                 }
             }
         } catch (Exception ex) {
             successs = false;
-            AnnotationProcessingHelper
+            FF4jAnnotationPreProcessorHelper
                     .print("ERROR: Process annotation @FeatureToggle failed.");
-            AnnotationProcessingHelper
+            FF4jAnnotationPreProcessorHelper
                     .print("ERROR: " + ex.getClass().getSimpleName() + ex.getMessage());
         }
         return successs;
@@ -131,7 +130,7 @@ public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
 //            AnnotationProcessingHelper
 //                    .print(processFiles(fileReader, element));
         } catch (Exception ex) {
-            AnnotationProcessingHelper
+            FF4jAnnotationPreProcessorHelper
                     .print("ERROR: " + ex.getClass().getSimpleName() + ex.getMessage());
         }
     }
@@ -147,7 +146,7 @@ public final class ToggleAnnotationPreProcessor extends AbstractProcessor {
             }
 
         } catch (Exception ex) {
-            AnnotationProcessingHelper
+            FF4jAnnotationPreProcessorHelper
                     .print("ERROR: " + ex.getClass().getSimpleName() + ex.getMessage());
         }
         return content;

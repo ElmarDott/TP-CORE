@@ -53,26 +53,17 @@ public class JavaMailClientTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
+        boolean check = true;
+        String out = "executed";
         FF4jProcessor feature = new FF4jProcessor();
+
         boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
         boolean socket = CONNECTION.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
-
-        boolean check;
-        String out;
         if (!toggle || !socket) {
             out = "skiped.";
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
-
         LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
@@ -89,11 +80,10 @@ public class JavaMailClientTest {
             SMTP_SERVER.stop();
             CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
 
-            LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -102,7 +92,7 @@ public class JavaMailClientTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

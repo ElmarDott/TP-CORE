@@ -96,9 +96,9 @@
                             <includes>
                                 <include>org/europa/together/business/FeatureToggle.java</include>
                                 <include>org/europa/together/domain/AnnotatedClass.java</include>
-                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
+                                <include>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</include>
                                 <include>org/europa/together/application/FF4jProcessor.java</include>
-                                <include>org/europa/together/utils/ToggleAnnotationPreProcessor.java</include>
+                                <include>org/europa/together/application/FF4jAnnotationPreProcessor.java</include>
                                 <include>org/europa/together/configuration/FeatureToggles.xml</include>
                             </includes>
                         </configuration>
@@ -114,9 +114,9 @@
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
                                 <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
-                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
+                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</exclude>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
-                                <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessor.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>

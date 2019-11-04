@@ -1,6 +1,8 @@
 package org.europa.together.utils;
 
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -18,6 +20,26 @@ public final class SocketTimeout {
      */
     private SocketTimeout() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Check if a URL e. g. www.google.com is available. It is a simple test if
+     * a connection to the internet is possible.
+     *
+     * @param url as String
+     * @return true on success
+     */
+    public static boolean isUrlAvailable(final String url) {
+        boolean success = false;
+        try {
+            URL uri = new URL(url);
+            URLConnection connection = uri.openConnection();
+            connection.connect();
+            success = true;
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return success;
     }
 
     /**

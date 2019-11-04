@@ -45,7 +45,7 @@ public class ConfigurationDO implements Serializable {
      */
     public static final String TABLE_NAME = "APP_CONFIG";
 
-    @Id
+    @Id //validate uuid
     @Column(name = "IDX")
     private String uuid;
 
@@ -101,7 +101,6 @@ public class ConfigurationDO implements Serializable {
      */
     public ConfigurationDO(final String key, final String value, final String modulName,
             final String version) {
-
         //PreSet
         this.uuid = StringUtils.generateUUID();
         //mandatory

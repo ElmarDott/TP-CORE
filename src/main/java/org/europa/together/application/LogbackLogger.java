@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Implementation of the Logger as Wrapper for SLF4j and logback Framework.
  */
 @FeatureToggle(featureID = FEATURE_ID)
-public final class LogbackLogger implements Logger {
+public class LogbackLogger implements Logger {
 
     private static final long serialVersionUID = 1L;
     private final String configurationFile = SYSTEM_APP_DIR + "/logback.xml";

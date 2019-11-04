@@ -3,6 +3,7 @@ package org.europa.together.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.europa.together.business.FeatureToggle;
 
 /**
  * Data structure to storage annotated FeatureToggle elements. Implements the
@@ -10,6 +11,7 @@ import java.util.Objects;
  * Classname & constructor name are the same. Types: CLASS | ENUM | CONSTRUCTOR
  * | METHOD
  */
+@FeatureToggle(featureID = "CM-0013.DO02")
 public class AnnotatedClass {
 
     public static final String CLASS = "CLASS";

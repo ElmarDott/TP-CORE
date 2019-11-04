@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
- * @version 1.1
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
@@ -125,12 +125,4 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      */
     @API(status = STABLE, since = "1.0")
     T find(PK id);
-
-    /**
-     * Delete all Entries of a Database Table.
-     *
-     * @param tableName as String
-     */
-    @API(status = STABLE, since = "1.0")
-    void flushTable(String tableName);
 }

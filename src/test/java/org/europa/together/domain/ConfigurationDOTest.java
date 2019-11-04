@@ -217,7 +217,6 @@ public class ConfigurationDOTest {
     @Test
     void testIsNotEqual() {
         LOGGER.log("TEST CASE: isNotEqual()", LogLevel.DEBUG);
-        LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
 
         ConfigurationDO A
                 = new ConfigurationDO("AAA", "000", "test", "1.0.1");

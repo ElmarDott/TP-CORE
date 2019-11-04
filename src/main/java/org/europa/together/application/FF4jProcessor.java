@@ -3,13 +3,14 @@ package org.europa.together.application;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import org.europa.together.utils.AnnotationProcessingHelper;
+import org.europa.together.business.FeatureToggle;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
 
 /**
  * Wrapper implementation.
  */
+@FeatureToggle(featureID = "CM-0013")
 public class FF4jProcessor {
 
     private static final long serialVersionUID = 13L;
@@ -23,8 +24,10 @@ public class FF4jProcessor {
      * Constructor.
      */
     public FF4jProcessor() {
-        AnnotationProcessingHelper.print("INFO: FeatureToggle PATH: " + this.path);
-        AnnotationProcessingHelper.print("INFO: FeatureToggle configuration: " + this.configFile);
+        FF4jAnnotationPreProcessorHelper
+                .print("INFO: FeatureToggle PATH: " + this.path);
+        FF4jAnnotationPreProcessorHelper
+                .print("INFO: FeatureToggle configuration: " + this.configFile);
     }
 
     /**
@@ -44,11 +47,11 @@ public class FF4jProcessor {
             toggles = new FF4j(source);
             feature = toggles.getFeature(featureId);
 
-            AnnotationProcessingHelper.print("INFO: Feature(" + feature.getUid() + ") "
+            FF4jAnnotationPreProcessorHelper.print("INFO: Feature(" + feature.getUid() + ") "
                     + feature.isEnable() + " " + feature.getDescription());
 
         } catch (Exception ex) {
-            AnnotationProcessingHelper.print("ERROR: " + ex.getMessage());
+            FF4jAnnotationPreProcessorHelper.print("ERROR: " + ex.getMessage());
         }
         return feature;
     }
@@ -61,7 +64,7 @@ public class FF4jProcessor {
     public void setConfigFile(final String configuration) {
         this.configFile = configuration;
 
-        AnnotationProcessingHelper.print("INFO: change configuration to: " + configuration);
+        FF4jAnnotationPreProcessorHelper.print("INFO: change configuration to: " + configuration);
     }
 
     /**

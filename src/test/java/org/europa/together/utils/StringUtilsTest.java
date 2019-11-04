@@ -5,7 +5,9 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.application.JavaCryptoTools;
 import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.CryptoTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.HashAlgorithm;
@@ -27,6 +29,7 @@ public class StringUtilsTest {
 
     private static final String FILE_PATH
             = Constraints.SYSTEM_APP_DIR + "/src/test/resources/org/europa/together/bom";
+    private CryptoTools cryptoTools = new JavaCryptoTools();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -101,25 +104,25 @@ public class StringUtilsTest {
     @Test
     void testHashToInt() {
 
-        assertEquals(2211, StringUtils.hashToInt(JavaCryptoTools.calculateHash("", HashAlgorithm.MD5)));
-        assertEquals(2262, StringUtils.hashToInt(JavaCryptoTools.calculateHash(" ", HashAlgorithm.MD5)));
-        assertEquals(2012, StringUtils.hashToInt(JavaCryptoTools.calculateHash("MD5", HashAlgorithm.MD5)));
-        assertEquals(2235, StringUtils.hashToInt(JavaCryptoTools.calculateHash("md5", HashAlgorithm.MD5)));
+        assertEquals(2211, StringUtils.hashToInt(cryptoTools.calculateHash("", HashAlgorithm.MD5)));
+        assertEquals(2262, StringUtils.hashToInt(cryptoTools.calculateHash(" ", HashAlgorithm.MD5)));
+        assertEquals(2012, StringUtils.hashToInt(cryptoTools.calculateHash("MD5", HashAlgorithm.MD5)));
+        assertEquals(2235, StringUtils.hashToInt(cryptoTools.calculateHash("md5", HashAlgorithm.MD5)));
 
-        assertEquals(2854, StringUtils.hashToInt(JavaCryptoTools.calculateHash("", HashAlgorithm.SHA)));
-        assertEquals(2725, StringUtils.hashToInt(JavaCryptoTools.calculateHash(" ", HashAlgorithm.SHA)));
-        assertEquals(2863, StringUtils.hashToInt(JavaCryptoTools.calculateHash("SHA", HashAlgorithm.SHA)));
-        assertEquals(2470, StringUtils.hashToInt(JavaCryptoTools.calculateHash("sha", HashAlgorithm.SHA)));
+        assertEquals(2854, StringUtils.hashToInt(cryptoTools.calculateHash("", HashAlgorithm.SHA)));
+        assertEquals(2725, StringUtils.hashToInt(cryptoTools.calculateHash(" ", HashAlgorithm.SHA)));
+        assertEquals(2863, StringUtils.hashToInt(cryptoTools.calculateHash("SHA", HashAlgorithm.SHA)));
+        assertEquals(2470, StringUtils.hashToInt(cryptoTools.calculateHash("sha", HashAlgorithm.SHA)));
 
-        assertEquals(4375, StringUtils.hashToInt(JavaCryptoTools.calculateHash("", HashAlgorithm.SHA256)));
-        assertEquals(4653, StringUtils.hashToInt(JavaCryptoTools.calculateHash(" ", HashAlgorithm.SHA256)));
-        assertEquals(4664, StringUtils.hashToInt(JavaCryptoTools.calculateHash("SHA-256", HashAlgorithm.SHA256)));
-        assertEquals(4340, StringUtils.hashToInt(JavaCryptoTools.calculateHash("sha-256", HashAlgorithm.SHA256)));
+        assertEquals(4375, StringUtils.hashToInt(cryptoTools.calculateHash("", HashAlgorithm.SHA256)));
+        assertEquals(4653, StringUtils.hashToInt(cryptoTools.calculateHash(" ", HashAlgorithm.SHA256)));
+        assertEquals(4664, StringUtils.hashToInt(cryptoTools.calculateHash("SHA-256", HashAlgorithm.SHA256)));
+        assertEquals(4340, StringUtils.hashToInt(cryptoTools.calculateHash("sha-256", HashAlgorithm.SHA256)));
 
-        assertEquals(8933, StringUtils.hashToInt(JavaCryptoTools.calculateHash("", HashAlgorithm.SHA512)));
-        assertEquals(9220, StringUtils.hashToInt(JavaCryptoTools.calculateHash(" ", HashAlgorithm.SHA512)));
-        assertEquals(9028, StringUtils.hashToInt(JavaCryptoTools.calculateHash("SHA-512", HashAlgorithm.SHA512)));
-        assertEquals(8941, StringUtils.hashToInt(JavaCryptoTools.calculateHash("sha-512", HashAlgorithm.SHA512)));
+        assertEquals(8933, StringUtils.hashToInt(cryptoTools.calculateHash("", HashAlgorithm.SHA512)));
+        assertEquals(9220, StringUtils.hashToInt(cryptoTools.calculateHash(" ", HashAlgorithm.SHA512)));
+        assertEquals(9028, StringUtils.hashToInt(cryptoTools.calculateHash("SHA-512", HashAlgorithm.SHA512)));
+        assertEquals(8941, StringUtils.hashToInt(cryptoTools.calculateHash("sha-512", HashAlgorithm.SHA512)));
     }
 
     @Test

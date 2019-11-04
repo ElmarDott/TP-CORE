@@ -19,7 +19,8 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.JavaCryptoTools;
+import org.europa.together.application.JavaCryptoTools;
+import org.europa.together.business.CryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,6 +40,8 @@ public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
+
+    private CryptoTools cryptoTools = new JavaCryptoTools();
 
     @Autowired
     @Qualifier("configurationHbmDAO")
@@ -79,7 +82,7 @@ public final class MailClientService {
 
             for (Map.Entry<String, String> entry : configurationList.entrySet()) {
                 if (configEntry.getKey().equals(
-                        JavaCryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
+                        cryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
 
                     configEntry.setValue(entry.getValue());
                     configurationDAO.update(configEntry.getUuid(), configEntry);
@@ -112,52 +115,52 @@ public final class MailClientService {
             }
 
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.host",
+                    .equals(cryptoTools.calculateHash("mailer.host",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.host", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.port",
+                    .equals(cryptoTools.calculateHash("mailer.port",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.port", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.sender",
+                    .equals(cryptoTools.calculateHash("mailer.sender",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.sender", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.user",
+                    .equals(cryptoTools.calculateHash("mailer.user",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.user", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.password",
+                    .equals(cryptoTools.calculateHash("mailer.password",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.password", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.ssl",
+                    .equals(cryptoTools.calculateHash("mailer.ssl",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.ssl", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.tls",
+                    .equals(cryptoTools.calculateHash("mailer.tls",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.tls", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.debug",
+                    .equals(cryptoTools.calculateHash("mailer.debug",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.debug", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.count",
+                    .equals(cryptoTools.calculateHash("mailer.count",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.count", value);
             }
             if (entry.getKey()
-                    .equals(JavaCryptoTools.calculateHash("mailer.wait",
+                    .equals(cryptoTools.calculateHash("mailer.wait",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.wait", value);
             }

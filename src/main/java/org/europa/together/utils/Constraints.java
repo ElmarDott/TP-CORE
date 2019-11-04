@@ -1,19 +1,13 @@
 package org.europa.together.utils;
 
 import java.nio.file.Paths;
-import org.europa.together.application.LogbackLogger;
 import org.europa.together.application.PropertyFileReader;
-import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
-import org.europa.together.domain.LogLevel;
 
 /**
  * Constraints for the package CORE.
  */
 public final class Constraints {
-
-    private static final Logger LOGGER = new LogbackLogger(Constraints.class);
-    private static final PropertyReader PROPERTY_READER = new PropertyFileReader();
 
     /**
      * Constructor.
@@ -37,6 +31,7 @@ public final class Constraints {
      */
     public static final String MODULE_DESCRIPTION = "Basic Library";
 
+    /* ###################################################################### */
     /**
      * Detect the Operating System (OS) where the application is running.
      */
@@ -75,7 +70,7 @@ public final class Constraints {
      * @return Constraints as String
      */
     public static String printConstraintInfo() {
-        String moduleInfo = "CORE Constraints DEBUG Info."
+        return "CORE Constraints DEBUG Info."
                 + "\n\t Module Name: " + MODULE_NAME
                 + "\n\t Module Version: " + MODULE_VERSION
                 + "\n\t Module Description: " + MODULE_DESCRIPTION
@@ -85,15 +80,14 @@ public final class Constraints {
                 + "\n\t BYTE DEVISOR: " + BYTE_DEVISOR
                 + "\n\t HEX 255: " + HEX_255
                 + "\n\t HEX 256: " + HEX_256;
-
-        LOGGER.log(moduleInfo, LogLevel.DEBUG);
-        return moduleInfo;
     }
 
+    /* ###################################################################### */
     private static String getVersion() {
         String filePath
                 = "org/europa/together/configuration/version.properties";
-        PROPERTY_READER.appendPropertiesFromClasspath(filePath);
-        return PROPERTY_READER.getPropertyAsString("version");
+        PropertyReader propertyReader = new PropertyFileReader();
+        propertyReader.appendPropertiesFromClasspath(filePath);
+        return propertyReader.getPropertyAsString("version");
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)
-public final class ListTree implements TreeWalker {
+public class ListTree implements TreeWalker {
 
     private static final long serialVersionUID = 9L;
     private static final Logger LOGGER = new LogbackLogger(ListTree.class);

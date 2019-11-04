@@ -1,9 +1,11 @@
-package org.europa.together.utils;
+package org.europa.together.application;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Element;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.domain.AnnotatedClass;
+import org.europa.together.utils.StringUtils;
 
 /**
  * During the processing of annotations some simple functions are needed, wich
@@ -16,7 +18,8 @@ import org.europa.together.domain.AnnotatedClass;
  * not for it's functionality inside. This circumstances are reasons why we have
  * a explicit print method instead of the Logger.
  */
-public class AnnotationProcessingHelper {
+@FeatureToggle(featureID = "CM-0013.H01")
+public class FF4jAnnotationPreProcessorHelper {
 
     private List<AnnotatedClass> annotations = new ArrayList<>();
 
