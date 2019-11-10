@@ -2,7 +2,7 @@
 
 # together Platform :: CORE
 
-[![License GPL-3.0](https://img.shields.io/badge/license-GNU-green.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![License Apache 2](https://img.shields.io/github/license/ElmarDott/TP-CORE)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
@@ -30,7 +30,7 @@ Components - Release: 1.0
  * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
- * [CORE-0014]
+ * [CORE-0014] [TextProcessor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Text-Processor)
  * [CORE-0015] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0015%5D-Crypto-Tools)
 
 Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
@@ -57,7 +57,7 @@ is running you are be able to setup the database by the following steps:
   DOC/>  https://docs.docker.com/samples/library/postgres/
 
 To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
-script.
+script. If you need a short introduction about docker, you can check our short tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
 
 ### Build
 
