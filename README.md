@@ -40,8 +40,8 @@ and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 8 SE. The
-implementation is also designed to run in Java EE 7 (e.g. Tomcat) environments.
+The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 111 SE. The
+implementation is also designed to run in Java EE 8 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL DBMS 11.
 
@@ -90,7 +90,7 @@ Please check the Release Notes for published Artifact Versions.
 
 ## License
 
-This project is licensed under the General Public License GPL-3.0
+This project is licensed under the Apache 2.0 license.
 
 ## Contributors
 
@@ -102,7 +102,8 @@ In the case you like this project, let me know it and rate it with a star.
 
 ## Release Notes
 
-|Version | Comment|-------------------------------------------------------------
+|Version | Comment
+|--------|----------------------------------------------------------------------
 | 2.0    | published 11/2019
 |        | - Change bean validation to version 2.0
 |        | - API changes: renaming impl classes
