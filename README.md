@@ -103,7 +103,7 @@ In the case you like this project, let me know it and rate it with a star.
 ## Release Notes
 
 |Version | Comment|-------------------------------------------------------------
-| 2.0    | in process
+| 2.0    | published 11/2019
 |        | - Change bean validation to version 2.0
 |        | - API changes: renaming impl classes
 |        | - GenericDAO CRUD operations remove final
