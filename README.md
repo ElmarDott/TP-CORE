@@ -40,7 +40,7 @@ and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 111 SE. The
+The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 11 SE. The
 implementation is also designed to run in Java EE 8 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL DBMS 11.

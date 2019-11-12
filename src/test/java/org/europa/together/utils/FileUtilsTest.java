@@ -138,15 +138,15 @@ public class FileUtilsTest {
         assertEquals(3, filelist.size());
         for (File entry : filelist) {
             if (entry.getName().equalsIgnoreCase("root")) {
-                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/root",
+                assertEquals(DIRECTORY + "dir-test/root",
                         entry.getAbsolutePath());
             }
             if (entry.getName().equalsIgnoreCase("file.sql")) {
-                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/level_2.0/level_2.1/file.sql",
+                assertEquals(DIRECTORY + "dir-test/level_2.0/level_2.1/file.sql",
                         entry.getAbsolutePath());
             }
             if (entry.getName().equalsIgnoreCase("file_a.txt")) {
-                assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/level_1.0/file_a.txt",
+                assertEquals(DIRECTORY + "dir-test/level_1.0/file_a.txt",
                         entry.getAbsolutePath());
             }
         }
