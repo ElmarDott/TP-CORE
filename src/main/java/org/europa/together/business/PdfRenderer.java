@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  * Basic PDF functionality to generate from an Application letters or reports.
  *
  * @author elmar.dott@gmail.com
- * @version 1.1
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ITextRenderer")
 @Component
 public interface PdfRenderer {
 

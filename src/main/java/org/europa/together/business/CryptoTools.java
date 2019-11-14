@@ -9,9 +9,9 @@ import org.europa.together.domain.HashAlgorithm;
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
- * @since 1.0
+ * @since 2.0
  */
-@API(status = STABLE, since = "2.0")
+@API(status = STABLE, since = "2.0", consumers = "JavaCryptoTools")
 public interface CryptoTools {
 
     /**

@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
  *
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ImgSclrProcessor")
 @Component
 public interface ImageProcessor {
 

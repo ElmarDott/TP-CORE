@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @version 2.0
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "JdbcActions")
 @Component
 public interface DatabaseActions {
 

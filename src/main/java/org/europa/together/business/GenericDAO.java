@@ -24,10 +24,10 @@ import org.springframework.stereotype.Component;
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
- * @version 2.0
+ * @version 1.2111111
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "GenrericHbmDAO")
 @Component
 public interface GenericDAO<T, PK extends Serializable> extends Serializable {
 

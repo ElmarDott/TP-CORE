@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * The PropertyReader is be able to read properties from different resources
- * like File, Database or from the Classpath. It is also possible to manipulate
+ * like File, Database or from the classpath. It is also possible to manipulate
  * the property list. The key feature are the different cast methods for the
  * property values to get them in the correct datatype.
  * <br><br>
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
  * the # character.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "PropertyFileReader")
 @Component
 public interface PropertyReader {
 

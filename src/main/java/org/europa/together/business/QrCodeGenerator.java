@@ -8,15 +8,15 @@ import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 /**
- * Generates Quick Response Codes (QR Codes) with the Zxing Library. The
- * Generator provides DataStructures like Calendar Entry or Contact Information
- * (PIM). It's implemented an encoder and also an decoder.
+ * Generates Quick Response Codes (QR Codes). The Generator provides
+ * DataStructures like Calendar Entry or Contact Information (PIM). It's
+ * implemented an encoder and also an decoder.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ZxingGenerator")
 @Component
 public interface QrCodeGenerator {
 

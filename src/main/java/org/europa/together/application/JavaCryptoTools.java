@@ -11,7 +11,7 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of java cryptography implementations.
+ * Implementation of java cryptography.
  */
 @Repository
 @FeatureToggle(featureID = FEATURE_ID)

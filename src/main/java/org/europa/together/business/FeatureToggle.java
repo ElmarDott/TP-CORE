@@ -22,7 +22,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE, since = "1.2")
+@API(status = STABLE, since = "1.2", consumers = "@ANNOTATION")
 public @interface FeatureToggle {
 
     /**

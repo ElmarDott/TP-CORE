@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
  * Java Applications.
  *
  * @author elmar.dott@gmail.com
- * @version 1.1
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "SaxTools")
 @Component
 public interface XmlTools {
 
