@@ -3,7 +3,7 @@
 # together Platform :: CORE
 
 [![License Apache 2](https://img.shields.io/github/license/ElmarDott/TP-CORE)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-1.1.0-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.0.1-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
 [![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg?branch=master)](https://coveralls.io/github/ElmarDott/TP-CORE)
@@ -12,7 +12,8 @@
 The TP-CORE Artifact contains typical basic functions for Java Applications. The
 Module is elaborated as library and packed as JAR file. It is possible to use
 this Artifact in Java EE and Java SE (Desktop) Applications. The implementation
-of these library has the goal, to create an useful and compact toolbox.
+of these library has the goal, to create an useful and compact toolbox. Free of
+charge for any kind of usage, commercial and private,
 
 ## Getting Started
 
@@ -80,7 +81,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -98,11 +99,18 @@ Feel free to send a request by e-mail in the case you want to contribute the
 project. Everyone is welcome, even beginners in programming. We also appreciate
 help by optimizing our documentation and creating tutorials.
 
+Mistakes happen. But we only able to fix them, when we you inform us you find a
+bug. Do not heasitat to send a report in the way you feel common. We try to give
+as much as possile fast & direct support.
+
 In the case you like this project, let me know it and rate it with a star.
 
 ## Release Notes
 
 |Version | Comment
+|--------|----------------------------------------------------------------------
+| 2.0.1  | published 12/2019
+|        | - bugfix; DAO visibilities
 |--------|----------------------------------------------------------------------
 | 2.0    | published 11/2019
 |        | - Change bean validation to version 2.0
