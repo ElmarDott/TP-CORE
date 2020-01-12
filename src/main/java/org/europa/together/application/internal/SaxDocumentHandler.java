@@ -1,10 +1,11 @@
-package org.europa.together.application;
+package org.europa.together.application.internal;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
