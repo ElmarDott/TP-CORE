@@ -94,12 +94,12 @@
                         <configuration>
                             <proc>none</proc>
                             <includes>
+                                <include>org/europa/together/configuration/FeatureToggles.xml</include>
                                 <include>org/europa/together/business/FeatureToggle.java</include>
                                 <include>org/europa/together/domain/AnnotatedClass.java</include>
-                                <include>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</include>
                                 <include>org/europa/together/application/FF4jProcessor.java</include>
-                                <include>org/europa/together/application/FF4jAnnotationPreProcessor.java</include>
-                                <include>org/europa/together/configuration/FeatureToggles.xml</include>
+                                <include>org/europa/together/application/internal/FF4jAnnotationPreProcessor.java</include>
+                                <include>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -114,9 +114,9 @@
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
                                 <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
-                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</exclude>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
-                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -131,9 +131,9 @@
                             <excludes>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
                                 <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
-                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
-                                <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -156,6 +156,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultEntries/>
+                            <addDefaultImplementationEntries/>
+                            <addDefaultSpecificationEntries/>
+                            <addBuildEnvironmentEntries/>
+                        </manifest>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${groupId}.${artifactId}</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
