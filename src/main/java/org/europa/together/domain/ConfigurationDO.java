@@ -31,7 +31,7 @@ import org.europa.together.utils.StringUtils;
         //CHECKSTYLE:ON
         uniqueConstraints = {
             @UniqueConstraint(columnNames
-                    = {"MODUL_NAME", "MODUL_VERSION", "CONF_KEY"})
+                    = {"MODUL_NAME", "SERVICE_VERSION", "CONF_KEY"})
         }
 )
 @FeatureToggle(featureID = "CM-0005.DO01")
@@ -65,7 +65,7 @@ public class ConfigurationDO implements Serializable {
     private String modulName;
 
     @NotNull(message = "{validation.notnull}")
-    @Column(name = "MODUL_VERSION", nullable = false)
+    @Column(name = "SERVICE_VERSION", nullable = false)
     private String version;
 
     @NotNull(message = "{validation.notnull}")
