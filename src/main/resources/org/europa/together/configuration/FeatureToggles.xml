@@ -67,7 +67,7 @@
         </feature-group>
 
         <feature-group name="Release_2.0">
-            <feature uid="CM-0015"      enable="true" description="Java Crypto Tools" />
+            <feature uid="CM-0014"      enable="true" description="Java Crypto Tools" />
         </feature-group>
     </features>
 </ff4j>

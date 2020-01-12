@@ -31,8 +31,7 @@ Components - Release: 1.0
  * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
- * [CORE-0014] [TextProcessor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Text-Processor)
- * [CORE-0015] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0015%5D-Crypto-Tools)
+ * [CORE-0014] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
 
 Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
 over configurations) and DRY (Don't repeat yourself). Also we following the programming
