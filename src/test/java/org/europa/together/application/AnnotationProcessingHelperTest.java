@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.AnnotatedClass;
 import org.europa.together.domain.LogLevel;

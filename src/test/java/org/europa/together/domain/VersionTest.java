@@ -1,12 +1,10 @@
 package org.europa.together.domain;
 
-import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;

@@ -5,7 +5,6 @@ import java.util.Map;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
-import static org.europa.together.service.MailClientScenarioTest.SMTP_SERVER;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;

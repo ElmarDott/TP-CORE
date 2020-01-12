@@ -1,6 +1,6 @@
 package org.europa.together.application;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.business.ConfigurationDAO;

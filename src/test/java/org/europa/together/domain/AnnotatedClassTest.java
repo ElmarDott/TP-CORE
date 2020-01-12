@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
