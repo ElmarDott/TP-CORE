@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Element;
 import org.europa.together.business.FeatureToggle;
-import org.europa.together.domain.AnnotatedClass;
 import org.europa.together.utils.StringUtils;
 
 /**

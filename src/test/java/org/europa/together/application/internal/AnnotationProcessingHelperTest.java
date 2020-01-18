@@ -1,4 +1,4 @@
-package org.europa.together.application;
+package org.europa.together.application.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -6,9 +6,9 @@ import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper;
+import org.europa.together.application.FF4jProcessor;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.europa.together.domain.AnnotatedClass;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import static org.junit.jupiter.api.Assertions.*;

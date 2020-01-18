@@ -1,9 +1,10 @@
-package org.europa.together.domain;
+package org.europa.together.application.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

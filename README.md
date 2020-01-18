@@ -80,7 +80,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 
@@ -107,6 +107,12 @@ In the case you like this project, let me know it and rate it with a star.
 ## Release Notes
 
 |Version | Comment
+|--------|----------------------------------------------------------------------
+| 2.0.2  | published 01/2020
+|        | - move internal implementation classes to package internal
+|        | - bugfix; add Java Modul name to MANIFEST.MF
+|        | - bugfix; cleanup test case imports
+|        | - bugfix; ConfigurationDO rename MODUL_VERSION to SERVIC_VERSION
 |--------|----------------------------------------------------------------------
 | 2.0.1  | published 12/2019
 |        | - bugfix; DAO visibilities
