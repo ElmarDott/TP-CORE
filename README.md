@@ -108,6 +108,9 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
+| 2.1    | in process
+|        | -
+|--------|----------------------------------------------------------------------
 | 2.0.2  | published 01/2020
 |        | - move internal implementation classes to package internal
 |        | - bugfix; add Java Modul name to MANIFEST.MF
