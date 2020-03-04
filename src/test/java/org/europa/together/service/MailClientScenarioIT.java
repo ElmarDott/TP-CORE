@@ -32,11 +32,11 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class MailClientScenarioTest extends
+public class MailClientScenarioIT extends
         ScenarioTest<MailServiceGiven, MailServiceAction, MailServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LogbackLogger(MailClientScenarioTest.class);
+            = new LogbackLogger(MailClientScenarioIT.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
@@ -46,7 +46,7 @@ public class MailClientScenarioTest extends
     public static GreenMail SMTP_SERVER = null;
     private MailClient client = null;
 
-    public MailClientScenarioTest() {
+    public MailClientScenarioIT() {
         client = new JavaMailClient();
         //COMPOSE MAIL
         client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");

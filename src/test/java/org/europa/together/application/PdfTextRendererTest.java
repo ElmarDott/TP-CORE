@@ -21,13 +21,13 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class ITextRendererTest {
+public class PdfTextRendererTest {
 
     private static final String FILE_PATH = "org/europa/together/pdf";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    private static final Logger LOGGER = new LogbackLogger(ITextRendererTest.class);
+    private static final Logger LOGGER = new LogbackLogger(PdfTextRendererTest.class);
     private PdfRenderer pdf = new ITextRenderer();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">

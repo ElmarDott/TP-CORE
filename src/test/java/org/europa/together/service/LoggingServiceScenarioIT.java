@@ -2,13 +2,12 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.europa.together.application.JdbcActions;
+import java.io.File;
 import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.ConfigurationDAO;
-import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -21,13 +20,11 @@ import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class ConfigurationServiceScenarioTest extends
-        ScenarioTest<ConfigurationServiceGiven, ConfigurationServiceAction, ConfigurationServiceOutcome> {
+public class LoggingServiceScenarioIT extends
+        ScenarioTest<LoggingServiceGiven, LoggingServiceAction, LoggingServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LogbackLogger(ConfigurationServiceScenarioTest.class);
-
-    public static DatabaseActions CONNECTION = new JdbcActions(true);
+            = new LogbackLogger(ConfigurationServiceScenarioIT.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -36,15 +33,12 @@ public class ConfigurationServiceScenarioTest extends
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
 
         FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(ConfigurationDAO.FEATURE_ID);
+        boolean toggle = feature.deactivateUnitTests(Logger.FEATURE_ID);
         LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
-        boolean socket = CONNECTION.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
 
         boolean check;
         String out;
-        if (!toggle || !socket) {
+        if (!toggle) {
             out = "skiped.";
             check = false;
         } else {
@@ -57,12 +51,6 @@ public class ConfigurationServiceScenarioTest extends
 
     @AfterAll
     static void tearDown() {
-        try {
-            CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
-            LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
     }
 
     @BeforeEach
@@ -71,49 +59,69 @@ public class ConfigurationServiceScenarioTest extends
 
     @AfterEach
     void testCaseTermination() {
-        CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
+        File config = new File(Constraints.SYSTEM_APP_DIR + "/logback.xml");
+        if (config.exists()) {
+            config.delete();
+        }
         LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
-        assertThat(ConfigurationService.class, hasValidBeanConstructor());
+        assertThat(LoggingService.class, hasValidBeanConstructor());
     }
 
     @Test
-    void scenario_resetModuleToDefault() {
-        LOGGER.log("Scenario A: Reset a full module to the default entries.", LogLevel.DEBUG);
+    void scenario_copyConfigurationFile() {
+        LOGGER.log("Scenario A: Copy the XML Configuration File", LogLevel.DEBUG);
 
         try {
             // PreCondition
-            given().service_has_database_connection()
-                    .and().database_is_populated();
+            given().application_directory_is_clean()
+                    .and().read_configuration_from_classpath();
 
             // Invariant
-            when().reset_module_to_default();
+            when().create_configuration();
 
             //PostCondition
-            then().check_default_entries();
+            then().configuration_is_present_in_application_directory();
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
     }
 
     @Test
-    void scenario_filterMandatoryFieldsOfConfigSet() {
-        LOGGER.log("Scenario B: Filter the mandatory fields of a config set.", LogLevel.DEBUG);
+    void scenario_readConfiguration() {
+        LOGGER.log("Scenario B: Read Configuration file.", LogLevel.DEBUG);
 
         try {
             // PreCondition
-            given().service_has_database_connection()
-                    .and().database_is_populated();
+            given().configuration_is_present_in_application_directory();
 
             // Invariant
-            when().filter_mandatory_fields_of_configSet();
+            when().read_configuration();
 
             //PostCondition
-            then().check_mandantory_entries();
+            then().configuration_is_readed();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void scenario_writeConfiguration() {
+        LOGGER.log("Scenario C: Write Configuration file.", LogLevel.DEBUG);
+
+        try {
+            // PreCondition
+            given().configuration_is_present_in_application_directory();
+
+            // Invariant
+            when().write_configuration();
+
+            //PostCondition
+            then().configuration_is_updated();
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

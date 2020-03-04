@@ -3,7 +3,7 @@ package org.europa.together.service;
 import com.tngtech.jgiven.Stage;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import static org.europa.together.service.ConfigurationServiceScenarioTest.CONNECTION;
+import static org.europa.together.service.ConfigurationServiceScenarioIT.CONNECTION;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
