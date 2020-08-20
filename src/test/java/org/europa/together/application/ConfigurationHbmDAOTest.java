@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
@@ -31,9 +32,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ConfigurationHbmDAOTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
+    private static DatabaseActions actions = new JdbcActions(true);
     private static final String FLUSH_TABLE = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
     private static final String FILE = "org/europa/together/sql/configuration-test.sql";
-    private static DatabaseActions actions = new JdbcActions(true);
 
     @Autowired
     @Qualifier("configurationHbmDAO")
@@ -180,10 +181,15 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: SerilizeAsJson()", LogLevel.DEBUG);
 
         String json
-                = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
         assertEquals(json, configurationDAO.serializeAsJson(configDO));
+    }
 
-        assertNull(configurationDAO.serializeAsJson(null));
+    @Test
+    void testFailSerilizeAsJson() throws Exception {
+        LOGGER.log("TEST CASE: FailSerilizeAsJson()", LogLevel.DEBUG);
+
+        assertEquals("null", configurationDAO.serializeAsJson(null));
     }
 
     @Test
@@ -191,9 +197,19 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: DeserilizeAsJson()", LogLevel.DEBUG);
 
         String json
-                = "{\"class\":\"org.europa.together.domain.ConfigurationDO\",\"comment\":null,\"configurationSet\":\"confSet\",\"defaultValue\":\"DEFAULT\",\"depecated\":false,\"key\":\"key\",\"mandatory\":false,\"modulName\":\"MOD\",\"uuid\":\"QWERTZ\",\"value\":\"no value\",\"version\":\"1.0\"}";
-        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json);
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
+        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, ConfigurationDO.class);
         assertEquals(configDO, deserialize);
+    }
+
+    @Test
+    void testFailDeserializeJson() {
+        LOGGER.log("TEST CASE: FailDeserilizeAsJson()", LogLevel.DEBUG);
+
+        String json
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
+        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, null);
+        assertNull(deserialize);
     }
 
     @Test

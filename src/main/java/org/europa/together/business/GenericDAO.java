@@ -3,7 +3,7 @@ package org.europa.together.business;
 import java.io.Serializable;
 import java.util.List;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -112,9 +112,19 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * Tried to create a Object from a given JSON String.
      *
      * @param json as String
-     * @return Entity as String
+     * @param clazz as Class
+     * @return Entity as Object
      */
-    @API(status = STABLE, since = "1.0")
+    @API(status = STABLE, since = "2.1")
+    T deserializeJsonAsObject(String json, Class<T> clazz);
+
+    /**
+     * Tried to create a Object from a given JSON String.
+     *
+     * @param json as String
+     * @return Entity as Object
+     */
+    @API(status = DEPRECATED, since = "1.0")
     T deserializeJsonAsObject(String json);
 
     /**

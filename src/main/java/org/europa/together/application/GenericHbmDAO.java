@@ -1,5 +1,8 @@
 package org.europa.together.application;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import java.io.Serializable;
@@ -66,8 +69,10 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     public boolean delete(final PK id) {
         boolean success = false;
         T foundObject = find(id);
-        mainEntityManagerFactory.remove(foundObject);
-        success = true;
+        if (foundObject != null) {
+            mainEntityManagerFactory.remove(foundObject);
+            success = true;
+        }
         return success;
     }
 
@@ -81,11 +86,10 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
                         + ") update", LogLevel.TRACE);
                 success = true;
             } else {
-                LOGGER.log(object.getClass().getSimpleName()
-                        + " could not updated.", LogLevel.WARN);
+                LOGGER.log("DAO update: Entity not found.", LogLevel.WARN);
             }
         } else {
-            LOGGER.log("DAO update : persist object is null!", LogLevel.WARN);
+            LOGGER.log("DAO update: persist object is null!", LogLevel.WARN);
         }
         return success;
     }
@@ -127,18 +131,40 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     @Override
     public String serializeAsJson(final T object) {
         String json = null;
-        if (object != null) {
-            JSONSerializer serializer = new JSONSerializer();
-            json = serializer.serialize(object);
-        } else {
-            LOGGER.log("Can't create JSON String, because the Entity is empty.", LogLevel.ERROR);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            json = mapper.writeValueAsString(object);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return json;
     }
 
     @Override
+    public T deserializeJsonAsObject(final String json, final Class<T> object) {
+        T retVal = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            retVal = (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return retVal;
+    }
+
+    @Override
+    @Deprecated
     public T deserializeJsonAsObject(final String json) {
-        return new JSONDeserializer<T>().deserialize(json);
+        T retVal = null;
+        try {
+            LOGGER.log("DEPECTED METHOD.", LogLevel.DEBUG);
+            retVal = new JSONDeserializer<T>().deserialize(json);
+
+//            retVal = mapper.readValue(json, Foo.class);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return retVal;
     }
 
     @Override
@@ -146,8 +172,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     public T find(final PK id) {
         T retVal = mainEntityManagerFactory.find(genericType, id);
         if (retVal == null) {
-            LOGGER.log("DAO (" + genericType.getClass().getSimpleName()
-                    + ") is not a Entity!", LogLevel.ERROR);
+            LOGGER.log("404 - Entity not found.", LogLevel.ERROR);
         }
         return retVal;
     }
