@@ -111,8 +111,9 @@ In the case you like this project, let me know it and rate it with a star.
 |--------|----------------------------------------------------------------------
 | 2.1    | in process
 |        | - extend StringUtils.createDateFromString()
+|        | - extend Constraints with TimeZone entry
 |        | - separate UnitTests from IntegrationTests
-|        | - replase JSON Lib for Jackson data-bind JSON
+|        | - JSON lib replace flexjson for Jackson data-bind
 |--------|----------------------------------------------------------------------
 | 2.0.2  | published 01/2020
 |        | - move internal implementation classes to package internal
