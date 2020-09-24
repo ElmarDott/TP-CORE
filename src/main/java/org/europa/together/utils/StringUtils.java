@@ -1,7 +1,11 @@
 package org.europa.together.utils;
 
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.europa.together.application.LogbackLogger;
@@ -287,5 +291,20 @@ public final class StringUtils {
         }
 
         return clean;
+    }
+
+    /**
+     * Create from a given String for UTC in the format of yyyy-mm-dd HH:mm:ss a
+     * java.sql.Timestamp class.
+     *
+     * @param timestamp as Sting
+     * @return timestamp as Timestamp
+     * @throws java.text.ParseException
+     */
+    public static Date createDateFromString(String timestamp)
+            throws ParseException {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.parse(timestamp);
     }
 }

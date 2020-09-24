@@ -8,6 +8,7 @@
     <body>
         <menu ref="parent" />
         <menu name="Resources">
+            <item name="OWASP Dependency Check" href="dependency-check-report.html" target="_blank" />
             <item name="JGiven BDD Report" href="jgiven/index.html" target="_blank" />
             <item name="jaCoCo Report" href="jacoco/index.html" target="_blank" />
             <item name="Clover Report" href="clover/index.html" target="_blank" />

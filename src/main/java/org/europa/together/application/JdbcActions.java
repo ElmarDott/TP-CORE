@@ -35,6 +35,7 @@ public class JdbcActions implements DatabaseActions {
     private static final long serialVersionUID = 8L;
     private static final Logger LOGGER = new LogbackLogger(JdbcActions.class);
 
+    //JDBC.timeout configurable
     private static final int TIMEOUT = 1000;
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnection = null;
@@ -121,7 +122,7 @@ public class JdbcActions implements DatabaseActions {
         return success;
     }
 
-    @Override
+    @Override //API CHANGE :: return bool to int (resultCount)
     public boolean executeQuery(final String sql) {
         boolean success = false;
         resultSet = null;
@@ -148,7 +149,7 @@ public class JdbcActions implements DatabaseActions {
         return success;
     }
 
-    @Override
+    @Override //API CHANGE DEPECATED - will be deleted
     public int getResultCount() {
         return resultCount;
     }
@@ -187,10 +188,10 @@ public class JdbcActions implements DatabaseActions {
                     metadata.getDatabaseProductVersion());
             properties.put("metaUser",
                     metadata.getUserName());
-            properties.put("metaUrl",
-                    metadata.getURL());
             properties.put("metaCatalog",
                     metadata.getConnection().getCatalog());
+            properties.put("metaUrl", metadata.getURL());
+
             properties.put("metaPort", Integer.toString(port));
 
         } catch (Exception ex) {
@@ -198,11 +199,32 @@ public class JdbcActions implements DatabaseActions {
         }
         return new JdbcConnection(properties);
     }
-    //  ----------------------------------------------------------------------------
 
+    /*
+    JdbcConnection {
+        JDBC_VERSION=4.2
+        DBMS_NAME=PostgreSQL
+        DBMS_VERSION=11.5 (Debian 11.5-3.pgdg90+1)
+        DRIVER_NAME=PostgreSQL
+        JDBC Driver
+        DRIVER_VERSION=42.2.8
+        USER=together
+        URL=jdbc:postgresql://172.18.0.2:5432/together-test
+        PORT=5432
+        CATALOG=together-test
+    }
+     */
+    //  ----------------------------------------------------------------------------
     private boolean connectionTimeout() {
-        // extract uri & port
+        // extract uri & port : FAIL
+        // regEx grap IP | domain | port
+        // jdbc:oracle:thin:@127.0.0.1:1521:together-test
         // jdbc:postgresql://172.17.0.1:5432/together-test
+        // jdbc:mysql://127.0.0.1:3306/together-test
+        // jdbc:db2://127.0.0.1:50000/together-test
+        // jdbc:derby://127.0.0.1:1527/together-test
+        // (?) jdbc:sqlite:together-test
+        // jdbc:h2:mem:together-test
         String[] extraction01 = connectionUrl.split("//");
         String[] extraction02 = extraction01[1].split("/");
         String[] extraction03 = extraction02[0].split(":");
@@ -210,6 +232,7 @@ public class JdbcActions implements DatabaseActions {
         this.port = Integer.parseInt(extraction03[1]);
 
         return SocketTimeout.timeout(TIMEOUT, uri, port);
+//        return true;
     }
 
     private void establishPooledConnection()

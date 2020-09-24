@@ -159,7 +159,7 @@ public class AnnotatedClassTest {
     }
 
     @Test
-    public void testChangeAnnotationType() {
+    void testChangeAnnotationType() {
         LOGGER.log("TEST CASE: changeAnnotationType()", LogLevel.DEBUG);
 
         AnnotatedClass element = new AnnotatedClass(AnnotatedClass.METHOD, "eu.freeplace.test", "Test", null);

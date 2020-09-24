@@ -54,7 +54,6 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("key"), hash),
@@ -70,10 +69,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
-
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("modulName"), module),
@@ -86,10 +83,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllModuleEntries(final String module) {
-
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("modulName"), module));
@@ -101,10 +96,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllDepecatedEntries() {
-
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("depecated"), Boolean.TRUE));
@@ -117,11 +110,9 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getHistoryOfAEntry(final String module,
             final String key, final String configSet) {
-
         String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("key"), hash),

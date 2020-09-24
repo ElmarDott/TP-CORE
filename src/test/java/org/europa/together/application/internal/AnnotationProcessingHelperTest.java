@@ -68,7 +68,7 @@ public class AnnotationProcessingHelperTest {
 
     @Test
     @Disabled
-    public void testPerformComplexCombinations() {
+    void testPerformComplexCombinations() {
         LOGGER.log("TEST CASE: performComplexCombinations", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -91,7 +91,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testMergeConstructorsAndMethods() {
+    void testMergeConstructorsAndMethods() {
         LOGGER.log("TEST CASE: mergeConstructorsAndMethods", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -108,7 +108,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testMergeMethodsToOneElement() {
+    void testMergeMethodsToOneElement() {
         LOGGER.log("TEST CASE: mergeMethodsToOneElement", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -125,7 +125,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testMergeConstructorsToOneElement() {
+    void testMergeConstructorsToOneElement() {
         LOGGER.log("TEST CASE: mergeConstructorsToOneElement", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -142,7 +142,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testMergeMethodsAndConstructorsToClass() {
+    void testMergeMethodsAndConstructorsToClass() {
         LOGGER.log("TEST CASE: mergeMethodsAndConstructorsToClass", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -158,7 +158,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testSimpleMethods() {
+    void testSimpleMethods() {
         LOGGER.log("TEST CASE: simpleMethods", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -175,7 +175,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testSimpleConstructors() {
+    void testSimpleConstructors() {
         LOGGER.log("TEST CASE: simpleConstructors", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -191,7 +191,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testSimpleEnums() {
+    void testSimpleEnums() {
         LOGGER.log("TEST CASE: simpleEnums", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -207,7 +207,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testSimpleClasses() {
+    void testSimpleClasses() {
         LOGGER.log("TEST CASE: simpleClasses", LogLevel.DEBUG);
 
         List<AnnotatedClass> set = new ArrayList<>();
@@ -223,7 +223,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testFailMergeAnnotations() {
+    void testFailMergeAnnotations() {
         LOGGER.log("TEST CASE: failMergeAnnotations", LogLevel.DEBUG);
 
         FF4jAnnotationPreProcessorHelper helper = new FF4jAnnotationPreProcessorHelper();
@@ -231,7 +231,7 @@ public class AnnotationProcessingHelperTest {
     }
 
     @Test
-    public void testPrint() {
+    void testPrint() {
         LOGGER.log("TEST CASE: print", LogLevel.DEBUG);
 
         PrintStream originalOut = System.out;
@@ -251,7 +251,7 @@ public class AnnotationProcessingHelperTest {
 
     @Test
     @Disabled
-    public void testRegExReplaceImport() {
+    void testRegExReplaceImport() {
         LOGGER.log("TEST CASE: regexReplaceImport", LogLevel.DEBUG);
 
         String file
