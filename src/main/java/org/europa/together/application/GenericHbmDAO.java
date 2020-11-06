@@ -1,10 +1,7 @@
 package org.europa.together.application;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;

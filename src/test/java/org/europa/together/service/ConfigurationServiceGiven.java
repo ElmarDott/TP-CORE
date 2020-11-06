@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class ConfigurationServiceGiven extends Stage<ConfigurationServiceGiven> {
 
     private static final Logger LOGGER

@@ -24,12 +24,11 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class ZxingGeneratorTest {
 
+    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
-
-    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

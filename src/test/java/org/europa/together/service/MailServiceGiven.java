@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -22,14 +21,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     private static final Logger LOGGER
             = new LogbackLogger(MailServiceGiven.class);
 
     @Autowired
-    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     public MailServiceGiven service_has_database_connection() {

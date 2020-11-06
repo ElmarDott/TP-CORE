@@ -7,10 +7,12 @@ import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper
 import org.europa.together.business.FeatureToggle;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
+import org.springframework.stereotype.Repository;
 
 /**
  * Wrapper implementation.
  */
+@Repository
 @FeatureToggle(featureID = "CM-0013")
 public class FF4jProcessor {
 

@@ -299,9 +299,9 @@ public final class StringUtils {
      *
      * @param timestamp as Sting
      * @return timestamp as Timestamp
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException in case of a failure
      */
-    public static Date createDateFromString(String timestamp)
+    public static Date createDateFromString(final String timestamp)
             throws ParseException {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

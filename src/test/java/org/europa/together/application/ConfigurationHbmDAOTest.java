@@ -15,29 +15,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:/org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ConfigurationHbmDAOTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
-    private static DatabaseActions actions = new JdbcActions(true);
+    private static DatabaseActions actions = new JdbcActions();
     private static final String FLUSH_TABLE = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
     private static final String FILE = "org/europa/together/sql/configuration-test.sql";
 
     @Autowired
-    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
     private ConfigurationDO configDO;
 

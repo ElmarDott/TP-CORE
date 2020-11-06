@@ -114,10 +114,12 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - extend Constraints with TimeZone entry
 |        | - separate UnitTests from IntegrationTests
 |        | - JSON lib replace flexjson for Jackson data-bind
+|        | - bugfix: optimize Spring DI
+|        | - replace 3CPO Connection Pool with Commons DBCP2 for Java 8 compatibility
 |--------|----------------------------------------------------------------------
 | 2.0.2  | published 01/2020
 |        | - move internal implementation classes to package internal
-|        | - bugfix; add Java Modul name to MANIFEST.MF
+|        | - bugfix: add Java Modul name to MANIFEST.MF
 |        | - bugfix; cleanup test case imports
 |        | - bugfix; ConfigurationDO rename MODUL_VERSION to SERVIC_VERSION
 |--------|----------------------------------------------------------------------

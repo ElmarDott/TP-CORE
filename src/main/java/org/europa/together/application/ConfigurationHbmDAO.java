@@ -13,6 +13,7 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +29,14 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     private static final long serialVersionUID = 5L;
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAO.class);
 
-    private final transient CryptoTools cryptoTools;
+    @Autowired
+    private transient CryptoTools cryptoTools;
 
     /**
      * Constructor.
      */
     public ConfigurationHbmDAO() {
         super();
-        cryptoTools = new JavaCryptoTools();
         LOGGER.log("instance class", LogLevel.INFO);
     }
 

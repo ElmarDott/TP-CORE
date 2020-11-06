@@ -26,7 +26,7 @@ public class JdbcActionsTest {
     private final String sql_drop = "DROP TABLE IF EXISTS test;";
 
     private static final Logger LOGGER = new LogbackLogger(JdbcActionsTest.class);
-    private static final DatabaseActions actions = new JdbcActions(true);
+    private static final DatabaseActions actions = new JdbcActions();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -162,7 +162,6 @@ public class JdbcActionsTest {
         assertTrue(actions.executeSqlFromClasspath(SQL_FILE));
         assertTrue(actions.executeQuery("SELECT * FROM app_config;"));
         assertNotNull(actions.getResultSet());
-        assertEquals(14, actions.getResultCount());
     }
 
     @Test

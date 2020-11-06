@@ -11,7 +11,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,7 +29,6 @@ public final class ConfigurationService {
     private static final Logger LOGGER = new LogbackLogger(ConfigurationService.class);
 
     @Autowired
-    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     /**

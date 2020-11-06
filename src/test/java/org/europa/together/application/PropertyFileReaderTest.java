@@ -15,20 +15,27 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class PropertyFileReaderTest {
 
+    private static final Logger LOGGER = new LogbackLogger(PropertyFileReaderTest.class);
     private static final String FILE_PATH
             = "org/europa/together/properties/properties-test-classpath.properties";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(PropertyFileReaderTest.class);
-    private final PropertyReader propertyReader = new PropertyFileReader();
+    @Autowired
+    private PropertyReader propertyReader;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -221,6 +228,7 @@ public class PropertyFileReaderTest {
     void testAddProperty() {
         LOGGER.log("TEST CASE: addProperty()", LogLevel.DEBUG);
 
+        propertyReader.clear();
         assertEquals(0, propertyReader.count());
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
@@ -261,6 +269,7 @@ public class PropertyFileReaderTest {
     void testClearProperties() {
         LOGGER.log("TEST CASE: clearProperties()", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         assertEquals(33, propertyReader.count());
         assertTrue(propertyReader.clear());

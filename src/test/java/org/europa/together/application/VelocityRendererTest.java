@@ -17,17 +17,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.europa.together.business.TemplateRenderer;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class VelocityRendererTest {
 
+    private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
     private static final String FILE_PATH = "org/europa/together/velocity";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
-    private TemplateRenderer instance = new VelocityRenderer();
+    @Autowired
+    private TemplateRenderer instance;
+
     private Map<String, String> properties = new HashMap<>();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">

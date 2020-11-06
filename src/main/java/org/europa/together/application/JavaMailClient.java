@@ -34,7 +34,6 @@ import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.europa.together.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -48,10 +47,11 @@ public class JavaMailClient implements MailClient {
     private static final Logger LOGGER = new LogbackLogger(JavaMailClient.class);
 
     @Autowired
-    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
-    private CryptoTools cryptoTools = new JavaCryptoTools();
-    private PropertyReader propertyReader = new PropertyFileReader();
+    @Autowired
+    private CryptoTools cryptoTools;
+    @Autowired
+    private PropertyReader propertyReader;
 
     private Map<String, String> mailConfiguration;
     private List<FileDataSource> attachments;
@@ -109,7 +109,7 @@ public class JavaMailClient implements MailClient {
         LOGGER.log("Populate Configuration: " + sqlFile, LogLevel.DEBUG);
         DatabaseActions connection;
         if (connectTestDb.length != 0) {
-            connection = new JdbcActions(true);
+            connection = new JdbcActions();
         } else {
             connection = new JdbcActions();
         }
