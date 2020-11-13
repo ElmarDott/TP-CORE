@@ -116,6 +116,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - separate UnitTests from IntegrationTests
 |        | - JSON lib replace flexjson for Jackson data-bind
 |        | - bugfix: optimize Spring DI
+|        | - replace JodaTime for java.time Java 8 compatibility (QRCodeGenerator & Validator)
 |        | - replace 3CPO Connection Pool with Commons DBCP2 for Java 8 compatibility
 |--------|----------------------------------------------------------------------
 | 2.0.2  | published 01/2020

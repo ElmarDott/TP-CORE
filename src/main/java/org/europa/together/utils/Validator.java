@@ -1,6 +1,6 @@
 package org.europa.together.utils;
 
-//import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -113,14 +113,14 @@ public final class Validator {
      * @param after as DateTime
      * @return true on success
      */
-//    public static boolean isDateAfter(final ZonedDateTime check, final ZonedDateTime after) {
-//        boolean success = false;
-//        if (check != null && after != null) {
-//            success = check.isAfter(after);
-//        }
-//        return success;
-//    }
-//
+    public static boolean isDateAfter(final ZonedDateTime check, final ZonedDateTime after) {
+        boolean success = false;
+        if (check != null && after != null) {
+            success = check.isAfter(after);
+        }
+        return success;
+    }
+
     /**
      * Check if is a given date before the given boundary. If the check date
      * equal to the before boundary, the validation will fail.<br>
@@ -132,14 +132,14 @@ public final class Validator {
      * @param before as DateTime
      * @return true on success
      */
-//    public static boolean isDateBefore(final ZonedDateTime check, final ZonedDateTime before) {
-//        boolean success = false;
-//        if (check != null && before != null) {
-//            success = check.isBefore(before);
-//        }
-//        return success;
-//    }
-//
+    public static boolean isDateBefore(final ZonedDateTime check, final ZonedDateTime before) {
+        boolean success = false;
+        if (check != null && before != null) {
+            success = check.isBefore(before);
+        }
+        return success;
+    }
+
     /**
      * Test if a given Date is inside a range between a min and max. The
      * boundaries are inside the range.
@@ -149,20 +149,20 @@ public final class Validator {
      * @param max as DateTime
      * @return true on success
      */
-//    public static boolean isDateInRange(
-//            final DateTime check, final ZonedDateTime min, final ZonedDateTime max) {
-//
-//        boolean success = false;
-//        if (check != null && min != null && max != null) {
-//            if (isDateBefore(check, max) && isDateAfter(check, min)) {
-//                success = true;
-//            } else {
-//                LOGGER.log("Date: " + check.toString() + " is not in range.", LogLevel.WARN);
-//            }
-//        }
-//        return success;
-//    }
-//
+    public static boolean isDateInRange(
+            final ZonedDateTime check, final ZonedDateTime min, final ZonedDateTime max) {
+
+        boolean success = false;
+        if (check != null && min != null && max != null) {
+            if (isDateBefore(check, max) && isDateAfter(check, min)) {
+                success = true;
+            } else {
+                LOGGER.log("Date: " + check.toString() + " is not in range.", LogLevel.WARN);
+            }
+        }
+        return success;
+    }
+
     /**
      * Check if is a given date after the given boundary. If the check date
      * equal to the after boundary, the validation will fail.<br>

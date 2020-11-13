@@ -1,7 +1,7 @@
 package org.europa.together.business;
 
 import java.io.File;
-//import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.*;
@@ -99,13 +99,13 @@ public interface QrCodeGenerator {
      * Encode an calender event.
      *
      * @param event as String
-     * @param start as DateTime
-     * @param end as DateTime
+     * @param start as ZonedDateTime
+     * @param end as ZonedDateTime
      * @return dataStructure as String
      */
-//    @API(status = STABLE, since = "2.1")
-//    String generateDataForCalenderEvent(String event, ZonedDateTime start, ZonedDateTime end);
-//
+    @API(status = STABLE, since = "2.1")
+    String generateDataForCalenderEvent(String event, ZonedDateTime start, ZonedDateTime end);
+
     /**
      * Encode an calender event.
      *

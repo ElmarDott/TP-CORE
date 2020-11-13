@@ -1,10 +1,11 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import java.time.ZonedDateTime;
 
 @RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
@@ -306,80 +308,95 @@ public class ValidatorTest {
     @Test
     void testIsDateAfter() {
         //now() is after 2015
-        assertTrue(Validator.isDateAfter(new DateTime(), new DateTime(2015, 12, 31, 23, 59)));
+        assertTrue(Validator.isDateAfter(ZonedDateTime.now(),
+                ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
         //after
-        assertTrue(Validator.isDateAfter(new DateTime(2016, 1, 1, 0, 0), new DateTime(2015, 12, 31, 23, 59)));
+        assertTrue(Validator.isDateAfter(ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
     }
 
     @Test
     void testIsDateNotAfter() {
         //equal
-        assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2015, 12, 31, 23, 59)));
+        assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
 
-        assertFalse(Validator.isDateAfter(null, null));
-        assertFalse(Validator.isDateAfter(new DateTime(), null));
-        assertFalse(Validator.isDateAfter(null, new DateTime()));
+//        assertFalse(Validator.isDateAfter(null, null));
+        assertFalse(Validator.isDateAfter(ZonedDateTime.now(), null));
+        assertFalse(Validator.isDateAfter(null, ZonedDateTime.now()));
 
-        assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 58), new DateTime()));
-        assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2016, 12, 31, 23, 58)));
+        assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")), ZonedDateTime.now()));
+        assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
     }
 
     @Test
     void testIsDateBefore() {
         //2015 is before now() => TRUE
-        assertTrue(Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime()));
+        assertTrue(Validator.isDateBefore(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.now()));
         //before
-        assertTrue(Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime(2016, 1, 1, 0, 0)));
+        assertTrue(Validator.isDateBefore(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC"))));
     }
 
     @Test
     void testIsDateNotBefore() {
         //equal
-        assertFalse(Validator.isDateAfter(new DateTime(2015, 12, 31, 23, 59), new DateTime(2015, 12, 31, 23, 59)));
+        assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
 
-        assertFalse(Validator.isDateBefore(null, null));
-        assertFalse(Validator.isDateBefore(new DateTime(), null));
-        assertFalse(Validator.isDateBefore(null, new DateTime()));
+//        assertFalse(Validator.isDateBefore(null, null));
+        assertFalse(Validator.isDateBefore(ZonedDateTime.now(), null));
+        assertFalse(Validator.isDateBefore(null, ZonedDateTime.now()));
         //now() is before 2015 => FALSE
-        assertFalse(Validator.isDateBefore(new DateTime(), new DateTime(2015, 12, 31, 23, 59)));
-        assertFalse(Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 58), new DateTime(2015, 12, 31, 23, 57)));
+        assertFalse(Validator.isDateBefore(ZonedDateTime.now(), ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
+        assertFalse(Validator.isDateBefore(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2015, 12, 31, 23, 49, 0, 0, ZoneId.of("UTC"))));
     }
 
     @Test
     void testIsDateInRange() {
         assertTrue(Validator.isDateInRange(
-                new DateTime(2015, 6, 15, 12, 0),
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2016, 12, 31, 23, 59)));
+                ZonedDateTime.of(2015, 6, 15, 12, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+        ));
     }
 
     @Test
     void testIsDateNotInRange() {
         assertFalse(Validator.isDateInRange(
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2016, 12, 31, 23, 59)));
-        assertFalse(Validator.isDateInRange(
-                new DateTime(2016, 12, 31, 23, 59),
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2016, 12, 31, 23, 59)));
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+        ));
 
         assertFalse(Validator.isDateInRange(
-                new DateTime(2017, 1, 1, 12, 0),
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2016, 12, 31, 23, 59)));
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+        ));
 
         assertFalse(Validator.isDateInRange(
-                new DateTime(2013, 1, 1, 0, 0),
-                new DateTime(2014, 1, 1, 0, 0),
-                new DateTime(2016, 12, 31, 23, 59)));
+                ZonedDateTime.of(2017, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+        ));
 
-        assertFalse(Validator.isDateInRange(null, null, null));
-        assertFalse(Validator.isDateInRange(new DateTime(), null, null));
-        assertFalse(Validator.isDateInRange(null, new DateTime(), null));
-        assertFalse(Validator.isDateInRange(null, null, new DateTime()));
-        assertFalse(Validator.isDateInRange(null, new DateTime(), new DateTime()));
-        assertFalse(Validator.isDateInRange(new DateTime(), new DateTime(), null));
-        assertFalse(Validator.isDateInRange(new DateTime(), null, new DateTime()));
+        assertFalse(Validator.isDateInRange(
+                ZonedDateTime.of(2013, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
+                ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+        ));
+
+//        assertFalse(Validator.isDateInRange(null, null, null));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, null));
+        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), null));
+        assertFalse(Validator.isDateInRange(null, null, ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), ZonedDateTime.now(), null));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now())
+        );
     }
 }
