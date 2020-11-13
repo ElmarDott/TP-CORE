@@ -145,14 +145,15 @@ public final class TreeNode {
             if (this == obj) {
                 success = true;
             } else {
-
                 final TreeNode other = (TreeNode) obj;
-                LOGGER.log(this.toString() + " == " + obj.toString(), LogLevel.DEBUG);
                 if (Objects.equals(this.parent, other.parent)
                         && Objects.equals(this.nodeName, other.nodeName)) {
                     success = true;
                 }
             }
+        }
+        if (success) {
+            LOGGER.log(this.toString() + " == " + obj.toString(), LogLevel.DEBUG);
         }
         return success;
     }

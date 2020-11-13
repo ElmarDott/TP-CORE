@@ -1,4 +1,4 @@
-<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
+x<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
 
 # together Platform :: CORE
 
@@ -17,7 +17,7 @@ charge for any kind of usage, commercial and private,
 
 ## Getting Started
 
-Components - Release: 1.0
+Components - Release: 2.0
  * [CORE-0001] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
  * [CORE-0002] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
  * [CORE-0003] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
@@ -111,7 +111,8 @@ In the case you like this project, let me know it and rate it with a star.
 |--------|----------------------------------------------------------------------
 | 2.1    | in process
 |        | - extend StringUtils.createDateFromString()
-|        | - extend Constraints with TimeZone entry
+|        | - extend TreeWalker.validate()
+|        | - extend Constraints with TimeZone entry insted of JodaTime
 |        | - separate UnitTests from IntegrationTests
 |        | - JSON lib replace flexjson for Jackson data-bind
 |        | - bugfix: optimize Spring DI

@@ -7,6 +7,8 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
+import org.europa.together.exceptions.MisconfigurationException;
+import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -68,7 +70,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testAddRoot() {
+    void testAddRoot() throws MisconfigurationException {
         LOGGER.log("TEST CASE: addRoot()", LogLevel.DEBUG);
 
         TreeNode root = new TreeNode();
@@ -101,7 +103,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testGetRoot() {
+    void testGetRoot() throws MisconfigurationException {
         LOGGER.log("TEST CASE: getRoot()", LogLevel.DEBUG);
 
         TreeWalker walker
@@ -112,11 +114,13 @@ public class ListTreeTest {
     }
 
     @Test
-    void testFailGetRoot() {
+    void testFailGetRoot() throws MisconfigurationException {
         LOGGER.log("TEST CASE: failGetRoot()", LogLevel.DEBUG);
 
         TreeWalker walker = new ListTree();
-        assertNull(walker.getRoot());
+        assertThrows(MisconfigurationException.class, () -> {
+            assertNull(walker.getRoot());
+        });
     }
 
     @Test
@@ -128,15 +132,21 @@ public class ListTreeTest {
     }
 
     @Test
-    void testAddNode() {
+    void testAddNode() throws MisconfigurationException {
         LOGGER.log("TEST CASE: addNode()", LogLevel.DEBUG);
 
         buildTree();
-        assertEquals(12, treeWalker.countNodes());
+
+        TreeNode add = new TreeNode("add");
+        List<TreeNode> node = treeWalker.getElementByName("06");
+        add.setParent(node.get(0).getUuid());
+        treeWalker.addNode(add);
+
+        assertEquals(13, treeWalker.countNodes());
     }
 
     @Test
-    void testFailAddNodeOfNameAndParent() {
+    void testFailAddNodeOfNameAndParent() throws MisconfigurationException {
         LOGGER.log("TEST CASE: failAddNodeOfNameAndParent()", LogLevel.DEBUG);
 
         buildTree();
@@ -153,7 +163,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testFailAddNodeOfSameUuid() {
+    void testFailAddNodeOfSameUuid() throws MisconfigurationException {
         LOGGER.log("TEST CASE: failAddNodeOfSameUuid()", LogLevel.DEBUG);
 
         buildTree();
@@ -171,7 +181,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testIsLeaf() {
+    void testIsLeaf() throws MisconfigurationException {
         LOGGER.log("TEST CASE: isLeaf()", LogLevel.DEBUG);
 
         buildTree();
@@ -200,7 +210,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testGetLeafs() {
+    void testGetLeafs() throws MisconfigurationException {
         LOGGER.log("TEST CASE: getLeafs()", LogLevel.DEBUG);
 
         buildTree();
@@ -208,7 +218,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testGetNodeByUuid() {
+    void testGetNodeByUuid() throws MisconfigurationException {
         LOGGER.log("TEST CASE: getNodeByUuid()", LogLevel.DEBUG);
 
         buildTree();
@@ -231,7 +241,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testIsNodeElementOfTree() {
+    void testIsNodeElementOfTree() throws MisconfigurationException {
         LOGGER.log("TEST CASE: isNodeElementOfTree()", LogLevel.DEBUG);
 
         buildTree();
@@ -248,7 +258,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testRemoveNode() {
+    void testRemoveNode() throws MisconfigurationException {
         LOGGER.log("TEST CASE: removeNode()", LogLevel.DEBUG);
 
         buildTree();
@@ -256,7 +266,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testIsNameUnique() {
+    void testIsNameUnique() throws MisconfigurationException {
         LOGGER.log("TEST CASE: isNameUnique()", LogLevel.DEBUG);
 
         buildTree();
@@ -279,7 +289,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testGetElementsByName() {
+    void testGetElementsByName() throws MisconfigurationException {
         LOGGER.log("TEST CASE: getElementsByName()", LogLevel.DEBUG);
 
         buildTree();
@@ -304,7 +314,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testGetElementByNameNotExist() {
+    void testGetElementByNameNotExist() throws MisconfigurationException {
         LOGGER.log("TEST CASE: getElementsByNameNotExist()", LogLevel.DEBUG);
 
         buildTree();
@@ -320,7 +330,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testPrune() {
+    void testPrune() throws MisconfigurationException {
         LOGGER.log("TEST CASE: prune()", LogLevel.DEBUG);
 
         buildTree();
@@ -335,7 +345,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testPruneRoot() {
+    void testPruneRoot() throws MisconfigurationException {
         LOGGER.log("TEST CASE: pruneRoot()", LogLevel.DEBUG);
 
         buildTree();
@@ -356,7 +366,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testMerge() {
+    void testMerge() throws MisconfigurationException {
         LOGGER.log("TEST CASE: merge()", LogLevel.DEBUG);
 
         buildTree();
@@ -369,7 +379,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void testFailMerge() {
+    void testFailMerge() throws MisconfigurationException {
         LOGGER.log("TEST CASE: failMerge()", LogLevel.DEBUG);
 
         buildTree();
@@ -381,7 +391,86 @@ public class ListTreeTest {
         assertEquals(12, treeWalker.countNodes());
     }
 
-    private void buildTree() {
+    @Test
+    void testPassValidateTree() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: passValidateTree()", LogLevel.DEBUG);
+
+        buildTree();
+
+        List<TreeNode> tree = treeWalker.getTree();
+        assertTrue(treeWalker.validateTree(tree));
+    }
+
+    @Test
+    void testFailValidateTreeRemoveNode() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failValidateTreeRemoveNode()", LogLevel.DEBUG);
+
+        buildTree();
+        assertFalse(treeWalker.removeNode(treeWalker.getElementByName("05").get(0)));
+        assertTrue(treeWalker.validateTree(treeWalker.getTree()));
+    }
+
+    @Test
+    void testFailValidateTreeNodeWithEmptyParent() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failValidateTreeNodeWithEmptyParent()", LogLevel.DEBUG);
+
+        buildTree();
+        TreeNode lost_01 = new TreeNode("lost");
+        treeWalker.addNode(lost_01);
+
+        assertFalse(treeWalker.validateTree(treeWalker.getTree()));
+    }
+
+    @Test
+    void testFailValidateTreeNodeWithDisconnectedParent() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failValidateTreeNodeWithDisconnectedParent()", LogLevel.DEBUG);
+
+        buildTree();
+        TreeNode lost_01 = new TreeNode("diconnected");
+        lost_01.setParent(StringUtils.generateUUID());
+        treeWalker.addNode(lost_01);
+
+        TreeNode lost_02 = new TreeNode("sub node 01");
+        lost_02.setParent(lost_01.getUuid());
+        treeWalker.addNode(lost_02);
+        TreeNode lost_03 = new TreeNode("sub node 02");
+        lost_03.setParent(lost_01.getUuid());
+        treeWalker.addNode(lost_03);
+
+        assertFalse(treeWalker.validateTree(treeWalker.getTree()));
+    }
+
+    @Test
+    void testFailValidateTreeHasNoRoot() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failValidateTreeHasNoRoot()", LogLevel.DEBUG);
+
+        treeWalker.clear();
+
+        TreeWalker tree = new ListTree();
+        TreeNode n_01 = new TreeNode("01");
+        tree.addNode(n_01);
+        TreeNode n_04 = new TreeNode("04");
+        n_04.setParent(n_01.getUuid());
+        tree.addNode(n_04);
+        TreeNode n_05 = new TreeNode("05");
+        n_05.setParent(n_01.getUuid());
+        tree.addNode(n_05);
+
+        assertFalse(treeWalker.validateTree(tree.getTree()));
+    }
+
+    @Test
+    void testFailValidateTreeHasMulitpleRoot() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failValidateTreeHasMulitpleRoot()", LogLevel.DEBUG);
+
+        TreeNode node = new TreeNode("second ROOT");
+        node.setParent("-1");
+        treeWalker.addNode(node);
+
+        assertFalse(treeWalker.validateTree(treeWalker.getTree()));
+    }
+
+    private void buildTree() throws MisconfigurationException {
         //P:0
         TreeNode n_01 = new TreeNode("01");
         n_01.setParent(treeWalker.getRoot().getUuid());
@@ -424,7 +513,7 @@ public class ListTreeTest {
         treeWalker.addNode(n_11);
     }
 
-    private TreeWalker appendTree() {
+    private TreeWalker appendTree() throws MisconfigurationException {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         TreeWalker append = new ListTree(new TreeNode("sub tree"));

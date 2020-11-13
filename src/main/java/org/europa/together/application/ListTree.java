@@ -8,6 +8,7 @@ import org.europa.together.business.TreeWalker;
 import static org.europa.together.business.TreeWalker.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -109,7 +110,9 @@ public class ListTree implements TreeWalker {
             success = true;
             LOGGER.log("Node " + node.getNodeName() + " removed.", LogLevel.DEBUG);
         } else {
-            LOGGER.log("Node \"" + node.getNodeName() + "\" can't removed.", LogLevel.WARN);
+            LOGGER.log("Node " + node.getNodeName()
+                    + " can't removed. First you need to remove all childe node(s)",
+                    LogLevel.WARN);
         }
         return success;
     }
@@ -188,7 +191,7 @@ public class ListTree implements TreeWalker {
     }
 
     @Override
-    public TreeNode getRoot() {
+    public TreeNode getRoot() throws MisconfigurationException {
         TreeNode root = null;
         if (this.rootUuid != null && !tree.isEmpty()) {
             for (TreeNode node : this.tree) {
@@ -197,9 +200,8 @@ public class ListTree implements TreeWalker {
                 }
             }
         }
-
         if (root == null) {
-            LOGGER.log("No root node is set.", LogLevel.ERROR);
+            throw new MisconfigurationException("No root node is set.");
         }
         return root;
     }
@@ -210,16 +212,18 @@ public class ListTree implements TreeWalker {
         if (!this.tree.isEmpty()
                 && node != null) {
 
-            for (TreeNode check : this.tree) {
+            if (!StringUtils.isEmpty(node.getParent())) {
+                for (TreeNode check : this.tree) {
 
-                if (node.getUuid().equals(check.getUuid())
-                        || node.getParent().equals(check.getParent())
-                        && node.getNodeName().equals(check.getNodeName())) {
+                    if (node.getUuid().equals(check.getUuid())
+                            || node.getParent().equals(check.getParent())
+                            && node.getNodeName().equals(check.getNodeName())) {
 
-                    LOGGER.log("Node with same name AND parent OR the same UUID already exist.",
-                            LogLevel.WARN);
-                    add = false;
-                    break;
+                        LOGGER.log("Node with same name AND parent OR the same UUID already exist.",
+                                LogLevel.WARN);
+                        add = false;
+                        break;
+                    }
                 }
             }
 
@@ -247,60 +251,64 @@ public class ListTree implements TreeWalker {
                 + cutNode.getUuid() + "]", LogLevel.DEBUG);
 
         stack.addAll(tree);
-        if (cutNode.equals(getRoot())) {
-            clear();
-        } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
-            removeNode(cutNode);
-        } else {
+        try {
+            if (cutNode.equals(getRoot())) {
+                clear();
+            } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
+                removeNode(cutNode);
+            } else {
 
-            TreeNode node = cutNode;
-            List<TreeNode> cutted = new ArrayList<>();
-            List<TreeNode> helper = new ArrayList<>();
-            cutted.add(node);
+                TreeNode node = cutNode;
+                List<TreeNode> cutted = new ArrayList<>();
+                List<TreeNode> helper = new ArrayList<>();
+                cutted.add(node);
 
-            int loop = this.tree.size();
-            for (int i = 0; i < loop; i++) {
+                int loop = this.tree.size();
+                for (int i = 0; i < loop; i++) {
 
-                if (!stack.isEmpty()) {
-                    for (TreeNode compare : stack) {
-                        if (i != 0) {
-                            node = compare;
-                        }
-                        for (int j = 0; j < tree.size(); j++) {
-                            if (node.getUuid().equals(compare.getUuid())) {
-                                cutted.add(compare);
-                                if (!isLeaf(compare)) {
-                                    helper.add(compare);
+                    if (!stack.isEmpty()) {
+                        for (TreeNode compare : stack) {
+                            if (i != 0) {
+                                node = compare;
+                            }
+                            for (int j = 0; j < tree.size(); j++) {
+                                if (node.getUuid().equals(compare.getUuid())) {
+                                    cutted.add(compare);
+                                    if (!isLeaf(compare)) {
+                                        helper.add(compare);
+                                    }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
-                }
 
-                if (!helper.isEmpty()) {
-                    stack.clear();
-                    for (TreeNode compare : helper) {
-                        for (TreeNode element : this.tree) {
-                            if (compare.getUuid().equals(element.getParent())) {
-                                stack.add(element);
+                    if (!helper.isEmpty()) {
+                        stack.clear();
+                        for (TreeNode compare : helper) {
+                            for (TreeNode element : this.tree) {
+                                if (compare.getUuid().equals(element.getParent())) {
+                                    stack.add(element);
+                                }
                             }
                         }
+                        cutted.addAll(stack);
+                        helper.clear();
+
+                    } else {
+                        break;
                     }
-                    cutted.addAll(stack);
-                    helper.clear();
-
-                } else {
-                    break;
                 }
-            }
 
-            if (!cutted.isEmpty()) {
-                for (TreeNode item : cutted) {
-                    this.tree.remove(item);
+                if (!cutted.isEmpty()) {
+                    for (TreeNode item : cutted) {
+                        this.tree.remove(item);
+                    }
                 }
-            }
 
+            }
+        } catch (MisconfigurationException ex) {
+            LOGGER.catchException(ex);
         }
     }
 
@@ -308,15 +316,20 @@ public class ListTree implements TreeWalker {
     public void merge(final String parentUuid, final TreeWalker appendingTree) {
         if (appendingTree != null && !appendingTree.isEmpty()) {
 
-            TreeNode appendingRoot = appendingTree.getRoot();
-            appendingRoot.setParent(parentUuid);
+            try {
+                TreeNode appendingRoot = appendingTree.getRoot();
+                appendingRoot.setParent(parentUuid);
 
-            List<TreeNode> newTree = new ArrayList<>();
-            newTree.addAll(appendingTree.getTree());
+                List<TreeNode> newTree = new ArrayList<>();
+                newTree.addAll(appendingTree.getTree());
 
-            this.tree.addAll(newTree);
-            LOGGER.log("Append " + newTree.size()
-                    + " Nodes to the new Tree.", LogLevel.DEBUG);
+                this.tree.addAll(newTree);
+                LOGGER.log("Append " + newTree.size()
+                        + " Nodes to the new Tree.", LogLevel.DEBUG);
+
+            } catch (MisconfigurationException ex) {
+                LOGGER.catchException(ex);
+            }
         } else {
             LOGGER.log("Merging tree is empty - no merge applied.", LogLevel.DEBUG);
 
@@ -324,24 +337,86 @@ public class ListTree implements TreeWalker {
     }
 
     @Override
+    public boolean validateTree(final List<TreeNode> collection) throws MisconfigurationException {
+        boolean isTree = false;
+        int marker = 0;
+        int counter = 0;
+        int root = 0;
+
+        if (!collection.isEmpty()) {
+            marker = collection.size() - 1;
+            List<TreeNode> comperator = new ArrayList<>();
+            comperator.addAll(collection);
+
+            for (TreeNode node : collection) {
+
+                if (StringUtils.isEmpty(node.getParent())) {
+                    counter++;
+                    LOGGER.log("Element with empty parent: " + node.getNodeName(), LogLevel.DEBUG);
+                }
+
+                if (!StringUtils.isEmpty(node.getParent()) && node.getParent().equals("-1")) {
+                    root++;
+                    LOGGER.log("ROOT element: " + node.getNodeName(), LogLevel.DEBUG);
+                }
+
+                for (TreeNode element : comperator) {
+
+                    if (!StringUtils.isEmpty(node.getParent())
+                            && !node.getParent().equals("-1")
+                            && !element.equals(node)
+                            && element.getUuid().equals(node.getParent())) {
+
+                        marker--;
+                        LOGGER.log("Parent of (" + node.getNodeName() + ") : " + node.getUuid()
+                                + " : (" + element.getNodeName() + ") " + element.getParent(),
+                                LogLevel.DEBUG);
+                    }
+                }
+            }
+        }
+
+        if (root == 0) {
+            LOGGER.log("Tree has no ROOT element.", LogLevel.DEBUG);
+        } else if (root > 1) {
+            LOGGER.log("Tree has muliple ROOT elements.", LogLevel.DEBUG);
+        }
+
+        if (marker != 0) {
+            LOGGER.log("Tree has " + marker + " disconnected Elemets.", LogLevel.DEBUG);
+        }
+
+        if (counter == 0
+                && root == 1
+                && marker == 0) {
+            isTree = true;
+        }
+        return isTree;
+    }
+
+    @Override
     public String toString() {
 
         StringBuilder out = new StringBuilder();
-        out.append("TreeWalkerImpl{\n")
-                .append("\t Root: ")
-                .append(getRoot().getNodeName())
-                .append("\n")
-                .append("\t Nodes: ")
-                .append(tree.size())
-                .append("\n TREE >>>\n");
+        try {
+            out.append("TreeWalkerImpl{\n")
+                    .append("\t Root: ")
+                    .append(getRoot().getNodeName())
+                    .append("\n")
+                    .append("\t Nodes: ")
+                    .append(tree.size())
+                    .append("\n TREE >>>\n");
 
-        for (TreeNode node : tree) {
-            out.append("\t")
-                    .append(node.toString())
-                    .append("\n");
+            for (TreeNode node : tree) {
+                out.append("\t")
+                        .append(node.toString())
+                        .append("\n");
+            }
+            out.append("}");
+
+        } catch (MisconfigurationException ex) {
+            LOGGER.catchException(ex);
         }
-
-        out.append("}");
         return out.toString();
     }
 
