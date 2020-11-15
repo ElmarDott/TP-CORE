@@ -112,7 +112,8 @@ In the case you like this project, let me know it and rate it with a star.
 | 2.1    | in process
 |        | - extend StringUtils.createDateFromString()
 |        | - extend TreeWalker.validate()
-|        | - extend Constraints with TimeZone entry insted of JodaTime
+|        | - extend CryptoTools.generateKeyPair()
+|        | - extend Constraints with TimeZone entry
 |        | - separate UnitTests from IntegrationTests
 |        | - JSON lib replace flexjson for Jackson data-bind
 |        | - bugfix: optimize Spring DI
@@ -123,7 +124,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - move internal implementation classes to package internal
 |        | - bugfix: add Java Modul name to MANIFEST.MF
 |        | - bugfix; cleanup test case imports
-|        | - bugfix; ConfigurationDO rename MODUL_VERSION to SERVIC_VERSION
+|        | - bugfix; ConfigurationDO rename MODULE_VERSION to SERVICE_VERSION
 |--------|----------------------------------------------------------------------
 | 2.0.1  | published 12/2019
 |        | - bugfix; DAO visibilities
