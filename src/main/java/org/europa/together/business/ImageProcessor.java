@@ -2,10 +2,12 @@ package org.europa.together.business;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Map;
+import java.util.List;
+import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
@@ -72,6 +74,7 @@ public interface ImageProcessor {
      *
      * @return true on success
      */
+    @API(status = DEPRECATED, since = "1.1")
     boolean isImageSet();
 
     /**
@@ -96,6 +99,7 @@ public interface ImageProcessor {
      *
      * @return height as int
      */
+    @API(status = STABLE, since = "1.1")
     int getHeight();
 
     /**
@@ -103,6 +107,7 @@ public interface ImageProcessor {
      *
      * @return width as int
      */
+    @API(status = STABLE, since = "1.1")
     int getWidth();
 
     /**
@@ -111,6 +116,7 @@ public interface ImageProcessor {
      * @param image as BufferedImage
      * @return imageSize as long
      */
+    @API(status = STABLE, since = "1.1")
     long getImageSize(BufferedImage image);
 
     /**
@@ -184,28 +190,21 @@ public interface ImageProcessor {
     BufferedImage rotateRight() throws MisconfigurationException;
 
     /**
-     * Function is not implemented now.
+     * Get the full List of ImageMetaData.
      *
-     * @return BufferedImage null
-     * @throws UnsupportedVersionException - always
+     * @return ImageMetaData as List
      */
-    @API(status = EXPERIMENTAL, since = "1.1")
-    default BufferedImage setMetaData()
-            throws UnsupportedVersionException {
-        //TODO: setMetaData()
-        throw new UnsupportedVersionException("Method not implemented in this Version.");
-    }
+    @API(status = STABLE, since = "2.1")
+    List<ImageMetadataItem> getMetaData();
 
     /**
-     * Function is not implemented now.
+     * Clear all meta data entries of an image.
      *
-     * @return Map null
-     * @throws UnsupportedVersionException - always
+     * @throws UnsupportedVersionException
      */
     @API(status = EXPERIMENTAL, since = "1.1")
-    default Map<String, String> getMetaData()
+    default void clearMetaData()
             throws UnsupportedVersionException {
-        //TODO: getMetaData()
         throw new UnsupportedVersionException("Method not implemented in this Version.");
     }
 }

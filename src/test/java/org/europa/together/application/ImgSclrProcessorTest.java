@@ -179,16 +179,7 @@ public class ImgSclrProcessorTest {
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
-        assertEquals(1471712, processor.getImageSize(img));
-    }
-
-    @Test
-    void testIsImageSet() {
-        LOGGER.log("TEST CASE: isImageSet()", LogLevel.DEBUG);
-
-        assertFalse(processor.isImageSet());
-        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
-        assertTrue(processor.isImageSet());
+        assertEquals(367928, processor.getImageSize(img));
     }
 
     @Test
@@ -392,5 +383,14 @@ public class ImgSclrProcessorTest {
         assertThrows(MisconfigurationException.class, () -> {
             processor.crop(0, 0, 0, 0);
         });
+    }
+
+    @Test
+    void testToString() {
+        LOGGER.log("TEST CASE: toString()", LogLevel.DEBUG);
+
+        assertTrue(processor.loadImage(new File(DIRECTORY + "135621.jpg")));
+        LOGGER.log("toString:" + processor.toString(), LogLevel.DEBUG);
+        assertNotEquals("No meta data from 135621.jpg extracted.", processor.toString());
     }
 }

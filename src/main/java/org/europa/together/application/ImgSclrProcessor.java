@@ -3,7 +3,13 @@ package org.europa.together.application;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
+import org.apache.commons.imaging.ImageFormat;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.common.ImageMetadata;
+import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.ImageProcessor;
 import static org.europa.together.business.ImageProcessor.FEATURE_ID;
@@ -26,7 +32,9 @@ public class ImgSclrProcessor implements ImageProcessor {
     private static final long MULTIPLIER = 4L;
     private static final int DIVISOR = 100;
     private BufferedImage image = null;
+    private ImageMetadata metadata = null;
     private String fileName = null;
+    private String fileExtension = null;
     private int height = 0;
     private int width = 0;
 
@@ -41,6 +49,10 @@ public class ImgSclrProcessor implements ImageProcessor {
     public boolean loadImage(final BufferedImage image) {
 
         boolean success = false;
+        if (isImageSet()) {
+            this.clearImage();
+        }
+
         if (image != null) {
             this.image = image;
             this.height = image.getHeight();
@@ -54,28 +66,25 @@ public class ImgSclrProcessor implements ImageProcessor {
     public boolean loadImage(final File imageFile) {
 
         boolean success = false;
-        if (this.image != null) {
+        if (isImageSet()) {
             this.clearImage();
         }
 
         try {
-            this.image = ImageIO.read(imageFile);
+            this.image = Imaging.getBufferedImage(imageFile);
+            this.metadata = Imaging.getMetadata(imageFile);
+            this.fileName = imageFile.getName();
             this.height = image.getHeight();
             this.width = image.getWidth();
-            this.fileName = imageFile.getName();
+            LOGGER.log("Load Image: " + this.fileName, LogLevel.DEBUG);
+
+            ImageFormat format = Imaging.guessFormat(imageFile);
+            this.fileExtension = format.getExtension();
+            LOGGER.log("Extension: " + this.fileExtension, LogLevel.DEBUG);
+
             success = true;
-            LOGGER.log("Image " + imageFile.getName() + " successful read.", LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
-        }
-        return success;
-    }
-
-    @Override
-    public boolean isImageSet() {
-        boolean success = false;
-        if (this.image != null) {
-            success = true;
         }
         return success;
     }
@@ -86,8 +95,7 @@ public class ImgSclrProcessor implements ImageProcessor {
             throws MisconfigurationException {
 
         boolean success = false;
-        if (!(format.equalsIgnoreCase("jpg") || format.equalsIgnoreCase("png")
-                || format.equalsIgnoreCase("gif"))) {
+        if (!isFormatAccepted(format)) {
             throw new MisconfigurationException(format + " is not supported.");
         }
 
@@ -119,8 +127,12 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public long getImageSize(final BufferedImage image) {
-        DataBuffer dataBuffer = image.getData().getDataBuffer();
-        return ((long) dataBuffer.getSize()) * MULTIPLIER;
+        long size = 0;
+        if (isImageSet()) {
+            DataBuffer dataBuffer = image.getData().getDataBuffer();
+            size = ((long) dataBuffer.getSize()) * MULTIPLIER;
+        }
+        return size;
     }
 
     @Override
@@ -136,7 +148,9 @@ public class ImgSclrProcessor implements ImageProcessor {
     @Override
     public void clearImage() {
         this.image = null;
+        this.metadata = null;
         this.fileName = null;
+        this.fileExtension = null;
         this.height = 0;
         this.width = 0;
         LOGGER.log("Loaded image reset.", LogLevel.TRACE);
@@ -226,4 +240,48 @@ public class ImgSclrProcessor implements ImageProcessor {
         return renderedImg;
     }
 
+    @Override
+    public List<ImageMetadataItem> getMetaData() {
+        List<ImageMetadataItem> collection = new ArrayList<>();
+        if (this.metadata != null) {
+            collection = (List<ImageMetadataItem>) metadata.getItems();
+        }
+        return collection;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder out = new StringBuilder();
+        List<ImageMetadataItem> metaList = new ArrayList<>();
+        metaList.addAll(getMetaData());
+
+        if (!metaList.isEmpty()) {
+            for (final ImageMetadataItem item : metaList) {
+                out.append("\n\t" + item);
+            }
+        } else {
+            out.append("No meta data from " + fileName + " extracted.");
+        }
+        return out.toString();
+    }
+
+    @Override //make private
+    public boolean isImageSet() {
+        boolean success = false;
+        if (this.image != null) {
+            success = true;
+        }
+        return success;
+    }
+
+    private boolean isFormatAccepted(final String imageFormat) {
+        boolean accept = false;
+        if (imageFormat.equalsIgnoreCase("jpg")
+                || imageFormat.equalsIgnoreCase("jpeg")
+                || imageFormat.equalsIgnoreCase("png")
+                || imageFormat.equalsIgnoreCase("gif")) {
+            accept = true;
+        }
+        return accept;
+    }
 }
