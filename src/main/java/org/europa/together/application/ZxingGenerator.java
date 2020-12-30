@@ -106,8 +106,8 @@ public class ZxingGenerator implements QrCodeGenerator {
     }
 
     @Override
-    public String generateDataForCalenderEvent(String event,
-            ZonedDateTime start, ZonedDateTime end) {
+    public String generateDataForCalenderEvent(final String event,
+            final ZonedDateTime start, final ZonedDateTime end) {
 
         String data = "BEGIN:VEVENT\n"
                 + "SUMMARY:" + event

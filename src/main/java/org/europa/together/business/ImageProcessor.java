@@ -5,11 +5,9 @@ import java.io.File;
 import java.util.List;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.europa.together.exceptions.MisconfigurationException;
-import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,7 +55,7 @@ public interface ImageProcessor {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean loadImage(final BufferedImage image);
+    boolean loadImage(BufferedImage image);
 
     /**
      * Load an image from a file. In te case an Image is already loaded, this
@@ -197,14 +195,4 @@ public interface ImageProcessor {
     @API(status = STABLE, since = "2.1")
     List<ImageMetadataItem> getMetaData();
 
-    /**
-     * Clear all meta data entries of an image.
-     *
-     * @throws UnsupportedVersionException
-     */
-    @API(status = EXPERIMENTAL, since = "1.1")
-    default void clearMetaData()
-            throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemented in this Version.");
-    }
 }

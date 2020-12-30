@@ -17,7 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -29,6 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
+@TestMethodOrder(OrderAnnotation.class)
 public class JavaCryptoToolsTest {
 
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoToolsTest.class);
@@ -177,6 +181,7 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
+    @Order(1)
     void testWriteKeyPairToFile() {
         LOGGER.log("TEST CASE: WriteKeyPairToFile()", LogLevel.DEBUG);
 
@@ -193,6 +198,7 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
+    @Order(2)
     void testLoadPrivateRsaKeyFromFile() {
         LOGGER.log("TEST CASE: LoadPrivateRsaKeyFromFile()", LogLevel.DEBUG);
 
@@ -202,15 +208,7 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testLoadPrivateEcKeyFromFile() {
-        LOGGER.log("TEST CASE: LoadPrivateEcKeyFromFile()", LogLevel.DEBUG);
-
-        PrivateKey privateEcKey = cryptoTools.loadPrivateKeyFile(
-                DIRECTORY + CipherAlgorithm.EC + ".key", CipherAlgorithm.EC);
-        assertEquals(CipherAlgorithm.EC.toString(), privateEcKey.getAlgorithm());
-    }
-
-    @Test
+    @Order(3)
     void testLoadPublicKeyRsaFromFile() {
         LOGGER.log("TEST CASE: LoadPublicRsaKeyFromFile()", LogLevel.DEBUG);
 
@@ -220,6 +218,17 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
+    @Order(4)
+    void testLoadPrivateEcKeyFromFile() {
+        LOGGER.log("TEST CASE: LoadPrivateEcKeyFromFile()", LogLevel.DEBUG);
+
+        PrivateKey privateEcKey = cryptoTools.loadPrivateKeyFile(
+                DIRECTORY + CipherAlgorithm.EC + ".key", CipherAlgorithm.EC);
+        assertEquals(CipherAlgorithm.EC.toString(), privateEcKey.getAlgorithm());
+    }
+
+    @Test
+    @Order(5)
     void testLoadPublicKeyEcFromFile() {
         LOGGER.log("TEST CASE: LoadPublicEcKeyFromFile()", LogLevel.DEBUG);
         String file = DIRECTORY;

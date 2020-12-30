@@ -37,6 +37,9 @@ public class JavaCryptoTools implements CryptoTools {
     private static final long serialVersionUID = 14L;
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoTools.class);
 
+    /**
+     * Constructor.
+     */
     public JavaCryptoTools() {
         Security.setProperty("crypto.policy", "unlimited");
         LOGGER.log("instance class", LogLevel.INFO);
@@ -96,18 +99,23 @@ public class JavaCryptoTools implements CryptoTools {
             destination = path;
         }
 
+        OutputStream privateFile = null;
+        OutputStream publicFile = null;
+
         try {
             byte[] publicKey = keyRing.getPublic().getEncoded();
             byte[] privateKey = keyRing.getPrivate().getEncoded();
 
             String privateCipher = keyRing.getPrivate().getAlgorithm();
-            OutputStream privateFile = new FileOutputStream(destination + "/" + privateCipher + ".key");
+            privateFile = new FileOutputStream(destination + "/"
+                    + privateCipher + ".key");
             privateFile.write(privateKey);
             privateFile.close();
             LOGGER.log("Private Key stored in PKCS#8 format.", LogLevel.DEBUG);
 
             String publicCipher = keyRing.getPublic().getAlgorithm();
-            OutputStream publicFile = new FileOutputStream(destination + "/" + publicCipher + ".pub");
+            publicFile = new FileOutputStream(destination + "/"
+                    + publicCipher + ".pub");
             publicFile.write(publicKey);
             publicFile.close();
             LOGGER.log("Public Kex stored in X.509 format.", LogLevel.DEBUG);

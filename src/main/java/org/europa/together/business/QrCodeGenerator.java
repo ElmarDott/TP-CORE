@@ -4,7 +4,8 @@ import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 

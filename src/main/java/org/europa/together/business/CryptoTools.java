@@ -44,7 +44,7 @@ public interface CryptoTools {
      * @throws java.security.NoSuchAlgorithmException in case of failure
      */
     @API(status = STABLE, since = "2.1")
-    public int getMaxKeySize(final CipherAlgorithm cipher) throws NoSuchAlgorithmException;
+    int getMaxKeySize(CipherAlgorithm cipher) throws NoSuchAlgorithmException;
 
     /**
      * Generate a public / private key pair. Usage:<br>
@@ -58,7 +58,7 @@ public interface CryptoTools {
      * @return public & private Key as KeyPair
      */
     @API(status = STABLE, since = "2.1")
-    KeyPair generateCipherKeyPair(final CipherAlgorithm cipher);
+    KeyPair generateCipherKeyPair(CipherAlgorithm cipher);
 
     /**
      * Writes the public / private keys as binary format to a given destination.
@@ -71,11 +71,26 @@ public interface CryptoTools {
      * @param keyRing as KeyPair
      */
     @API(status = STABLE, since = "2.1")
-    void saveKeyPairToFile(final String path, final KeyPair keyRing);
+    void saveKeyPairToFile(String path, KeyPair keyRing);
 
+    /**
+     * Load a private key in a binary format from a file to use for
+     * cryptography.
+     *
+     * @param keyFile as String
+     * @param algorithm as CipherAlgorithm
+     * @return the PrivateKey
+     */
     @API(status = STABLE, since = "2.1")
-    PrivateKey loadPrivateKeyFile(final String keyFile, final CipherAlgorithm algorithm);
+    PrivateKey loadPrivateKeyFile(String keyFile, CipherAlgorithm algorithm);
 
+    /**
+     * Load a public key in a binary format from a file to use for cryptography.
+     *
+     * @param keyFile as String
+     * @param algorithm as CipherAlgorithm
+     * @return the PublicKey
+     */
     @API(status = STABLE, since = "2.1")
-    PublicKey loadPublicKeyFile(final String keyFile, final CipherAlgorithm algorithm);
+    PublicKey loadPublicKeyFile(String keyFile, CipherAlgorithm algorithm);
 }

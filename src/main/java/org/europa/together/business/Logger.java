@@ -50,7 +50,7 @@ public interface Logger {
      * @return LogLevel
      */
     @API(status = STABLE, since = "1.0")
-    LogLevel log(final String message, final LogLevel level);
+    LogLevel log(String message, LogLevel level);
 
     /**
      * Get the configured LogLevel for the Logger.

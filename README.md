@@ -81,7 +81,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.2</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -109,7 +109,7 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
-| 2.1    | in process
+| 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()
 |        | - extend TreeWalker.validate()
 |        | - extend CryptoTools.generateKeyPair()

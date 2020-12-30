@@ -46,7 +46,7 @@ public interface PropertyReader {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean addPropertyList(final Map<String, String> propertyList);
+    boolean addPropertyList(Map<String, String> propertyList);
 
     /**
      * Load a property List from an given file inside the classpath. eg:
@@ -56,7 +56,7 @@ public interface PropertyReader {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean appendPropertiesFromClasspath(final String resource);
+    boolean appendPropertiesFromClasspath(String resource);
 
     /**
      * Load a property List from an external file. eg:
@@ -66,7 +66,7 @@ public interface PropertyReader {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean appendPropertiesFromFile(final String resource);
+    boolean appendPropertiesFromFile(String resource);
 
     /**
      * Clear the entire property list.
@@ -118,7 +118,7 @@ public interface PropertyReader {
      * @return Boolean PropertyKeyAsBoolean
      */
     @API(status = STABLE, since = "1.0")
-    Boolean getPropertyAsBoolean(final String key);
+    Boolean getPropertyAsBoolean(String key);
 
     /**
      * Get the property value as Double.
@@ -127,7 +127,7 @@ public interface PropertyReader {
      * @return Double PropertyAsDouble
      */
     @API(status = STABLE, since = "1.0")
-    Double getPropertyAsDouble(final String key);
+    Double getPropertyAsDouble(String key);
 
     /**
      * Get the property value as Float.
@@ -136,7 +136,7 @@ public interface PropertyReader {
      * @return Float PropertyAsFloat
      */
     @API(status = STABLE, since = "1.0")
-    Float getPropertyAsFloat(final String key);
+    Float getPropertyAsFloat(String key);
 
     /**
      * Get the value of a property as Integer.
@@ -145,7 +145,7 @@ public interface PropertyReader {
      * @return int PropertyKeyAsInteger
      */
     @API(status = STABLE, since = "1.0")
-    Integer getPropertyAsInt(final String key);
+    Integer getPropertyAsInt(String key);
 
     /**
      * Get the property value as String.
@@ -154,7 +154,7 @@ public interface PropertyReader {
      * @return String PropertyAsString
      */
     @API(status = STABLE, since = "1.0")
-    String getPropertyAsString(final String key);
+    String getPropertyAsString(String key);
 
     /**
      * Get the full property list as Map.
