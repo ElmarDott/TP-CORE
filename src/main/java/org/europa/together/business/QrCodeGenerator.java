@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 /**
@@ -106,17 +105,6 @@ public interface QrCodeGenerator {
      */
     @API(status = STABLE, since = "2.1")
     String generateDataForCalenderEvent(String event, ZonedDateTime start, ZonedDateTime end);
-
-    /**
-     * Encode an calender event.
-     *
-     * @param event as String
-     * @param start as DateTime
-     * @param end as DateTime
-     * @return dataStructure as String
-     */
-    @API(status = DEPRECATED, since = "1.0")
-    String generateDataForCalenderEvent(String event, DateTime start, DateTime end);
 
     /**
      * Encode an URL which will opened in a web browser.

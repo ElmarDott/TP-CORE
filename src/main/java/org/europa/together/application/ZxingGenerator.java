@@ -24,7 +24,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import static org.europa.together.business.QrCodeGenerator.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -118,18 +117,6 @@ public class ZxingGenerator implements QrCodeGenerator {
     }
 
     @Override
-    public String generateDataForCalenderEvent(final String event,
-            final DateTime start, final DateTime end) {
-
-        String data = "BEGIN:VEVENT\n"
-                + "SUMMARY:" + event
-                + "\n DTSTART:" + formatDateTime(start)
-                + "\n DTEND: " + formatDateTime(end)
-                + "\n END:VEVENT";
-        return data;
-    }
-
-    @Override
     public String generateDataForUrl(final String url) {
         String data = url.replace("//", "");
         return "URLTO:" + data;
@@ -177,14 +164,5 @@ public class ZxingGenerator implements QrCodeGenerator {
         }
 
         return decode;
-    }
-
-    //deprecated
-    private String formatDateTime(final DateTime date) {
-        String format = date.toString();
-        format = format.replace("-", "");
-        format = format.replace(":", "");
-        format = format.substring(0, format.length() - SUBSTRING);
-        return format + "Z";
     }
 }
