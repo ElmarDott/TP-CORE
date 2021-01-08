@@ -119,15 +119,6 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
     T deserializeJsonAsObject(String json, Class<T> clazz);
 
     /**
-     * Tried to create a Object from a given JSON String.
-     *
-     * @param json as String
-     * @return Entity as Object
-     */
-    @API(status = DEPRECATED, since = "1.0")
-    T deserializeJsonAsObject(String json);
-
-    /**
      * try to find a persitence Object.
      *
      * @param id as Object

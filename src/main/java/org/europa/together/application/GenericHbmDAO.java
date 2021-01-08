@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import flexjson.JSONDeserializer;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -143,21 +142,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         try {
             ObjectMapper mapper = new ObjectMapper();
             retVal = (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return retVal;
-    }
-
-    @Override
-    @Deprecated
-    public T deserializeJsonAsObject(final String json) {
-        T retVal = null;
-        try {
-            LOGGER.log("DEPECTED METHOD.", LogLevel.DEBUG);
-            retVal = new JSONDeserializer<T>().deserialize(json);
-
-//            retVal = mapper.readValue(json, Foo.class);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

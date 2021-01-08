@@ -111,6 +111,7 @@ In the case you like this project, let me know it and rate it with a star.
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
 |        | - remove jodatime
+|        | - remove flexjson
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()

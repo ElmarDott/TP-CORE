@@ -183,13 +183,6 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
-        <!-- depecated -->
-        <dependency>
-            <groupId>net.sf.flexjson</groupId>
-            <artifactId>flexjson</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <!-- new JSON solution -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
