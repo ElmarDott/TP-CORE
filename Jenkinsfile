@@ -1,16 +1,11 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('') {
       steps {
-        build(job: 'TP-CORE', propagate: true)
+        git(url: 'https://github.com/ElmarDott/TP-CORE.git', changelog: true, poll: true, branch: 'master')
       }
     }
 
-  }
-  environment {
-    JDK11 = 'jdk11'
-    Maven = 'default'
-    Branch = 'master'
   }
 }
