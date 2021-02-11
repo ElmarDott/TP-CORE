@@ -3,7 +3,10 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'mvn verify'
+        withMaven(maven: 'maven-3.6.0', jdk: 'OpenJDK-11') {
+          sh 'mvn verify'
+        }
+
       }
     }
 
