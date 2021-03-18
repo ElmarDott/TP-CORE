@@ -41,8 +41,8 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven email_get_configuration(MailClient client) {
         try {
-            assertEquals(10, client.getConfiguration().size());
-            assertEquals("127.0.0.1", client.getConfiguration().get("mailer.host"));
+            assertEquals(10, client.getDebugActiveConfiguration().size());
+            assertEquals("127.0.0.1", client.getDebugActiveConfiguration().get("mailer.host"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -60,7 +60,7 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven email_has_recipient(MailClient client) {
         try {
-            assertEquals(1, client.getRecipentList().size());
+            assertEquals(1, client.getMailObject().getRecipentList().size());
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -69,9 +69,9 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven email_has_recipients(MailClient client) {
         try {
-            assertEquals(10, client.getRecipentList().size());
-            assertEquals("3", client.getConfiguration().get("mailer.count"));
-            assertEquals("2", client.getConfiguration().get("mailer.wait"));
+            assertEquals(10, client.getMailObject().getRecipentList().size());
+            assertEquals("3", client.getDebugActiveConfiguration().get("mailer.count"));
+            assertEquals("2", client.getDebugActiveConfiguration().get("mailer.wait"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -80,7 +80,7 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven email_contains_attachment(MailClient client) {
         try {
-            assertEquals(1, client.getAttachmentList().size());
+            assertEquals(1, client.getMailObject().getAttachmentList().size());
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -90,9 +90,7 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
     public MailServiceGiven email_is_composed(MailClient client) {
         try {
 
-            MimeMessage message = client.composeMail(
-                    client.getRecipentList().get(0)
-            );
+            MimeMessage message = client.getMimeMessage();
             assertNotNull(message);
         } catch (Exception ex) {
             LOGGER.catchException(ex);

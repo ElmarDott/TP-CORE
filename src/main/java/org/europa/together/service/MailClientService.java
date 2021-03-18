@@ -1,6 +1,5 @@
 package org.europa.together.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +9,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.application.JavaMailClient;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.FeatureToggle;
@@ -20,7 +20,7 @@ import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.business.CryptoTools;
-import org.europa.together.utils.StringUtils;
+import org.europa.together.domain.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +41,7 @@ public final class MailClientService {
 
     @Autowired
     private CryptoTools cryptoTools;
+
     @Autowired
     private ConfigurationDAO configurationDAO;
 
@@ -98,71 +99,9 @@ public final class MailClientService {
     @FeatureToggle(featureID = "CM-0006.S004")
     public Map<String, String> getDbConfiguration() {
 
-        Map<String, String> configuration = new HashMap<>();
-        List<ConfigurationDO> configurationEntries
-                = configurationDAO.getAllConfigurationSetEntries(
-                        Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
-
-        for (ConfigurationDO entry : configurationEntries) {
-            String value;
-            if (StringUtils.isEmpty(entry.getValue())) {
-                value = entry.getDefaultValue();
-            } else {
-                value = entry.getValue();
-            }
-
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.host",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.host", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.port",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.port", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.sender",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.sender", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.user",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.user", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.password",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.password", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.ssl",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.ssl", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.tls",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.tls", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.debug",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.debug", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.count",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.count", value);
-            }
-            if (entry.getKey()
-                    .equals(cryptoTools.calculateHash("mailer.wait",
-                            HashAlgorithm.SHA256))) {
-                configuration.replace("mailer.wait", value);
-            }
-        }
-        return configuration;
+        MailClient mailClient = new JavaMailClient();
+        mailClient.loadConfigurationFromDatabase();
+        return mailClient.getDebugActiveConfiguration();
     }
 
     /**
@@ -183,17 +122,20 @@ public final class MailClientService {
      */
     @API(status = STABLE, since = "1.0")
     @FeatureToggle(featureID = "CM-0006.S002")
-    public void sendEmail(final MailClient mail) {
+    public void sendEmail(final Mail mail) {
         try {
-            Address[] addresses = new Address[1];
-            addresses[0] = mail.getRecipentList().get(0);
-            Message msg = mail.composeMail(mail.getRecipentList().get(0));
+            MailClient mailClient = new JavaMailClient();
+            mailClient.loadConfigurationFromDatabase();
+            mailClient.composeMail(mail);
 
-            Transport postman = mail.getSession().getTransport();
+            Address[] address = new Address[1];
+            address[0] = mail.getRecipentList().get(0);
+
+            Transport postman = mailClient.getSession().getTransport();
             postman.connect();
-            postman.sendMessage(msg, addresses);
+            postman.sendMessage(mailClient.getMimeMessage(), address);
             postman.close();
-            LOGGER.log("E-Mail should be send.", LogLevel.TRACE);
+            LOGGER.log("E-Mail should send.", LogLevel.TRACE);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -212,15 +154,25 @@ public final class MailClientService {
      */
     @API(status = STABLE, since = "1.0")
     @FeatureToggle(featureID = "CM-0006.S003")
-    public int sendBulkMail(final MailClient mail) {
+    public int sendBulkMail(final Mail mail) {
 
         int countSendedMails = 0;
+
         try {
-            int maximumMailBulk = mail.getBulkMailLimiter();
-            long countWaitTime = mail.getWaitTime();
+            MailClient mailClient = new JavaMailClient();
+            mailClient.loadConfigurationFromDatabase();
+            mailClient.composeMail(mail);
+
+            int maximumMailBulk = mailClient.getBulkMailLimiter();
+            long countWaitTime = mailClient.getWaitTime();
+
+            Transport postman = mailClient.getSession().getTransport();
+            postman.connect();
 
             for (InternetAddress recipient : mail.getRecipentList()) {
 
+                Address[] address = new Address[1];
+                address[0] = recipient;
                 countSendedMails++;
                 //after x mails wait for n seconds
                 if (countSendedMails % maximumMailBulk == 0) {
@@ -229,14 +181,14 @@ public final class MailClientService {
                     LOGGER.log("Timer wait for " + countWaitTime + " seconds.",
                             LogLevel.DEBUG);
                 }
-
-                Transport.send(mail.composeMail(recipient));
+                Transport.send(mailClient.getMimeMessage(), address);
             }
+            postman.close();
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log(countSendedMails + " E-Mails was send", LogLevel.DEBUG);
+        LOGGER.log(countSendedMails + " E-Mails should sended", LogLevel.DEBUG);
         return countSendedMails;
     }
 }

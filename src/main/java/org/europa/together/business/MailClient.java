@@ -1,14 +1,12 @@
 package org.europa.together.business;
 
-import java.util.List;
 import java.util.Map;
-import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.domain.Mail;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,110 +42,25 @@ public interface MailClient {
     String CONFIG_VERSION = "1.0";
 
     /**
-     * Add attachments from a given List of strings to the mail attachments. A
-     * list entry represents the full path to the attachment as String.
+     * Population the database with the MailClient Configuration.
      *
-     * @param attachmentList as String
+     * @param sqlFile as String
      */
-    @API(status = STABLE, since = "1.0")
-    void addAttachmentList(List<String> attachmentList);
+    void populateDbConfiguration(String sqlFile);
 
     /**
-     * Add a recipient from a given list of Strings to the mail recipients. A
-     * list entry represent a E-Mail Address as String. This function allows an
-     * import e-mail from other systems.
+     * Get the full active configuration of the mail client for debugging.
      *
-     * @param recipientList as String
+     * @return configuration as Map
      */
-    @API(status = STABLE, since = "1.0")
-    void addRecipientList(List<String> recipientList);
-
-    /**
-     * Reset the Attachment List.
-     *
-     */
-    @API(status = STABLE, since = "1.0")
-    void clearAttachments();
+    @API(status = STABLE, since = "3.0")
+    Map<String, String> getDebugActiveConfiguration();
 
     /**
      * Clean (reset) the mailer configuration.
      */
     @API(status = STABLE, since = "2.0")
     void clearConfiguration();
-
-    /**
-     * Reset the Recipient List.
-     */
-    @API(status = STABLE, since = "1.0")
-    void clearRecipents();
-
-    /**
-     * Population the database with the MailClient Configuration.
-     *
-     * @param sqlFile as String
-     * @param connectTestDb as boolean
-     */
-    @API(status = STABLE, since = "2.0")
-    void populateDbConfiguration(String sqlFile, boolean... connectTestDb);
-
-    /**
-     * Limit the maximum file size for attachments.
-     *
-     * @param attachmentSize as long
-     */
-    @API(status = STABLE, since = "1.0")
-    void setAttachmentSize(long attachmentSize);
-
-    /**
-     * Add E-MAil content from a String.
-     *
-     * @param content as String
-     */
-    @API(status = STABLE, since = "1.0")
-    void setContent(String content);
-
-    /**
-     * Set the MimeType of a E-Mail to HTML.
-     */
-    @API(status = STABLE, since = "1.0")
-    void setMimeTypeToHTML();
-
-    /**
-     * Set the MimeType of an E-Mail to plain text.
-     */
-    @API(status = STABLE, since = "1.0")
-    void setMimeTypeToPlain();
-
-    /**
-     * Add a subject (topic) to the mail.
-     *
-     * @param subject as String
-     */
-    @API(status = STABLE, since = "1.0")
-    void setSubject(String subject);
-
-    /**
-     * Add an attachment to the Attachment List. The file size of attachments
-     * can be limited. To refer an attachment, set the resource e.g.:
-     * picture.png
-     *
-     * @param resource as String
-     * @return true on success
-     */
-    @API(status = STABLE, since = "1.0")
-    boolean addAttachment(String resource);
-
-    /**
-     * Add an Recipient to the Recipient List. The implementation check if the
-     * recipient already exist in the List. Also the format of an valid e-mail
-     * address will be tested. If an given E-Mail address is not valid it will
-     * not added to the List.
-     *
-     * @param recipient as String
-     * @return true on success
-     */
-    @API(status = STABLE, since = "1.0")
-    boolean addRecipent(String recipient);
 
     /**
      *
@@ -174,13 +87,6 @@ public interface MailClient {
     int getBulkMailLimiter();
 
     /**
-     *
-     * @return size as long
-     */
-    @API(status = STABLE, since = "1.0")
-    long getAttachmentSize();
-
-    /**
      * Get the Configured wait time in milliseconds until the next mail bulk can
      * be send.
      *
@@ -188,6 +94,15 @@ public interface MailClient {
      */
     @API(status = STABLE, since = "1.0")
     long getWaitTime();
+
+    /**
+     * Compose a full E-Mail, ready to send.
+     *
+     * @param mail as Mail
+     * @throws javax.mail.MessagingException by error
+     */
+    @API(status = STABLE, since = "1.0")
+    void composeMail(Mail mail) throws MessagingException;
 
     /**
      * Get the configured session to connect the SMTP Server.
@@ -199,55 +114,18 @@ public interface MailClient {
     Session getSession();
 
     /**
+     * Get the composing Mail Object.
      *
-     * @return content as String
+     * @return email as Mail
      */
-    @API(status = STABLE, since = "1.0")
-    String getContent();
+    @API(status = STABLE, since = "3.0")
+    Mail getMailObject();
 
     /**
+     * Get the MimeMessage ready for sending.
      *
-     * @return mimeType as String
+     * @return message as MimeMessage
      */
-    @API(status = STABLE, since = "1.0")
-    String getMimeType();
-
-    /**
-     *
-     * @return subject as String
-     */
-    @API(status = STABLE, since = "1.0")
-    String getSubject();
-
-    /**
-     *
-     * @return attachments as List
-     */
-    @API(status = STABLE, since = "1.0")
-    List<FileDataSource> getAttachmentList();
-
-    /**
-     *
-     * @return recipients as List
-     */
-    @API(status = STABLE, since = "1.0")
-    List<InternetAddress> getRecipentList();
-
-    /**
-     * Get the full SMTP Configuration.
-     *
-     * @return configuration as Map
-     */
-    @API(status = STABLE, since = "1.0")
-    Map<String, String> getConfiguration();
-
-    /**
-     * Compose a full E-Mail, ready to send.
-     *
-     * @param recipient as InternetAddress
-     * @return e-mail as MimeMessage
-     * @throws javax.mail.MessagingException by error
-     */
-    @API(status = STABLE, since = "1.0")
-    MimeMessage composeMail(InternetAddress recipient) throws MessagingException;
+    @API(status = STABLE, since = "3.0")
+    MimeMessage getMimeMessage();
 }

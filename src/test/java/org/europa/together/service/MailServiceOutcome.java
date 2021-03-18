@@ -58,8 +58,8 @@ public class MailServiceOutcome extends Stage<MailServiceOutcome> {
     public MailServiceOutcome configuration_is_changed() {
         try {
             assertTrue(mailer.loadConfigurationFromDatabase());
-            assertEquals(10, mailer.getConfiguration().size());
-            assertEquals("SMTPS.localhost:5432", mailer.getConfiguration().get("mailer.host"));
+            assertEquals(10, mailer.getDebugActiveConfiguration().size());
+            assertEquals("SMTPS.localhost:5432", mailer.getDebugActiveConfiguration().get("mailer.host"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
