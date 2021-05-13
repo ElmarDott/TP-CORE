@@ -23,7 +23,7 @@ public interface XmlTools {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0010";
+    String FEATURE_ID = "CM-10";
 
     /**
      * Parse a given XML File to grab the content.

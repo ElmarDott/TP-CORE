@@ -2,14 +2,12 @@ package org.europa.together.domain;
 
 import java.lang.reflect.Constructor;
 import org.europa.together.application.JdbcActions;
-import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,26 +25,7 @@ public class JdbcConnectionTest {
     @BeforeAll
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
-        FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests("CM-0008.DO01");
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
-        boolean socket = actions.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
-
-        boolean check;
-        String out;
-        if (!toggle || !socket) {
-            out = "skiped.";
-            check = false;
-        } else {
-            out = "executed.";
-            check = true;
-        }
-
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
     }
 
     @AfterAll

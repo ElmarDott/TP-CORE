@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
- * @version 1.2
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0", consumers = "JavaMailClient")
@@ -27,7 +27,7 @@ public interface MailClient {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0006";
+    String FEATURE_ID = "CM-06";
 
     /**
      * Define the Configuration Set for the MailClient.

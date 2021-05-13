@@ -7,7 +7,6 @@ import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.FileUtils;
-import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -45,8 +44,6 @@ public class SaxToolsTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
 
         try {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.dtd"), DTD);
@@ -55,14 +52,7 @@ public class SaxToolsTest {
             LOGGER.catchException(ex);
         }
 
-        boolean toggle = feature.deactivateUnitTests(XmlTools.FEATURE_ID);
-        boolean hasInternet
-                = SocketTimeout.isUrlAvailable("http://www.google.com");
-        if (!toggle || !hasInternet) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 

@@ -3,7 +3,7 @@ package org.europa.together.business;
 import java.io.Serializable;
 import java.util.List;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
  * <br><br>
  * This configuration us a MySQL Database connection to local host with the
  * following account: <br>
- * - jdbc.main.schema=collab<br>
- * - jdbc.main.user=collab<br>
- * - jdbc.main.password=collab
+ * - jdbc.schema=collab<br>
+ * - jdbc.user=collab<br>
+ * - jdbc.password=collab
  *
  * @param <T> the Entity to Save
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
- * @version 1.2111111
+ * @version 1.3
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0", consumers = "GenrericHbmDAO")
@@ -35,7 +35,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0002";
+    String FEATURE_ID = "CM-02";
 
     /**
      * Persist a new Entity and return TRUE if it was successful. In the case

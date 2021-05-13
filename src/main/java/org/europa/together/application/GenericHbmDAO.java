@@ -8,9 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.GenericDAO;
-import static org.europa.together.business.GenericDAO.FEATURE_ID;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.hibernate.Session;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("unchecked")
 @Repository
 @Transactional
-@FeatureToggle(featureID = FEATURE_ID)
 public abstract class GenericHbmDAO<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 

@@ -2,10 +2,8 @@ package org.europa.together.application;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
-import static org.europa.together.business.TreeWalker.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
 import org.europa.together.exceptions.MisconfigurationException;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of a TreeWalker.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class ListTree implements TreeWalker {
 
     private static final long serialVersionUID = 9L;

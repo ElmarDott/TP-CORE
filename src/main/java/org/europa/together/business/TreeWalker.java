@@ -27,7 +27,7 @@ public interface TreeWalker {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0009";
+    String FEATURE_ID = "CM-09";
 
     /**
      * Add the root node to the tree.

@@ -24,7 +24,7 @@ public interface DatabaseActions {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0008";
+    String FEATURE_ID = "CM-08";
 
     /**
      * Establish an JDBC Connection. If the propertyFile Parameter is empty,

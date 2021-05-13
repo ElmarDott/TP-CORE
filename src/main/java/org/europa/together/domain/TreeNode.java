@@ -2,7 +2,6 @@ package org.europa.together.domain;
 
 import java.util.Objects;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
@@ -12,7 +11,6 @@ import org.europa.together.utils.StringUtils;
  * have two child nods with the same name. for a user is then hard to
  * distinguish which child node is the right one. (e.g. Files and Folders)
  */
-@FeatureToggle(featureID = "CM-0009.DO")
 public final class TreeNode {
 
     private static final Logger LOGGER = new LogbackLogger(TreeNode.class);

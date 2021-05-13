@@ -21,7 +21,7 @@ public interface PdfRenderer {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0011";
+    String FEATURE_ID = "CM-11";
 
     /**
      * Writes a PDF document (PdfReader) to the given Destination.

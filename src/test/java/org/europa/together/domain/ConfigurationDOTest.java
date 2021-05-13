@@ -144,64 +144,6 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    void testIncorrectBeanConstruction() {
-        LOGGER.log("TEST CASE: incorrectBeanConstruction()", LogLevel.DEBUG);
-
-        ConfigurationDO domainObject;
-
-        LOGGER.log("Create DomainObject with empty KEY", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(null, value, modulName, version);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DomainObject with empty MODULE_NAME", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, null, version);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DomainObject with empty VERSION", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, null);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DomainObject with empty CONF_SET", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, version);
-        domainObject.prePersist();
-        domainObject.setConfigurationSet(null);
-
-        assertNotNull(domainObject);
-        assertEquals(null, domainObject.getConfigurationSet());
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DomainObject with empty DEFAULT_VALUE", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, version);
-        domainObject.prePersist();
-        domainObject.setDefaultValue(null);
-
-        assertNotNull(domainObject);
-        assertEquals(null, domainObject.getDefaultValue());
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-    }
-
-    @Test
     void testIsEqual() {
         LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
 

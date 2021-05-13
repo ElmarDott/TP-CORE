@@ -42,15 +42,8 @@ public class PdfTextRendererTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
 
-        boolean toggle = feature.deactivateUnitTests(PdfRenderer.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 

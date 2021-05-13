@@ -5,9 +5,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.ConfigurationDAO;
-import static org.europa.together.business.ConfigurationDAO.FEATURE_ID;
 import org.europa.together.business.CryptoTools;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-@FeatureToggle(featureID = FEATURE_ID)
 public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         implements ConfigurationDAO {
 

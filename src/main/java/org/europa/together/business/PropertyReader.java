@@ -26,7 +26,7 @@ public interface PropertyReader {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0004";
+    String FEATURE_ID = "CM-04";
 
     /**
      * Add a single Property to the Property list. If the property already exist

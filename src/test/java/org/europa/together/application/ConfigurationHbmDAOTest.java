@@ -54,18 +54,14 @@ public class ConfigurationHbmDAOTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
 
-        boolean toggle = feature.deactivateUnitTests(ConfigurationDAO.FEATURE_ID);
         boolean socket = actions.connect("default");
-        if (!toggle || !socket) {
-            out = "skiped.";
+        if (!socket) {
             check = false;
         }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
 
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
+        Assumptions.assumeTrue(check);
         actions.executeSqlFromClasspath(FILE);
     }
 

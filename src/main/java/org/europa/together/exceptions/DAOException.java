@@ -1,11 +1,8 @@
 package org.europa.together.exceptions;
 
-import org.europa.together.business.FeatureToggle;
-
 /**
  * DAO Exception for Transaction Rollback.
  */
-@FeatureToggle(featureID = "CM-0002.EX01")
 public class DAOException extends Exception {
 
     private static final long serialVersionUID = 1L;

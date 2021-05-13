@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.mail.internet.AddressException;
 import org.europa.together.application.JdbcActions;
-import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.application.JavaMailClient;
 import org.europa.together.business.DatabaseActions;
@@ -53,27 +52,15 @@ public class MailClientScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-
-        FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+        boolean check = true;
 
         boolean socket = CONNECTION.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
-
-        boolean check;
-        String out;
-        if (!toggle || !socket) {
-            out = "skiped.";
+        if (!socket) {
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
 
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
         //DBMS Table setup

@@ -1,4 +1,4 @@
-x<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
+<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
 
 # together Platform :: CORE
 
@@ -18,20 +18,20 @@ charge for any kind of usage, commercial and private,
 ## Getting Started
 
 Components - Release: 2.0
- * [CORE-0001] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
- * [CORE-0002] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
- * [CORE-0003] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
- * [CORE-0004] [Property Reader](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0004%5D-Property-Reader)
- * [CORE-0005] [Application Configuration](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0005%5D-Application-Configuration)
- * [CORE-0006] [SMTP E-Mail Client](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0006%5D-SMTP-E-Mail-Client)
- * [CORE-0007] [QR Code Reader / Writer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0007%5D-QR-Code-Reader---Writer)
- * [CORE-0008] [Database Actions](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0008%5D-Database-Actions)
- * [CORE-0009] [Tree Walker](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0009%5D-Tree-Walker)
- * [CORE-0010] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0010%5D-XML-Tools)
- * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
- * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
- * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
- * [CORE-0014] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
+ * [CORE-01] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
+ * [CORE-02] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
+ * [CORE-03] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
+ * [CORE-04] [Property Reader](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0004%5D-Property-Reader)
+ * [CORE-05] [Application Configuration](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0005%5D-Application-Configuration)
+ * [CORE-06] [SMTP E-Mail Client](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0006%5D-SMTP-E-Mail-Client)
+ * [CORE-07] [QR Code Reader / Writer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0007%5D-QR-Code-Reader---Writer)
+ * [CORE-08] [Database Actions](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0008%5D-Database-Actions)
+ * [CORE-09] [Tree Walker](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0009%5D-Tree-Walker)
+ * [CORE-10] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0010%5D-XML-Tools)
+ * [CORE-11] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
+ * [CORE-12] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
+ * [CORE-13] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
+ * [CORE-14] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
 
 Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Convention
 over configurations) and DRY (Don't repeat yourself). Also we following the programming
@@ -40,21 +40,35 @@ and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 11.3, Maven 3.6.1 and Java 11 SE. The
-implementation is also designed to run in Java EE 8 (e.g. Tomcat) environments.
-The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
+The CORE Module is build with NetBeans 12.3, Maven 3.6.3 and Java 11 SE (openJDK).
+The implementation is also designed to run in Java EE 9 (e.g. Tomcat) environments.
+The most important dependencies are Hibernate 5.4, Spring 5.3 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL DBMS 11.
 
 We decided to use docker for an easy database setup. After on your system docker
 is running you are be able to setup the database by the following steps:
 
-  * docker pull postgres
-  * docker run -d -p 5432:5432 --name postgres -v /home/user/docker/postgreSQL:/var/lib/postgresql/data postgres
-  * docker start postgres
-  * docker stop postgres
+  docker network create -d bridge --subnet=172.18.0.0/16 services
+
+  docker run -d --name postgres --restart=no \
+  -p 5432:5432 --net services --ip 172.18.0.2 \
+  -e POSTGRES_PASSWORD=s3cr3t \
+  -e PGPASSWORD=s3cr3t \
+  -v /home/user/docker/postgres:/var/lib/postgresql/data \
+  postgres:11
+
+  docker run -d --name pgadmin --restart=no \
+  -p 8004:80 --net services --ip 172.18.0.98 \
+  -e PGADMIN_DEFAULT_EMAIL=elmar.dott@gmail.com \
+  -e PGADMIN_DEFAULT_PASSWORD=s3cr3t \
+  --link postgres:11 \
+  dpage/pgadmin4:4.29
 
   URI/>  172.17.0.1:5432   User: postgres PWD: n/a
   DOC/>  https://docs.docker.com/samples/library/postgres/
+
+  * docker start postgres
+  * docker stop postgres
 
 To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
 script. If you need a short introduction about docker, you can check our tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
@@ -112,6 +126,7 @@ In the case you like this project, let me know it and rate it with a star.
 | 3.0.0  | in progress
 |        | - remove jodatime
 |        | - remove flexjson
+|        | - Refactor MailClient & MailService
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()

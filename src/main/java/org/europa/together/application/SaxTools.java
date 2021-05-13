@@ -16,12 +16,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 import org.europa.together.application.internal.SaxDocumentHandler;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import org.europa.together.business.XmlTools;
-import static org.europa.together.business.XmlTools.FEATURE_ID;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of useful XML Tools.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class SaxTools implements XmlTools {
 
     private static final long serialVersionUID = 10L;

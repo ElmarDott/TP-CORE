@@ -3,21 +3,19 @@ package org.europa.together.application;
 import ch.qos.logback.classic.Level;
 import java.io.File;
 import java.util.Arrays;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
-import static org.europa.together.business.Logger.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.utils.Constraints;
 import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the Logger as Wrapper for SLF4j and logback Framework.
  */
 //@Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class LogbackLogger implements Logger {
 
     private static final long serialVersionUID = 1L;
-    private final String configurationFile = SYSTEM_APP_DIR + "/logback.xml";
+    private final String configurationFile = Constraints.SYSTEM_APP_DIR + "/logback.xml";
     private Class<?> instance = null;
     private org.slf4j.Logger logger = null;
 

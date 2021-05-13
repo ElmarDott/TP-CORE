@@ -92,18 +92,18 @@ public final class FileUtils {
                 default:
                     break;
                 case "kilo":
-                    size = size / Constraints.BYTE_DEVISOR;
+                    size = size / Constraints.INT_1024;
                     break;
                 case "mega":
-                    size = (size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
+                    size = (size / Constraints.INT_1024) / Constraints.INT_1024;
                     break;
                 case "giga":
-                    size = ((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
-                            / Constraints.BYTE_DEVISOR;
+                    size = ((size / Constraints.INT_1024) / Constraints.INT_1024)
+                            / Constraints.INT_1024;
                     break;
                 case "tera":
-                    size = (((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
-                            / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
+                    size = (((size / Constraints.INT_1024) / Constraints.INT_1024)
+                            / Constraints.INT_1024) / Constraints.INT_1024;
                     break;
             }
 

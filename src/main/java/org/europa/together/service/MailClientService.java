@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.mail.Address;
-import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
@@ -12,7 +11,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.JavaMailClient;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.ConfigurationDO;
@@ -33,7 +31,6 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.0")
 @Service
-@FeatureToggle(featureID = MailClient.FEATURE_ID)
 public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
@@ -70,7 +67,6 @@ public final class MailClientService {
      * @param configurationList as Map
      */
     @API(status = STABLE, since = "1.0")
-    @FeatureToggle(featureID = "CM-0006.S001")
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
@@ -96,7 +92,6 @@ public final class MailClientService {
      * @return mailConfiguration as Map
      */
     @API(status = STABLE, since = "1.1")
-    @FeatureToggle(featureID = "CM-0006.S004")
     public Map<String, String> getDbConfiguration() {
 
         MailClient mailClient = new JavaMailClient();
@@ -121,7 +116,6 @@ public final class MailClientService {
      * @param mail as MailClient
      */
     @API(status = STABLE, since = "1.0")
-    @FeatureToggle(featureID = "CM-0006.S002")
     public void sendEmail(final Mail mail) {
         try {
             MailClient mailClient = new JavaMailClient();
@@ -153,7 +147,6 @@ public final class MailClientService {
      * @return sendedEmails as int
      */
     @API(status = STABLE, since = "1.0")
-    @FeatureToggle(featureID = "CM-0006.S003")
     public int sendBulkMail(final Mail mail) {
 
         int countSendedMails = 0;

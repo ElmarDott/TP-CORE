@@ -9,9 +9,7 @@ import javax.persistence.Index;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
@@ -34,7 +32,6 @@ import org.europa.together.utils.StringUtils;
                     = {"MODUL_NAME", "SERVICE_VERSION", "CONF_KEY"})
         }
 )
-@FeatureToggle(featureID = "CM-0005.DO01")
 public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 102L;
@@ -49,34 +46,27 @@ public class ConfigurationDO implements Serializable {
     @Column(name = "IDX")
     private String uuid;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_KEY", nullable = false)
     private String key;
 
     @Column(name = "CONF_VALUE")
     private String value;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "DEFAULT_VALUE", nullable = false)
     private String defaultValue;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MODUL_NAME", nullable = false)
     private String modulName;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "SERVICE_VERSION", nullable = false)
     private String version;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "DEPECATED", nullable = false)
     private boolean depecated;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MANDATORY", nullable = false)
     private boolean mandatory;
 

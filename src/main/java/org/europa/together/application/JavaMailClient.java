@@ -19,10 +19,8 @@ import javax.mail.internet.MimeMultipart;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.business.DatabaseActions;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
-import static org.europa.together.business.MailClient.FEATURE_ID;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
@@ -37,7 +35,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of a simple SMTP Mailer.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class JavaMailClient implements MailClient {
 
     private static final long serialVersionUID = 6L;

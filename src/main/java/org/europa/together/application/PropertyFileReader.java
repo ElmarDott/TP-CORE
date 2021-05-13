@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
-import static org.europa.together.business.PropertyReader.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of the PropertyReader.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class PropertyFileReader implements PropertyReader {
 
     private static final long serialVersionUID = 4L;

@@ -38,16 +38,8 @@ public class JdbcActionsTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
 
-        boolean toggle = feature.deactivateUnitTests(DatabaseActions.FEATURE_ID);
-        boolean socket = actions.connect("default");
-        if (!toggle || !socket) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 

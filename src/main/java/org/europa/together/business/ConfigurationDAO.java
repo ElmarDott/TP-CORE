@@ -30,7 +30,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0005";
+    String FEATURE_ID = "CM-05";
 
     /**
      * Get the whole configuration object by a given key, module and the version

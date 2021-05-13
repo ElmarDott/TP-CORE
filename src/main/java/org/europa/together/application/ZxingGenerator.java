@@ -19,10 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
-import static org.europa.together.business.QrCodeGenerator.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Repository;
 
@@ -30,13 +28,10 @@ import org.springframework.stereotype.Repository;
  * Implementation of the QR Code Generator.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class ZxingGenerator implements QrCodeGenerator {
 
     private static final long serialVersionUID = 7L;
     private static final Logger LOGGER = new LogbackLogger(ZxingGenerator.class);
-
-    private static final int SUBSTRING = 8;
 
     private final String charset;
     private int dimensionHeight;
@@ -105,7 +100,7 @@ public class ZxingGenerator implements QrCodeGenerator {
     }
 
     @Override
-    public String generateDataForCalenderEvent(final String event,
+    public String generateDataForCalendarEvent(final String event,
             final ZonedDateTime start, final ZonedDateTime end) {
 
         String data = "BEGIN:VEVENT\n"

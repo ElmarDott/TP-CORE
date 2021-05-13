@@ -41,15 +41,8 @@ public class ZxingGeneratorTest {
     static void setUp() {
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
 
-        boolean toggle = feature.deactivateUnitTests(QrCodeGenerator.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 
@@ -179,7 +172,7 @@ public class ZxingGeneratorTest {
         generator.setup(out, 100);
 
         assertTrue(generator.encode(
-                generator.generateDataForCalenderEvent("Appointment",
+                generator.generateDataForCalendarEvent("Appointment",
                         ZonedDateTime.of(2017, 1, 1, 1, 0, 0, 0, ZoneId.of("UTC")),
                         ZonedDateTime.of(2017, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
                 )
