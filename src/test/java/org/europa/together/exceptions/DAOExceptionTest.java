@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 public class DAOExceptionTest {
 
     @Test()
-    void testExceptionObject() {
+    void exceptionObject() {
         DAOException ex_00 = new DAOException("DAO Exception");
         assertEquals("DAO Exception", ex_00.getMessage());
 

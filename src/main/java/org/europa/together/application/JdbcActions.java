@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -58,12 +59,9 @@ public class JdbcActions implements DatabaseActions {
 
         boolean connected = true;
         try {
-            if (jdbcConnection == null) {
-                fetchProperties(propertyFile);
-                establishPooledConnection();
-            } else {
-                LOGGER.log("Connection already established.", LogLevel.DEBUG);
-            }
+            fetchProperties(propertyFile);
+            establishPooledConnection();
+
         } catch (Exception ex) {
             connected = false;
             LOGGER.catchException(ex);
@@ -148,37 +146,6 @@ public class JdbcActions implements DatabaseActions {
         return this.uri;
     }
 
-    @Override
-    public JdbcConnection getJdbcMetaData() {
-
-        Map<String, String> properties = new HashMap<>();
-        try {
-            metadata = jdbcConnection.getMetaData();
-
-            properties.put("metaJdbcVersion",
-                    metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion());
-            properties.put("metaJdbcDriverName",
-                    metadata.getDriverName());
-            properties.put("metaJdbcDriverVersion",
-                    metadata.getDriverVersion());
-            properties.put("metaDbmsName",
-                    metadata.getDatabaseProductName());
-            properties.put("metaDbmsVersion",
-                    metadata.getDatabaseProductVersion());
-            properties.put("metaUser",
-                    metadata.getUserName());
-            properties.put("metaCatalog",
-                    metadata.getConnection().getCatalog());
-            properties.put("metaUrl", metadata.getURL());
-
-            properties.put("metaPort", Integer.toString(port));
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return new JdbcConnection(properties);
-    }
-
     /*
     JdbcConnection {
         JDBC_VERSION=4.2
@@ -193,6 +160,33 @@ public class JdbcActions implements DatabaseActions {
         CATALOG=together-test
     }
      */
+    @Override
+    public JdbcConnection getJdbcMetaData() throws SQLException {
+
+        Map<String, String> properties = new HashMap<>();
+
+        metadata = jdbcConnection.getMetaData();
+
+        properties.put("metaJdbcVersion",
+                metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion());
+        properties.put("metaJdbcDriverName",
+                metadata.getDriverName());
+        properties.put("metaJdbcDriverVersion",
+                metadata.getDriverVersion());
+        properties.put("metaDbmsName",
+                metadata.getDatabaseProductName());
+        properties.put("metaDbmsVersion",
+                metadata.getDatabaseProductVersion());
+        properties.put("metaUser",
+                metadata.getUserName());
+        properties.put("metaCatalog",
+                metadata.getConnection().getCatalog());
+        properties.put("metaUrl", metadata.getURL());
+        properties.put("metaPort", Integer.toString(port));
+
+        return new JdbcConnection(properties);
+    }
+
     //  ----------------------------------------------------------------------------
     private void establishPooledConnection()
             throws TimeOutException, ClassNotFoundException, PropertyVetoException, SQLException {
@@ -209,8 +203,7 @@ public class JdbcActions implements DatabaseActions {
         this.jdbcConnection = cpds.getConnection();
     }
 
-    private void fetchProperties(final String propertyFile) {
-
+    private void fetchProperties(final String propertyFile) throws IOException {
         String properties = propertyFile;
         PropertyReader reader = new PropertyFileReader();
 
@@ -219,6 +212,7 @@ public class JdbcActions implements DatabaseActions {
             reader.appendPropertiesFromClasspath(jdbcProperties);
         } else {
             LOGGER.log("Append properties from: " + propertyFile, LogLevel.DEBUG);
+
             reader.appendPropertiesFromFile(propertyFile);
         }
 

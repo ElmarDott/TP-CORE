@@ -29,11 +29,9 @@ public class LogbackLoggerTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
+        Assumptions.assumeTrue(true);
 
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -52,7 +50,7 @@ public class LogbackLoggerTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         Logger test_01 = new LogbackLogger(Logger.class);
@@ -60,7 +58,7 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void testFallbackConstructor() {
+    void fallbackConstructor() {
         LOGGER.log("TEST CASE: fallbackConstructor", LogLevel.DEBUG);
 
         LoggingService service = new LoggingService();
@@ -77,27 +75,57 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void testLog() {
-        LOGGER.log("TEST CASE: log", LogLevel.DEBUG);
+    void failLog() throws Exception {
+        LOGGER.log("TEST CASE: faiLog", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        assertThrows(Exception.class, () -> {
+            logger.log("console logging test: trace", null);
+        });
+    }
+
+    @Test
+    void logTrace() {
+        LOGGER.log("TEST CASE: logTrace", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.TRACE, logger.log("console logging test: trace", LogLevel.TRACE));
+    }
+
+    @Test
+    void logDebug() {
+        LOGGER.log("TEST CASE: logDebug", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.DEBUG, logger.log("console logging test: debug", LogLevel.DEBUG));
+    }
+
+    @Test
+    void logInfo() {
+        LOGGER.log("TEST CASE: logInfo", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.INFO, logger.log("console logging test: info", LogLevel.INFO));
+    }
+
+    @Test
+    void logWarn() {
+        LOGGER.log("TEST CASE: logWarn", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.WARN, logger.log("console logging test: warn", LogLevel.WARN));
+    }
+
+    @Test
+    void logError() {
+        LOGGER.log("TEST CASE: logError", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
         assertEquals(LogLevel.ERROR, logger.log("console logging test: error", LogLevel.ERROR));
     }
 
     @Test
-    void testFailLog() {
-        LOGGER.log("TEST CASE: faiLog", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        assertNull(logger.log("console logging test: trace", null));
-    }
-
-    @Test
-    void testCatchException() {
+    void catchException() {
         LOGGER.log("TEST CASE: catchException", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
@@ -106,7 +134,7 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void testCatchNullpointerException() {
+    void catchNullpointerException() {
         LOGGER.log("TEST CASE: catchNullpointerException", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
@@ -115,45 +143,62 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void testGetConfiguredLogLevel() throws InterruptedException {
-        LOGGER.log("TEST CASE: getConfiguredLogLevel", LogLevel.DEBUG);
+    void failManipulateLogLevel() {
+        LOGGER.log("TEST CASE: failManipulateLogLevel", LogLevel.DEBUG);
 
         Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(null);
 
-        logger.setLogLevel(LogLevel.ERROR);
-        assertEquals(LogLevel.ERROR, logger.getConfiguredLogLevel());
-        LOGGER.log("case 5: ERROR", LogLevel.ERROR);
-
-        logger.setLogLevel(LogLevel.WARN);
-        assertEquals(LogLevel.WARN, logger.getConfiguredLogLevel());
-        LOGGER.log("case 4: WARN", LogLevel.WARN);
-
-        logger.setLogLevel(LogLevel.INFO);
-        assertEquals(LogLevel.INFO, logger.getConfiguredLogLevel());
-        LOGGER.log("case 3: INFO", LogLevel.INFO);
-
-        logger.setLogLevel(LogLevel.DEBUG);
-        assertEquals(LogLevel.DEBUG, logger.getConfiguredLogLevel());
-        LOGGER.log("case 2: DEBUG", LogLevel.DEBUG);
-
-        logger.setLogLevel(LogLevel.TRACE);
-        assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
-        LOGGER.log("case 1: TRACE", LogLevel.TRACE);
+        assertNull(logger.getConfiguredLogLevel());
     }
 
-    private String logConfiguration(final String logLevel) {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<configuration debug=\"false\" scan=\"true\" scanPeriod=\"2 seconds\">\n"
-                + "    <statusListener class=\"ch.qos.logback.core.status.OnConsoleStatusListener\" />\n"
-                + "    <appender name=\"CONSOLE\" class=\"ch.qos.logback.core.ConsoleAppender\">\n"
-                + "        <encoder>\n"
-                + "            <pattern>%5p %date{yyyy-MM-dd HH:mm:ss} %-50logger{50} | %m%n</pattern>\n"
-                + "        </encoder>\n"
-                + "    </appender>\n"
-                + "    <logger name=\"org.europa.together\" level=\"TRACE\" />\n"
-                + "    <root level=\"" + logLevel + "\">\n"
-                + "        <appender-ref ref=\"CONSOLE\" />\n"
-                + "    </root>\n"
-                + "</configuration>";
+    @Test
+    void manipulateLogLeveltoTrace() {
+        LOGGER.log("TEST CASE: manipulateLogLeveltoTrace", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(LogLevel.TRACE);
+
+        assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
+    }
+
+    @Test
+    void manipulateLogLeveltoDebug() {
+        LOGGER.log("TEST CASE: manipulateLogLeveltoDebug", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(LogLevel.DEBUG);
+
+        assertEquals(LogLevel.DEBUG, logger.getConfiguredLogLevel());
+    }
+
+    @Test
+    void manipulateLogLeveltoInfo() {
+        LOGGER.log("TEST CASE: manipulateLogLeveltoInfo", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(LogLevel.INFO);
+
+        assertEquals(LogLevel.INFO, logger.getConfiguredLogLevel());
+    }
+
+    @Test
+    void manipulateLogLeveltoWarn() {
+        LOGGER.log("TEST CASE: manipulateLogLeveltoWarn", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(LogLevel.WARN);
+
+        assertEquals(LogLevel.WARN, logger.getConfiguredLogLevel());
+    }
+
+    @Test
+    void manipulateLogLeveltoError() {
+        LOGGER.log("TEST CASE: manipulateLogLeveltoError", LogLevel.DEBUG);
+
+        Logger logger = new LogbackLogger(Logger.class);
+        logger.setLogLevel(LogLevel.ERROR);
+
+        assertEquals(LogLevel.ERROR, logger.getConfiguredLogLevel());
     }
 }

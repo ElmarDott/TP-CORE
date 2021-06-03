@@ -22,49 +22,28 @@ import org.junit.runner.RunWith;
 public class MailTest {
 
     private static final Logger LOGGER = new LogbackLogger(MailTest.class);
+
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
 
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
-    }
-    //</editor-fold>
-
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(Mail.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testGetDefaultMimeType() {
-        LOGGER.log("TEST CASE: getDefaultMimeType()", LogLevel.DEBUG);
+    void getDefaultMimeType() {
+        LOGGER.log("TEST CASE: getDefaultMimeType", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         assertEquals("plain", mail.getMimeType());
     }
 
     @Test
-    void testSetHtmlMimeType() {
-        LOGGER.log("TEST CASE: setHtmlMimeType()", LogLevel.DEBUG);
+    void setHtmlMimeType() {
+        LOGGER.log("TEST CASE: setHtmlMimeType", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         mail.setMimeTypeToHTML();
@@ -72,8 +51,8 @@ public class MailTest {
     }
 
     @Test
-    void testSetPlainMimeType() {
-        LOGGER.log("TEST CASE: setPlainMimeType()", LogLevel.DEBUG);
+    void setPlainMimeType() {
+        LOGGER.log("TEST CASE: setPlainMimeType", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         mail.setMimeTypeToHTML();
@@ -82,8 +61,8 @@ public class MailTest {
     }
 
     @Test
-    void testRecipients() throws AddressException {
-        LOGGER.log("TEST CASE: recipients()", LogLevel.DEBUG);
+    void recipients() throws AddressException {
+        LOGGER.log("TEST CASE: recipients", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         LOGGER.log("Inital empty recipient list.", LogLevel.DEBUG);
@@ -103,7 +82,7 @@ public class MailTest {
     }
 
     @Test
-    void testAddRecipentDetectDoubleEntries() throws AddressException {
+    void addRecipentDetectDoubleEntries() throws AddressException {
         LOGGER.log("TEST CASE: addRecipentDetectDoubleEntries", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -115,7 +94,7 @@ public class MailTest {
     }
 
     @Test
-    void testAddRecipentValidationFail() throws AddressException {
+    void addRecipentValidationFail() throws AddressException {
         LOGGER.log("TEST CASE: addRecipentValidationFail", LogLevel.DEBUG);
 
         List<String> failure = new ArrayList<>();
@@ -134,7 +113,7 @@ public class MailTest {
     }
 
     @Test
-    void testAddRecipientList() throws AddressException {
+    void addRecipientList() throws AddressException {
         LOGGER.log("TEST CASE: addRecipientList", LogLevel.DEBUG);
 
         List<String> recipients = new ArrayList<>();
@@ -151,7 +130,7 @@ public class MailTest {
     }
 
     @Test
-    void testContent() {
+    void content() {
         LOGGER.log("TEST CASE: content", LogLevel.DEBUG);
 
         String content = "<h1>E Mail>/h1><p>this is the content of the email.";
@@ -161,7 +140,7 @@ public class MailTest {
     }
 
     @Test
-    void testSubject() {
+    void subject() {
         LOGGER.log("TEST CASE: subject", LogLevel.DEBUG);
 
         String subject = "E-MAil Topic";
@@ -171,8 +150,8 @@ public class MailTest {
     }
 
     @Test
-    void testAttachments() {
-        LOGGER.log("TEST CASE: attachments()", LogLevel.DEBUG);
+    void attachments() {
+        LOGGER.log("TEST CASE: attachments", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         LOGGER.log("Inital empty attachment list.", LogLevel.DEBUG);
@@ -190,7 +169,7 @@ public class MailTest {
     }
 
     @Test
-    void testFailAddEmptyAttachment() {
+    void failAddEmptyAttachment() {
         LOGGER.log("TEST CASE: failAddEmptyAttachment", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -199,7 +178,7 @@ public class MailTest {
     }
 
     @Test
-    void testFailAddNotExistingAttachment() {
+    void failAddNotExistingAttachment() {
         LOGGER.log("TEST CASE: failAddNotExistingAttachment", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -208,17 +187,17 @@ public class MailTest {
     }
 
     @Test
-    void testAttachmentSize() {
+    void attachmentSize() {
         LOGGER.log("TEST CASE: attachmentSize", LogLevel.DEBUG);
 
         Mail mail = new Mail();
-        assertEquals(0, mail.getAttachmentSize());
+        assertEquals(-1, mail.getAttachmentSize());
         mail.setAttachmentSize(100);
         assertEquals(100, mail.getAttachmentSize());
     }
 
     @Test
-    void testAddAttachmentLimitSize() {
+    void addAttachmentLimitSize() {
         LOGGER.log("TEST CASE: addAttachmentLimitSize", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -229,7 +208,7 @@ public class MailTest {
     }
 
     @Test
-    void testaddAttachmentList() {
+    void addAttachmentList() {
         LOGGER.log("TEST CASE: addAttachmentList", LogLevel.DEBUG);
 
         List<String> attachments = new ArrayList<>();

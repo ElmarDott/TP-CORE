@@ -27,7 +27,7 @@ public class Mail {
 
     public Mail() {
         mimeType = "plain";
-        attachmentSize = 0;
+        attachmentSize = -1;
         attachmentList = new ArrayList<>();
         recipientList = new ArrayList<>();
     }
@@ -77,7 +77,7 @@ public class Mail {
         if (file.getFile().exists()) {
             long size = file.getFile().length();
             if (size > 0) {
-                if (attachmentSize >= size || attachmentSize == 0) {
+                if (attachmentSize >= size || attachmentSize == -1) {
                     attachmentList.add(file);
                     success = true;
                     LOGGER.log(file.getName() + " added. (" + size + ") bytes", LogLevel.DEBUG);

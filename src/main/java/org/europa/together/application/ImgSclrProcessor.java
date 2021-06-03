@@ -125,7 +125,7 @@ public class ImgSclrProcessor implements ImageProcessor {
     @Override
     public long getImageSize(final BufferedImage image) {
         long size = 0;
-        if (isImageSet()) {
+        if (image != null) {
             DataBuffer dataBuffer = image.getData().getDataBuffer();
             size = ((long) dataBuffer.getSize()) * MULTIPLIER;
         }

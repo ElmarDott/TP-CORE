@@ -1,8 +1,11 @@
 package org.europa.together.utils;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.TimeZone;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.application.PropertyFileReader;
+import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 
 /**
@@ -10,6 +13,7 @@ import org.europa.together.business.PropertyReader;
  */
 public final class Constraints {
 
+    private static final Logger LOGGER = new LogbackLogger(Constraints.class);
     private static final String FILE
             = "org/europa/together/configuration/module.properties";
 
@@ -110,7 +114,11 @@ public final class Constraints {
     /* ###################################################################### */
     private static String getAppInfo(final String propertyName) {
         PropertyReader propertyReader = new PropertyFileReader();
-        propertyReader.appendPropertiesFromClasspath(FILE);
+        try {
+            propertyReader.appendPropertiesFromClasspath(FILE);
+        } catch (IOException ex) {
+            LOGGER.catchException(ex);
+        }
         return propertyReader.getPropertyAsString(propertyName);
     }
 }

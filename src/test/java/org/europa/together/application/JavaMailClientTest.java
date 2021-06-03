@@ -4,13 +4,16 @@ import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import java.io.IOException;
 import java.security.Security;
+import java.util.Map;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
+import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.Mail;
 import org.europa.together.utils.Constraints;
@@ -37,42 +40,39 @@ public class JavaMailClientTest {
 
     private static final Logger LOGGER = new LogbackLogger(JavaMailClientTest.class);
 
-    private static GreenMail SMTP_SERVER;
-    private static DatabaseActions CONNECTION = new JdbcActions();
     private static final String DIRECTORY
-            = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
+            = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
+    private static final String FLUSH_TABLE
+            = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
 
     @Autowired
     private MailClient mailClient;
 
+    private static GreenMail SMTP_SERVER;
+    private static DatabaseActions jdbcActions = new JdbcActions();
+
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-
-        boolean socket = CONNECTION.connect("default");
-        if (!socket) {
-            check = false;
-        }
-
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
-
         //SMTP Test Server
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
+        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning());
+        //DBMS
+        Assumptions.assumeTrue(jdbcActions.connect("default"));
+
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
         try {
             SMTP_SERVER.stop();
-            CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
+            jdbcActions.executeQuery(FLUSH_TABLE);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -91,14 +91,14 @@ public class JavaMailClientTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(JavaMailClient.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testInitialConfiguration() {
+    void initialConfiguration() {
         LOGGER.log("TEST CASE: initialConfiguration", LogLevel.DEBUG);
 
         MailClient client = new JavaMailClient();
@@ -109,38 +109,33 @@ public class JavaMailClientTest {
     }
 
     @Test
-    void testCleanConfiguration() {
+    void cleanConfiguration() {
+        LOGGER.log("TEST CASE: cleanConfiguration", LogLevel.DEBUG);
+
         MailClient client = new JavaMailClient();
         client.clearConfiguration();
         assertEquals(0, client.getDebugActiveConfiguration().size());
     }
 
     @Test
-    void testFailPopulateDatabaseConfiguration() {
-        LOGGER.log("TEST CASE: failPopulateDatabaseConfiguration", LogLevel.DEBUG);
+    void loadConfigurationFromClasspath() throws IOException {
+        LOGGER.log("TEST CASE: loadConfigurationFromClasspath", LogLevel.DEBUG);
 
-        MailClient client = new JavaMailClient();
-        client.populateDbConfiguration(null);
-        assertEquals("mailer.host", client.getDebugActiveConfiguration().get("mailer.host"));
+        mailClient.loadConfigurationFromProperties("org/europa/together/properties/mail-test-classpath.properties");
+        assertEquals("localhost", mailClient.getDebugActiveConfiguration().get("mailer.host"));
     }
 
     @Test
-    void testFailLoadConfigurationFromPropertyFile() {
-        LOGGER.log("TEST CASE: failLoadConfigurationFromPropertyFile", LogLevel.DEBUG);
+    void loadConfigurationFromFileSystem() throws IOException {
+        LOGGER.log("TEST CASE: loadConfigurationFromFileSystem", LogLevel.DEBUG);
 
-        assertFalse(mailClient.loadConfigurationFromProperties(DIRECTORY + "/not-exist.properties"));
+        mailClient.loadConfigurationFromProperties(DIRECTORY
+                + "/org/europa/together/properties/mail-test-filesystem.properties");
+        assertEquals("www.sample.com", mailClient.getDebugActiveConfiguration().get("mailer.host"));
     }
 
     @Test
-    void testFailLoadConfigurationFromDatabase() {
-        LOGGER.log("TEST CASE: failLoadConfigurationFromDatabase", LogLevel.DEBUG);
-
-        assertTrue(CONNECTION.executeQuery("TRUNCATE TABLE app_config;"));
-        assertFalse(mailClient.loadConfigurationFromDatabase());
-    }
-
-    @Test
-    void testLoadConfigurationFromDatabase() {
+    void loadConfigurationFromDatabase() {
         LOGGER.log("TEST CASE: loadConfigurationFromDatabase", LogLevel.DEBUG);
 
         mailClient.populateDbConfiguration(SQL_FILE);
@@ -159,33 +154,56 @@ public class JavaMailClientTest {
     }
 
     @Test
-    void testLoadConfigurationFromClasspath() {
-        LOGGER.log("TEST CASE: loadConfigurationFromClasspath", LogLevel.DEBUG);
+    void failLoadConfigurationFromDatabase() {
+        LOGGER.log("TEST CASE: failLoadConfigurationFromDatabase", LogLevel.DEBUG);
 
-        assertTrue(mailClient.loadConfigurationFromProperties("org/europa/together/properties/mail-test-classpath.properties"));
-        assertEquals("localhost", mailClient.getDebugActiveConfiguration().get("mailer.host"));
+        assertTrue(jdbcActions.executeQuery(FLUSH_TABLE));
+        assertFalse(mailClient.loadConfigurationFromDatabase());
     }
 
     @Test
-    void testLoadConfigurationFromFileSystem() {
-        LOGGER.log("TEST CASE: loadConfigurationFromFileSystem", LogLevel.DEBUG);
+    void failLoadConfigurationFromPropertyFile() throws IOException {
+        LOGGER.log("TEST CASE: failLoadConfigurationFromPropertyFile", LogLevel.DEBUG);
 
-        assertTrue(mailClient.loadConfigurationFromProperties(DIRECTORY
-                + "/org/europa/together/properties/mail-test-filesystem.properties"));
-        assertEquals("www.sample.com", mailClient.getDebugActiveConfiguration().get("mailer.host"));
+        assertThrows(Exception.class, () -> {
+            mailClient.loadConfigurationFromProperties(DIRECTORY + "/not-exist.properties");
+        });
     }
 
     @Test
-    void testConnectSMTPServer() throws Exception {
+    void failPopulateDatabaseConfiguration() {
+        LOGGER.log("TEST CASE: failPopulateDatabaseConfiguration", LogLevel.DEBUG);
+
+        MailClient client = new JavaMailClient();
+        client.populateDbConfiguration(null);
+        assertEquals("mailer.host", client.getDebugActiveConfiguration().get("mailer.host"));
+    }
+
+    @Test
+    void connectSMTPServer() throws Exception {
         LOGGER.log("TEST CASE: connectSMTPServer", LogLevel.DEBUG);
 
         mailClient.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
+        Map<String, String> conf = mailClient.getDebugActiveConfiguration();
+        assertEquals("3465", conf.get("mailer.port"));
+
         Session session = mailClient.getSession();
+        assertNotNull(session);
         assertEquals("127.0.0.1", session.getProperty("mail.smtp.host"));
     }
 
     @Test
-    void testComposeHtmlMail() throws Exception {
+    void failConnetSMTPServer() throws Exception {
+        LOGGER.log("TEST CASE: failConnectSMTPServer", LogLevel.DEBUG);
+
+        mailClient.clearConfiguration();
+        assertThrows(Exception.class, () -> {
+            mailClient.getSession();
+        });
+    }
+
+    @Test
+    void composeHtmlMail() throws Exception {
         LOGGER.log("TEST CASE: composeHtmlMail", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -193,7 +211,6 @@ public class JavaMailClientTest {
         mail.setSubject("TESTMAIL");
         mail.setMessage("<h1>TEST</h1><br/><p>This ist the testmail content.</p>");
         mail.addRecipent("otto@sample.org");
-        mail.addAttachment(DIRECTORY + "/Attachment.pdf");
 
         mailClient.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
         mailClient.composeMail(mail);
@@ -206,8 +223,27 @@ public class JavaMailClientTest {
     }
 
     @Test
-    void testComposeTextMail() throws Exception {
+    void composeTextMail() throws Exception {
         LOGGER.log("TEST CASE: composeTextMail", LogLevel.DEBUG);
+
+        Mail mail = new Mail();
+        mail.setSubject("TESTMAIL");
+        mail.setMessage("This ist the testmail content.");
+        mail.addRecipent("otto@sample.org");
+
+        mailClient.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
+        mailClient.composeMail(mail);
+        MimeMessage message = mailClient.getMimeMessage();
+
+        assertEquals("text/plain", message.getContentType());
+        assertEquals("TESTMAIL", message.getSubject());
+        assertEquals("noreply@sample.org", message.getFrom()[0].toString());
+        assertEquals(new InternetAddress("noreply@sample.org"), message.getSender());
+    }
+
+    @Test
+    void composeTextMailWithAttachment() throws Exception {
+        LOGGER.log("TEST CASE: composeTextMailWithAttachment", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         mail.setSubject("TESTMAIL");
@@ -220,9 +256,6 @@ public class JavaMailClientTest {
         MimeMessage message = mailClient.getMimeMessage();
 
         assertEquals("text/plain", message.getContentType());
-        assertEquals("TESTMAIL", message.getSubject());
-        assertEquals("noreply@sample.org", message.getFrom()[0].toString());
-        assertEquals(new InternetAddress("noreply@sample.org"), message.getSender());
     }
 
     @Test

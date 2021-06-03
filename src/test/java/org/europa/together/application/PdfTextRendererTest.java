@@ -30,7 +30,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class PdfTextRendererTest {
 
     private static final Logger LOGGER = new LogbackLogger(PdfTextRendererTest.class);
-    private static final String FILE_PATH = "org/europa/together/pdf";
+
+    private static final String FILE_PATH
+            = "org/europa/together/pdf";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
@@ -40,11 +42,9 @@ public class PdfTextRendererTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
+        Assumptions.assumeTrue(true);
 
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -63,7 +63,7 @@ public class PdfTextRendererTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(ITextRenderer.class, hasValidBeanConstructor());
@@ -82,7 +82,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testReadPdf() {
+    void readPdf() {
         LOGGER.log("TEST CASE: readPdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -91,13 +91,13 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testFailReadPdf() {
+    void failReadPdf() {
         LOGGER.log("TEST CASE: failReadPdf", LogLevel.DEBUG);
         assertNull(pdf.readDocument(null));
     }
 
     @Test
-    void testFailRenderHtmlToPdf() {
+    void failRenderHtmlToPdf() {
         LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
 
         pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
@@ -105,7 +105,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testLoadAndWritePdf() {
+    void loadAndWritePdf() {
         LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -118,7 +118,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testFailWritePdf() {
+    void failWritePdf() {
         LOGGER.log("TEST CASE: failWritePdf", LogLevel.DEBUG);
 
         String out = DIRECTORY + FILE_PATH + "/fail.pdf";
@@ -128,7 +128,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testRenderHtmlToPdf() {
+    void renderHtmlToPdf() {
         LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
 
         String html = "<h1>My First PDF Document</h1 > <p>"
@@ -139,7 +139,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testRemovePages() {
+    void removePages() {
         LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -155,7 +155,7 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testFailRemovePages() {
+    void failRemovePages() {
         LOGGER.log("TEST CASE: failRemovePages", LogLevel.DEBUG);
         assertNull(pdf.removePage(null, 1));
     }

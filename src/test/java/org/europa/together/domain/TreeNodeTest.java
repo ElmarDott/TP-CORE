@@ -5,11 +5,7 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -20,39 +16,17 @@ public class TreeNodeTest {
 
     private static final Logger LOGGER = new LogbackLogger(TreeNodeTest.class);
 
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
-    }
-    //</editor-fold>
-
     @Test
-    void testDomainObject() {
-        LOGGER.log("TEST CASE: domainObject()", LogLevel.DEBUG);
+    void createDomainObject() {
+        LOGGER.log("TEST CASE: createDomainObject", LogLevel.DEBUG);
 
         assertThat(TreeNode.class, hasValidBeanConstructor());
         assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName"));
     }
 
     @Test
-    void testEqualByCopy() {
-        LOGGER.log("TEST CASE: equalByCopy()", LogLevel.DEBUG);
+    void equalByCopy() {
+        LOGGER.log("TEST CASE: equalByCopy", LogLevel.DEBUG);
 
         TreeNode node_01 = new TreeNode("cloend");
         node_01.setParent(StringUtils.generateUUID());
@@ -67,8 +41,8 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testNotEqualByCopy() {
-        LOGGER.log("TEST CASE: equalNotByCopy()", LogLevel.DEBUG);
+    void notEqualByCopy() {
+        LOGGER.log("TEST CASE: equalNotByCopy", LogLevel.DEBUG);
 
         try {
             TreeNode node_01 = new TreeNode("node x");
@@ -95,8 +69,8 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testNotEqual() {
-        LOGGER.log("TEST CASE: notEqual()", LogLevel.DEBUG);
+    void notEqual() {
+        LOGGER.log("TEST CASE: notEqual", LogLevel.DEBUG);
 
         TreeNode node_01 = new TreeNode("node A");
         assertNotNull(node_01.getUuid());
@@ -123,8 +97,8 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testToString() {
-        LOGGER.log("TEST CASE: toString()", LogLevel.DEBUG);
+    void generateToString() {
+        LOGGER.log("TEST CASE: generateToString", LogLevel.DEBUG);
 
         TreeNode node = new TreeNode("NODE");
         String out = node.toString();
@@ -133,8 +107,8 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testCreateDomainObjectBySetter() {
-        LOGGER.log("TEST CASE: createDomainObjectBySetter()", LogLevel.DEBUG);
+    void createDomainObjectBySetter() {
+        LOGGER.log("TEST CASE: createDomainObjectBySetter", LogLevel.DEBUG);
 
         TreeNode parent = new TreeNode();
         TreeNode node = new TreeNode();
@@ -148,8 +122,8 @@ public class TreeNodeTest {
     }
 
     @Test
-    void testCorrectBeanConstruction() {
-        LOGGER.log("TEST CASE: correctBeanConstruction()", LogLevel.DEBUG);
+    void correctBeanConstruction() {
+        LOGGER.log("TEST CASE: correctBeanConstruction", LogLevel.DEBUG);
 
         TreeNode node_00 = new TreeNode();
         assertNotNull(node_00.getUuid());

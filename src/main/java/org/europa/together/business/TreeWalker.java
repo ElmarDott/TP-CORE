@@ -132,14 +132,12 @@ public interface TreeWalker {
     TreeNode getNodeByUuid(String uuid);
 
     /**
-     * Get the root TreeNode. If no root is set the function throw a
-     * MisconfigurationException.
+     * Get the root TreeNode. If no root is set the return will be NULL.
      *
      * @return root as TreeNode
-     * @throws org.europa.together.exceptions.MisconfigurationException on Error
      */
-    @API(status = STABLE, since = "1.0")
-    TreeNode getRoot() throws MisconfigurationException;
+    @API(status = STABLE, since = "3.0")
+    TreeNode getRoot();
 
     /**
      * Add the node to the tree. Check if the node is already exist in the tree

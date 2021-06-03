@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.domain.PagingDimension;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +90,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     @Transactional(readOnly = true)
-    public long countEntries(final String table) {
+    public long countAllElements(final String table) {
         String sql = "SELECT COUNT(*) FROM " + table;
         Session session = mainEntityManagerFactory.unwrap(Session.class);
         String count = String.valueOf(session.createSQLQuery(sql).uniqueResult());
@@ -100,6 +101,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     @Transactional(readOnly = true)
     public List<T> listAllElements() {
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        // count all entries
+        // define pagination
+        // get selected results
         CriteriaQuery<T> query = builder.createQuery(genericType);
         // create Criteria
         query.from(genericType);
@@ -153,5 +157,25 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             LOGGER.log("404 - Entity not found.", LogLevel.ERROR);
         }
         return retVal;
+    }
+
+    @Override
+    public PagingDimension calculatePagination(final PagingDimension input) {
+
+        int restElements = input.getAllEntries() % input.getPageSize();
+        int start = ((input.getPage() - 1) * input.getPageSize()) + 1;
+        int end = start + input.getPageSize();
+        if (restElements != 0) {
+            end = start + restElements;
+        }
+
+        PagingDimension result = new PagingDimension();
+        result.setAllEntries(input.getAllEntries());
+        result.setPageSize(input.getPageSize());
+        result.setPage(input.getPage());
+        result.setStart(start);
+        result.setEnd(end);
+
+        return result;
     }
 }

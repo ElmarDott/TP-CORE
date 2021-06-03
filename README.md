@@ -124,9 +124,11 @@ In the case you like this project, let me know it and rate it with a star.
 |Version | Comment
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
+|        | - Refactor: test cases
 |        | - remove jodatime
 |        | - remove flexjson
-|        | - Refactor MailClient & MailService
+|        | - Refactor: MailClient & MailService
+|        | - bugfix: TreeWalker.addNode()
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()

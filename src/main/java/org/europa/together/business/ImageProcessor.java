@@ -30,6 +30,12 @@ public interface ImageProcessor {
     String FEATURE_ID = "CM-12";
 
     /**
+     * Supported JPEG file format.
+     */
+    @API(status = STABLE, since = "3.0")
+    String FORMAT_JPEG = "jpeg";
+
+    /**
      * Supported JPG file format.
      */
     @API(status = STABLE, since = "1.0")

@@ -21,30 +21,10 @@ public class JdbcConnectionTest {
     private static final Logger LOGGER = new LogbackLogger(JdbcConnectionTest.class);
     private static DatabaseActions actions = new JdbcActions();
 
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
-    }
-    //</editor-fold>
-
     @Test
-    void testPrivateConstructor() throws Exception {
+    void privateConstructor() throws Exception {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         Constructor<JdbcConnection> clazz
                 = JdbcConnection.class.getDeclaredConstructor();
         clazz.setAccessible(true);
@@ -54,8 +34,8 @@ public class JdbcConnectionTest {
     }
 
     @Test
-    void testJdbcMetData() {
-        LOGGER.log("TEST CASE: getJdbcMetaData()", LogLevel.DEBUG);
+    void jdbcMetData() {
+        LOGGER.log("TEST CASE: getJdbcMetaData", LogLevel.DEBUG);
 
         try {
             DatabaseActions actions = new JdbcActions();

@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 public class TimeOutExceptionTest {
 
     @Test()
-    void testExceptionObject() {
+    void exceptionObject() {
         TimeOutException ex_00 = new TimeOutException("Time Out Exception");
         assertEquals("Time Out Exception", ex_00.getMessage());
 

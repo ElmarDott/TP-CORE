@@ -295,11 +295,11 @@ public final class StringUtils {
 
     /**
      * Create from a given String for UTC in the format of yyyy-mm-dd HH:mm:ss a
-     * java.sql.Timestamp class.
+     * java.util.Date class.
      *
      * @param timestamp as Sting
-     * @return timestamp as Timestamp
-     * @throws java.text.ParseException in case of a failure
+     * @return timestamp as Date
+     * @throws java.text.ParseException on failure
      */
     public static Date createDateFromString(final String timestamp)
             throws ParseException {

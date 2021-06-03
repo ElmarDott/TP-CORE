@@ -1,7 +1,9 @@
 package org.europa.together.business;
 
+import java.io.IOException;
 import java.util.Map;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import org.apiguardian.api.API;
@@ -65,10 +67,10 @@ public interface MailClient {
     /**
      *
      * @param resource as String
-     * @return true on success
+     * @throws java.io.IOException on failure
      */
-    @API(status = STABLE, since = "1.0")
-    boolean loadConfigurationFromProperties(String resource);
+    @API(status = STABLE, since = "3.0")
+    void loadConfigurationFromProperties(String resource) throws IOException;
 
     /**
      *
@@ -101,7 +103,7 @@ public interface MailClient {
      * @param mail as Mail
      * @throws javax.mail.MessagingException by error
      */
-    @API(status = STABLE, since = "1.0")
+    @API(status = STABLE, since = "3.0")
     void composeMail(Mail mail) throws MessagingException;
 
     /**
@@ -110,8 +112,8 @@ public interface MailClient {
      * @return session as Session
      * @throws javax.mail.NoSuchProviderException
      */
-    @API(status = STABLE, since = "1.0")
-    Session getSession();
+    @API(status = STABLE, since = "3.0")
+    Session getSession() throws NoSuchProviderException;
 
     /**
      * Get the composing Mail Object.

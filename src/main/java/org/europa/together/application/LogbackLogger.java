@@ -41,28 +41,23 @@ public class LogbackLogger implements Logger {
     @Override
     public LogLevel log(final String message, final LogLevel level) {
 
-        if (level != null) {
-            instanceLogger();
-            switch (level) {
-                case TRACE:
-                    logger.trace(message);
-                    break;
-                case DEBUG:
-                    logger.debug(message);
-                    break;
-                case INFO:
-                    logger.info(message);
-                    break;
-                case WARN:
-                    logger.warn(message);
-                    break;
-                case ERROR:
-                    logger.error(message);
-                    break;
-                default:
-                    //can not accessed
-                    break;
-            }
+        instanceLogger();
+        switch (level) {
+            case TRACE:
+                logger.trace(message);
+                break;
+            case DEBUG:
+                logger.debug(message);
+                break;
+            case INFO:
+                logger.info(message);
+                break;
+            case WARN:
+                logger.warn(message);
+                break;
+            default:
+                logger.error(message);
+                break;
         }
         return level;
     }
@@ -137,4 +132,5 @@ public class LogbackLogger implements Logger {
             logger = LoggerFactory.getILoggerFactory().getLogger(instance.getName());
         }
     }
+
 }

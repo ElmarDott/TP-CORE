@@ -1,6 +1,7 @@
 package org.europa.together.business;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JdbcConnection;
@@ -92,10 +93,10 @@ public interface DatabaseActions {
      * Return a object with all JDBC Connection meta date.
      *
      * @return JdbcConnection as Object
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException on failure
      */
-    @API(status = STABLE, since = "1.2")
-    JdbcConnection getJdbcMetaData();
+    @API(status = STABLE, since = "3.0")
+    JdbcConnection getJdbcMetaData() throws SQLException;
 
     /**
      * Get the host URL / IP of the configured Database connection.

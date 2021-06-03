@@ -188,17 +188,14 @@ public class ListTree implements TreeWalker {
     }
 
     @Override
-    public TreeNode getRoot() throws MisconfigurationException {
+    public TreeNode getRoot() {
         TreeNode root = null;
-        if (this.rootUuid != null && !tree.isEmpty()) {
+        if (this.rootUuid != null) {
             for (TreeNode node : this.tree) {
                 if (node.getUuid().equals(this.rootUuid)) {
                     root = node;
                 }
             }
-        }
-        if (root == null) {
-            throw new MisconfigurationException("No root node is set.");
         }
         return root;
     }
@@ -206,8 +203,7 @@ public class ListTree implements TreeWalker {
     @Override
     public boolean addNode(final TreeNode node) {
         boolean add = true;
-        if (!this.tree.isEmpty()
-                && node != null) {
+        if (node != null) {
 
             if (!StringUtils.isEmpty(node.getParent())) {
                 for (TreeNode check : this.tree) {
@@ -229,6 +225,8 @@ public class ListTree implements TreeWalker {
                 LOGGER.log("Node [" + node.getNodeName() + "] added.",
                         LogLevel.DEBUG);
             }
+        } else {
+            add = false;
         }
         return add;
     }
@@ -248,64 +246,60 @@ public class ListTree implements TreeWalker {
                 + cutNode.getUuid() + "]", LogLevel.DEBUG);
 
         stack.addAll(tree);
-        try {
-            if (cutNode.equals(getRoot())) {
-                clear();
-            } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
-                removeNode(cutNode);
-            } else {
+        if (cutNode.equals(getRoot())) {
+            clear();
+        } else if (isElementOfTree(cutNode) && isLeaf(cutNode)) {
+            removeNode(cutNode);
+        } else {
 
-                TreeNode node = cutNode;
-                List<TreeNode> cutted = new ArrayList<>();
-                List<TreeNode> helper = new ArrayList<>();
-                cutted.add(node);
+            TreeNode node = cutNode;
+            List<TreeNode> cutted = new ArrayList<>();
+            List<TreeNode> helper = new ArrayList<>();
+            cutted.add(node);
 
-                int loop = this.tree.size();
-                for (int i = 0; i < loop; i++) {
+            int loop = this.tree.size();
+            for (int i = 0; i < loop; i++) {
 
-                    if (!stack.isEmpty()) {
-                        for (TreeNode compare : stack) {
-                            if (i != 0) {
-                                node = compare;
-                            }
-                            for (int j = 0; j < tree.size(); j++) {
-                                if (node.getUuid().equals(compare.getUuid())) {
-                                    cutted.add(compare);
-                                    if (!isLeaf(compare)) {
-                                        helper.add(compare);
-                                    }
-                                    break;
+                if (!stack.isEmpty()) {
+                    for (TreeNode compare : stack) {
+                        if (i != 0) {
+                            node = compare;
+                        }
+                        for (int j = 0; j < tree.size(); j++) {
+                            if (node.getUuid().equals(compare.getUuid())) {
+                                cutted.add(compare);
+                                if (!isLeaf(compare)) {
+                                    helper.add(compare);
                                 }
+                                break;
                             }
                         }
                     }
+                }
 
-                    if (!helper.isEmpty()) {
-                        stack.clear();
-                        for (TreeNode compare : helper) {
-                            for (TreeNode element : this.tree) {
-                                if (compare.getUuid().equals(element.getParent())) {
-                                    stack.add(element);
-                                }
+                if (!helper.isEmpty()) {
+                    stack.clear();
+                    for (TreeNode compare : helper) {
+                        for (TreeNode element : this.tree) {
+                            if (compare.getUuid().equals(element.getParent())) {
+                                stack.add(element);
                             }
                         }
-                        cutted.addAll(stack);
-                        helper.clear();
-
-                    } else {
-                        break;
                     }
-                }
+                    cutted.addAll(stack);
+                    helper.clear();
 
-                if (!cutted.isEmpty()) {
-                    for (TreeNode item : cutted) {
-                        this.tree.remove(item);
-                    }
+                } else {
+                    break;
                 }
-
             }
-        } catch (MisconfigurationException ex) {
-            LOGGER.catchException(ex);
+
+            if (!cutted.isEmpty()) {
+                for (TreeNode item : cutted) {
+                    this.tree.remove(item);
+                }
+            }
+
         }
     }
 
@@ -313,20 +307,16 @@ public class ListTree implements TreeWalker {
     public void merge(final String parentUuid, final TreeWalker appendingTree) {
         if (appendingTree != null && !appendingTree.isEmpty()) {
 
-            try {
-                TreeNode appendingRoot = appendingTree.getRoot();
-                appendingRoot.setParent(parentUuid);
+            TreeNode appendingRoot = appendingTree.getRoot();
+            appendingRoot.setParent(parentUuid);
 
-                List<TreeNode> newTree = new ArrayList<>();
-                newTree.addAll(appendingTree.getTree());
+            List<TreeNode> newTree = new ArrayList<>();
+            newTree.addAll(appendingTree.getTree());
 
-                this.tree.addAll(newTree);
-                LOGGER.log("Append " + newTree.size()
-                        + " Nodes to the new Tree.", LogLevel.DEBUG);
+            this.tree.addAll(newTree);
+            LOGGER.log("Append " + newTree.size()
+                    + " Nodes to the new Tree.", LogLevel.DEBUG);
 
-            } catch (MisconfigurationException ex) {
-                LOGGER.catchException(ex);
-            }
         } else {
             LOGGER.log("Merging tree is empty - no merge applied.", LogLevel.DEBUG);
 
@@ -393,27 +383,21 @@ public class ListTree implements TreeWalker {
 
     @Override
     public String toString() {
-
         StringBuilder out = new StringBuilder();
-        try {
-            out.append("TreeWalkerImpl{\n")
-                    .append("\t Root: ")
-                    .append(getRoot().getNodeName())
-                    .append("\n")
-                    .append("\t Nodes: ")
-                    .append(tree.size())
-                    .append("\n TREE >>>\n");
+        out.append("TreeWalkerImpl{\n")
+                .append("\t Root: ")
+                .append(getRoot().getNodeName())
+                .append("\n")
+                .append("\t Nodes: ")
+                .append(tree.size())
+                .append("\n TREE >>>\n");
 
-            for (TreeNode node : tree) {
-                out.append("\t")
-                        .append(node.toString())
-                        .append("\n");
-            }
-            out.append("}");
-
-        } catch (MisconfigurationException ex) {
-            LOGGER.catchException(ex);
+        for (TreeNode node : tree) {
+            out.append("\t")
+                    .append(node.toString())
+                    .append("\n");
         }
+        out.append("}");
         return out.toString();
     }
 

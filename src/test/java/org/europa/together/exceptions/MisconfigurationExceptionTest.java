@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 public class MisconfigurationExceptionTest {
 
     @Test()
-    void testExceptionObject() {
+    void exceptionObject() {
         MisconfigurationException ex_00 = new MisconfigurationException("Misconfiguration Exception");
         assertEquals("Misconfiguration Exception", ex_00.getMessage());
 

@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -84,25 +86,29 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public boolean loadConfigurationFromProperties(final String resource) {
+    public void loadConfigurationFromProperties(final String resource) throws IOException {
 
-        boolean success = false;
         Map<String, String> properties = new HashMap<>();
-        if (propertyReader.appendPropertiesFromClasspath(resource)) {
+
+        try {
+            propertyReader.appendPropertiesFromClasspath(resource);
             properties = propertyReader.getPropertyList();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
-        if (propertyReader.appendPropertiesFromFile(resource)) {
+
+        try {
+            propertyReader.appendPropertiesFromFile(resource);
             properties = propertyReader.getPropertyList();
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
 
         if (!properties.isEmpty()) {
             configuration.putAll(properties);
-            success = true;
         } else {
-            LOGGER.log("Could not load mail.properties from file system or classpath.",
-                    LogLevel.WARN);
+            throw new IOException("Could not load " + resource + " from file system or classpath.");
         }
-        return success;
     }
 
     @Override
@@ -179,28 +185,20 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public Session getSession() {
-        Session connection = null;
-        try {
-            connection = Session.getInstance(this.wireConfigurationEntries(),
-                    new javax.mail.Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(
-                            configuration.get("mailer.user"),
-                            configuration.get("mailer.password")
-                    );
-                }
-            });
-            connection.setDebug(Boolean.valueOf(configuration.get("mailer.debug")));
+    public Session getSession() throws NoSuchProviderException {
 
-            if (!connection.getTransport().isConnected()) {
-                throw new RuntimeException("No SMTPS Connection established.");
+        Session connection = Session.getInstance(wireConfigurationEntries(),
+                new javax.mail.Authenticator() {
+
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                        configuration.get("mailer.user"),
+                        configuration.get("mailer.password")
+                );
             }
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+        });
+        connection.setDebug(Boolean.valueOf(configuration.get("mailer.debug")));
         return connection;
     }
 
@@ -224,11 +222,13 @@ public class JavaMailClient implements MailClient {
         configuration.put("mailer.ssl", "mailer.ssl");
         configuration.put("mailer.tls", "mailer.tls");
         configuration.put("mailer.debug", "false");
-        configuration.put("mailer.count", "1");
-        configuration.put("mailer.wait", "0");
+        configuration.put("mailer.count", "-1");
+        configuration.put("mailer.wait", "-1");
     }
 
     private void processConfiguration(final List<ConfigurationDO> configurationEntries) {
+        LOGGER.log("Process E-Mail Configuration  (" + configurationEntries.size() + ")",
+                 LogLevel.DEBUG);
 
         for (ConfigurationDO entry : configurationEntries) {
             String value;
@@ -242,51 +242,61 @@ public class JavaMailClient implements MailClient {
                     .equals(cryptoTools.calculateHash("mailer.host",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.host", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.port",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.port", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.sender",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.sender", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.user",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.user", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.password",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.password", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.ssl",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.ssl", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.tls",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.tls", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.debug",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.debug", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.count",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.count", value);
+                continue;
             }
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.wait",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.wait", value);
+                continue;
             }
         }
     }

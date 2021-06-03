@@ -72,12 +72,12 @@ public class JavaCryptoTools implements CryptoTools {
     public KeyPair generateCipherKeyPair(final CipherAlgorithm cipher) {
 
         KeyPair pair = null;
-        int lenght = Constraints.INT_4096;
-        if (cipher.equals(CipherAlgorithm.EC)) {
-            lenght = Constraints.INT_512;
-        }
-
         try {
+            int lenght = Constraints.INT_4096;
+            if (cipher.equals(CipherAlgorithm.EC)) {
+                lenght = Constraints.INT_512;
+            }
+
             KeyPairGenerator keyring = KeyPairGenerator.getInstance(cipher.toString());
             keyring.initialize(lenght, new SecureRandom());
             pair = keyring.generateKeyPair();
