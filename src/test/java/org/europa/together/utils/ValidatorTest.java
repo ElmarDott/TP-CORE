@@ -32,7 +32,7 @@ public class ValidatorTest {
     }
 
     @Test
-    void booleanRegex() {
+    void isBooleanRegex() {
         assertTrue(Validator.validate("true", Validator.BOOLEAN));
         assertTrue(Validator.validate("false", Validator.BOOLEAN));
         assertTrue(Validator.validate("TRUE", Validator.BOOLEAN));
@@ -41,33 +41,42 @@ public class ValidatorTest {
         assertTrue(Validator.validate("fAlSe", Validator.BOOLEAN));
         assertTrue(Validator.validate("0", Validator.BOOLEAN));
         assertTrue(Validator.validate("1", Validator.BOOLEAN));
-        //FALSE POSITIVE
+    }
+
+    @Test
+    void isNotBooleanRegex() {
         assertFalse(Validator.validate("-1", Validator.BOOLEAN));
         assertFalse(Validator.validate("5", Validator.BOOLEAN));
     }
 
     @Test
-    void digitRegex() {
+    void isDigitRegex() {
         assertTrue(Validator.validate("0000", Validator.DIGIT));
         assertTrue(Validator.validate("1", Validator.DIGIT));
         assertTrue(Validator.validate("1234567890", Validator.DIGIT));
         assertTrue(Validator.validate("1 2 345 6  789 0", Validator.DIGIT));
+    }
 
+    @Test
+    void isNotDigitRegex() {
         assertFalse(Validator.validate("ABC.01", Validator.DIGIT));
     }
 
     @Test
-    void characterRegex() {
+    void isCharacterRegex() {
         assertTrue(Validator.validate("abcdefghijklmnopqrstuvwxyz", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("ABCDEFGHIJKLMNOPQRSTUVWXYZ", Validator.ASCII_CHARACTER));
         assertTrue(Validator.validate("abc XYZ", Validator.ASCII_CHARACTER));
+    }
 
+    @Test
+    void isNotCharacterRegex() {
         assertFalse(Validator.validate("äöü ÄÖÜ ß", Validator.ASCII_CHARACTER));
         assertFalse(Validator.validate("abc 123 XYZ", Validator.ASCII_CHARACTER));
     }
 
     @Test
-    void textRegex() {
+    void isTextRegex() {
         assertTrue(Validator.validate("A fool with a tool is still a fool.", Validator.TEXT));
         assertTrue(Validator.validate("Remember, remember the 1 st. of November!", Validator.TEXT));
         assertTrue(Validator.validate("EN/00001.III-D", Validator.TEXT));
@@ -75,24 +84,30 @@ public class ValidatorTest {
         assertTrue(Validator.validate("Brackets: <>(){}[]", Validator.TEXT));
         assertTrue(Validator.validate("Symbols 01: ?!.,;_", Validator.TEXT));
         assertTrue(Validator.validate("Symbols 02: ¬&§$@€#", Validator.TEXT));
+    }
 
+    @Test
+    void isNotTextRegex() {
         assertFalse(Validator.validate("äöüÄÖÜß", Validator.TEXT));
     }
 
     @Test
-    void regexLetters() {
+    void isRegexLetters() {
         assertTrue(Validator.validate("abcdefXYZ", Validator.LETTERS));
         assertTrue(Validator.validate("a", Validator.LETTERS));
         assertTrue(Validator.validate("A", Validator.LETTERS));
         assertTrue(Validator.validate("ABCxyz", Validator.LETTERS));
+    }
 
+    @Test
+    void isNotRegexLetters() {
         assertFalse(Validator.validate("äöüÄÖÜß", Validator.LETTERS));
         assertFalse(Validator.validate("12345678890", Validator.LETTERS));
         assertFalse(Validator.validate("!§$%", Validator.LETTERS));
     }
 
     @Test
-    void floatingPointRegex() {
+    void isFloatingPointRegex() {
         assertTrue(Validator.validate("0000", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("1", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("1234567890", Validator.FLOATING_POINT));
@@ -104,7 +119,10 @@ public class ValidatorTest {
         assertTrue(Validator.validate("-0.123456789", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("0123456789.0987654321", Validator.FLOATING_POINT));
         assertTrue(Validator.validate("-0123456789.0987654321", Validator.FLOATING_POINT));
+    }
 
+    @Test
+    void isNotFloatingPointRegex() {
         assertFalse(Validator.validate("0.", Validator.FLOATING_POINT));
         assertFalse(Validator.validate("-0.", Validator.FLOATING_POINT));
         assertFalse(Validator.validate(".0", Validator.FLOATING_POINT));
@@ -115,8 +133,7 @@ public class ValidatorTest {
     }
 
     @Test
-    void time24Regex() {
-
+    void isTime24Regex() {
         assertTrue(Validator.validate("00:00", Validator.TIME_24H));
         assertTrue(Validator.validate("00:01", Validator.TIME_24H));
         assertTrue(Validator.validate("00:09", Validator.TIME_24H));
@@ -159,8 +176,10 @@ public class ValidatorTest {
         assertTrue(Validator.validate("21:00", Validator.TIME_24H));
         assertTrue(Validator.validate("22:00", Validator.TIME_24H));
         assertTrue(Validator.validate("23:00", Validator.TIME_24H));
+    }
 
-        //FALSE POSITIVE
+    @Test
+    void isNotTime24Regex() {
         assertFalse(Validator.validate("24:00", Validator.TIME_24H));
         assertFalse(Validator.validate("24:01", Validator.TIME_24H));
         assertFalse(Validator.validate("25:00", Validator.TIME_24H));
@@ -172,11 +191,11 @@ public class ValidatorTest {
         assertFalse(Validator.validate("10:60", Validator.TIME_24H));
         assertFalse(Validator.validate("10:61", Validator.TIME_24H));
         assertFalse(Validator.validate("10:69", Validator.TIME_24H));
+
     }
 
     @Test
     void isRGBColor() {
-
         assertTrue(Validator.validate("#000", Validator.RGB_COLOR));
         assertTrue(Validator.validate("#fff", Validator.RGB_COLOR));
         assertTrue(Validator.validate("#f0A", Validator.RGB_COLOR));
@@ -197,42 +216,6 @@ public class ValidatorTest {
     }
 
     @Test
-    void isVersionNumber() {
-        assertTrue(Validator.validate("000.000.000-LABEL", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("000.000.000", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("000.000", Validator.VERSION_NUMBER));
-
-        assertTrue(Validator.validate("1.0", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.0.0", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("01.0", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("001.0", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.00", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.000", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.00.0", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.0.00", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.0.000", Validator.VERSION_NUMBER));
-
-        assertTrue(Validator.validate("1.00-XYZ", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.0.0-SNAPSHOT", Validator.VERSION_NUMBER));
-        assertTrue(Validator.validate("1.0.0-XXXXXXXXXX", Validator.VERSION_NUMBER));
-    }
-
-    @Test
-    void isNotVersionNumber() {
-        assertFalse(Validator.validate("A", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate(".1", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0.0.0", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("0001.0", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0000", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0.0000", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0.000-0", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0.000-abc", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1.0.000-XXXXXXXXXXX", Validator.VERSION_NUMBER));
-        assertFalse(Validator.validate("1-XYZ", Validator.VERSION_NUMBER));
-    }
-
-    @Test
     void isNotRGBColor() {
         assertFalse(Validator.validate("#0", Validator.RGB_COLOR));
         assertFalse(Validator.validate("#11af990", Validator.RGB_COLOR));
@@ -244,6 +227,129 @@ public class ValidatorTest {
         assertFalse(Validator.validate("#AFaFA", Validator.RGB_COLOR));
 
         assertFalse(Validator.validate("#ggg", Validator.RGB_COLOR));
+    }
+
+    @Test
+    void isValidIP4() {
+        assertTrue(Validator.validate("127.0.0.1", Validator.IP4_ADDRESS));
+
+        assertTrue(Validator.validate("0.0.0.0", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("1.0.0.0", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("0.1.0.0", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("0.0.1.0", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("0.0.0.1", Validator.IP4_ADDRESS));
+
+        assertTrue(Validator.validate("20.20.20.20", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("99.100.200.10", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("140.145.240.245", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("255.255.255.255", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isValidIP4_WithPort() {
+        assertTrue(Validator.validate("127.0.0.1:80", Validator.IP4_ADDRESS));
+
+        assertTrue(Validator.validate("127.0.0.1:0", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:1", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:10", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:100", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:1000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:9999", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:10000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:19999", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:29999", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:39999", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:49999", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:59999", Validator.IP4_ADDRESS));
+        //-----------------------------------------------------------------------
+        assertTrue(Validator.validate("127.0.0.1:60000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:61000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:62000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:63000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:64000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:64999", Validator.IP4_ADDRESS));
+        //-----------------------------------------------------------------------
+        assertTrue(Validator.validate("127.0.0.1:65000", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:65499", Validator.IP4_ADDRESS));
+        //-----------------------------------------------------------------------
+        assertTrue(Validator.validate("127.0.0.1:65500", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:65529", Validator.IP4_ADDRESS));
+        //-----------------------------------------------------------------------
+        assertTrue(Validator.validate("127.0.0.1:65530", Validator.IP4_ADDRESS));
+        assertTrue(Validator.validate("127.0.0.1:65535", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isIP4_WithInvalidPort() {
+        assertFalse(Validator.validate("127.0.0.1:65536", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("127.0.0.1:555555", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isInvalidIP4_Format() {
+        assertFalse(Validator.validate("255.255.255", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("255.255", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("255", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isInvalidIP4_LedingZeros() {
+        assertFalse(Validator.validate("1.1.1.01", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("1.1.1.001", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("1.1.01.1", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("1.1.001.1", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("1.01.1.1", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("1.001.1.1", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("01.1.1.1", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("001.1.1.1", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isInvalidIP4_Ending() {
+        assertFalse(Validator.validate("256.255.255.255", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("255.256.255.255", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("255.255.256.255", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("255.255.255.256", Validator.IP4_ADDRESS));
+        assertFalse(Validator.validate("355.255.255.255", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isVersionNumber() {
+        assertTrue(Validator.validate("1", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("9", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.0", Validator.SEMANTIC_VERSION_NUMBER));
+//        assertTrue(Validator.validate("1.10", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.10", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("10.100.1000", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("123.1234.12345", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1234", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("12.1-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.109.1234567890", Validator.SEMANTIC_VERSION_NUMBER));
+//
+        assertTrue(Validator.validate("1-xYz", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.2-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.2.3-xyzXYZxyzX", Validator.SEMANTIC_VERSION_NUMBER));
+    }
+
+    @Test
+    void isNotVersionNumber_StartWithZero() {
+        assertFalse(Validator.validate("0", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("01.02", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.03", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("0.0.0-LABEL", Validator.SEMANTIC_VERSION_NUMBER));
+    }
+
+    @Test
+    void isNotVersionNumber_Format() {
+        assertFalse(Validator.validate("1.0.0.0", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("A", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate(".1", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.0.", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.0-", Validator.SEMANTIC_VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.0-abcabcabcab", Validator.SEMANTIC_VERSION_NUMBER));
     }
 
     @Test
@@ -299,7 +405,7 @@ public class ValidatorTest {
         assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
 
-//        assertFalse(Validator.isDateAfter(null, null));
+        assertFalse(Validator.isDateAfter(null, null));
         assertFalse(Validator.isDateAfter(ZonedDateTime.now(), null));
         assertFalse(Validator.isDateAfter(null, ZonedDateTime.now()));
 
@@ -324,7 +430,7 @@ public class ValidatorTest {
         assertFalse(Validator.isDateAfter(ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2015, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))));
 
-//        assertFalse(Validator.isDateBefore(null, null));
+        assertFalse(Validator.isDateBefore(null, null));
         assertFalse(Validator.isDateBefore(ZonedDateTime.now(), null));
         assertFalse(Validator.isDateBefore(null, ZonedDateTime.now()));
         //now() is before 2015 => FALSE
@@ -343,32 +449,40 @@ public class ValidatorTest {
     }
 
     @Test
-    void isDateNotInRange() {
+    void isDateNotInRange_LowerBondery() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
         ));
+    }
 
+    void isDateNotInRange_UpperBoundry() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
         ));
+    }
 
+    void isDateNotInRange_After() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2017, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
         ));
+    }
 
+    void isDateNotInRange_Before() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2013, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
         ));
+    }
 
-//        assertFalse(Validator.isDateInRange(null, null, null));
+    void isDateNotInRange_NullPointer() {
+        assertFalse(Validator.isDateInRange(null, null, null));
         assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, null));
         assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), null));
         assertFalse(Validator.isDateInRange(null, null, ZonedDateTime.now()));

@@ -9,13 +9,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg?branch=master)](https://coveralls.io/github/ElmarDott/TP-CORE)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f00b311bb51247c1ac215b699b52e5ed)](https://app.codacy.com/app/ElmarDott/TP-CORE?utm_source=github.com&utm_medium=referral&utm_content=ElmarDott/TP-CORE&utm_campaign=Badge_Grade_Dashboard)
 
-The TP-CORE Artifact contains typical basic functions for Java Applications. The
-Module is elaborated as library and packed as JAR file. It is possible to use
-this Artifact in Java EE and Java SE (Desktop) Applications. The implementation
-of these library has the goal, to create an useful and compact toolbox. Free of
-charge for any kind of usage, commercial and private,
+The TP-CORE Artifact contains typical basic functions for Java Applications. The Module is elaborated as library and packed as JAR file. It is possible to use this Artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
 ## Getting Started
+Please check out the [Wiki](https://github.com/ElmarDott/TP-CORE/wiki/home) for futher information.
 
 Components - Release: 2.0
  * [CORE-01] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
@@ -33,20 +30,13 @@ Components - Release: 2.0
  * [CORE-13] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
  * [CORE-14] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
 
-Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Convention
-over configurations) and DRY (Don't repeat yourself). Also we following the programming
-paradigms of: Test Driven Development (TDD), Behavioral Driven Development (BDD)
-and Domain Driven Development (DDD).
+Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Convention over configurations) and DRY (Don't repeat yourself). Also we following the programming paradigms of: Test Driven Development (TDD), Behavioral Driven Development (BDD) and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 12.3, Maven 3.6.3 and Java 11 SE (openJDK).
-The implementation is also designed to run in Java EE 9 (e.g. Tomcat) environments.
-The most important dependencies are Hibernate 5.4, Spring 5.3 and JUnit 5. As
-Database Server (DBMS) we recommend PostgeSQL DBMS 11.
+The CORE Module is build with NetBeans 12.4, Maven 3.6.3 and Java 11 SE (openJDK). The implementation is also designed to run in Java EE 9 (e.g. Tomcat) environments. The most important dependencies are Hibernate 5.4, Spring 5.3 and JUnit 5. As Database Server (DBMS) we recommend PostgeSQL DBMS 11.
 
-We decided to use docker for an easy database setup. After on your system docker
-is running you are be able to setup the database by the following steps:
+We decided to use docker for an easy database setup. After on your system docker is running you are be able to setup the database by the following steps:
 
   docker network create -d bridge --subnet=172.18.0.0/16 services
 
@@ -70,23 +60,16 @@ is running you are be able to setup the database by the following steps:
   * docker start postgres
   * docker stop postgres
 
-To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
-script. If you need a short introduction about docker, you can check our tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
+To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql script. If you need a short introduction about docker, you can check our tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
 
 ### Build
 
-To build the Project you will need the parent-pom from the TP-CM project
-(build-workflow). The project configurations are available in src/main/filter/
-directory.
+To build the Project you will need the parent-pom from the TP-CM project (build-workflow). The project configurations are available in src/main/filter/ directory.
 
-In the case there is no DBMS available, all test cases which depend on Database
-access will skipped.
+In the case there is no DBMS available, all test cases which depend on Database access will skipped.
 
 ### Installing
-All released Artifacts will be available on Maven Central for usage. To fit with the
-hosting restriction on Sonatype Open Source Project Repository Hosting, it was necessary
-to change the POM GAV. As Result the Java packages do not fit with the pom GAV. So you
-are be able to use the artifact in your project as dependency with the following entry:
+All released Artifacts will be available on Maven Central for usage. To fit with the hosting restriction on Sonatype Open Source Project Repository Hosting, it was necessary to change the POM GAV. As Result the Java packages do not fit with the pom GAV. So you are be able to use the artifact in your project as dependency with the following entry:
 
 Please check the Release Notes for published Artifact Versions.
 **Maven**
@@ -109,13 +92,9 @@ This project is licensed under the Apache 2.0 license.
 
 ## Contributors
 
-Feel free to send a request by e-mail in the case you want to contribute the
-project. Everyone is welcome, even beginners in programming. We also appreciate
-help by optimizing our documentation and creating tutorials.
+Feel free to send a request by e-mail in the case you want to contribute the project. Everyone is welcome, even beginners in programming. We also appreciate help by optimizing our documentation and creating tutorials.
 
-Mistakes happen. But we only able to fix them, when we you inform us you find a
-bug. Do not hesitate to send a report in the way you feel common. We try to give
-as much as possible fast & direct support.
+Mistakes happen. But we only able to fix them, when we you inform us you find a bug. Do not hesitate to send a report in the way you feel common. We try to give as much as possible fast & direct support.
 
 In the case you like this project, let me know it and rate it with a star.
 
@@ -124,11 +103,13 @@ In the case you like this project, let me know it and rate it with a star.
 |Version | Comment
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
-|        | - Refactor: test cases
+|        | - refactor: test cases
 |        | - remove jodatime
 |        | - remove flexjson
 |        | - Refactor: MailClient & MailService
 |        | - bugfix: TreeWalker.addNode()
+|        | - extend: Validator.IP4_ADDRESS
+|        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()

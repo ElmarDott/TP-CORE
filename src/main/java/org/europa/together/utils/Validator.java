@@ -68,6 +68,18 @@ public final class Validator {
             = "((0[0-9])|(1[0-9])|(2[0-3])):((0[0-9])|([1-5][0-9]))";
 
     /**
+     * IP Adress (Version 4) with optional Port e. g.: 127.0.0.1:80
+     * (1-255).(0-255).(0-255).(0-255):(1-65535)
+     */
+    public static final String IP4_ADDRESS
+            = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\."
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\."
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\."
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])"
+            // Optinal Port
+            + "(:[1-5]?[0-9]{0,4}|:6[0-4][0-9][0-9][0-9]|:65[0-4][0-9][0-9]|:655[0-2][0-9]|:6553[0-5])?";
+
+    /**
      * Test if a Email Address in the typical format, like:<br>
      * _a-zA-Z0-9-(.)_a-zA-Z0-9-(@)[a-zA-Z0-9-]*(.)a-zA-Z{2}.
      */
@@ -78,8 +90,11 @@ public final class Validator {
      * Version number based on semantic versioning. Major.Minor.Patch-SNAPSHOT :
      * 1.0; 1.0-SNAPSHOT; 1.0.0-SNAPSHOT :: 000.000.000-ABCDEFGHIJ
      */
-    public static final String VERSION_NUMBER
-            = "([0-9]{1,3})\\.([0-9]){1,3}(\\.[0-9]{1,3})?(-[A-Z]{1,10})?";
+    public static final String SEMANTIC_VERSION_NUMBER
+            = "[1-9][0-9]*"
+            + "(\\.[0-9]|\\.[1-9][0-9]*)?"
+            + "(\\.[0-9]|\\.[1-9][0-9]*)?"
+            + "(-?[A-Za-z]){0,10}";
 
     /**
      * Check if the Variable test inside the range of the borders min and max.

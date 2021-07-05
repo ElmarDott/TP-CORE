@@ -50,9 +50,9 @@ public class Version implements Comparable<Version> {
 
         try {
 
-            if (!Validator.validate(version, Validator.VERSION_NUMBER)) {
+            if (!Validator.validate(version, Validator.SEMANTIC_VERSION_NUMBER)) {
                 String msg = "The version number " + version
-                        + " do not match the Pattern: [000].[000].[000]-[LABEL].";
+                        + " do not match the Pattern: [1].[2].[3]-[LABEL].";
                 throw new MisconfigurationException(msg);
             }
 
