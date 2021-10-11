@@ -38,6 +38,25 @@ public final class FileUtils {
     }
 
     /**
+     * Convert an InputStream to an ByteArray.
+     *
+     * @param input InputStream
+     * @return byte[] as Array
+     */
+    public static byte[] inputStreamToByteArray(InputStream input) {
+
+        byte[] byteArray = null;
+
+        try {
+            byteArray = input.readAllBytes();
+        } catch (IOException ex) {
+            LOGGER.catchException(ex);
+        }
+
+        return byteArray;
+    }
+
+    /**
      * Write a string to a File.
      *
      * @param content as String

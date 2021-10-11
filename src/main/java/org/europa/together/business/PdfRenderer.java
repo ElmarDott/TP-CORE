@@ -1,9 +1,10 @@
 package org.europa.together.business;
 
-import com.itextpdf.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0", consumers = "ITextRenderer, OpenPdfRenderer")
+@API(status = STABLE, since = "1.0", consumers = "OpenPdfRenderer")
 @Component
 public interface PdfRenderer {
 
@@ -21,7 +22,7 @@ public interface PdfRenderer {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-11";
+    String FEATURE_ID = "CM-0011";
 
     /**
      * Writes a PDF document (PdfReader) to the given Destination.
@@ -29,8 +30,32 @@ public interface PdfRenderer {
      * @param pdf as PdfReader
      * @param destination as String
      */
-    @API(status = STABLE, since = "1.1")
+    @API(status = STABLE, since = "2.2")
     void writeDocument(PdfReader pdf, String destination);
+
+    /**
+     * Read a PDF from FILE as PdfReader.
+     *
+     * @param pdfDocument as File
+     * @return pdf as PdfReader
+     */
+    @API(status = STABLE, since = "2.2")
+    PdfReader loadDocument(File pdfDocument);
+
+    /**
+     * Remove from a given PDF pages. Usage:<br>
+     * <code>
+     *  PdfReader pdf = readDocument(new File(document.pdf));
+     *  File newPdf = removePages(pdf, 2, 4, 12);
+     * </code><br>
+     * Removes from the PDF document the Pages: 2,4 and 12.
+     *
+     * @param pdf as PdfReader
+     * @param pages as int
+     * @return pdf as PdfReader
+     */
+    @API(status = STABLE, since = "2.2")
+    PdfReader removePage(PdfReader pdf, int... pages);
 
     /**
      * Generate a PDF Document in the size A4 from a HTML String. The file
@@ -74,30 +99,6 @@ public interface PdfRenderer {
      */
     @API(status = STABLE, since = "1.0")
     void setTitle(String title);
-
-    /**
-     * Read a PDF from FILE as PdfReader.
-     *
-     * @param pdfDocument as File
-     * @return pdf as PdfReader
-     */
-    @API(status = STABLE, since = "1.1")
-    PdfReader readDocument(File pdfDocument);
-
-    /**
-     * Remove from a given PDF pages. Usage:<br>
-     * <code>
-     *  PdfReader pdf = readDocument(new File(document.pdf));
-     *  File newPdf = removePages(pdf, 2, 4, 12);
-     * </code><br>
-     * Removes from the PDF document the Pages: 2,4 and 12.
-     *
-     * @param pdf as PdfReader
-     * @param pages as int
-     * @return pdf as PdfReader
-     */
-    @API(status = STABLE, since = "1.1")
-    PdfReader removePage(PdfReader pdf, int... pages);
 
     /**
      * Get the author of the document.

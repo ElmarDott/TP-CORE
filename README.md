@@ -34,7 +34,7 @@ Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Conventi
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 12.4, Maven 3.6.3 and Java 11 SE (openJDK). The implementation is also designed to run in Java EE 9 (e.g. Tomcat) environments. The most important dependencies are Hibernate 5.4, Spring 5.3 and JUnit 5. As Database Server (DBMS) we recommend PostgeSQL DBMS 11.
+The CORE Module is build with NetBeans 12.4, Maven 3.8.1 and Java 11 SE (openJDK). The implementation is also designed to run in Java EE 9 (e.g. Tomcat) environments. The most important dependencies are Hibernate 5.4, Spring 5.3 and JUnit 5. As Database Server (DBMS) we recommend PostgeSQL DBMS 11.
 
 We decided to use docker for an easy database setup. After on your system docker is running you are be able to setup the database by the following steps:
 
@@ -49,7 +49,7 @@ We decided to use docker for an easy database setup. After on your system docker
 
   docker run -d --name pgadmin --restart=no \
   -p 8004:80 --net services --ip 172.18.0.98 \
-  -e PGADMIN_DEFAULT_EMAIL=elmar.dott@gmail.com \
+  -e PGADMIN_DEFAULT_EMAIL=myself@sample.com \
   -e PGADMIN_DEFAULT_PASSWORD=s3cr3t \
   --link postgres:11 \
   dpage/pgadmin4:4.29
@@ -110,6 +110,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - bugfix: TreeWalker.addNode()
 |        | - extend: Validator.IP4_ADDRESS
 |        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
+|        | - refactor: replace iTextPdf for OpenPDF
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()
