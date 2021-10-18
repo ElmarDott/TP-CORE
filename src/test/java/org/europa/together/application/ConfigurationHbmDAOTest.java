@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.business.ConfigurationDAO;
@@ -56,7 +57,7 @@ public class ConfigurationHbmDAOTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("default"));
+        Assumptions.assumeTrue(jdbcActions.connect("test"));
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         jdbcActions.executeSqlFromClasspath(FILE);
@@ -73,7 +74,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @AfterEach
-    void testCaseTermination() {
+    void testCaseTermination() throws SQLException {
         jdbcActions.executeQuery(FLUSH_TABLE);
         LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
@@ -179,7 +180,7 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: serilizeAsJson", LogLevel.DEBUG);
 
         String json
-                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
         assertEquals(json, configurationDAO.serializeAsJson(configDO));
     }
 
@@ -195,7 +196,7 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: deserilizeAsJson", LogLevel.DEBUG);
 
         String json
-                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
         ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, ConfigurationDO.class);
         assertEquals(configDO, deserialize);
     }
@@ -205,7 +206,7 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: failDeserilizeAsJson", LogLevel.DEBUG);
 
         String json
-                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"depecated\":false,\"mandatory\":false,\"comment\":null}";
+                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
         ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, null);
         assertNull(deserialize);
     }
@@ -356,7 +357,7 @@ public class ConfigurationHbmDAOTest {
     void getDeprecatedEntries() {
         LOGGER.log("TEST CASE: getDeprecatedEntries", LogLevel.DEBUG);
 
-        List<ConfigurationDO> result = configurationDAO.getAllDepecatedEntries();
+        List<ConfigurationDO> result = configurationDAO.getAllDeprecatedEntries();
         assertEquals(2, result.size());
 
         if (result.get(0).getUuid().equals("1de21a70-591b-4af8-8706-fc5581e90b0a")) {

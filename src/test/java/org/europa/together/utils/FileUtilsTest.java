@@ -39,10 +39,10 @@ public class FileUtilsTest {
 
     @Test
     void getFileSize() {
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", " "));
-        assertEquals(259, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", " "));
+        assertEquals(142, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
 
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "mega"));
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "giga"));

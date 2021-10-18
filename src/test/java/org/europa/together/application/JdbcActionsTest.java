@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -68,7 +69,7 @@ public class JdbcActionsTest {
         LOGGER.log("TEST CASE: connect", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        assertTrue(dbms.connect("default"));
+        assertTrue(dbms.connect("test"));
     }
 
     @Test
@@ -82,24 +83,6 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void getPort() {
-        LOGGER.log("TEST CASE: getPort", LogLevel.DEBUG);
-
-        DatabaseActions dbms = new JdbcActions();
-        assertTrue(dbms.connect("default"));
-        assertEquals(0, dbms.getPort());
-    }
-
-    @Test
-    void getUri() {
-        LOGGER.log("TEST CASE: getUri", LogLevel.DEBUG);
-
-        DatabaseActions dbms = new JdbcActions();
-        assertTrue(dbms.connect("default"));
-        assertEquals(null, dbms.getUri());
-    }
-
-    @Test
     void fallbackLoadProperties() {
         LOGGER.log("TEST CASE: fallbackLoadProperties", LogLevel.DEBUG);
 
@@ -108,33 +91,42 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void executeQuery() {
+    void executeQuery() throws SQLException {
         LOGGER.log("TEST CASE: executeQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect("default");
-        assertTrue(dbms.executeQuery(sql_drop));
-        assertTrue(dbms.executeQuery(sql_create));
+        dbms.connect("test");
+
+        assertNull(dbms.executeQuery(sql_drop));
+        assertNull(dbms.executeQuery(sql_create));
         dbms.executeQuery(sql_drop);
     }
 
     @Test
-    void failExecuteQuery() {
+    void failExecuteQuery() throws SQLException {
         LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect(Constraints.SYSTEM_APP_DIR
-                + "/target/test-classes/"
-                + "org/europa/together/properties/jdbc-test-fail.properties");
-        assertFalse(dbms.executeQuery("SELECT * FROM foo;"));
+        dbms.connect("test");
+        assertThrows(Exception.class, () -> {
+            dbms.executeQuery("SELECT * FROM foo;");
+        });
     }
 
     @Test
-    void executeSqlFileFromClasspath() {
+    void failExecuteQueryNoConnection() throws SQLException {
+        LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new JdbcActions();
+        assertNull(dbms.executeQuery("SELECT * FROM foo;"));
+    }
+
+    @Test
+    void executeSqlFileFromClasspath() throws SQLException {
         LOGGER.log("TEST CASE: executeSqlFileFromClasspath", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect("default");
+        dbms.connect("test");
         dbms.executeQuery(sql_drop);
         String file = "org/europa/together/sql/test.sql";
         assertTrue(dbms.executeSqlFromClasspath(file));
@@ -146,26 +138,24 @@ public class JdbcActionsTest {
         LOGGER.log("TEST CASE: sqlFileNotFound", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect("default");
+        dbms.connect("test");
         String file = "org/europa/together/sql/file-not-exist.sql";
         assertFalse(dbms.executeSqlFromClasspath(file));
     }
 
     @Test
-    void getResultSet() {
+    void getResultSet() throws SQLException {
         LOGGER.log("TEST CASE: getResultSet", LogLevel.DEBUG);
 
         String SQL_FILE
                 = "org/europa/together/sql/test.sql";
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect("default");
-        dbms.executeQuery(sql_drop);
+        dbms.connect("test");
 
         assertTrue(dbms.executeSqlFromClasspath(SQL_FILE));
-        assertTrue(dbms.executeQuery("SELECT * FROM test;"));
 
-        assertNotNull(dbms.getResultSet());
-        assertEquals(1, dbms.getResultCount());
+        ResultSet results = dbms.executeQuery("SELECT * FROM test;");
+        assertEquals(1, dbms.countResultSets(results));
 
         dbms.executeQuery(sql_drop);
     }
@@ -175,7 +165,7 @@ public class JdbcActionsTest {
         LOGGER.log("TEST CASE: getJdbcMetaData", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect("default");
+        dbms.connect("test");
         JdbcConnection metaData = dbms.getJdbcMetaData();
         LOGGER.log(metaData.toString(), LogLevel.DEBUG);
         assertNotNull(metaData);

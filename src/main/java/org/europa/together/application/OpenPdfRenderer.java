@@ -3,6 +3,7 @@ package org.europa.together.application;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public PdfReader loadDocument(File pdfDocument) {
+    public PdfReader loadDocument(final File pdfDocument) {
         PdfReader pdfReader = null;
         try {
             pdfReader = new PdfReader(pdfDocument.getAbsolutePath());
@@ -50,7 +51,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public void writeDocument(PdfReader pdf, String destination) {
+    public void writeDocument(final PdfReader pdf, final String destination) {
         try {
             PdfStamper pdfStamper = new PdfStamper(pdf, new FileOutputStream(destination));
             pdfStamper.close();
@@ -60,7 +61,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public PdfReader removePage(PdfReader pdf, int... pages) {
+    public PdfReader removePage(final PdfReader pdf, final int... pages) {
         PdfReader newPDF = null;
         try {
             newPDF = new PdfReader(pdf);
@@ -83,7 +84,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public void renderDocumentFromHtml(String file, String template) {
+    public void renderDocumentFromHtml(final String file, final String template) {
 
         StringBuilder html = new StringBuilder();
         html.append("<html>")
@@ -101,24 +102,26 @@ public class OpenPdfRenderer implements PdfRenderer {
                 .append(template)
                 .append("</body></html>");
 
+        ITextRenderer renderer = new ITextRenderer();
+
+        SharedContext sharedContext = renderer.getSharedContext();
+        sharedContext.setPrint(true);
+        sharedContext.setInteractive(false);
+        sharedContext.setReplacedElementFactory(new PdfReplacedElementFactory());
+        sharedContext.getTextRenderer().setSmoothingThreshold(0);
+
+        renderer.setDocumentFromString(createWellFormedHtml(html.toString()));
+        renderer.layout();
+
+        OutputStream os;
         try {
-            ITextRenderer renderer = new ITextRenderer();
-
-            SharedContext sharedContext = renderer.getSharedContext();
-            sharedContext.setPrint(true);
-            sharedContext.setInteractive(false);
-            sharedContext.setReplacedElementFactory(new PdfReplacedElementFactory());
-            sharedContext.getTextRenderer().setSmoothingThreshold(0);
-
-            renderer.setDocumentFromString(createWellFormedHtml(html.toString()));
-            renderer.layout();
-
-            OutputStream os = new FileOutputStream(file);
+            os = new FileOutputStream(file);
             renderer.createPDF(os);
 
-        } catch (Exception ex) {
+        } catch (FileNotFoundException ex) {
             LOGGER.catchException(ex);
         }
+
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
@@ -163,7 +166,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
     //</editor-fold>
 
-    private String createWellFormedHtml(String html) {
+    private String createWellFormedHtml(final String html) {
         org.jsoup.nodes.Document content = org.jsoup.Jsoup.parse(html, "UTF-8");
         content.outputSettings().syntax(
                 org.jsoup.nodes.Document.OutputSettings.Syntax.xml);

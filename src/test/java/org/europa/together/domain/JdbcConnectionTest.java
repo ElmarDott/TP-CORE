@@ -5,11 +5,7 @@ import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -39,7 +35,7 @@ public class JdbcConnectionTest {
 
         try {
             DatabaseActions actions = new JdbcActions();
-            actions.connect("default");
+            actions.connect("test");
             JdbcConnection metaData = actions.getJdbcMetaData();
 
             LOGGER.log(metaData.toString(), LogLevel.DEBUG);
@@ -49,6 +45,7 @@ public class JdbcConnectionTest {
             assertNotNull(metaData.DRIVER_NAME);
             assertNotNull(metaData.DRIVER_VERSION);
             assertNotNull(metaData.JDBC_VERSION);
+            assertNotNull(metaData.IP);
             assertNotNull(metaData.PORT);
             assertNotNull(metaData.URL);
             assertNotNull(metaData.USER);

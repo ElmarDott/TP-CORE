@@ -65,14 +65,17 @@ public interface MailClient {
     void clearConfiguration();
 
     /**
+     * Load the e-mail configuration from a given property file.
      *
-     * @param resource as String
+     * @param resource as String return true on success
+     * @return true on success
      * @throws java.io.IOException on failure
      */
     @API(status = STABLE, since = "3.0")
-    void loadConfigurationFromProperties(String resource) throws IOException;
+    boolean loadConfigurationFromProperties(String resource) throws IOException;
 
     /**
+     * Load the e-mail configuration from the database.
      *
      * @return true on success
      */

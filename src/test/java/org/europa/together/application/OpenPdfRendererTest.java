@@ -129,11 +129,12 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failRenderHtmlToPdf() {
+    void failRenderHtmlToPdf() throws Exception {
         LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
 
-        pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
-        assertFalse(new File(DIRECTORY + "fail.pdf").exists());
+        assertThrows(Exception.class, () -> {
+            pdf.renderDocumentFromHtml(null, "no content");
+        });
     }
 
     @Test

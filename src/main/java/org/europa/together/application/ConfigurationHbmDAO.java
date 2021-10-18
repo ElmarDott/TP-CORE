@@ -93,12 +93,12 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
 
     @Override
     @Transactional(readOnly = true)
-    public List<ConfigurationDO> getAllDepecatedEntries() {
+    public List<ConfigurationDO> getAllDeprecatedEntries() {
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("depecated"), Boolean.TRUE));
+        query.where(builder.equal(root.get("deprecated"), Boolean.TRUE));
         query.orderBy(builder.asc(root.get("version")));
 
         return mainEntityManagerFactory.createQuery(query).getResultList();

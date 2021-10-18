@@ -55,7 +55,7 @@ public class MailClientScenarioIT extends
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
 
-        boolean socket = CONNECTION.connect("default");
+        boolean socket = CONNECTION.connect("test");
         if (!socket) {
             check = false;
         }

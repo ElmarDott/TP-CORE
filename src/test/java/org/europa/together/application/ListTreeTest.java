@@ -237,11 +237,19 @@ public class ListTreeTest {
     }
 
     @Test
-    void failGetNodeByUuid() {
+    void failGetNodeByUuid_emptyTree() {
         LOGGER.log("TEST CASE: failGetNodeByUuid", LogLevel.DEBUG);
 
         TreeWalker emptyTree = new ListTree();
         assertNull(emptyTree.getNodeByUuid("uuid"));
+    }
+
+    @Test
+    void failGetNodeByUuid_UuidNotExist() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failGetNodeByUuid", LogLevel.DEBUG);
+
+        buildTree();
+        assertNull(treeWalker.getNodeByUuid("NotExist"));
     }
 
     @Test

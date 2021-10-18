@@ -110,7 +110,10 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - bugfix: TreeWalker.addNode()
 |        | - extend: Validator.IP4_ADDRESS
 |        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
-|        | - refactor: replace iTextPdf for OpenPDF
+|        | - remove ITextRenderer for OpenPdfRenderer
+|--------|----------------------------------------------------------------------
+| 2.2.0  | published xx/2021
+|        | - add OpenPDF Renderer (iText 5 will removed in Version 3.0)
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
 |        | - extend StringUtils.createDateFromString()

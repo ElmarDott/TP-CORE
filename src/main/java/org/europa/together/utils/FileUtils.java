@@ -43,7 +43,7 @@ public final class FileUtils {
      * @param input InputStream
      * @return byte[] as Array
      */
-    public static byte[] inputStreamToByteArray(InputStream input) {
+    public static byte[] inputStreamToByteArray(final InputStream input) {
 
         byte[] byteArray = null;
 

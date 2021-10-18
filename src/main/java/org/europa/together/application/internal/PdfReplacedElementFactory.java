@@ -15,6 +15,9 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 
 /**
@@ -22,18 +25,23 @@ import org.europa.together.utils.FileUtils;
  */
 public class PdfReplacedElementFactory implements ReplacedElementFactory {
 
+    private static final Logger LOGGER = new LogbackLogger(PdfReplacedElementFactory.class);
+
+    private final int height = 250;
+    private final int width = 150;
+
     @Override
-    public ReplacedElement createReplacedElement(LayoutContext c, BlockBox box, UserAgentCallback uac, int cssWidth,
-            int cssHeight) {
+    public ReplacedElement createReplacedElement(final LayoutContext c, final BlockBox box,
+            final UserAgentCallback uac, final int cssWidth, final int cssHeight) {
         Element e = box.getElement();
         if (e == null) {
             return null;
         }
         String nodeName = e.getNodeName();
-        // Look for img tag in the HTML
         if (nodeName.equals("img")) {
             String imagePath = e.getAttribute("src");
-            System.out.println("imagePath-- " + imagePath.substring(imagePath.indexOf("/") + 1));
+            LOGGER.log("imagePath-- " + imagePath.substring(imagePath.indexOf("/") + 1),
+                    LogLevel.DEBUG);
             FSImage fsImage;
             try {
                 fsImage = getImageInstance(imagePath);
@@ -46,7 +54,7 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
                 if (cssWidth != -1 || cssHeight != -1) {
                     fsImage.scale(cssWidth, cssHeight);
                 } else {
-                    fsImage.scale(250, 150);
+                    fsImage.scale(height, width);
                 }
                 return new ITextImageElement(fsImage);
             }
@@ -54,7 +62,7 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
         return null;
     }
 
-    private FSImage getImageInstance(String imagePath)
+    private FSImage getImageInstance(final String imagePath)
             throws IOException, BadElementException {
         InputStream input = null;
         FSImage fsImage;
@@ -69,17 +77,17 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
 
     @Override
     public void reset() {
-        // TODO Auto-generated method stub
+        // Auto-generated method stub
     }
 
     @Override
-    public void remove(Element e) {
-        // TODO Auto-generated method stub
+    public void remove(final Element e) {
+        // Auto-generated method stub
 
     }
 
     @Override
-    public void setFormSubmissionListener(FormSubmissionListener listener) {
-        // TODO Auto-generated method stub
+    public void setFormSubmissionListener(final FormSubmissionListener listener) {
+        // Auto-generated method stub
     }
 }

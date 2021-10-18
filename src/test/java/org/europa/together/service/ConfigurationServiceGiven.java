@@ -1,6 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
+import java.sql.ResultSet;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.europa.together.service.ConfigurationServiceScenarioIT.CONNECTION;
@@ -37,10 +38,9 @@ public class ConfigurationServiceGiven extends Stage<ConfigurationServiceGiven> 
     public ConfigurationServiceGiven database_is_populated() {
         try {
             assertTrue(CONNECTION.executeSqlFromClasspath(SQL_FILE));
-            boolean check
+            ResultSet results
                     = CONNECTION.executeQuery("SELECT * FROM app_config WHERE modul_name='Module_A';");
-            assertTrue(check);
-            assertEquals(10, CONNECTION.getResultCount());
+            assertEquals(10, CONNECTION.countResultSets(results));
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);

@@ -101,12 +101,15 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     @Transactional(readOnly = true)
     public List<T> listAllElements() {
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
-        // count all entries
-        // define pagination
-        // get selected results
         CriteriaQuery<T> query = builder.createQuery(genericType);
         // create Criteria
         query.from(genericType);
+
+        // count all entries
+        int count = mainEntityManagerFactory.createQuery(query).getResultList().size();
+        // define pagination
+        // get selected results
+
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 

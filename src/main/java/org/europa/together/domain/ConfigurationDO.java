@@ -64,8 +64,8 @@ public class ConfigurationDO implements Serializable {
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @Column(name = "DEPECATED", nullable = false)
-    private boolean depecated;
+    @Column(name = "DEPRECATED", nullable = false)
+    private boolean deprecated;
 
     @Column(name = "MANDATORY", nullable = false)
     private boolean mandatory;
@@ -101,7 +101,7 @@ public class ConfigurationDO implements Serializable {
         //optional
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         this.comment = "";
     }
@@ -114,19 +114,19 @@ public class ConfigurationDO implements Serializable {
     public void prePersist() {
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         LOGGER.log("@PrePersist [ConfigurationDO]", LogLevel.INFO);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
     /**
-     * Show if entry is depecated.
+     * Show if entry is deprecated.
      *
-     * @return true if is depecated
+     * @return true if is deprecated
      */
-    public boolean isDepecated() {
-        return depecated;
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
     /**
@@ -166,12 +166,12 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Set if a entry is depecated.
+     * Set if a entry is deprecated.
      *
-     * @param depecated as boolean
+     * @param deprecated as boolean
      */
-    public void setDepecated(final boolean depecated) {
-        this.depecated = depecated;
+    public void setDeprecated(final boolean deprecated) {
+        this.deprecated = deprecated;
     }
 
     /**
@@ -339,7 +339,7 @@ public class ConfigurationDO implements Serializable {
                 + ", modulName=" + modulName
                 + ", configurationSet=" + configurationSet
                 + ", version=" + version
-                + ", depecated=" + depecated
+                + ", deprecated=" + deprecated
                 + ", mandatory=" + mandatory
                 + ", comment=" + comment + '}';
     }

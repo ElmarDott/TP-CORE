@@ -1,6 +1,9 @@
 package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import org.europa.together.application.LogbackLogger;
@@ -17,8 +20,8 @@ public class ConfigurationDOTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationDOTest.class);
 
-    private static ValidatorFactory validatorFactory;
-    private static Validator validate;
+    private static Validator validate
+            = Validation.buildDefaultValidatorFactory().getValidator();
 
     private String key = "key";
     private String value = "value";
@@ -26,7 +29,7 @@ public class ConfigurationDOTest {
     private String modulName = "module";
     private String configSet = "configuration";
     private String version = "1.0";
-    private boolean depecated = true;
+    private boolean deprecated = true;
     private boolean mandatory = false;
     private String comment = "no comment";
 
@@ -40,7 +43,7 @@ public class ConfigurationDOTest {
         assertNotNull(domainObject);
         assertEquals("default", domainObject.getConfigurationSet());
         assertEquals("NIL", domainObject.getDefaultValue());
-        assertEquals(false, domainObject.isDepecated());
+        assertEquals(false, domainObject.isDeprecated());
         assertEquals(false, domainObject.isMandatory());
     }
 
@@ -90,8 +93,12 @@ public class ConfigurationDOTest {
         domainObject.setValue(value);
 
         assertNotNull(domainObject);
-        assertEquals(0, validate.validate(domainObject).size());
-        assertTrue(validate.validate(domainObject).isEmpty());
+
+        Set<ConstraintViolation<ConfigurationDO>> result
+                = validate.validate(domainObject);
+
+        assertTrue(result.isEmpty());
+        assertEquals(0, result.size());
     }
 
     @Test

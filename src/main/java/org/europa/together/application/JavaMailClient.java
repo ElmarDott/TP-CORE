@@ -71,7 +71,7 @@ public class JavaMailClient implements MailClient {
     public void populateDbConfiguration(final String sqlFile) {
         LOGGER.log("Populate Configuration: " + sqlFile, LogLevel.DEBUG);
         DatabaseActions connection = new JdbcActions();
-        connection.connect("default");
+        connection.connect("test");
         connection.executeSqlFromClasspath(sqlFile);
     }
 
@@ -86,14 +86,16 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public void loadConfigurationFromProperties(final String resource) throws IOException {
+    public boolean loadConfigurationFromProperties(final String resource) throws IOException {
 
+        boolean success = true;
         Map<String, String> properties = new HashMap<>();
 
         try {
             propertyReader.appendPropertiesFromClasspath(resource);
             properties = propertyReader.getPropertyList();
         } catch (Exception ex) {
+            success = false;
             LOGGER.catchException(ex);
         }
 
@@ -101,14 +103,17 @@ public class JavaMailClient implements MailClient {
             propertyReader.appendPropertiesFromFile(resource);
             properties = propertyReader.getPropertyList();
         } catch (Exception ex) {
+            success = false;
             LOGGER.catchException(ex);
         }
 
         if (!properties.isEmpty()) {
             configuration.putAll(properties);
         } else {
+            success = false;
             throw new IOException("Could not load " + resource + " from file system or classpath.");
         }
+        return success;
     }
 
     @Override
@@ -228,7 +233,7 @@ public class JavaMailClient implements MailClient {
 
     private void processConfiguration(final List<ConfigurationDO> configurationEntries) {
         LOGGER.log("Process E-Mail Configuration  (" + configurationEntries.size() + ")",
-                 LogLevel.DEBUG);
+                LogLevel.DEBUG);
 
         for (ConfigurationDO entry : configurationEntries) {
             String value;

@@ -1,5 +1,6 @@
 package org.europa.together.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -8,7 +9,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.JavaMailClient;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
@@ -36,11 +36,16 @@ public final class MailClientService {
     private static final long serialVersionUID = 206L;
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
 
+    private String configurationFile = null;
+
     @Autowired
     private CryptoTools cryptoTools;
 
     @Autowired
     private ConfigurationDAO configurationDAO;
+
+    @Autowired
+    private MailClient mailClient;
 
     /**
      * Constructor.
@@ -65,9 +70,12 @@ public final class MailClientService {
      * <li>mailer.wait</li>
      *
      * @param configurationList as Map
+     * @return configuration as Map
      */
-    @API(status = STABLE, since = "1.0")
-    public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
+    @API(status = STABLE, since = "3.0")
+    public Map<String, String> updateDatabaseConfiguration(
+            final Map<String, String> configurationList) {
+
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
                         Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
@@ -83,32 +91,73 @@ public final class MailClientService {
                 }
             }
         }
-    }
-
-    /**
-     * Get the Configuration for the E-Mail Service from the Database and return
-     * the result as Map.
-     *
-     * @return mailConfiguration as Map
-     */
-    @API(status = STABLE, since = "1.1")
-    public Map<String, String> getDbConfiguration() {
-
-        MailClient mailClient = new JavaMailClient();
+        mailClient.clearConfiguration();
         mailClient.loadConfigurationFromDatabase();
         return mailClient.getDebugActiveConfiguration();
     }
 
     /**
-     * Send an composed (single) e-mail which is configured in a MailClient. An
-     * E-Mail can be configured as followed:  <br>
+     * Allows to update the property configuration file for the MailClient by a
+     * map of configuration entries.<br>
+     * <li>mailer.host</li>
+     * <li>mailer.port</li>
+     * <li>mailer.sender</li>
+     * <li>mailer.user</li>
+     * <li>mailer.password</li>
+     * <li>mailer.ssl</li>
+     * <li>mailer.tls</li>
+     * <li>mailer.debug</li>
+     * <li>mailer.count</li>
+     * <li>mailer.wait</li>
+     *
+     *
+     * @param content as String
+     * @param resource as String
+     * @return configuration as Map
+     * @throws IOException
+     */
+    @API(status = STABLE, since = "3.0")
+    public Map<String, String> updatePropertyConfiguration(
+            final String content, final String resource) throws IOException {
+
+        //write updates to file
+        mailClient.clearConfiguration();
+        mailClient.loadConfigurationFromProperties(resource);
+        return mailClient.getDebugActiveConfiguration();
+    }
+
+    /**
+     * Get the active configuration for the E-Mail Service and return the result
+     * as Map.
+     *
+     * @return mailConfiguration as Map
+     * @throws java.io.IOException in case of failue
+     */
+    @API(status = STABLE, since = "3.0")
+    public Map<String, String> loadConfiguration() {
+        return mailClient.getDebugActiveConfiguration();
+    }
+
+    /**
+     * Set the path to the external configuration property file. If this file is
+     * set the configuration is tried to fetch from this file. If this action is
+     * failed for some reason, the configuration will loaded from the database.
+     *
+     * @param resource as String
+     */
+    @API(status = STABLE, since = "3.0")
+    public void setExternalConfigurationFile(final String resource) {
+        this.configurationFile = resource;
+    }
+
+    /**
+     * Send an composed (single) e-mail which is configured in a Mail data
+     * class. An E-Mail can be configured as followed:  <br>
      * <code>
-     *  MailClient mailer = new MailCLientImpl();
-     *  mailer.loadConfigurationFromDatabase();
-     *  mailer.addRecipent("recipient@sample.org");
-     *  mailer.setSubject("TEST MAIL");
-     *  mailer.setContent("This ist the testmail content.");
-     *  mailer.addAttachment("Attachment.pdf");
+     *  Mail mail = new Mail();
+     *  mail.setSubject(subject);
+     *  mail.setMessage(content);
+     *  mail.addRecipent(mailAdress);
      * </code> <br>
      * In the case there are more recipients configured the mail will be only
      * send to the first entry.
@@ -118,8 +167,12 @@ public final class MailClientService {
     @API(status = STABLE, since = "1.0")
     public void sendEmail(final Mail mail) {
         try {
-            MailClient mailClient = new JavaMailClient();
-            mailClient.loadConfigurationFromDatabase();
+            if (this.configurationFile != null) {
+                mailClient.loadConfigurationFromProperties(configurationFile);
+            } else {
+                mailClient.loadConfigurationFromDatabase();
+            }
+
             mailClient.composeMail(mail);
 
             Address[] address = new Address[1];
@@ -141,7 +194,10 @@ public final class MailClientService {
      * Bulk Mail supports a special feature, to interrupt the sending after an
      * defined amount of mails fo a configured time (milliseconds) until the
      * next bulk can be send. After the termination the method return th count
-     * of the send mails.
+     * of the send mails. This two parameters are also part of thw whole
+     * configuration and will not set seperatly.
+     * <li><b>wait time:</b> default = -1 (unlimited)</li>
+     * <li><b>bulk mail limiter:</b> default = -1 (unlimited)</li>
      *
      * @param mail as MailClient
      * @return sendedEmails as int
@@ -152,8 +208,12 @@ public final class MailClientService {
         int countSendedMails = 0;
 
         try {
-            MailClient mailClient = new JavaMailClient();
-            mailClient.loadConfigurationFromDatabase();
+            if (this.configurationFile != null) {
+                mailClient.loadConfigurationFromProperties(configurationFile);
+            } else {
+                mailClient.loadConfigurationFromDatabase();
+            }
+
             mailClient.composeMail(mail);
 
             int maximumMailBulk = mailClient.getBulkMailLimiter();
@@ -184,4 +244,5 @@ public final class MailClientService {
         LOGGER.log(countSendedMails + " E-Mails should sended", LogLevel.DEBUG);
         return countSendedMails;
     }
+
 }

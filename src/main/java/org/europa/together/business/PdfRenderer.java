@@ -4,7 +4,6 @@ import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.springframework.stereotype.Component;
 
 /**

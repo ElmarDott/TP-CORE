@@ -16,6 +16,7 @@ public final class JdbcConnection {
     public final String DRIVER_VERSION;
     public final String USER;
     public final String URL;
+    public final String IP;
     public final String PORT;
     public final String CATALOG;
     //CHECKSTYLE:ON
@@ -41,6 +42,7 @@ public final class JdbcConnection {
         DRIVER_VERSION = properties.get("metaJdbcDriverVersion");
         USER = properties.get("metaUser");
         URL = properties.get("metaUrl");
+        IP = properties.get("metaIP");
         PORT = properties.get("metaPort");
         CATALOG = properties.get("metaCatalog");
     }
@@ -55,6 +57,7 @@ public final class JdbcConnection {
                 + " DRIVER_VERSION=" + DRIVER_VERSION
                 + " USER=" + USER
                 + " URL=" + URL
+                + " IP=" + IP
                 + " PORT=" + PORT
                 + " CATALOG=" + CATALOG
                 + " }";

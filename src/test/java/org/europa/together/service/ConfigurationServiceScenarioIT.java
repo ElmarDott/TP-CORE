@@ -2,6 +2,7 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import java.sql.SQLException;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
@@ -37,7 +38,7 @@ public class ConfigurationServiceScenarioIT extends
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
         boolean check = true;
 
-        boolean socket = CONNECTION.connect("default");
+        boolean socket = CONNECTION.connect("test");
         if (!socket) {
             check = false;
         }
@@ -61,7 +62,7 @@ public class ConfigurationServiceScenarioIT extends
     }
 
     @AfterEach
-    void testCaseTermination() {
+    void testCaseTermination() throws SQLException {
         CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
         LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }

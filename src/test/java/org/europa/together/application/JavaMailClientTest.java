@@ -6,6 +6,7 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.io.IOException;
 import java.security.Security;
+import java.sql.SQLException;
 import java.util.Map;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -63,7 +64,7 @@ public class JavaMailClientTest {
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
         Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning());
         //DBMS
-        Assumptions.assumeTrue(jdbcActions.connect("default"));
+        Assumptions.assumeTrue(jdbcActions.connect("test"));
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
@@ -154,10 +155,10 @@ public class JavaMailClientTest {
     }
 
     @Test
-    void failLoadConfigurationFromDatabase() {
+    void failLoadConfigurationFromDatabase() throws SQLException {
         LOGGER.log("TEST CASE: failLoadConfigurationFromDatabase", LogLevel.DEBUG);
 
-        assertTrue(jdbcActions.executeQuery(FLUSH_TABLE));
+        jdbcActions.executeQuery(FLUSH_TABLE);
         assertFalse(mailClient.loadConfigurationFromDatabase());
     }
 

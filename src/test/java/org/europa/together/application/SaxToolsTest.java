@@ -51,8 +51,8 @@ public class SaxToolsTest {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.xsd"), SCHEMA);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
+            Assumptions.assumeTrue(false);
         }
-        Assumptions.assumeTrue(true);
 
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }

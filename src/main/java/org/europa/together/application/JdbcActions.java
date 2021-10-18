@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -19,6 +21,7 @@ import org.europa.together.domain.JdbcConnection;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.TimeOutException;
 import org.europa.together.utils.StringUtils;
+import org.europa.together.utils.Validator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
@@ -36,15 +39,10 @@ public class JdbcActions implements DatabaseActions {
     private Connection jdbcConnection = null;
     private Statement statement = null;
 
-    private int port;
-    private int resultCount = 0;
-
-    private ResultSet resultSet = null;
     private DatabaseMetaData metadata;
     private String connectionUrl;
     private String driverClass;
     private String pwd;
-    private String uri;
     private String user;
 
     /**
@@ -64,6 +62,7 @@ public class JdbcActions implements DatabaseActions {
 
         } catch (Exception ex) {
             connected = false;
+            LOGGER.log("Connection failed!", LogLevel.WARN);
             LOGGER.catchException(ex);
         }
         return connected;
@@ -72,7 +71,7 @@ public class JdbcActions implements DatabaseActions {
     @Override
     public boolean executeSqlFromClasspath(final String sqlFile) {
 
-        boolean success = false;
+        boolean success = true;
         BufferedReader reader = null;
         StringBuilder sql = new StringBuilder();
         ApplicationContext context = new ClassPathXmlApplicationContext();
@@ -88,10 +87,11 @@ public class JdbcActions implements DatabaseActions {
                     sql.append(line);
                 }
             }
-            success = this.executeQuery(sql.toString());
+            this.executeQuery(sql.toString());
             reader.close();
 
         } catch (Exception ex) {
+            success = false;
             LOGGER.catchException(ex);
         }
 
@@ -99,73 +99,36 @@ public class JdbcActions implements DatabaseActions {
         return success;
     }
 
-    @Override //API CHANGE :: return bool to int (resultCount)
-    public boolean executeQuery(final String sql) {
-        boolean success = false;
-        resultSet = null;
-        resultCount = 0;
-        try {
-            if (jdbcConnection != null) {
-
-                statement = jdbcConnection.createStatement();
-                statement.execute(sql);
-                if (statement.getResultSet() != null) {
-                    resultSet = statement.getResultSet();
-                    while (resultSet.next()) {
-                        resultCount++;
-                    }
-                }
-                success = true;
-                statement = null;
-            } else {
-                LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
-            }
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return success;
-    }
-
-    @Override //API CHANGE DEPECATED - will be deleted
-    public int getResultCount() {
-        return resultCount;
-    }
-
     @Override
-    public ResultSet getResultSet() {
+    public ResultSet executeQuery(final String sql) throws SQLException {
+        ResultSet resultSet = null;
+        if (jdbcConnection != null) {
+
+            statement = jdbcConnection.createStatement();
+            statement.execute(sql);
+            resultSet = statement.getResultSet();
+        } else {
+            LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
+        }
         return resultSet;
     }
 
     @Override
-    public int getPort() {
-        return this.port;
+    public int countResultSets(final ResultSet results) throws SQLException {
+        int count = 0;
+        while (results.next()) {
+            count++;
+        }
+        return count;
     }
 
-    @Override
-    public String getUri() {
-        return this.uri;
-    }
-
-    /*
-    JdbcConnection {
-        JDBC_VERSION=4.2
-        DBMS_NAME=PostgreSQL
-        DBMS_VERSION=11.5 (Debian 11.5-3.pgdg90+1)
-        DRIVER_NAME=PostgreSQL
-        JDBC Driver
-        DRIVER_VERSION=42.2.8
-        USER=together
-        URL=jdbc:postgresql://172.18.0.2:5432/together-test
-        PORT=5432
-        CATALOG=together-test
-    }
-     */
     @Override
     public JdbcConnection getJdbcMetaData() throws SQLException {
 
         Map<String, String> properties = new HashMap<>();
-
         metadata = jdbcConnection.getMetaData();
+
+        String url = metadata.getURL();
 
         properties.put("metaJdbcVersion",
                 metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion());
@@ -181,18 +144,36 @@ public class JdbcActions implements DatabaseActions {
                 metadata.getUserName());
         properties.put("metaCatalog",
                 metadata.getConnection().getCatalog());
-        properties.put("metaUrl", metadata.getURL());
-        properties.put("metaPort", Integer.toString(port));
+        properties.put("metaUrl", url);
+
+        String[] result = grabIpAndPort(url).split(":");
+        String ip = result[0];
+        String port = result[1];
+
+        properties.put("metaIP", ip);
+        properties.put("metaPort", port);
 
         return new JdbcConnection(properties);
     }
 
     //  ----------------------------------------------------------------------------
+    private String grabIpAndPort(final String connectionUrl) {
+        LOGGER.log("Grab IP4 Adress an Port from connection string.", LogLevel.DEBUG);
+
+        Pattern pattern = Pattern.compile(Validator.IP4_ADDRESS);
+        Matcher matcher = pattern.matcher(connectionUrl);
+        LOGGER.log("RegEx match found: " + matcher.find()
+                + " GroupCount: " + matcher.groupCount(), LogLevel.DEBUG);
+        String result = matcher.group(0);
+        LOGGER.log("Result: " + result + " - Search: " + connectionUrl, LogLevel.DEBUG);
+        return result;
+    }
+
     private void establishPooledConnection()
             throws TimeOutException, ClassNotFoundException, PropertyVetoException, SQLException {
 
         LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
-        Class.forName(this.driverClass);
+        Class.forName(driverClass);
 
         BasicDataSource cpds = new BasicDataSource();
         cpds.setDriverClassName(driverClass);
@@ -207,12 +188,11 @@ public class JdbcActions implements DatabaseActions {
         String properties = propertyFile;
         PropertyReader reader = new PropertyFileReader();
 
-        if (StringUtils.isEmpty(properties) || propertyFile.equals("default")) {
-            LOGGER.log("Append default properties: " + jdbcProperties, LogLevel.DEBUG);
+        if (StringUtils.isEmpty(properties) || propertyFile.equals("test")) {
+            LOGGER.log("Append (test) properties: " + jdbcProperties, LogLevel.DEBUG);
             reader.appendPropertiesFromClasspath(jdbcProperties);
         } else {
             LOGGER.log("Append properties from: " + propertyFile, LogLevel.DEBUG);
-
             reader.appendPropertiesFromFile(propertyFile);
         }
 

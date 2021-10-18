@@ -58,7 +58,7 @@ public class MailServiceAction extends Stage<MailServiceAction> {
 
     public MailServiceAction load_service_database_configuration() {
         try {
-            assertEquals(10, service.getDbConfiguration().size());
+            assertEquals(10, service.loadConfiguration().size());
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
