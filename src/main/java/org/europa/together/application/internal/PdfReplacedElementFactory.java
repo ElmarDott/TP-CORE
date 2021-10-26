@@ -21,7 +21,7 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 
 /**
- *
+ * Helper class to replace elements fürm HTML content to include them in PDF.
  */
 public class PdfReplacedElementFactory implements ReplacedElementFactory {
 

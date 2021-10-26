@@ -23,7 +23,7 @@
 
     <properties>
         <skipUnitTests>false</skipUnitTests>
-        <skipIntegrationTests>true</skipIntegrationTests>
+        <skipIntegrationTests>false</skipIntegrationTests>
 
         <skipEnforcer>false</skipEnforcer>
         <skipJarSigner>false</skipJarSigner>

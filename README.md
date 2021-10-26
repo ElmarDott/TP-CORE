@@ -112,7 +112,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |        | - remove ITextRenderer for OpenPdfRenderer
 |--------|----------------------------------------------------------------------
-| 2.2.0  | published xx/2021
+| 2.2.0  | published 10/2021
 |        | - add OpenPDF Renderer (iText 5 will removed in Version 3.0)
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020

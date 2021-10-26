@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.application.internal.PdfReplacedElementFactory;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
@@ -40,10 +40,10 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public PdfReader loadDocument(final File pdfDocument) {
-        PdfReader pdfReader = null;
+    public PdfDocument loadDocument(final File pdfDocument) {
+        PdfDocument pdfReader = null;
         try {
-            pdfReader = new PdfReader(pdfDocument.getAbsolutePath());
+            pdfReader = new PdfDocument(pdfDocument.getAbsolutePath());
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -51,7 +51,7 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public void writeDocument(final PdfReader pdf, final String destination) {
+    public void writeDocument(final PdfDocument pdf, final String destination) {
         try {
             PdfStamper pdfStamper = new PdfStamper(pdf, new FileOutputStream(destination));
             pdfStamper.close();
@@ -61,10 +61,10 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public PdfReader removePage(final PdfReader pdf, final int... pages) {
-        PdfReader newPDF = null;
+    public PdfDocument removePage(final PdfDocument pdf, final int... pages) {
+        PdfDocument newPDF = null;
         try {
-            newPDF = new PdfReader(pdf);
+            newPDF = new PdfDocument(pdf);
             int pagesTotal = newPDF.getNumberOfPages();
             List<Integer> allPages = new ArrayList<>(pagesTotal);
             for (int i = 1; i <= pagesTotal; i++) {

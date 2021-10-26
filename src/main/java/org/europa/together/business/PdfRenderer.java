@@ -1,9 +1,9 @@
 package org.europa.together.business;
 
-import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.application.internal.PdfDocument;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,7 +30,7 @@ public interface PdfRenderer {
      * @param destination as String
      */
     @API(status = STABLE, since = "2.2")
-    void writeDocument(PdfReader pdf, String destination);
+    void writeDocument(PdfDocument pdf, String destination);
 
     /**
      * Read a PDF from FILE as PdfReader.
@@ -39,7 +39,7 @@ public interface PdfRenderer {
      * @return pdf as PdfReader
      */
     @API(status = STABLE, since = "2.2")
-    PdfReader loadDocument(File pdfDocument);
+    PdfDocument loadDocument(File pdfDocument);
 
     /**
      * Remove from a given PDF pages. Usage:<br>
@@ -54,7 +54,7 @@ public interface PdfRenderer {
      * @return pdf as PdfReader
      */
     @API(status = STABLE, since = "2.2")
-    PdfReader removePage(PdfReader pdf, int... pages);
+    PdfDocument removePage(PdfDocument pdf, int... pages);
 
     /**
      * Generate a PDF Document in the size A4 from a HTML String. The file

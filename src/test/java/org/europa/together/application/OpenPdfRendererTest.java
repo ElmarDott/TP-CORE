@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
+import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
@@ -88,7 +89,7 @@ public class OpenPdfRendererTest {
         LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
-        PdfReader document = pdf.loadDocument(file);
+        PdfDocument document = pdf.loadDocument(file);
 
         String out = DIRECTORY + FILE_PATH + "/copy.pdf";
         pdf.writeDocument(document, out);
@@ -111,10 +112,10 @@ public class OpenPdfRendererTest {
         LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
-        PdfReader document = pdf.loadDocument(file);
+        PdfDocument document = pdf.loadDocument(file);
         assertEquals(5, document.getNumberOfPages());
 
-        PdfReader reduced = pdf.removePage(document, 1, 3, 5);
+        PdfDocument reduced = pdf.removePage(document, 1, 3, 5);
 
         String out = DIRECTORY + FILE_PATH + "/reduced.pdf";
         pdf.writeDocument(reduced, out);
