@@ -58,6 +58,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
                 builder.equal(root.get("modulName"), module),
                 builder.equal(root.get("version"), version));
 
+        query.orderBy(builder.asc(root.get("uuid")));
         ConfigurationDO entry = mainEntityManagerFactory.createQuery(query).getSingleResult();
         LOGGER.log("getValueByKey() : " + entry.toString(), LogLevel.DEBUG);
         return entry;
@@ -75,6 +76,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
                 builder.equal(root.get("version"), version),
                 builder.equal(root.get("configurationSet"), configSet));
 
+        query.orderBy(builder.asc(root.get("version")));
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
@@ -86,8 +88,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("modulName"), module));
-        query.orderBy(builder.asc(root.get("version")));
 
+        query.orderBy(builder.asc(root.get("version")));
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
@@ -99,8 +101,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
         query.where(builder.equal(root.get("deprecated"), Boolean.TRUE));
-        query.orderBy(builder.asc(root.get("version")));
 
+        query.orderBy(builder.asc(root.get("version")));
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
@@ -116,8 +118,8 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         query.where(builder.equal(root.get("key"), hash),
                 builder.equal(root.get("modulName"), module),
                 builder.equal(root.get("configurationSet"), configSet));
-        query.orderBy(builder.asc(root.get("version")));
 
+        query.orderBy(builder.asc(root.get("version")));
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 

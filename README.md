@@ -15,20 +15,20 @@ The TP-CORE Artifact contains typical basic functions for Java Applications. The
 Please check out the [Wiki](https://github.com/ElmarDott/TP-CORE/wiki/home) for futher information.
 
 Components - Release: 2.0
- * [CORE-01] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
- * [CORE-02] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
- * [CORE-03] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
- * [CORE-04] [Property Reader](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0004%5D-Property-Reader)
- * [CORE-05] [Application Configuration](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0005%5D-Application-Configuration)
- * [CORE-06] [SMTP E-Mail Client](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0006%5D-SMTP-E-Mail-Client)
- * [CORE-07] [QR Code Reader / Writer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0007%5D-QR-Code-Reader---Writer)
- * [CORE-08] [Database Actions](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0008%5D-Database-Actions)
- * [CORE-09] [Tree Walker](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0009%5D-Tree-Walker)
- * [CORE-10] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0010%5D-XML-Tools)
- * [CORE-11] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
- * [CORE-12] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
- * [CORE-13] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
- * [CORE-14] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
+ * [CORE-01] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-01%5D-Logger)
+ * [CORE-02] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-02%5D-generic-Data-Access-Object---DAO)
+ * [CORE-03] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-03%5D-Template-Renderer)
+ * [CORE-04] [Property Reader](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-04%5D-Property-Reader)
+ * [CORE-05] [Application Configuration](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-05%5D-ConfigurationDAO)
+ * [CORE-06] [SMTP E-Mail Client](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-06%5D-SMTP-E-Mail-Client)
+ * [CORE-07] [QR Code Reader / Writer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-07%5D-QR-Code-Generator)
+ * [CORE-08] [Database Actions](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-08%5D-Database-Actions)
+ * [CORE-09] [Tree Walker](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-09%5D-Tree-Walker)
+ * [CORE-10] [XML Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-10%5D-XML-Tools)
+ * [CORE-11] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-11%5D-PDF-Renderer)
+ * [CORE-12] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-12%5D-Image-Processor)
+ * [CORE-13] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-13%5D-Feature-Toggle)
+ * [CORE-14] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-14%5D-Crypto-Tools)
 
 Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Convention over configurations) and DRY (Don't repeat yourself). Also we following the programming paradigms of: Test Driven Development (TDD), Behavioral Driven Development (BDD) and Domain Driven Development (DDD).
 
@@ -111,6 +111,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - extend: Validator.IP4_ADDRESS
 |        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |        | - remove ITextRenderer for OpenPdfRenderer
+|        | - extend GenericDAO.listAll() with pagination
 |--------|----------------------------------------------------------------------
 | 2.2.0  | published 10/2021
 |        | - add OpenPDF Renderer (iText 5 will removed in Version 3.0)

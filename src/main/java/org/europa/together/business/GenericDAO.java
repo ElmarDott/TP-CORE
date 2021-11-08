@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.domain.PagingDimension;
+import org.europa.together.domain.JpaPagination;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -77,19 +78,20 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * <code>SELECT COUNT(*) FROM &lt;TABLE&gt;</code> Return the amount of all
      * existing elements for a DAO as int.
      *
-     * @param table as String
      * @return count as long
      */
     @API(status = STABLE, since = "3.0")
-    long countAllElements(String table);
+    long countAllElements();
 
     /**
      * Get all persited entries of an Entity.
      *
+     * @param seekElement as JpaPagination
      * @return List of Entity Objects
+     * @throws org.europa.together.exceptions.DAOException in case of failure
      */
     @API(status = STABLE, since = "1.0")
-    List<T> listAllElements();
+    List<T> listAllElements(JpaPagination<T> seekElement) throws DAOException;
 
     /**
      * Get the primary key of an Object.
@@ -128,24 +130,4 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      */
     @API(status = STABLE, since = "1.0")
     T find(PK id);
-
-    /**
-     * Calculates the pagination for DAO Objects, to limit the result set for
-     * queries. dimension = {start, end, page, pageSize, allEntries};
-     * <br>
-     * <li><b>start</b> - define the first element appears in the result
-     * set</li>
-     * <li><b>end</b> - define the last element appears in the result set</li>
-     * <li><b>page</b> - tells the exakt page number for the result set</li>
-     * <li><b>pageSize</b> - limit the count of elements appears on a page</li>
-     * <li><b>resultCount</b> - the abslout amount of elements for the whole
-     * result set</li>
-     * example: 1, 50, 1, 50, 713 | 700, 713, 15, 50, 713 ...
-     *
-     *
-     * @param dimension as PagingDimension
-     * @return dimension as PagingDimension
-     */
-    @API(status = STABLE, since = "3.0")
-    PagingDimension calculatePagination(PagingDimension dimension);
 }

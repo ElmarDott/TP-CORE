@@ -8,11 +8,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.domain.PagingDimension;
-import org.hibernate.Session;
+import org.europa.together.domain.JpaPagination;
+import org.europa.together.exceptions.DAOException;
+import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +46,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
      * Constructor.
      */
     public GenericHbmDAO() {
-        this.genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+        genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
         LOGGER.log("instance class", LogLevel.INFO);
     }
@@ -90,27 +92,62 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     @Transactional(readOnly = true)
-    public long countAllElements(final String table) {
-        String sql = "SELECT COUNT(*) FROM " + table;
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        String count = String.valueOf(session.createSQLQuery(sql).uniqueResult());
-        return Long.parseLong(count);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<T> listAllElements() {
+    public long countAllElements() {
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(genericType);
         // create Criteria
         query.from(genericType);
+        return mainEntityManagerFactory.createQuery(query).getResultList().size();
+    }
 
-        // count all entries
-        int count = mainEntityManagerFactory.createQuery(query).getResultList().size();
-        // define pagination
-        // get selected results
+    @Override
+    @Transactional(readOnly = true)
+    public List<T> listAllElements(final JpaPagination<T> seekElement)
+            throws DAOException {
 
-        return mainEntityManagerFactory.createQuery(query).getResultList();
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(genericType);
+        Root<T> root = query.from(genericType);
+
+        int limit = seekElement.getPageSize();
+
+        // skip pagination
+        int countedResults = mainEntityManagerFactory.createQuery(query).getResultList().size();
+        if (limit == 0 || limit >= countedResults) {
+            limit = countedResults;
+        }
+
+        //order the result set
+        if (seekElement.getSorting().equals(JpaPagination.ORDER_ASC)) {
+            query.orderBy(builder.asc(root.get(seekElement.getPrimaryKey())));
+        } else {
+            query.orderBy(builder.desc(root.get(seekElement.getPrimaryKey())));
+        }
+
+        if (!StringUtils.isEmpty(seekElement.getPageBreak())) {
+            if (seekElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
+                query.where(
+                        builder.greaterThanOrEqualTo(
+                                root.get(seekElement.getPrimaryKey()),
+                                seekElement.getPageBreak()
+                        )
+                );
+            } else {
+                query.where(
+                        builder.lessThanOrEqualTo(
+                                root.get(seekElement.getPrimaryKey()),
+                                seekElement.getPageBreak()
+                        )
+                );
+            }
+        }
+
+        List<T> results = mainEntityManagerFactory.createQuery(query)
+                .setMaxResults(limit).getResultList();
+
+        LOGGER.log("GenericDAO: " + seekElement.toString(), LogLevel.DEBUG);
+
+        return results;
     }
 
     @Override
@@ -162,23 +199,4 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         return retVal;
     }
 
-    @Override
-    public PagingDimension calculatePagination(final PagingDimension input) {
-
-        int restElements = input.getAllEntries() % input.getPageSize();
-        int start = ((input.getPage() - 1) * input.getPageSize()) + 1;
-        int end = start + input.getPageSize();
-        if (restElements != 0) {
-            end = start + restElements;
-        }
-
-        PagingDimension result = new PagingDimension();
-        result.setAllEntries(input.getAllEntries());
-        result.setPageSize(input.getPageSize());
-        result.setPage(input.getPage());
-        result.setStart(start);
-        result.setEnd(end);
-
-        return result;
-    }
 }

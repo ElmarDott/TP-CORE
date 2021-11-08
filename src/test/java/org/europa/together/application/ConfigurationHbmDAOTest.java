@@ -8,7 +8,9 @@ import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
+import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.DAOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -91,14 +93,15 @@ public class ConfigurationHbmDAOTest {
     void countEntries() {
         LOGGER.log("TEST CASE: countEntries", LogLevel.DEBUG);
 
-        assertEquals(14, configurationDAO.countAllElements(ConfigurationDO.TABLE_NAME));
+        assertEquals(14, configurationDAO.countAllElements());
     }
 
     @Test
-    void listAll() {
+    void listAll() throws DAOException {
         LOGGER.log("TEST CASE: listAll", LogLevel.DEBUG);
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements();
+        JpaPagination<ConfigurationDO> seekElement = new JpaPagination<ConfigurationDO>("uuid");
+        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
         assertEquals(14, result.size());
     }
 
