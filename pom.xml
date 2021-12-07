@@ -9,11 +9,12 @@
 
     <name>CORE</name>
     <description>Basic Library</description>
+    <url>https://elmar-dott.com</url>
 
     <parent>
         <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.4-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.together.modules</groupId>
@@ -191,6 +192,18 @@
             <artifactId>commons-imaging</artifactId>
             <version>1.0-alpha2</version>
         </dependency>
+
+        <dependency><!-- Circuit Breaker -->
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-circuitbreaker</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency><!-- Feature Flags -->
+            <groupId>org.ff4j</groupId>
+            <artifactId>ff4j-core</artifactId>
+            <version>1.8.11</version>
+        </dependency>
+
 
         <!-- Bundels -->
         <dependency>

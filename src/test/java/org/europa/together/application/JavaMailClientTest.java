@@ -144,7 +144,7 @@ public class JavaMailClientTest {
 
         assertEquals("smtp.sample.org", mailClient.getDebugActiveConfiguration().get("mailer.host"));
         assertEquals("465", mailClient.getDebugActiveConfiguration().get("mailer.port"));
-        assertEquals("noreply@sample.org", mailClient.getDebugActiveConfiguration().get("mailer.sender"));
+        assertEquals("send.from@mail.me", mailClient.getDebugActiveConfiguration().get("mailer.sender"));
         assertEquals("JohnDoe", mailClient.getDebugActiveConfiguration().get("mailer.user"));
         assertEquals("s3cr3t", mailClient.getDebugActiveConfiguration().get("mailer.password"));
         assertEquals("true", mailClient.getDebugActiveConfiguration().get("mailer.ssl"));
@@ -152,6 +152,16 @@ public class JavaMailClientTest {
         assertEquals("false", mailClient.getDebugActiveConfiguration().get("mailer.debug"));
         assertEquals("1", mailClient.getDebugActiveConfiguration().get("mailer.count"));
         assertEquals("0", mailClient.getDebugActiveConfiguration().get("mailer.wait"));
+    }
+
+    @Test
+    void tryLoadConfigEntryNotExist() {
+        LOGGER.log("TEST CASE: tryLoadConfigEntryNotExist", LogLevel.DEBUG);
+
+        mailClient.populateDbConfiguration(SQL_FILE);
+        assertTrue(mailClient.loadConfigurationFromDatabase());
+
+        assertNull(mailClient.getDebugActiveConfiguration().get("entry.do.not.exist"));
     }
 
     @Test

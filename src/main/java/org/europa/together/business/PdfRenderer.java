@@ -1,6 +1,7 @@
 package org.europa.together.business;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.internal.PdfDocument;
@@ -20,7 +21,7 @@ public interface PdfRenderer {
     /**
      * Identifier for the given feature to enable toggles.
      */
-    @API(status = STABLE, since = "1.2")
+    @API(status = STABLE, since = "2.0")
     String FEATURE_ID = "CM-0011";
 
     /**
@@ -29,7 +30,7 @@ public interface PdfRenderer {
      * @param pdf as PdfReader
      * @param destination as String
      */
-    @API(status = STABLE, since = "2.2")
+    @API(status = STABLE, since = "3.0")
     void writeDocument(PdfDocument pdf, String destination);
 
     /**
@@ -38,7 +39,7 @@ public interface PdfRenderer {
      * @param pdfDocument as File
      * @return pdf as PdfReader
      */
-    @API(status = STABLE, since = "2.2")
+    @API(status = STABLE, since = "3.0")
     PdfDocument loadDocument(File pdfDocument);
 
     /**
@@ -53,19 +54,20 @@ public interface PdfRenderer {
      * @param pages as int
      * @return pdf as PdfReader
      */
-    @API(status = STABLE, since = "2.2")
+    @API(status = STABLE, since = "3.0")
     PdfDocument removePage(PdfDocument pdf, int... pages);
 
     /**
-     * Generate a PDF Document in the size A4 from a HTML String. The file
+     * Generate a PDF Document in the size A4 from a HTML String.The file
      * parameter define the path were the PDF will sored an how the document is
      * named.
      *
      * @param file as String
      * @param htmlTemplate as String
+     * @throws java.io.FileNotFoundException in cse of failure
      */
-    @API(status = STABLE, since = "1.0")
-    void renderDocumentFromHtml(String file, String htmlTemplate);
+    @API(status = STABLE, since = "3.0")
+    void renderDocumentFromHtml(String file, String htmlTemplate) throws FileNotFoundException;
 
     /**
      * Set the author for the document.

@@ -17,41 +17,6 @@ public class VersionTest {
     private static final Logger LOGGER = new LogbackLogger(VersionTest.class);
 
     @Test
-    void createDomainObject() {
-        LOGGER.log("TEST CASE: createDomainObject", LogLevel.DEBUG);
-
-        Version version = new Version("1.2.3-SNAPSHOT");
-
-        assertEquals(1, version.getMajor());
-        assertEquals(2, version.getMinor());
-        assertEquals(3, version.getPatch());
-        assertEquals("SNAPSHOT", version.getLabel());
-    }
-
-    @Test
-    void domainObjectWithoutOptional() {
-        LOGGER.log("TEST CASE: createDomainObjectbyMandatoryFields", LogLevel.DEBUG);
-
-        Version version_1 = new Version("1.10");
-        assertEquals(1, version_1.getMajor());
-        assertEquals(10, version_1.getMinor());
-        assertEquals(-1, version_1.getPatch());
-        assertEquals(null, version_1.getLabel());
-
-        Version version_2 = new Version("1.10.2");
-        assertEquals(1, version_2.getMajor());
-        assertEquals(10, version_2.getMinor());
-        assertEquals(2, version_2.getPatch());
-        assertEquals(null, version_2.getLabel());
-
-        Version version_3 = new Version("1.10-TEST");
-        assertEquals(1, version_3.getMajor());
-        assertEquals(10, version_3.getMinor());
-        assertEquals(-1, version_3.getPatch());
-        assertEquals("TEST", version_3.getLabel());
-    }
-
-    @Test
     void failCreateDomainObject() throws Exception {
         LOGGER.log("TEST CASE: failCreateDomainObject", LogLevel.DEBUG);
 
@@ -60,16 +25,79 @@ public class VersionTest {
         assertEquals(-1, version.getMinor());
         assertEquals(-1, version.getPatch());
         assertEquals(null, version.getLabel());
+        assertEquals(null, version.getVersion());
     }
 
     @Test
-    void getVersion() {
-        LOGGER.log("TEST CASE: getVersion", LogLevel.DEBUG);
+    void getVersion_Major() {
+        LOGGER.log("TEST CASE: getVersion-Major", LogLevel.DEBUG);
 
-        assertEquals("1.3.6-TEST", new Version("1.3.6-TEST").getVersion());
-        assertEquals("2.4.6", new Version("2.4.6").getVersion());
-        assertEquals("1.10-SNAPSHOT", new Version("1.10-SNAPSHOT").getVersion());
-        assertEquals("1.3", new Version("1.3").getVersion());
+        Version version = new Version("1");
+        assertEquals(1, version.getMajor());
+        assertEquals(-1, version.getMinor());
+        assertEquals(-1, version.getPatch());
+        assertEquals(null, version.getLabel());
+        assertEquals("1", version.getVersion());
+    }
+
+    @Test
+    void failGetVersion_MajorWithLabel() {
+        LOGGER.log("TEST CASE: failGetVersion-MajorWithLabel", LogLevel.DEBUG);
+
+        Version version = new Version("1-TEST");
+        assertEquals(-1, version.getMajor());
+        assertEquals(-1, version.getMinor());
+        assertEquals(-1, version.getPatch());
+        assertEquals(null, version.getLabel());
+        assertEquals(null, version.getVersion());
+    }
+
+    @Test
+    void getVersion_Minor() {
+        LOGGER.log("TEST CASE: getVersion-Minor", LogLevel.DEBUG);
+
+        Version version = new Version("1.2543");
+        assertEquals(1, version.getMajor());
+        assertEquals(2543, version.getMinor());
+        assertEquals(-1, version.getPatch());
+        assertEquals(null, version.getLabel());
+        assertEquals("1.2543", version.getVersion());
+    }
+
+    @Test
+    void getVersion_MinorWithLabel() {
+        LOGGER.log("TEST CASE: getVersion-MinorWithLabel", LogLevel.DEBUG);
+
+        Version version = new Version("5.12-SNAPSHOT");
+        assertEquals(5, version.getMajor());
+        assertEquals(12, version.getMinor());
+        assertEquals(-1, version.getPatch());
+        assertEquals("SNAPSHOT", version.getLabel());
+        assertEquals("5.12-SNAPSHOT", version.getVersion());
+    }
+
+    @Test
+    void getVersion_Patch() {
+        LOGGER.log("TEST CASE: getVersion-Patch", LogLevel.DEBUG);
+
+        Version version = new Version("2.11.71");
+        assertEquals(2, version.getMajor());
+        assertEquals(11, version.getMinor());
+        assertEquals(71, version.getPatch());
+        assertEquals(null, version.getLabel());
+        assertEquals("2.11.71", version.getVersion());
+    }
+
+    @Test
+    void getVersion_PatchWithLabel() {
+        LOGGER.log("TEST CASE: getVersion-PatchWithLabel", LogLevel.DEBUG);
+
+        Version version = new Version("1.8.41-RELEASE");
+        assertEquals(1, version.getMajor());
+        assertEquals(8, version.getMinor());
+        assertEquals(41, version.getPatch());
+        assertEquals("RELEASE", version.getLabel());
+        assertEquals("1.8.41-RELEASE", version.getVersion());
     }
 
     @Test
@@ -84,23 +112,49 @@ public class VersionTest {
     }
 
     @Test
-    void isEqual() {
-        LOGGER.log("TEST CASE: isEqual", LogLevel.DEBUG);
-
-        Version x = new Version("1.1.1");
-        assertEquals(x, x);
-
-        LOGGER.log("ASSERT TRUE by same major", LogLevel.DEBUG);
+    void isEqualByMajor() {
+        LOGGER.log("TEST CASE: isEqualByMajor", LogLevel.DEBUG);
         assertTrue(new Version("1.0").equals(new Version("1.0.0")));
         assertTrue(new Version("1.0.0").equals(new Version("1.0")));
+    }
 
-        LOGGER.log("ASSERT TRUE by same minor", LogLevel.DEBUG);
-        assertTrue(new Version("1.9").equals(new Version("1.9")));
+    @Test
+    void isNotEqualByMajor() {
+        LOGGER.log("TEST CASE: isNotEqualByMajor", LogLevel.DEBUG);
+        assertFalse(new Version("2.0.0").equals(new Version("1.0.0")));
+        assertFalse(new Version("2.0").equals(new Version("1.0")));
+        assertFalse(new Version("2.0.1").equals(new Version("1.0.1")));
+    }
 
-        LOGGER.log("ASSERT TRUE by same patch", LogLevel.DEBUG);
+    @Test
+    void isEqualByMinor() {
+        LOGGER.log("TEST CASE: isEqualByMinor", LogLevel.DEBUG);
+        assertTrue(new Version("3.9").equals(new Version("3.9")));
+    }
+
+    @Test
+    void isNotEqualByMinor() {
+        LOGGER.log("TEST CASE: isNotEqualByMinor", LogLevel.DEBUG);
+        assertFalse(new Version("1.0").equals(new Version("1.1")));
+        assertFalse(new Version("1.0.0").equals(new Version("1.1.0")));
+        assertFalse(new Version("1.1.0").equals(new Version("1.1.1")));
+    }
+
+    @Test
+    void isEqualByPatch() {
+        LOGGER.log("TEST CASE: isEqualByPatch", LogLevel.DEBUG);
         assertTrue(new Version("2.0.1").equals(new Version("2.0.1")));
+    }
 
-        LOGGER.log("ASSERT TRUE by different label", LogLevel.DEBUG);
+    @Test
+    void isNotEqualByPatch() {
+        LOGGER.log("TEST CASE: isNotEqualByPatch", LogLevel.DEBUG);
+        assertFalse(new Version("2.0.1").equals(new Version("2.0.2")));
+    }
+
+    @Test
+    void isEqualByDiffrentLabel() {
+        LOGGER.log("TEST CASE: isEqualNyDiffrentLabel", LogLevel.DEBUG);
         assertTrue(new Version("1.2.3-LABLE").equals(new Version("1.2.3-SNAPSHOT")));
     }
 
@@ -108,21 +162,15 @@ public class VersionTest {
     void isNotEqual() {
         LOGGER.log("TEST CASE: isNotEqual", LogLevel.DEBUG);
 
-        LOGGER.log("ASSERT FALSE", LogLevel.DEBUG);
-        assertFalse(new Version("1.2.3").equals(new Version("2.3.4")));
-        assertFalse(new Version("1.2.3").equals(null));
+        //by themself
+        Version x = new Version("1.1.1");
+        assertEquals(x, x);
 
-        LOGGER.log("ASSERT FALSE by major", LogLevel.DEBUG);
-        assertFalse(new Version("2.0.0").equals(new Version("1.0.0")));
-        assertFalse(new Version("2.0").equals(new Version("1.0")));
-        assertFalse(new Version("1.0").equals(new Version("1.0.1")));
+        //by null
+        assertFalse(new Version("1.0").equals(null));
 
-        LOGGER.log("ASSERT FALSE by minor", LogLevel.DEBUG);
-        assertFalse(new Version("1.9").equals(new Version("1.8")));
-        assertFalse(new Version("1.0.0").equals(new Version("1.1.0")));
-
-        LOGGER.log("ASSERT FALSE by patch", LogLevel.DEBUG);
-        assertFalse(new Version("2.0.1").equals(new Version("2.0.2")));
+        //by wrong object
+        assertFalse(new Version("1.0").equals(Integer.valueOf(10)));
     }
 
     @Test
@@ -166,10 +214,10 @@ public class VersionTest {
         list.add(new Version("1.2.0"));
         list.add(new Version("1.2.1"));
 
-        String sortedist = "[Version{1.1.2}, Version{1.2}, Version{1.2.0}, Version{1.2.1}, Version{3.1.2}, Version{3.2.2}]";
+        String sortdist = "[Version{1.1.2}, Version{1.2}, Version{1.2.0}, Version{1.2.1}, Version{3.1.2}, Version{3.2.2}]";
 
         Collections.sort(list);
         LOGGER.log(list.toString(), LogLevel.DEBUG);
-        assertEquals(sortedist, list.toString());
+        assertEquals(sortdist, list.toString());
     }
 }

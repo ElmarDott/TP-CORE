@@ -4,6 +4,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
@@ -49,7 +51,7 @@ public final class FileUtils {
 
         try {
             byteArray = input.readAllBytes();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
 
@@ -197,26 +199,34 @@ public final class FileUtils {
     @SuppressFBWarnings(
             value = "OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE",
             justification = "Exception Handling have to be done in the class calling this method.")
-    public static void copyFile(final File source, final File destination)
-            throws IOException {
+    public static void copyFile(final File source, final File destination) {
 
         InputStream is = null;
         OutputStream os = null;
 
-        is = new FileInputStream(source);
-        os = new FileOutputStream(destination);
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(destination);
 
-        byte[] buffer = new byte[BYTES];
-        int length;
-        while ((length = is.read(buffer)) > 0) {
-            os.write(buffer, 0, length);
-        }
+            byte[] buffer = new byte[BYTES];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
 
-        if (is != null) {
             is.close();
-        }
-        if (os != null) {
             os.close();
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+
+        } finally {
+            try {
+                is.close();
+                os.close();
+            } catch (IOException ex) {
+                LOGGER.catchException(ex);
+            }
         }
     }
 

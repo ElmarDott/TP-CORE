@@ -12,7 +12,7 @@ INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODU
 VALUES ('01f05983-8f5c-4114-ad8a-7f4073c80f27', 'fca1f5a28199bae3e126181012f8e901f6746ff7c5204fc96c7a6a74698ad287', '', '${mailer.port}', 'email', 'core', '1.0', true, false, '');
 -- mailer.sender
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, SERVICE_VERSION, MANDATORY, DEPRECATED, COMMENT)
-VALUES ('7d1f0e8e-81f4-4a23-a7d0-c1d96c42e3cb', 'dfb5634b02902fbfcf7bbed2dea5eec99a3a6b7cb5f44bd483e4916ae1fc9dfe', '', '${mailer.sender}', 'email', 'core', '1.0', true, false, '');
+VALUES ('7d1f0e8e-81f4-4a23-a7d0-c1d96c42e3cb', 'dfb5634b02902fbfcf7bbed2dea5eec99a3a6b7cb5f44bd483e4916ae1fc9dfe', 'send.from@mail.me', '${mailer.sender}', 'email', 'core', '1.0', true, false, '');
 -- mailer.user
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, SERVICE_VERSION, MANDATORY, DEPRECATED, COMMENT)
 VALUES ('1a4f65f5-dc89-4b2f-8766-8092c812047f', 'b5255cb2a1425fa96e1b64182b58fa5b3b2d46c30462de64d7dc6465b02875c8', '', '${mailer.user}', 'email', 'core', '1.0', true, false, '');

@@ -84,7 +84,8 @@ public class OpenPdfRenderer implements PdfRenderer {
     }
 
     @Override
-    public void renderDocumentFromHtml(final String file, final String template) {
+    public void renderDocumentFromHtml(final String file, final String template)
+            throws FileNotFoundException {
 
         StringBuilder html = new StringBuilder();
         html.append("<html>")
@@ -113,15 +114,8 @@ public class OpenPdfRenderer implements PdfRenderer {
         renderer.setDocumentFromString(createWellFormedHtml(html.toString()));
         renderer.layout();
 
-        OutputStream os;
-        try {
-            os = new FileOutputStream(file);
-            renderer.createPDF(os);
-
-        } catch (FileNotFoundException ex) {
-            LOGGER.catchException(ex);
-        }
-
+        OutputStream os = new FileOutputStream(file);
+        renderer.createPDF(os);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">

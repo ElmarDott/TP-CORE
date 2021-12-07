@@ -1,6 +1,8 @@
 package org.europa.together.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -76,7 +78,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    void readFile() {
+    void readFileStream() {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.NONE));
@@ -84,7 +86,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    void failReadFile() {
+    void failReadFileStream() {
         assertEquals("", FileUtils.readFileStream(new File("no_file")));
     }
 
@@ -133,35 +135,44 @@ public class FileUtilsTest {
     }
 
     @Test
-    void failCopyFile() throws Exception {
+    void listFileTreeWithEmptyDir() {
+        File file = new File(DIRECTORY + "dir-test/empty");
+        assertTrue(file.mkdir());
+        assertEquals(0, FileUtils.listFileTree(file).size());
+        assertTrue(file.delete());
+    }
 
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(null, new File(""));
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(new File(""), null);
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(null, null);
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(new File("NULL"), new File(""));
-        });
+    @Test
+    void failListFileTree() {
+        assertNull(FileUtils.listFileTree(null));
     }
 
     @Test
     void copyFile() {
-        try {
-            File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
-            File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
-            FileUtils.copyFile(source, destination);
-            assertTrue(destination.exists());
+        File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
+        File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
+        FileUtils.copyFile(source, destination);
+        assertTrue(destination.exists());
+    }
 
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+    @Test
+    void failCopyFile() throws Exception {
+
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(new File("empty/dontExist.txt"), new File("empty/dontExist-copy.txt"));
+        });
+    }
+
+    @Test
+    void inputStreamToByteArray() {
+        byte[] byteArray = {23, 12, 1, 0, 12, 34, 9};
+        InputStream input = new ByteArrayInputStream(byteArray);
+
+        assertArrayEquals(byteArray, FileUtils.inputStreamToByteArray(input));
+    }
+
+    @Test
+    void failInputStreamToByteArray() throws Exception {
+        assertNull(FileUtils.inputStreamToByteArray(null));
     }
 }

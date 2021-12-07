@@ -103,15 +103,16 @@ In the case you like this project, let me know it and rate it with a star.
 |Version | Comment
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
-|        | - refactor: test cases
+|        | - extend Validator.IP4_ADDRESS
+|        | - extend GenericDAO.listAll() with pagination
 |        | - remove jodatime
 |        | - remove flexjson
-|        | - Refactor: MailClient & MailService
-|        | - bugfix: TreeWalker.addNode()
-|        | - extend: Validator.IP4_ADDRESS
-|        | - refactor: Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |        | - remove ITextRenderer for OpenPdfRenderer
-|        | - extend GenericDAO.listAll() with pagination
+|        | - refactor MailClient & MailService
+|        | - refactor Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
+|        | - refactor test cases
+|        | - bugfix TreeWalker.addNode()
+|        | - bugfix Change TreeNode.value to generic object (typesafe)
 |--------|----------------------------------------------------------------------
 | 2.2.0  | published 10/2021
 |        | - add OpenPDF Renderer (iText 5 will removed in Version 3.0)

@@ -176,6 +176,7 @@ public class ValidatorTest {
         assertTrue(Validator.validate("21:00", Validator.TIME_24H));
         assertTrue(Validator.validate("22:00", Validator.TIME_24H));
         assertTrue(Validator.validate("23:00", Validator.TIME_24H));
+        assertTrue(Validator.validate("23:59", Validator.TIME_24H));
     }
 
     @Test
@@ -319,14 +320,14 @@ public class ValidatorTest {
         assertTrue(Validator.validate("9", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0.0", Validator.SEMANTIC_VERSION_NUMBER));
-//        assertTrue(Validator.validate("1.10", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.10", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0.10", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("10.100.1000", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("123.1234.12345", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1234", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("12.1-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.109.1234567890", Validator.SEMANTIC_VERSION_NUMBER));
-//
+
         assertTrue(Validator.validate("1-xYz", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.2-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.2.3-xyzXYZxyzX", Validator.SEMANTIC_VERSION_NUMBER));
@@ -449,7 +450,13 @@ public class ValidatorTest {
     }
 
     @Test
-    void isDateNotInRange_LowerBondery() {
+    void isDateNotInRange() {
+        ZonedDateTime check = ZonedDateTime.now();
+        assertFalse(Validator.isDateInRange(check, check, check));
+    }
+
+    @Test
+    void isDateNotInRange_LowerBoundry() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
@@ -482,13 +489,14 @@ public class ValidatorTest {
     }
 
     void isDateNotInRange_NullPointer() {
-        assertFalse(Validator.isDateInRange(null, null, null));
+        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), ZonedDateTime.now(), null));
+
         assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, null));
         assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), null));
         assertFalse(Validator.isDateInRange(null, null, ZonedDateTime.now()));
-        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
-        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), ZonedDateTime.now(), null));
-        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now())
-        );
+
+        assertFalse(Validator.isDateInRange(null, null, null));
     }
 }

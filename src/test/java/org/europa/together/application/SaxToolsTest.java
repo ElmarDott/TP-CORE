@@ -123,7 +123,7 @@ public class SaxToolsTest {
     }
 
     @Test
-    void fFailParseXmlString() {
+    void failParseXmlString() {
         LOGGER.log("TEST CASE: failParseXmlString", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();

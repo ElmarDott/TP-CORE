@@ -135,7 +135,12 @@ public class Version implements Comparable<Version> {
     public String getVersion() {
 
         String version = null;
-        version = major + "." + minor;
+        if (major != -1) {
+            version = Integer.toString(major);
+        }
+        if (minor != -1) {
+            version = version + "." + minor;
+        }
         if (patch != -1) {
             version = version + "." + patch;
         }
