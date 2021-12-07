@@ -9,6 +9,7 @@ import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +66,7 @@ public final class ConfigurationService {
             final String module, final String version, final String configSet) {
 
         List<ConfigurationDO> mandantoryEntries = new ArrayList<>();
+
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(module, version, configSet);
         for (ConfigurationDO entry : configurationEntries) {

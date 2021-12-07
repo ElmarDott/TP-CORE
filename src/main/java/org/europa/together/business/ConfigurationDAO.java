@@ -45,7 +45,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     ConfigurationDO getConfigurationByKey(String key, String module, String version);
 
     /**
-     * Return a List with all configuration Objects of a ConfigurationSet. A
+     * Return a List with all configuration Objects of a ConfigurationSet.A
      * ConfigurationSet is a collection of all configuration Entries of one
      * version for a special service like email inside a module.
      *
@@ -53,6 +53,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @param version as String
      * @param configSet as Sting
      * @return ConfigurationSet as List&lt;Configuration&gt;
+     * @throws org.europa.together.exceptions.DAOException in case of failure
      */
     @API(status = STABLE, since = "1.0")
     List<ConfigurationDO>

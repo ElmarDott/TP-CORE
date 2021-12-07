@@ -1,6 +1,8 @@
 package org.europa.together.application;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -9,6 +11,7 @@ import org.europa.together.business.CryptoTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
+import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,21 +71,22 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
-        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
-        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-        // create Criteria
-        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("modulName"), module),
-                builder.equal(root.get("version"), version),
-                builder.equal(root.get("configurationSet"), configSet));
 
-        query.orderBy(builder.asc(root.get("version")));
-        return mainEntityManagerFactory.createQuery(query).getResultList();
+        Map<String, String> filter = new HashMap<>();
+        filter.put("modulName", module);
+        filter.put("version", version);
+        filter.put("configurationSet", configSet);
+
+        JpaPagination pagination = new JpaPagination("uuid");
+        pagination.setFilterCriteria(filter);
+
+        return listAllElements(pagination);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllModuleEntries(final String module) {
+
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
         // create Criteria

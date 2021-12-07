@@ -1,11 +1,11 @@
 package org.europa.together.business;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.Serializable;
 import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JpaPagination;
-import org.europa.together.exceptions.DAOException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -91,7 +91,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * @throws org.europa.together.exceptions.DAOException in case of failure
      */
     @API(status = STABLE, since = "1.0")
-    List<T> listAllElements(JpaPagination<T> seekElement) throws DAOException;
+    List<T> listAllElements(JpaPagination seekElement);
 
     /**
      * Get the primary key of an Object.
@@ -108,9 +108,11 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @param object of an Entity
      * @return JSON object as String
+     * @throws com.fasterxml.jackson.core.JsonProcessingException in case of
+     * failure
      */
     @API(status = STABLE, since = "1.0")
-    String serializeAsJson(T object);
+    String serializeAsJson(T object) throws JsonProcessingException;
 
     /**
      * Tried to create a Object from a given JSON String.

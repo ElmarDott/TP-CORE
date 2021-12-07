@@ -1,19 +1,22 @@
 package org.europa.together.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.JpaPagination;
-import org.europa.together.exceptions.DAOException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,13 +66,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     public boolean delete(final PK id) {
-        boolean success = false;
         T foundObject = find(id);
-        if (foundObject != null) {
-            mainEntityManagerFactory.remove(foundObject);
-            success = true;
-        }
-        return success;
+        mainEntityManagerFactory.remove(foundObject);
+        return true;
     }
 
     @Override
@@ -102,8 +101,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> listAllElements(final JpaPagination<T> seekElement)
-            throws DAOException {
+    public List<T> listAllElements(final JpaPagination seekElement) {
 
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(genericType);
@@ -116,30 +114,42 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         if (limit == 0 || limit >= countedResults) {
             limit = countedResults;
         }
-
-        //order the result set
+        // order the result set
         if (seekElement.getSorting().equals(JpaPagination.ORDER_ASC)) {
             query.orderBy(builder.asc(root.get(seekElement.getPrimaryKey())));
         } else {
             query.orderBy(builder.desc(root.get(seekElement.getPrimaryKey())));
         }
-
+        // get the break element
+        List<Predicate> filters = new ArrayList<>();
         if (!StringUtils.isEmpty(seekElement.getPageBreak())) {
             if (seekElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
-                query.where(
+                filters.add(
                         builder.greaterThanOrEqualTo(
                                 root.get(seekElement.getPrimaryKey()),
                                 seekElement.getPageBreak()
-                        )
-                );
+                        ));
             } else {
-                query.where(
+                filters.add(
                         builder.lessThanOrEqualTo(
                                 root.get(seekElement.getPrimaryKey()),
                                 seekElement.getPageBreak()
-                        )
-                );
+                        ));
             }
+        }
+        // check for filter criterias
+        if (seekElement.getFilterCriteria().size() > 0) {
+            for (Map.Entry<String, String> entry
+                    : seekElement.getFilterCriteria().entrySet()) {
+                filters.add(
+                        builder.equal(root.get(entry.getKey()), entry.getValue()));
+            }
+        } else {
+            LOGGER.log("No filters are set.", LogLevel.DEBUG);
+        }
+        // put everything together
+        if (!filters.isEmpty()) {
+            query.where(filters.toArray(new Predicate[filters.size()]));
         }
 
         List<T> results = mainEntityManagerFactory.createQuery(query)
@@ -166,15 +176,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    public String serializeAsJson(final T object) {
-        String json = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            json = mapper.writeValueAsString(object);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return json;
+    public String serializeAsJson(final T object) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 
     @Override

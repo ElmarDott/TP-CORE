@@ -1,5 +1,8 @@
 package org.europa.together.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Be always aware, when using listAll() because some database tables with a
  * giant amount of rows will slow down your application dramatically. The
@@ -15,7 +18,7 @@ package org.europa.together.domain;
  *
  * @param <T> as GeneriClass
  */
-public class JpaPagination<T> {
+public class JpaPagination {
 
     /**
      * Ascending sorting order of the whole result set.
@@ -39,6 +42,7 @@ public class JpaPagination<T> {
     private int pageSize;
     private String primaryKey;
     private String pageBreak;
+    private Map<String, String> filterCriteria = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -71,6 +75,7 @@ public class JpaPagination<T> {
                 + ", pageSize=" + pageSize
                 + ", primaryKey=" + primaryKey
                 + ", pageBreak=" + pageBreak
+                + ", filterCriteria=" + filterCriteria
                 + '}';
     }
 
@@ -114,4 +119,11 @@ public class JpaPagination<T> {
         this.pageBreak = pageBreak;
     }
 
+    public Map<String, String> getFilterCriteria() {
+        return filterCriteria;
+    }
+
+    public void setFilterCriteria(Map<String, String> filterCriteria) {
+        this.filterCriteria = filterCriteria;
+    }
 }

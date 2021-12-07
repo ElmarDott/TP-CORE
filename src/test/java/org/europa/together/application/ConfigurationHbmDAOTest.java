@@ -100,7 +100,8 @@ public class ConfigurationHbmDAOTest {
     void listAll() throws DAOException {
         LOGGER.log("TEST CASE: listAll", LogLevel.DEBUG);
 
-        JpaPagination<ConfigurationDO> seekElement = new JpaPagination<ConfigurationDO>("uuid");
+        JpaPagination seekElement = new JpaPagination("uuid");
+        seekElement.setPageSize(25);
         List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
         assertEquals(14, result.size());
     }
@@ -179,7 +180,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void serilizeAsJson() {
+    void serilizeAsJson() throws Exception {
         LOGGER.log("TEST CASE: serilizeAsJson", LogLevel.DEBUG);
 
         String json
@@ -273,7 +274,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void getAllSetEntries() {
+    void getAllSetEntries() throws DAOException {
         LOGGER.log("TEST CASE: getAllSetEntries", LogLevel.DEBUG);
 
         List<ConfigurationDO> set
@@ -325,20 +326,24 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void updateConfigurationEntries() {
+    void updateConfigurationEntries() throws DAOException {
         LOGGER.log("TEST CASE: updateConfigurationEntries", LogLevel.DEBUG);
 
         List<ConfigurationDO> set
                 = configurationDAO.getAllConfigurationSetEntries("Module_B", "1.0", "Set_2");
+
+        LOGGER.log(set.get(0).toString(), LogLevel.DEBUG);
+        LOGGER.log(set.get(1).toString(), LogLevel.DEBUG);
+        LOGGER.log(set.get(2).toString(), LogLevel.DEBUG);
 
         assertEquals(3, set.size());
         ConfigurationDO a = set.get(0);
         ConfigurationDO b = set.get(1);
         ConfigurationDO c = set.get(2);
 
-        assertEquals("none", a.getValue());
-        assertEquals("a", b.getValue());
-        assertEquals("a", c.getValue());
+        assertEquals("d", a.getDefaultValue());
+        assertEquals("f", b.getDefaultValue());
+        assertEquals("e", c.getDefaultValue());
 
         a.setValue("a_01");
         b.setValue("a_02");
