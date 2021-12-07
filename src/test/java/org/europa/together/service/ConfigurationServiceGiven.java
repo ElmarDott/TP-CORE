@@ -28,7 +28,7 @@ public class ConfigurationServiceGiven extends Stage<ConfigurationServiceGiven> 
 
     public ConfigurationServiceGiven service_has_database_connection() {
         try {
-            assertTrue(CONNECTION.connect("default"));
+            assertTrue(CONNECTION.connect("test"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

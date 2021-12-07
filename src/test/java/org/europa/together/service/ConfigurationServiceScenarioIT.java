@@ -35,16 +35,9 @@ public class ConfigurationServiceScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        Assumptions.assumeTrue(CONNECTION.connect("test"));
+
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-
-        boolean socket = CONNECTION.connect("test");
-        if (!socket) {
-            check = false;
-        }
-
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
     }
 
     @AfterAll

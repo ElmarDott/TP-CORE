@@ -19,6 +19,7 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.domain.Mail;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,7 @@ public final class MailClientService {
         }
         mailClient.clearConfiguration();
         mailClient.loadConfigurationFromDatabase();
+
         return mailClient.getDebugActiveConfiguration();
     }
 
