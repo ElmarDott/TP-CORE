@@ -42,7 +42,10 @@ public class JpaPagination {
     private int pageSize;
     private String primaryKey;
     private String pageBreak;
-    private Map<String, String> filterCriteria = new HashMap<>();
+    private String additionalOrdering;
+    private Map<String, String> filterStringCriteria = new HashMap<>();
+    private Map<String, Boolean> filterBooleanCriteria = new HashMap<>();
+    private Map<String, Integer> filterIntegerCriteria = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -75,7 +78,10 @@ public class JpaPagination {
                 + ", pageSize=" + pageSize
                 + ", primaryKey=" + primaryKey
                 + ", pageBreak=" + pageBreak
-                + ", filterCriteria=" + filterCriteria
+                + ", additionalOrdering=" + additionalOrdering
+                + ", filterStringCriteria=" + filterStringCriteria
+                + ", filterBooleanCriteria=" + filterBooleanCriteria
+                + ", filterIntegerCriteria=" + filterIntegerCriteria
                 + '}';
     }
 
@@ -119,11 +125,36 @@ public class JpaPagination {
         this.pageBreak = pageBreak;
     }
 
-    public Map<String, String> getFilterCriteria() {
-        return filterCriteria;
+    public String getAdditionalOrdering() {
+        return additionalOrdering;
     }
 
-    public void setFilterCriteria(Map<String, String> filterCriteria) {
-        this.filterCriteria = filterCriteria;
+    public void setAdditionalOrdering(String additionalOrdering) {
+        this.additionalOrdering = additionalOrdering;
     }
+
+    public Map<String, String> getFilterStringCriteria() {
+        return filterStringCriteria;
+    }
+
+    public void setFilterStringCriteria(Map<String, String> filterStringCriteria) {
+        this.filterStringCriteria = filterStringCriteria;
+    }
+
+    public Map<String, Boolean> getFilterBooleanCriteria() {
+        return filterBooleanCriteria;
+    }
+
+    public void setFilterBooleanCriteria(Map<String, Boolean> filterBooleanCriteria) {
+        this.filterBooleanCriteria = filterBooleanCriteria;
+    }
+
+    public Map<String, Integer> getFilterIntegerCriteria() {
+        return filterIntegerCriteria;
+    }
+
+    public void setFilterIntegerCriteria(Map<String, Integer> filterIntegerCriteria) {
+        this.filterIntegerCriteria = filterIntegerCriteria;
+    }
+
 }

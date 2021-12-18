@@ -120,34 +120,13 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         } else {
             query.orderBy(builder.desc(root.get(seekElement.getPrimaryKey())));
         }
-        // get the break element
-        List<Predicate> filters = new ArrayList<>();
-        if (!StringUtils.isEmpty(seekElement.getPageBreak())) {
-            if (seekElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
-                filters.add(
-                        builder.greaterThanOrEqualTo(
-                                root.get(seekElement.getPrimaryKey()),
-                                seekElement.getPageBreak()
-                        ));
-            } else {
-                filters.add(
-                        builder.lessThanOrEqualTo(
-                                root.get(seekElement.getPrimaryKey()),
-                                seekElement.getPageBreak()
-                        ));
-            }
+
+        if (!StringUtils.isEmpty(seekElement.getAdditionalOrdering())) {
+            query.orderBy(builder.asc(root.get(seekElement.getAdditionalOrdering())));
         }
-        // check for filter criterias
-        if (seekElement.getFilterCriteria().size() > 0) {
-            for (Map.Entry<String, String> entry
-                    : seekElement.getFilterCriteria().entrySet()) {
-                filters.add(
-                        builder.equal(root.get(entry.getKey()), entry.getValue()));
-            }
-        } else {
-            LOGGER.log("No filters are set.", LogLevel.DEBUG);
-        }
+
         // put everything together
+        List<Predicate> filters = calculatePredicates(builder, root, seekElement);
         if (!filters.isEmpty()) {
             query.where(filters.toArray(new Predicate[filters.size()]));
         }
@@ -203,4 +182,57 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         return retVal;
     }
 
+    private List<Predicate> calculatePredicates(CriteriaBuilder builder, Root<T> root,
+            JpaPagination seekElement) {
+        List<Predicate> filters = new ArrayList<>();
+
+        // get the break element
+        if (!StringUtils.isEmpty(seekElement.getPageBreak())) {
+            if (seekElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
+                filters.add(
+                        builder.greaterThanOrEqualTo(
+                                root.get(seekElement.getPrimaryKey()),
+                                seekElement.getPageBreak()
+                        ));
+            } else {
+                filters.add(
+                        builder.lessThanOrEqualTo(
+                                root.get(seekElement.getPrimaryKey()),
+                                seekElement.getPageBreak()
+                        ));
+            }
+        }
+
+        if (!seekElement.getFilterStringCriteria().isEmpty()) {
+            for (Map.Entry<String, String> entry
+                    : seekElement.getFilterStringCriteria().entrySet()) {
+                filters.add(
+                        builder.equal(root.get(entry.getKey()), entry.getValue()));
+            }
+        } else {
+            LOGGER.log("No String based filters are set.", LogLevel.DEBUG);
+        }
+
+        if (!seekElement.getFilterBooleanCriteria().isEmpty()) {
+            for (Map.Entry<String, Boolean> entry
+                    : seekElement.getFilterBooleanCriteria().entrySet()) {
+                filters.add(
+                        builder.equal(root.get(entry.getKey()), entry.getValue()));
+            }
+        } else {
+            LOGGER.log("No Boolean based filters are set.", LogLevel.DEBUG);
+        }
+
+        if (!seekElement.getFilterIntegerCriteria().isEmpty()) {
+            for (Map.Entry<String, Integer> entry
+                    : seekElement.getFilterIntegerCriteria().entrySet()) {
+                filters.add(
+                        builder.equal(root.get(entry.getKey()), entry.getValue()));
+            }
+        } else {
+            LOGGER.log("No Integer based filters are set.", LogLevel.DEBUG);
+        }
+
+        return filters;
+    }
 }

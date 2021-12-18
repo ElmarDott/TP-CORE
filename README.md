@@ -84,7 +84,7 @@ Please check the Release Notes for published Artifact Versions.
 
 ## Authors
 
-* **Elmar Dott** - *Concept, Architecture, Development* - [enRebaja](https://enRebaja.wordpress.com)
+* **Elmar Dott** - [*Concept, Architecture, Development*](https://elmar-dott.com)
 
 ## License
 

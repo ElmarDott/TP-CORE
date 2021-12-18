@@ -210,7 +210,7 @@ public class DaoPaginationTest {
         filters.put("modulName", "default");
 
         JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterCriteria(filters);
+        seekElement.setFilterStringCriteria(filters);
 
         List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
 
@@ -227,7 +227,7 @@ public class DaoPaginationTest {
         filters.put("modulName", "default");
 
         JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterCriteria(filters);
+        seekElement.setFilterStringCriteria(filters);
         seekElement.setPageSize(8);
         seekElement.setPageBreak("88888888-0057-4444-4444-cccccccccc");
 
@@ -247,7 +247,7 @@ public class DaoPaginationTest {
         filters.put("configurationSet", "AAA");
 
         JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterCriteria(filters);
+        seekElement.setFilterStringCriteria(filters);
         seekElement.setPageSize(8);
         seekElement.setPageBreak("88888888-0005-4444-4444-cccccccccc");
 

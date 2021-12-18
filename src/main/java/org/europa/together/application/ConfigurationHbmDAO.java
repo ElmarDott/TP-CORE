@@ -71,14 +71,13 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
-
         Map<String, String> filter = new HashMap<>();
         filter.put("modulName", module);
         filter.put("version", version);
         filter.put("configurationSet", configSet);
 
         JpaPagination pagination = new JpaPagination("uuid");
-        pagination.setFilterCriteria(filter);
+        pagination.setFilterStringCriteria(filter);
 
         return listAllElements(pagination);
     }
@@ -86,45 +85,48 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllModuleEntries(final String module) {
+        Map<String, String> filter = new HashMap<>();
+        filter.put("modulName", module);
 
-        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
-        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-        // create Criteria
-        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("modulName"), module));
+        JpaPagination pagination = new JpaPagination("uuid");
+        pagination.setFilterStringCriteria(filter);
+        pagination.setAdditionalOrdering("version");
 
-        query.orderBy(builder.asc(root.get("version")));
-        return mainEntityManagerFactory.createQuery(query).getResultList();
+        List<ConfigurationDO> results = listAllElements(pagination);
+        return results;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllDeprecatedEntries() {
-        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
-        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-        // create Criteria
-        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("deprecated"), Boolean.TRUE));
+        Map<String, Boolean> filter = new HashMap<>();
+        filter.put("deprecated", Boolean.TRUE);
 
-        query.orderBy(builder.asc(root.get("version")));
-        return mainEntityManagerFactory.createQuery(query).getResultList();
+        JpaPagination pagination = new JpaPagination("uuid");
+        pagination.setFilterBooleanCriteria(filter);
+        pagination.setAdditionalOrdering("version");
+
+        List<ConfigurationDO> results = listAllElements(pagination);
+        return results;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getHistoryOfAEntry(final String module,
             final String key, final String configSet) {
-        String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
-        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
-        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
-        // create Criteria
-        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("key"), hash),
-                builder.equal(root.get("modulName"), module),
-                builder.equal(root.get("configurationSet"), configSet));
 
-        query.orderBy(builder.asc(root.get("version")));
-        return mainEntityManagerFactory.createQuery(query).getResultList();
+        String hash = cryptoTools.calculateHash(key, HashAlgorithm.SHA256);
+        Map<String, String> filter = new HashMap<>();
+        filter.put("key", hash);
+        filter.put("modulName", module);
+        filter.put("configurationSet", configSet);
+
+        JpaPagination pagination = new JpaPagination("uuid");
+        pagination.setFilterStringCriteria(filter);
+        pagination.setAdditionalOrdering("version");
+
+        List<ConfigurationDO> results = listAllElements(pagination);
+        return results;
     }
 
     @Override
