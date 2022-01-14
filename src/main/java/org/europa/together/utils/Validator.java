@@ -182,6 +182,56 @@ public final class Validator {
     }
 
     /**
+     * Test if a 10 or 13 digit ISBN number is valid.
+     *
+     * @param isbn as String
+     * @return true on success
+     */
+    public static boolean isIsbn(final String isbn) throws NumberFormatException {
+
+        boolean success = false;
+        int tmp = 0;
+        String check = isbn.replaceAll("-", "");
+        int size = check.length();
+
+        if (StringUtils.isEmpty(isbn) || size != 10 && size != 13) {
+            throw new NumberFormatException(
+                    "The format has not the correct lenght of a valid ISBN.");
+        }
+
+        for (int i = 0; i < size; i++) {
+            String element = check.substring(i, i + 1);
+
+            int digit;
+            if (size == 10 && i == 9 && element.equalsIgnoreCase("x")) {
+                digit = 10;
+            } else {
+                digit = Integer.parseInt(element);
+            }
+
+            if (size == 10) {
+                tmp += ((10 - i) * digit);
+                LOGGER.log("(ISBN-10 SUM: " + tmp, LogLevel.DEBUG);
+
+            } else {
+                tmp += (i % 2 == 0) ? digit : digit * 3;
+                LOGGER.log("(ISBN-13 SUM: " + tmp, LogLevel.DEBUG);
+            }
+        }
+
+        if (size == 10) {
+            if (tmp % 11 == 0) {
+                success = true;
+            }
+        } else {
+            if (tmp % 10 == 0) {
+                success = true;
+            }
+        }
+        return success;
+    }
+
+    /**
      * Validate a String against an regular expression and return true if the
      * String matches the RegEx.
      *

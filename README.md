@@ -104,6 +104,7 @@ In the case you like this project, let me know it and rate it with a star.
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
 |        | - extend Validator.IP4_ADDRESS
+|        | - extend Validator.isIsbn10() + isIsbn13()
 |        | - extend GenericDAO.listAll() with pagination
 |        | - remove jodatime
 |        | - remove flexjson

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import java.time.ZonedDateTime;
+import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -464,6 +465,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_UpperBoundry() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
@@ -472,6 +474,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_After() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2017, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC")),
@@ -480,6 +483,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_Before() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2013, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
@@ -488,6 +492,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_NullPointer() {
         assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
         assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now()));
@@ -498,5 +503,69 @@ public class ValidatorTest {
         assertFalse(Validator.isDateInRange(null, null, ZonedDateTime.now()));
 
         assertFalse(Validator.isDateInRange(null, null, null));
+    }
+
+    @Test
+    void isValidIsbn10() {
+        assertTrue(Validator.isIsbn("3836278340"));
+        assertTrue(Validator.isIsbn("38-3627-834-0"));
+        assertTrue(Validator.isIsbn("0-9752298-0-X"));
+    }
+
+    @Test
+    void isInvalidIsbn10() {
+        assertFalse(Validator.isIsbn("3836278344"));
+        assertFalse(Validator.isIsbn("9836278340"));
+    }
+
+    @Test
+    void isValidIsbn13() {
+        assertTrue(Validator.isIsbn("9783836278348"));
+        assertTrue(Validator.isIsbn("978-3-8362-7834-8"));
+    }
+
+    @Test
+    void isInvalidIsbn13() {
+        assertFalse(Validator.isIsbn("9783846278348"));
+    }
+
+    @Test
+    void isInvalidIsbn_NotInterger() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("d836278340");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn_empty() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn10_toShort() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("383627834");
+        });
+    }
+
+    void isInvalidIsbn10_tolong() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("38362783400");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn13_toShort() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("978383627834");
+        });
+    }
+
+    void isInvalidIsbn13_tolong() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("97838362783481");
+        });
     }
 }
