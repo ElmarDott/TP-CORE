@@ -1,0 +1,157 @@
+package org.europa.together.application;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import org.europa.together.business.DatabaseActions;
+import org.europa.together.business.FeatureFlags;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.ConfigurationDO;
+import org.europa.together.domain.LogLevel;
+import org.ff4j.FF4j;
+import org.ff4j.core.Feature;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@SuppressWarnings("unchecked")
+@RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
+public class FeatureFlagsFF4jTest {
+
+    private static final Logger LOGGER = new LogbackLogger(FeatureFlagsFF4jTest.class);
+
+    private static final String FLUSH_TABLE
+            = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
+    private static final String FILE
+            = "org/europa/together/sql/ff-configuration.sql";
+    private static final String PROPERTIES
+            = "org/europa/together/configuration/jdbc.properties";
+
+    @Autowired
+    private FeatureFlags featureFlags;
+
+    private static DatabaseActions jdbcActions = new JdbcActions();
+    private Feature feature;
+
+    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
+    @BeforeAll
+    static void setUp() {
+        Assumptions.assumeTrue(jdbcActions.connect("test"));
+
+        jdbcActions.executeSqlFromClasspath(FILE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
+    }
+
+    @BeforeEach
+    void testCaseInitialization() {
+    }
+
+    @AfterEach
+    void testCaseTermination() throws SQLException {
+        jdbcActions.executeSqlFromClasspath("schema-drop.sql");
+        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+    }
+    //</editor-fold>
+
+    public FeatureFlagsFF4jTest() {
+        feature = new Feature("TEST");
+        feature.setDescription("Temporary test feature.");
+        feature.setGroup("none");
+        feature.setEnable(true);
+    }
+
+    @Test
+    void activateFeatureFlags() throws IOException {
+        LOGGER.log("TEST CASE: activateFeatureFlags", LogLevel.DEBUG);
+
+        FF4j ff4j = featureFlags.getFeatureStore(PROPERTIES);
+        ff4j.createSchema();
+
+        assertTrue(ff4j.isEnableAudit());
+        assertFalse(ff4j.isAutocreate());
+    }
+
+    @Test
+    void addFeature() throws IOException {
+        LOGGER.log("TEST CASE: addFeature", LogLevel.DEBUG);
+
+        featureFlags.getFeatureStore(PROPERTIES).createSchema();
+        featureFlags.addFeature(this.feature);
+
+        assertNotNull(featureFlags.getFeature("TEST"));
+    }
+
+    @Test
+    void updateFeature() throws IOException {
+        LOGGER.log("TEST CASE: updateFeature", LogLevel.DEBUG);
+
+        featureFlags.getFeatureStore(PROPERTIES).createSchema();
+        featureFlags.addFeature(this.feature);
+
+        Feature changedFeature = featureFlags.getFeature("TEST");
+        changedFeature.setGroup("changes");
+
+        featureFlags.updateFeature(changedFeature);
+        assertNotEquals(feature, featureFlags.getFeature("TEST"));
+        assertEquals(1, featureFlags.listAllFeatures().size());
+    }
+
+    @Test
+    void updateFeatureNotExist() throws IOException {
+        LOGGER.log("TEST CASE: updateFeatureNotExist", LogLevel.DEBUG);
+
+        featureFlags.getFeatureStore(PROPERTIES).createSchema();
+        featureFlags.addFeature(this.feature);
+
+        Feature changedFeature = featureFlags.getFeature("TEST");
+        changedFeature.setUid("UPDATE");
+
+        featureFlags.updateFeature(changedFeature);
+        assertEquals(2, featureFlags.listAllFeatures().size());
+    }
+
+    @Test
+    void deleteFeature() throws IOException {
+        LOGGER.log("TEST CASE: deleteFeature", LogLevel.DEBUG);
+
+        featureFlags.getFeatureStore(PROPERTIES).createSchema();
+        featureFlags.addFeature(this.feature);
+
+        assertNotNull(featureFlags.getFeature("TEST"));
+
+        featureFlags.removeFeature("TEST");
+        assertEquals(0, featureFlags.listAllFeatures().size());
+    }
+
+    @Test
+    void activateDeactivateFeature() throws IOException {
+        LOGGER.log("TEST CASE: activateDeactivateFeature", LogLevel.DEBUG);
+
+        featureFlags.getFeatureStore(PROPERTIES).createSchema();
+        featureFlags.addFeature(this.feature);
+
+        featureFlags.deactivateFeature("TEST");
+        assertFalse(featureFlags.check("TEST"));
+
+        featureFlags.activateFeature("TEST");
+        assertTrue(featureFlags.check("TEST"));
+    }
+}

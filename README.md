@@ -103,6 +103,7 @@ In the case you like this project, let me know it and rate it with a star.
 |Version | Comment
 |--------|----------------------------------------------------------------------
 | 3.0.0  | in progress
+|        | - implement FeatureFlags based FF4j
 |        | - extend Validator.IP4_ADDRESS
 |        | - extend Validator.isIsbn10() + isIsbn13()
 |        | - extend GenericDAO.listAll() with pagination

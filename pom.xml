@@ -54,8 +54,8 @@
 
     <build>
         <filters>
-            <filter>src/main/filter/database.properties</filter>
-            <filter>src/main/filter/mail.properties</filter>
+            <filter>src/main/filters/database.properties</filter>
+            <filter>src/main/filters/mail.properties</filter>
         </filters>
 
         <resources>
@@ -192,18 +192,17 @@
             <artifactId>commons-imaging</artifactId>
             <version>1.0-alpha2</version>
         </dependency>
+        <dependency><!-- Feature Flags -->
+            <groupId>org.ff4j</groupId>
+            <artifactId>ff4j-core</artifactId>
+            <version>1.8.12</version>
+        </dependency>
 
         <dependency><!-- Circuit Breaker -->
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-circuitbreaker</artifactId>
             <version>1.7.1</version>
         </dependency>
-        <dependency><!-- Feature Flags -->
-            <groupId>org.ff4j</groupId>
-            <artifactId>ff4j-core</artifactId>
-            <version>1.8.11</version>
-        </dependency>
-
 
         <!-- Bundels -->
         <dependency>
