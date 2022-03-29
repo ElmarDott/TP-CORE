@@ -3,7 +3,8 @@
 --- #### #######################################################################
 ---  Notes: CONF-KEY in table APP_CONFIG is SHA-256 protected
 
---- #### E-MAIL--- mailer.host
+--- #### E-MAIL
+--- mailer.host
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, SERVICE_VERSION, MANDATORY, DEPRECATED, COMMENT)
 VALUES ('8cbef5a9-81ee-496c-8486-4929f4a05749', '630fa1d4617b3f19bb631e93befc5462111f7e6ee927300b6778638cfcbdfae9', '', '${mailer.host}', 'email', 'core', '1.0', true, false, '');
 -- mailer.port

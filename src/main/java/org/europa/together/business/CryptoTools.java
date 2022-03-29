@@ -10,7 +10,7 @@ import org.europa.together.domain.CipherAlgorithm;
 import org.europa.together.domain.HashAlgorithm;
 
 /**
- * Basic cryptographic functions for Applications.
+ * Basic cryptographic functions for applications.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -20,7 +20,7 @@ import org.europa.together.domain.HashAlgorithm;
 public interface CryptoTools {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "2.0")
     String FEATURE_ID = "CM-14";
@@ -41,7 +41,7 @@ public interface CryptoTools {
      *
      * @param cipher as CipherAlgorithm
      * @return length as int
-     * @throws java.security.NoSuchAlgorithmException in case of failure
+     * @throws java.security.NoSuchAlgorithmException
      */
     @API(status = STABLE, since = "2.1")
     int getMaxKeySize(CipherAlgorithm cipher) throws NoSuchAlgorithmException;

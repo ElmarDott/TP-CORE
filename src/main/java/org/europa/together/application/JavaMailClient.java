@@ -20,7 +20,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.CryptoTools;
-import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.business.PropertyReader;
@@ -65,14 +64,6 @@ public class JavaMailClient implements MailClient {
         configMaximumMailBulk = -1;
         configCountWaitTime = -1;
         LOGGER.log("instance class", LogLevel.INFO);
-    }
-
-    @Override
-    public void populateDbConfiguration(final String sqlFile) {
-        LOGGER.log("Populate Configuration: " + sqlFile, LogLevel.DEBUG);
-        DatabaseActions connection = new JdbcActions();
-        connection.connect("test");
-        connection.executeSqlFromClasspath(sqlFile);
     }
 
     @Override
@@ -129,7 +120,7 @@ public class JavaMailClient implements MailClient {
                         CONFIG_VERSION, CONFIG_SET);
 
         LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
-        if (configurationEntries.size() > 0) {
+        if (configurationEntries != null && configurationEntries.size() > 0) {
             processConfiguration(configurationEntries);
             success = true;
         }
@@ -279,10 +270,9 @@ public class JavaMailClient implements MailClient {
                     .equals(cryptoTools.calculateHash("mailer.count",
                             HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.count", value);
-            } else {
-                //if (entry.getKey()
-                //    .equals(cryptoTools.calculateHash("mailer.wait",
-                //            HashAlgorithm.SHA256))) {
+            } else if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.wait",
+                            HashAlgorithm.SHA256))) {
                 configuration.replace("mailer.wait", value);
             }
         }

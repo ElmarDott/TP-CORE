@@ -55,7 +55,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @AfterAll
-    static void tearDown() throws SQLException {
+    static void tearDown() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
         LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
@@ -65,7 +65,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @AfterEach
-    void testCaseTermination() throws SQLException {
+    void testCaseTermination() throws Exception {
         jdbcActions.executeSqlFromClasspath("schema-drop.sql");
         LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
@@ -79,7 +79,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void activateFeatureFlags() throws IOException {
+    void activateFeatureFlags() throws Exception {
         LOGGER.log("TEST CASE: activateFeatureFlags", LogLevel.DEBUG);
 
         FF4j ff4j = featureFlags.getFeatureStore(PROPERTIES);
@@ -90,7 +90,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void addFeature() throws IOException {
+    void addFeature() throws Exception {
         LOGGER.log("TEST CASE: addFeature", LogLevel.DEBUG);
 
         featureFlags.getFeatureStore(PROPERTIES).createSchema();
@@ -100,7 +100,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void updateFeature() throws IOException {
+    void updateFeature() throws Exception {
         LOGGER.log("TEST CASE: updateFeature", LogLevel.DEBUG);
 
         featureFlags.getFeatureStore(PROPERTIES).createSchema();
@@ -115,7 +115,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void updateFeatureNotExist() throws IOException {
+    void updateFeatureNotExist() throws Exception {
         LOGGER.log("TEST CASE: updateFeatureNotExist", LogLevel.DEBUG);
 
         featureFlags.getFeatureStore(PROPERTIES).createSchema();
@@ -129,7 +129,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void deleteFeature() throws IOException {
+    void deleteFeature() throws Exception {
         LOGGER.log("TEST CASE: deleteFeature", LogLevel.DEBUG);
 
         featureFlags.getFeatureStore(PROPERTIES).createSchema();
@@ -142,7 +142,7 @@ public class FeatureFlagsFF4jTest {
     }
 
     @Test
-    void activateDeactivateFeature() throws IOException {
+    void activateDeactivateFeature() throws Exception {
         LOGGER.log("TEST CASE: activateDeactivateFeature", LogLevel.DEBUG);
 
         featureFlags.getFeatureStore(PROPERTIES).createSchema();

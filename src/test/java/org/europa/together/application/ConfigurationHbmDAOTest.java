@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.europa.together.business.ConfigurationDAO;
@@ -10,7 +9,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.DAOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -76,7 +74,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @AfterEach
-    void testCaseTermination() throws SQLException {
+    void testCaseTermination() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
         LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
@@ -97,7 +95,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void listAll() throws DAOException {
+    void listAll() {
         LOGGER.log("TEST CASE: listAll", LogLevel.DEBUG);
 
         JpaPagination seekElement = new JpaPagination("uuid");
@@ -111,6 +109,12 @@ public class ConfigurationHbmDAOTest {
         LOGGER.log("TEST CASE: getPrimaryKeyOfObject", LogLevel.DEBUG);
 
         assertEquals("QWERTZ", configurationDAO.getPrimaryKeyOfObject(configDO));
+    }
+
+    @Test
+    void failGetPrimaryKeyOfObject() {
+        LOGGER.log("TEST CASE: failGetPrimaryKeyOfObject", LogLevel.DEBUG);
+
         assertNull(configurationDAO.getPrimaryKeyOfObject(null));
     }
 
@@ -120,12 +124,26 @@ public class ConfigurationHbmDAOTest {
 
         ConfigurationDO config = configurationDAO.find("88888888-4444-4444-4444-cccccccccc");
         assertEquals("key", config.getKey());
-
-        assertNull(configurationDAO.find("DumDiDum"));
     }
 
     @Test
-    void create() {
+    void findNotExist() {
+        LOGGER.log("TEST CASE: findNotExist", LogLevel.DEBUG);
+
+        assertNull(configurationDAO.find("NotExist"));
+    }
+
+    @Test
+    void failFind() throws Exception {
+        LOGGER.log("TEST CASE: failFind", LogLevel.DEBUG);
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.find(null);
+        });
+    }
+
+    @Test
+    void create() throws Exception {
         LOGGER.log("TEST CASE: create", LogLevel.DEBUG);
 
         configurationDAO.create(configDO);
@@ -133,41 +151,65 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void failCreate() throws IllegalArgumentException {
+    void failCreate() throws Exception {
         LOGGER.log("TEST CASE: failCreate", LogLevel.DEBUG);
 
         assertFalse(configurationDAO.create(null));
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
         LOGGER.log("TEST CASE: update", LogLevel.DEBUG);
 
         assertTrue(configurationDAO.create(configDO));
         configDO.setValue("changed value");
 
-        assertTrue(configurationDAO.update("QWERTZ", configDO));
+        configurationDAO.update("QWERTZ", configDO);
         assertEquals("changed value", configurationDAO.find("QWERTZ").getValue());
     }
 
     @Test
-    void failUpdate() {
-        LOGGER.log("TEST CASE: failUpdate", LogLevel.DEBUG);
+    void updateNotExist() throws Exception {
+        LOGGER.log("TEST CASE: updateNotExist", LogLevel.DEBUG);
 
-        assertTrue(configurationDAO.create(configDO));
-        assertFalse(configurationDAO.update("DumDiDumm", configDO));
-
-        assertFalse(configurationDAO.update("QWERTZ", null));
+        assertThrows(Exception.class, () -> {
+            configurationDAO.update("NotExist", configDO);
+        });
     }
 
     @Test
-    void delete() {
+    void failUpdate() throws Exception {
+        LOGGER.log("TEST CASE: failUpdate", LogLevel.DEBUG);
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.update(null, configDO);
+        });
+        assertThrows(Exception.class, () -> {
+            configurationDAO.update("", null);
+        });
+        assertThrows(Exception.class, () -> {
+            configurationDAO.update(null, null);
+        });
+    }
+
+    @Test
+    void delete() throws Exception {
         LOGGER.log("TEST CASE: delete", LogLevel.DEBUG);
 
-        assertTrue(configurationDAO.create(configDO));
+        configurationDAO.create(configDO);
         assertNotNull(configurationDAO.find("QWERTZ"));
-        assertTrue(configurationDAO.delete("QWERTZ"));
-        assertNull(configurationDAO.find("QWERTZ"));
+
+        configurationDAO.delete(configDO.getUuid());
+        assertNull(configurationDAO.find(configDO.getUuid()));
+    }
+
+    @Test
+    void deleteNotExist() throws Exception {
+        LOGGER.log("TEST CASE: deleteNotExist", LogLevel.DEBUG);
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.delete("notExist");
+        });
     }
 
     @Test
@@ -196,7 +238,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void deserializeJson() {
+    void deserializeJson() throws Exception {
         LOGGER.log("TEST CASE: deserilizeAsJson", LogLevel.DEBUG);
 
         String json
@@ -206,13 +248,15 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void failDeserializeJson() {
+    void failDeserializeJson() throws Exception {
         LOGGER.log("TEST CASE: failDeserilizeAsJson", LogLevel.DEBUG);
 
         String json
-                = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
-        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, null);
-        assertNull(deserialize);
+                = "{\"failString\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.deserializeJsonAsObject(json, null);
+        });
     }
 
     @Test
@@ -243,6 +287,7 @@ public class ConfigurationHbmDAOTest {
     @Test
     void getValueByKeyNoExist() throws Exception {
         LOGGER.log("TEST CASE: getValueByKeyNoExist", LogLevel.DEBUG);
+
         assertThrows(Exception.class, () -> {
             configurationDAO.getValueByKey("key", "Module", "1");
         });
@@ -274,7 +319,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void getAllSetEntries() throws DAOException {
+    void getAllSetEntries() {
         LOGGER.log("TEST CASE: getAllSetEntries", LogLevel.DEBUG);
 
         List<ConfigurationDO> set
@@ -326,7 +371,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void updateConfigurationEntries() throws DAOException {
+    void updateConfigurationEntries() {
         LOGGER.log("TEST CASE: updateConfigurationEntries", LogLevel.DEBUG);
 
         List<ConfigurationDO> set

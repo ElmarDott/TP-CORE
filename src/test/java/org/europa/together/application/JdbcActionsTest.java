@@ -2,7 +2,6 @@ package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.JdbcConnection;
@@ -91,7 +90,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void executeQuery() throws SQLException {
+    void executeQuery() throws Exception {
         LOGGER.log("TEST CASE: executeQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -103,7 +102,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void failExecuteQuery() throws SQLException {
+    void failExecuteQuery() throws Exception {
         LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -114,7 +113,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void failExecuteQueryNoConnection() throws SQLException {
+    void failExecuteQueryNoConnection() throws Exception {
         LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -122,7 +121,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void executeSqlFileFromClasspath() throws SQLException {
+    void executeSqlFileFromClasspath() throws Exception {
         LOGGER.log("TEST CASE: executeSqlFileFromClasspath", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -144,7 +143,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void getResultSet() throws SQLException {
+    void getResultSet() throws Exception {
         LOGGER.log("TEST CASE: getResultSet", LogLevel.DEBUG);
 
         String SQL_FILE
@@ -161,7 +160,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void getJdbcMetaData() throws SQLException {
+    void getJdbcMetaData() throws Exception {
         LOGGER.log("TEST CASE: getJdbcMetaData", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();

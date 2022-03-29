@@ -3,6 +3,7 @@ package org.europa.together.application;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -30,7 +31,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAO.class);
 
     @Autowired
-    private transient CryptoTools cryptoTools;
+    private CryptoTools cryptoTools;
 
     /**
      * Constructor.
@@ -41,7 +42,9 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     }
 
     @Override
-    public void updateConfigurationEntries(final List<ConfigurationDO> configuration) {
+    public void updateConfigurationEntries(final List<ConfigurationDO> configuration)
+            throws EntityNotFoundException {
+
         for (ConfigurationDO entry : configuration) {
             this.update(entry.getUuid(), entry);
         }
@@ -71,6 +74,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
+
         Map<String, String> filter = new HashMap<>();
         filter.put("modulName", module);
         filter.put("version", version);
@@ -147,7 +151,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
     }
 
     @Override
-    public void restoreKeyToDefault(final ConfigurationDO entry) {
+    public void restoreKeyToDefault(final ConfigurationDO entry) throws EntityNotFoundException {
         ConfigurationDO change = this.find(entry.getUuid());
         change.setValue(change.getDefaultValue());
         this.update(change.getUuid(), change);

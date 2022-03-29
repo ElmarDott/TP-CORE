@@ -9,7 +9,6 @@ import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +42,7 @@ public final class ConfigurationService {
      * values.
      *
      * @param module as String
+     * @throws org.europa.together.exceptions.DAOException in case of failure
      */
     @API(status = STABLE, since = "1.0")
     public void resetModuleToDefault(final String module) {

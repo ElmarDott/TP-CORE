@@ -110,7 +110,7 @@ public class MailClientScenarioIT extends
     }
 
     @Test
-    void scenario_sendBulkMail() throws AddressException {
+    void scenario_sendBulkMail() throws Exception {
         LOGGER.log("Scenario A: Bulk Mail", LogLevel.DEBUG);
 
         Mail mail = new Mail();

@@ -190,11 +190,15 @@ public final class Validator {
     public static boolean isIsbn(final String isbn) throws NumberFormatException {
 
         boolean success = false;
+        final int value09 = 9;
+        final int value10 = 10;
+        final int value11 = 11;
+        final int value13 = 13;
         int tmp = 0;
         String check = isbn.replaceAll("-", "");
         int size = check.length();
 
-        if (StringUtils.isEmpty(isbn) || size != 10 && size != 13) {
+        if (StringUtils.isEmpty(isbn) || size != value10 && size != value13) {
             throw new NumberFormatException(
                     "The format has not the correct lenght of a valid ISBN.");
         }
@@ -203,14 +207,14 @@ public final class Validator {
             String element = check.substring(i, i + 1);
 
             int digit;
-            if (size == 10 && i == 9 && element.equalsIgnoreCase("x")) {
-                digit = 10;
+            if (size == value10 && i == value09 && element.equalsIgnoreCase("x")) {
+                digit = value10;
             } else {
                 digit = Integer.parseInt(element);
             }
 
-            if (size == 10) {
-                tmp += ((10 - i) * digit);
+            if (size == value10) {
+                tmp += ((value10 - i) * digit);
                 LOGGER.log("(ISBN-10 SUM: " + tmp, LogLevel.DEBUG);
 
             } else {
@@ -219,12 +223,12 @@ public final class Validator {
             }
         }
 
-        if (size == 10) {
-            if (tmp % 11 == 0) {
+        if (size == value10) {
+            if (tmp % value11 == 0) {
                 success = true;
             }
         } else {
-            if (tmp % 10 == 0) {
+            if (tmp % value10 == 0) {
                 success = true;
             }
         }

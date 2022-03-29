@@ -57,7 +57,7 @@ public class MailTest {
     }
 
     @Test
-    void recipients() throws AddressException {
+    void recipients() throws Exception {
         LOGGER.log("TEST CASE: recipients", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -78,7 +78,7 @@ public class MailTest {
     }
 
     @Test
-    void addRecipentDetectDoubleEntries() throws AddressException {
+    void addRecipentDetectDoubleEntries() throws Exception {
         LOGGER.log("TEST CASE: addRecipentDetectDoubleEntries", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -90,7 +90,7 @@ public class MailTest {
     }
 
     @Test
-    void addRecipentValidationFail() throws AddressException {
+    void addRecipentValidationFail() throws Exception {
         LOGGER.log("TEST CASE: addRecipentValidationFail", LogLevel.DEBUG);
 
         List<String> failure = new ArrayList<>();
@@ -109,7 +109,7 @@ public class MailTest {
     }
 
     @Test
-    void addRecipientList() throws AddressException {
+    void addRecipientList() throws Exception {
         LOGGER.log("TEST CASE: addRecipientList", LogLevel.DEBUG);
 
         List<String> recipients = new ArrayList<>();

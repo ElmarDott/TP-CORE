@@ -3,7 +3,6 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
@@ -140,7 +139,7 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void simpleRenderHtmlToPdf() throws FileNotFoundException {
+    void simpleRenderHtmlToPdf() throws Exception {
         LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
 
         String html = "<h1>My First PDF Document</h1 > <p>"

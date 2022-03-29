@@ -6,7 +6,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.TreeWalker;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.TreeNode;
-import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -67,7 +66,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void addRoot() throws MisconfigurationException {
+    void addRoot() throws Exception {
         LOGGER.log("TEST CASE: addRoot", LogLevel.DEBUG);
 
         TreeNode<Boolean> root = new TreeNode<Boolean>();
@@ -88,7 +87,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void getRoot() throws MisconfigurationException {
+    void getRoot() throws Exception {
         LOGGER.log("TEST CASE: getRoot", LogLevel.DEBUG);
 
         TreeWalker<Boolean> walker
@@ -109,7 +108,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void countNodes() throws MisconfigurationException {
+    void countNodes() throws Exception {
         LOGGER.log("TEST CASE: countNodes", LogLevel.DEBUG);
 
         buildTree();
@@ -124,7 +123,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void addNode() throws MisconfigurationException {
+    void addNode() throws Exception {
         LOGGER.log("TEST CASE: addNode", LogLevel.DEBUG);
 
         buildTree();
@@ -139,7 +138,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failAddEmptyNode() throws MisconfigurationException {
+    void failAddEmptyNode() throws Exception {
         LOGGER.log("TEST CASE: failAddEmptyNode", LogLevel.DEBUG);
 
         buildTree();
@@ -147,7 +146,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failAddNodeOfSameNameAndParent() throws MisconfigurationException {
+    void failAddNodeOfSameNameAndParent() throws Exception {
         LOGGER.log("TEST CASE: failAddNodeOfSameNameAndParent", LogLevel.DEBUG);
 
         TreeWalker<Boolean> walker = new ListTree<Boolean>();
@@ -166,7 +165,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failAddNodeOfSameUuid() throws MisconfigurationException {
+    void failAddNodeOfSameUuid() throws Exception {
         LOGGER.log("TEST CASE: failAddNodeOfSameUuid", LogLevel.DEBUG);
 
         TreeWalker<Boolean> walker = new ListTree<Boolean>();
@@ -182,7 +181,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void getLeafCount() throws MisconfigurationException {
+    void getLeafCount() throws Exception {
         LOGGER.log("TEST CASE: getLeafCount", LogLevel.DEBUG);
 
         buildTree();
@@ -190,7 +189,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void isLeaf() throws MisconfigurationException {
+    void isLeaf() throws Exception {
         LOGGER.log("TEST CASE: isLeaf", LogLevel.DEBUG);
 
         buildTree();
@@ -200,7 +199,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failIsLeaf() throws MisconfigurationException {
+    void failIsLeaf() throws Exception {
         LOGGER.log("TEST CASE: failIsLeaf", LogLevel.DEBUG);
 
         buildTree();
@@ -210,7 +209,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void getNodeByUuid() throws MisconfigurationException {
+    void getNodeByUuid() throws Exception {
         LOGGER.log("TEST CASE: getNodeByUuid", LogLevel.DEBUG);
 
         buildTree();
@@ -238,7 +237,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failGetNodeByUuidByUuidNotExist() throws MisconfigurationException {
+    void failGetNodeByUuidByUuidNotExist() throws Exception {
         LOGGER.log("TEST CASE: failGetNodeByUuidByUuidNotExist", LogLevel.DEBUG);
 
         buildTree();
@@ -246,7 +245,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void isNodeElementOfTree() throws MisconfigurationException {
+    void isNodeElementOfTree() throws Exception {
         LOGGER.log("TEST CASE: isNodeElementOfTree", LogLevel.DEBUG);
 
         buildTree();
@@ -262,7 +261,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failRemoveNode() throws MisconfigurationException {
+    void failRemoveNode() throws Exception {
         LOGGER.log("TEST CASE: failRemoveNode", LogLevel.DEBUG);
 
         buildTree();
@@ -270,7 +269,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void isNameUnique() throws MisconfigurationException {
+    void isNameUnique() throws Exception {
         LOGGER.log("TEST CASE: isNameUnique", LogLevel.DEBUG);
 
         buildTree();
@@ -293,7 +292,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void getElementsByName() throws MisconfigurationException {
+    void getElementsByName() throws Exception {
         LOGGER.log("TEST CASE: getElementsByName", LogLevel.DEBUG);
 
         buildTree();
@@ -318,7 +317,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void getElementByNameNotExist() throws MisconfigurationException {
+    void getElementByNameNotExist() throws Exception {
         LOGGER.log("TEST CASE: getElementsByNameNotExist", LogLevel.DEBUG);
 
         buildTree();
@@ -334,7 +333,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void pruneRoot() throws MisconfigurationException {
+    void pruneRoot() throws Exception {
         LOGGER.log("TEST CASE: pruneRoot", LogLevel.DEBUG);
 
         buildTree();
@@ -344,7 +343,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void pruneLeaf() throws MisconfigurationException {
+    void pruneLeaf() throws Exception {
         LOGGER.log("TEST CASE: pruneLeaf", LogLevel.DEBUG);
 
         buildTree();
@@ -358,7 +357,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void pruneElementIsNotInTree() throws MisconfigurationException {
+    void pruneElementIsNotInTree() throws Exception {
         LOGGER.log("TEST CASE: pruneElementIsNotInTree", LogLevel.DEBUG);
 
         buildTree();
@@ -373,7 +372,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void prune() throws MisconfigurationException {
+    void prune() throws Exception {
         LOGGER.log("TEST CASE: prune", LogLevel.DEBUG);
 
         buildTree();
@@ -405,7 +404,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void merge() throws MisconfigurationException {
+    void merge() throws Exception {
         LOGGER.log("TEST CASE: merge", LogLevel.DEBUG);
 
         buildTree();
@@ -418,7 +417,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failMerge() throws MisconfigurationException {
+    void failMerge() throws Exception {
         LOGGER.log("TEST CASE: failMerge", LogLevel.DEBUG);
 
         buildTree();
@@ -431,7 +430,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void passValidateTree() throws MisconfigurationException {
+    void passValidateTree() throws Exception {
         LOGGER.log("TEST CASE: passValidateTree", LogLevel.DEBUG);
 
         buildTree();
@@ -441,7 +440,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateByEmptyTree() throws MisconfigurationException {
+    void failValidateByEmptyTree() throws Exception {
         LOGGER.log("TEST CASE: failValidateByTreeRemoveNode", LogLevel.DEBUG);
 
         TreeWalker<Boolean> emptyTree = new ListTree<Boolean>();
@@ -449,7 +448,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateTreeRemoveNode() throws MisconfigurationException {
+    void failValidateTreeRemoveNode() throws Exception {
         LOGGER.log("TEST CASE: failValidateTreeRemoveNode", LogLevel.DEBUG);
 
         buildTree();
@@ -458,7 +457,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateTreeNodeWithEmptyParent() throws MisconfigurationException {
+    void failValidateTreeNodeWithEmptyParent() throws Exception {
         LOGGER.log("TEST CASE: failValidateTreeNodeWithEmptyParent", LogLevel.DEBUG);
 
         buildTree();
@@ -469,7 +468,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateTreeNodeWithDisconnectedParent() throws MisconfigurationException {
+    void failValidateTreeNodeWithDisconnectedParent() throws Exception {
         LOGGER.log("TEST CASE: failValidateTreeNodeWithDisconnectedParent", LogLevel.DEBUG);
 
         buildTree();
@@ -488,7 +487,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateTreeHasNoRoot() throws MisconfigurationException {
+    void failValidateTreeHasNoRoot() throws Exception {
         LOGGER.log("TEST CASE: failValidateTreeHasNoRoot", LogLevel.DEBUG);
 
         treeWalker.clear();
@@ -507,7 +506,7 @@ public class ListTreeTest {
     }
 
     @Test
-    void failValidateTreeHasMulitpleRoot() throws MisconfigurationException {
+    void failValidateTreeHasMulitpleRoot() throws Exception {
         LOGGER.log("TEST CASE: failValidateTreeHasMulitpleRoot", LogLevel.DEBUG);
 
         TreeNode<Boolean> node = new TreeNode<>("second ROOT");
@@ -517,7 +516,7 @@ public class ListTreeTest {
         assertFalse(treeWalker.validateTree(treeWalker.getTree()));
     }
 
-    private void buildTree() throws MisconfigurationException {
+    private void buildTree() throws Exception {
         //P:0
         TreeNode<Boolean> n_01 = new TreeNode<>("01");
         n_01.setParent(treeWalker.getRoot().getUuid());
@@ -560,7 +559,7 @@ public class ListTreeTest {
         treeWalker.addNode(n_11);
     }
 
-    private TreeWalker<Boolean> appendTree() throws MisconfigurationException {
+    private TreeWalker<Boolean> appendTree() throws Exception {
         TreeWalker<Boolean> append = new ListTree<Boolean>(new TreeNode<>("sub tree"));
         //P:0
         TreeNode<Boolean> n_01 = new TreeNode<>("S-01");

@@ -8,8 +8,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
- * Generates Quick Response Codes (QR Codes). The Generator provides
- * DataStructures like Calendar Entry or Contact Information (PIM). It's
+ * Generates Quick Response Codes (QR Codes). The generator provides
+ * DataStructures like calendar entry or contact information (PIM). It's
  * implemented an encoder and also an decoder.
  *
  * @author elmar.dott@gmail.com
@@ -21,14 +21,14 @@ import org.springframework.stereotype.Component;
 public interface QrCodeGenerator {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-07";
 
     /**
-     * Configure the Generator with the dimension (height and width) of the QR
-     * Code Image. Height = Weight; the produced Image will be always an square.
+     * Configure the generator with the dimension (height and width) of the QR
+     * Code Image. Height = Weight; the produced image will be always an square.
      * It also define where the file will be stored.
      *
      * @param dimensions as int
@@ -38,7 +38,7 @@ public interface QrCodeGenerator {
     void setup(String fileOutputPath, int dimensions);
 
     /**
-     * Encode from a given String the Image and store it on the configured path.
+     * Encode from a given String the image and store it on the configured path.
      *
      * @param data as String
      * @return true on success
@@ -47,7 +47,7 @@ public interface QrCodeGenerator {
     boolean encode(String data);
 
     /**
-     * Extract (decode) from a Image file the Information as String.
+     * Extract (decode) from a image file the information as String.
      *
      * @param qrCode as File
      * @return the content as String
@@ -56,7 +56,7 @@ public interface QrCodeGenerator {
     String decode(File qrCode);
 
     /**
-     * Create a vCard (Version 3.0) data structure.URL:
+     * Create a vCard (Version 3.0) data structure. URL:
      * https://en.wikipedia.org/wiki/VCard<br><br>
      *
      * Property Set:<br>

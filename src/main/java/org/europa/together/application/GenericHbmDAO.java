@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,7 @@ import org.europa.together.business.GenericDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.JpaPagination;
+import org.europa.together.exceptions.DAOException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,28 +67,26 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    public boolean delete(final PK id) {
+    public void delete(final PK id) throws EntityNotFoundException {
         T foundObject = find(id);
-        mainEntityManagerFactory.remove(foundObject);
-        return true;
+        if (foundObject != null) {
+            mainEntityManagerFactory.remove(foundObject);
+        } else {
+            throw new EntityNotFoundException("delete:" + id.toString());
+        }
     }
 
     @Override
-    public boolean update(final PK id, final T object) {
-        boolean success = false;
-        if (object != null) {
-            if (find(id) != null) {
-                mainEntityManagerFactory.merge(object);
-                LOGGER.log("DAO (" + object.getClass().getSimpleName()
-                        + ") update", LogLevel.TRACE);
-                success = true;
-            } else {
-                LOGGER.log("DAO update: Entity not found.", LogLevel.WARN);
-            }
+    public void update(final PK id, final T object) throws EntityNotFoundException {
+
+        if (object != null && this.find(id) != null) {
+            mainEntityManagerFactory.merge(object);
+            LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") update",
+                    LogLevel.TRACE);
         } else {
-            LOGGER.log("DAO update: persist object is null!", LogLevel.WARN);
+            throw new EntityNotFoundException("update: " + id.toString()
+                    + " : " + object.toString());
         }
-        return success;
     }
 
     @Override
@@ -101,13 +101,15 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> listAllElements(final JpaPagination seekElement) {
+    public List<T> listAllElements(final JpaPagination pivotElement) {
+
+        LOGGER.log("GenericDAO: " + pivotElement.toString(), LogLevel.DEBUG);
 
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(genericType);
         Root<T> root = query.from(genericType);
 
-        int limit = seekElement.getPageSize();
+        int limit = pivotElement.getPageSize();
 
         // skip pagination
         int countedResults = mainEntityManagerFactory.createQuery(query).getResultList().size();
@@ -115,26 +117,24 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             limit = countedResults;
         }
         // order the result set
-        if (seekElement.getSorting().equals(JpaPagination.ORDER_ASC)) {
-            query.orderBy(builder.asc(root.get(seekElement.getPrimaryKey())));
+        if (pivotElement.getSorting().equals(JpaPagination.ORDER_ASC)) {
+            query.orderBy(builder.asc(root.get(pivotElement.getPrimaryKey())));
         } else {
-            query.orderBy(builder.desc(root.get(seekElement.getPrimaryKey())));
+            query.orderBy(builder.desc(root.get(pivotElement.getPrimaryKey())));
         }
 
-        if (!StringUtils.isEmpty(seekElement.getAdditionalOrdering())) {
-            query.orderBy(builder.asc(root.get(seekElement.getAdditionalOrdering())));
+        if (!StringUtils.isEmpty(pivotElement.getAdditionalOrdering())) {
+            query.orderBy(builder.asc(root.get(pivotElement.getAdditionalOrdering())));
         }
 
         // put everything together
-        List<Predicate> filters = calculatePredicates(builder, root, seekElement);
+        List<Predicate> filters = calculatePredicates(builder, root, pivotElement);
         if (!filters.isEmpty()) {
             query.where(filters.toArray(new Predicate[filters.size()]));
         }
 
         List<T> results = mainEntityManagerFactory.createQuery(query)
                 .setMaxResults(limit).getResultList();
-
-        LOGGER.log("GenericDAO: " + seekElement.toString(), LogLevel.DEBUG);
 
         return results;
     }
@@ -161,51 +161,40 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    public T deserializeJsonAsObject(final String json, final Class<T> object) {
-        T retVal = null;
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            retVal = (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return retVal;
+    public T deserializeJsonAsObject(final String json, final Class<T> object)
+            throws JsonProcessingException, ClassNotFoundException {
+        ObjectMapper mapper = new ObjectMapper();
+        return (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public T find(final PK id) {
         T retVal = mainEntityManagerFactory.find(genericType, id);
-        if (retVal == null) {
-            LOGGER.log("404 - Entity not found.", LogLevel.ERROR);
-        }
         return retVal;
     }
 
-    private List<Predicate> calculatePredicates(CriteriaBuilder builder, Root<T> root,
-            JpaPagination seekElement) {
+    //### ######################################################################
+    private List<Predicate> calculatePredicates(final CriteriaBuilder builder, final Root<T> root,
+            final JpaPagination pivotElement) {
         List<Predicate> filters = new ArrayList<>();
 
         // get the break element
-        if (!StringUtils.isEmpty(seekElement.getPageBreak())) {
-            if (seekElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
-                filters.add(
-                        builder.greaterThanOrEqualTo(
-                                root.get(seekElement.getPrimaryKey()),
-                                seekElement.getPageBreak()
-                        ));
+        if (!StringUtils.isEmpty(pivotElement.getPageBreak())) {
+            if (pivotElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
+                filters.add(builder.greaterThanOrEqualTo(root.get(pivotElement.getPrimaryKey()),
+                        pivotElement.getPageBreak()
+                ));
             } else {
-                filters.add(
-                        builder.lessThanOrEqualTo(
-                                root.get(seekElement.getPrimaryKey()),
-                                seekElement.getPageBreak()
-                        ));
+                filters.add(builder.lessThanOrEqualTo(root.get(pivotElement.getPrimaryKey()),
+                        pivotElement.getPageBreak()
+                ));
             }
         }
 
-        if (!seekElement.getFilterStringCriteria().isEmpty()) {
+        if (!pivotElement.getFilterStringCriteria().isEmpty()) {
             for (Map.Entry<String, String> entry
-                    : seekElement.getFilterStringCriteria().entrySet()) {
+                    : pivotElement.getFilterStringCriteria().entrySet()) {
                 filters.add(
                         builder.equal(root.get(entry.getKey()), entry.getValue()));
             }
@@ -213,9 +202,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             LOGGER.log("No String based filters are set.", LogLevel.DEBUG);
         }
 
-        if (!seekElement.getFilterBooleanCriteria().isEmpty()) {
+        if (!pivotElement.getFilterBooleanCriteria().isEmpty()) {
             for (Map.Entry<String, Boolean> entry
-                    : seekElement.getFilterBooleanCriteria().entrySet()) {
+                    : pivotElement.getFilterBooleanCriteria().entrySet()) {
                 filters.add(
                         builder.equal(root.get(entry.getKey()), entry.getValue()));
             }
@@ -223,9 +212,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             LOGGER.log("No Boolean based filters are set.", LogLevel.DEBUG);
         }
 
-        if (!seekElement.getFilterIntegerCriteria().isEmpty()) {
+        if (!pivotElement.getFilterIntegerCriteria().isEmpty()) {
             for (Map.Entry<String, Integer> entry
-                    : seekElement.getFilterIntegerCriteria().entrySet()) {
+                    : pivotElement.getFilterIntegerCriteria().entrySet()) {
                 filters.add(
                         builder.equal(root.get(entry.getKey()), entry.getValue()));
             }

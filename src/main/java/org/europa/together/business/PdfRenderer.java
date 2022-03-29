@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public interface PdfRenderer {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "2.0")
     String FEATURE_ID = "CM-0011";
@@ -64,7 +64,7 @@ public interface PdfRenderer {
      *
      * @param file as String
      * @param htmlTemplate as String
-     * @throws java.io.FileNotFoundException in cse of failure
+     * @throws java.io.FileNotFoundException
      */
     @API(status = STABLE, since = "3.0")
     void renderDocumentFromHtml(String file, String htmlTemplate) throws FileNotFoundException;

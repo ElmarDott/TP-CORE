@@ -4,7 +4,7 @@ import com.lowagie.text.pdf.PdfReader;
 import java.io.IOException;
 
 /**
- * This class hides implementation details of the OpenPdf PdfRendere class used
+ * This class hides implementation details of the OpenPdf PdfReader class used
  * in the API.
  */
 public class PdfDocument extends PdfReader {

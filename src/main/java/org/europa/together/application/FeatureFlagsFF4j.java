@@ -5,8 +5,6 @@ import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.CryptoTools;
@@ -25,7 +23,6 @@ import org.ff4j.property.store.JdbcPropertyStore;
 import org.ff4j.store.JdbcFeatureStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -52,8 +49,6 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
 
     /**
      * Constructor.
-     *
-     * @param propertyFile as String
      */
     public FeatureFlagsFF4j() {
         LOGGER.log("instance class", LogLevel.INFO);
@@ -90,32 +85,32 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
     }
 
     @Override
-    public boolean check(String featureId) {
+    public boolean check(final String featureId) {
         return ff4j.check(featureId);
     }
 
     @Override
-    public void activateFeature(String featureId) {
+    public void activateFeature(final String featureId) {
         ff4j.enable(featureId);
     }
 
     @Override
-    public void deactivateFeature(String featureId) {
+    public void deactivateFeature(final String featureId) {
         ff4j.disable(featureId);
     }
 
     @Override
-    public void addFeature(Feature feature) {
+    public void addFeature(final Feature feature) {
         ff4j.createFeature(feature);
     }
 
     @Override
-    public Feature getFeature(String featureId) {
+    public Feature getFeature(final String featureId) {
         return ff4j.getFeature(featureId);
     }
 
     @Override
-    public void updateFeature(Feature feature) {
+    public void updateFeature(final Feature feature) {
         if (ff4j.exist(feature.getUid())) {
             ff4j.delete(feature.getUid());
         }
@@ -123,7 +118,7 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
     }
 
     @Override
-    public void removeFeature(String featureId) {
+    public void removeFeature(final String featureId) {
         ff4j.delete(featureId);
     }
 

@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public interface ImageProcessor {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-12";
@@ -92,7 +92,7 @@ public interface ImageProcessor {
      * @param file as File
      * @param format as String
      * @return true on success
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     boolean saveImage(BufferedImage renderedImage, File file, String format)
@@ -139,7 +139,7 @@ public interface ImageProcessor {
      * @param height as int
      * @param width as int
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage crop(int x, int y, int height, int width)
@@ -149,7 +149,7 @@ public interface ImageProcessor {
      * Flip the image horizontaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipHorizontal() throws MisconfigurationException;
@@ -158,7 +158,7 @@ public interface ImageProcessor {
      * Flip the image verticaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipVertical() throws MisconfigurationException;
@@ -179,7 +179,7 @@ public interface ImageProcessor {
      *
      * @param percentage as int
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage resize(int percentage) throws MisconfigurationException;
@@ -188,7 +188,7 @@ public interface ImageProcessor {
      * Rotate the image 90 degree steps to the right side.Clockwise rotation.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage rotateRight() throws MisconfigurationException;

@@ -154,7 +154,7 @@ public class VelocityRendererTest {
     }
 
     @Test
-    void failLoadContentByFileResource() {
+    void failLoadContentByFileResource() throws Exception {
         LOGGER.log("TEST CASE: failLoadContentByFileResource", LogLevel.DEBUG);
 
         instance = new VelocityRenderer();

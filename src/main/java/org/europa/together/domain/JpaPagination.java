@@ -15,8 +15,6 @@ import java.util.Map;
  * <br>
  * Its necessary to define the Primary Key from the Domain Object and not from
  * the database table name.
- *
- * @param <T> as GeneriClass
  */
 public class JpaPagination {
 
@@ -129,7 +127,7 @@ public class JpaPagination {
         return additionalOrdering;
     }
 
-    public void setAdditionalOrdering(String additionalOrdering) {
+    public void setAdditionalOrdering(final String additionalOrdering) {
         this.additionalOrdering = additionalOrdering;
     }
 
@@ -137,7 +135,7 @@ public class JpaPagination {
         return filterStringCriteria;
     }
 
-    public void setFilterStringCriteria(Map<String, String> filterStringCriteria) {
+    public void setFilterStringCriteria(final Map<String, String> filterStringCriteria) {
         this.filterStringCriteria = filterStringCriteria;
     }
 
@@ -145,7 +143,7 @@ public class JpaPagination {
         return filterBooleanCriteria;
     }
 
-    public void setFilterBooleanCriteria(Map<String, Boolean> filterBooleanCriteria) {
+    public void setFilterBooleanCriteria(final Map<String, Boolean> filterBooleanCriteria) {
         this.filterBooleanCriteria = filterBooleanCriteria;
     }
 
@@ -153,7 +151,7 @@ public class JpaPagination {
         return filterIntegerCriteria;
     }
 
-    public void setFilterIntegerCriteria(Map<String, Integer> filterIntegerCriteria) {
+    public void setFilterIntegerCriteria(final Map<String, Integer> filterIntegerCriteria) {
         this.filterIntegerCriteria = filterIntegerCriteria;
     }
 

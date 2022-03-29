@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public interface XmlTools {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-10";

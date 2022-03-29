@@ -32,13 +32,6 @@ public class OpenPdfRenderer implements PdfRenderer {
     private String author = "";
     private String keywords = "";
 
-    /**
-     * Constructor.
-     */
-    public OpenPdfRenderer() {
-        LOGGER.log("instance class", LogLevel.INFO);
-    }
-
     @Override
     public PdfDocument loadDocument(final File pdfDocument) {
         PdfDocument pdfReader = null;

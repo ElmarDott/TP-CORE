@@ -75,7 +75,7 @@ public final class MailClientService {
      */
     @API(status = STABLE, since = "3.0")
     public Map<String, String> updateDatabaseConfiguration(
-            final Map<String, String> configurationList) {
+            final Map<String, String> configurationList) throws DAOException {
 
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(

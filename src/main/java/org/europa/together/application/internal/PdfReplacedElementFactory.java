@@ -83,7 +83,6 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
     @Override
     public void remove(final Element e) {
         // Auto-generated method stub
-
     }
 
     @Override

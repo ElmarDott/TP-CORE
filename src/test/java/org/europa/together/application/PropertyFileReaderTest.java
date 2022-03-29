@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.Logger;
@@ -127,7 +126,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void appendPropertiesFromExternalFile() throws IOException {
+    void appendPropertiesFromExternalFile() throws Exception {
         LOGGER.log("TEST CASE: appendPropertiesFromExternalFile", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -148,7 +147,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void appendPropertiesFromClasspath() throws IOException {
+    void appendPropertiesFromClasspath() throws Exception {
         LOGGER.log("TEST CASE: appendPropertiesFromClasspath", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -169,7 +168,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyAsBoolean() throws IOException {
+    void getPropertyAsBoolean() throws Exception {
         LOGGER.log("TEST CASE: getPropertyAsBoolean", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -182,7 +181,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failGetPropertyAsBoolean() throws IOException {
+    void failGetPropertyAsBoolean() throws Exception {
         LOGGER.log("TEST CASE: failGetPropertyAsBoolean", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -195,7 +194,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyAsInt() throws IOException {
+    void getPropertyAsInt() throws Exception {
         LOGGER.log("TEST CASE: getPropertyAsInt", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -207,7 +206,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failGetPropertyAsInt() throws IOException {
+    void failGetPropertyAsInt() throws Exception {
         LOGGER.log("TEST CASE: failGetPropertyAsInt", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -221,7 +220,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyAsString() throws IOException {
+    void getPropertyAsString() throws Exception {
         LOGGER.log("TEST CASE: getPropertyAsString", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -234,7 +233,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failGetPropertyAsString() throws IOException {
+    void failGetPropertyAsString() throws Exception {
         LOGGER.log("TEST CASE: failGetPropertyAsString", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -244,7 +243,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyAsFloat() throws IOException {
+    void getPropertyAsFloat() throws Exception {
         LOGGER.log("TEST CASE: getPropertyAsFloat", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -260,7 +259,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failGetPropertyAsFloat() throws IOException {
+    void failGetPropertyAsFloat() throws Exception {
         LOGGER.log("TEST CASE: failGetPropertyAsFloat", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -272,7 +271,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyAsDouble() throws IOException {
+    void getPropertyAsDouble() throws Exception {
         LOGGER.log("TEST CASE: getPropertyAsDouble", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -286,7 +285,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failGetPropertyAsDouble() throws IOException {
+    void failGetPropertyAsDouble() throws Exception {
         LOGGER.log("TEST CASE: failGetPropertyAsDouble", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -298,7 +297,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void addProperty() throws IOException {
+    void addProperty() throws Exception {
         LOGGER.log("TEST CASE: addProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -313,7 +312,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failAddProperty() throws IOException {
+    void failAddProperty() throws Exception {
         LOGGER.log("TEST CASE: failAddProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -327,7 +326,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void removeProperty() throws IOException {
+    void removeProperty() throws Exception {
         LOGGER.log("TEST CASE: removeProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -340,7 +339,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void failRemoveProperty() throws IOException {
+    void failRemoveProperty() throws Exception {
         LOGGER.log("TEST CASE: failRemoveProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -379,7 +378,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void clearProperties() throws IOException {
+    void clearProperties() throws Exception {
         LOGGER.log("TEST CASE: clearProperties", LogLevel.DEBUG);
 
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
@@ -388,7 +387,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void getPropertyList() throws IOException {
+    void getPropertyList() throws Exception {
         LOGGER.log("TEST CASE: getPropertyList", LogLevel.DEBUG);
 
         propertyReader.clear();

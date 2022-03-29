@@ -10,20 +10,21 @@ import org.ff4j.core.Feature;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * Feature Flags is a wrapper for the FF4j library to enable toggels for
+ * activating and deactivating features.
  */
 @API(status = STABLE, since = "3.0", consumers = "FeatureFlagsFF4j")
 @Component
 public interface FeatureFlags {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "3.0")
     String FEATURE_ID = "CM-13";
 
     /**
-     * Define the Configuration Set for the MailClient.
+     * Define the configuration set for FeatureFlags.
      */
     @API(status = STABLE, since = "3.0")
     String CONFIG_SET = "features";
@@ -34,21 +35,77 @@ public interface FeatureFlags {
     @API(status = STABLE, since = "3.0")
     String CONFIG_VERSION = "1.0";
 
-    public FF4j getFeatureStore(String propertyFile) throws IOException, ConnectException;
+    /**
+     * Connect an application to a feature store by a given database connection
+     * file.
+     * <li>jdbc.driverClassName</li>
+     * <li>jdbc.url</li>
+     * <li>jdbc.user</li>
+     * <li>jdbc.password</li>
+     *
+     * @param propertyFile as String
+     * @return feature store as FF4j
+     * @throws java.io.IOException
+     * @throws java.net.ConnectException
+     */
+    FF4j getFeatureStore(String propertyFile) throws IOException, ConnectException;
 
-    public boolean check(String featureId);
+    /**
+     * Check if a feature is enbaled or not.
+     *
+     * @param featureId as String
+     * @return check as boolean
+     */
+    boolean check(String featureId);
 
-    public void activateFeature(String eeatureId);
+    /**
+     * Activate a feature in the feature store by given ID.
+     *
+     * @param featureId as String
+     */
+    void activateFeature(String featureId);
 
-    public void deactivateFeature(String featureId);
+    /**
+     * Deactivate a feature in the feature store by given ID.
+     *
+     * @param featureId as String
+     */
+    void deactivateFeature(String featureId);
 
-    public void addFeature(Feature feature);
+    /**
+     * Add a Feature to the feature store.
+     *
+     *
+     * @param feature as Feature
+     */
+    void addFeature(Feature feature);
 
-    public Feature getFeature(String featureId);
+    /**
+     * Get the full Feature by a given ID from the feature store.
+     *
+     * @param featureId as String
+     * @return feature as Feature
+     */
+    Feature getFeature(String featureId);
 
-    public void updateFeature(Feature feature);
+    /**
+     * Update an existing Feature in the feature store.
+     *
+     * @param feature as Feature
+     */
+    void updateFeature(Feature feature);
 
-    public void removeFeature(String featureId);
+    /**
+     * Remove an existing Feature from the feature store.
+     *
+     * @param featureId
+     */
+    void removeFeature(String featureId);
 
-    public Map<String, Feature> listAllFeatures();
+    /**
+     * Grab all in the feature store existing Features.
+     *
+     * @return Feature by its featureId as Map
+     */
+    Map<String, Feature> listAllFeatures();
 }

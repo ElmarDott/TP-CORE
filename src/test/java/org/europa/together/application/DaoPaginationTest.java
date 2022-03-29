@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.DAOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +52,7 @@ public class DaoPaginationTest {
     }
 
     @AfterAll
-    static void tearDown() throws SQLException {
+    static void tearDown() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
         LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
@@ -64,7 +62,7 @@ public class DaoPaginationTest {
     }
 
     @AfterEach
-    void testCaseTermination() throws SQLException {
+    void testCaseTermination() throws Exception {
         LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
@@ -74,8 +72,8 @@ public class DaoPaginationTest {
         LOGGER.log("TEST CASE: emptyListAllAsc", LogLevel.DEBUG);
 
         jdbcActions.executeQuery(FLUSH_TABLE);
-        JpaPagination seekElement = new JpaPagination("uuid");
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         //restore DB before test in the case the tests fail
         jdbcActions.executeSqlFromClasspath(FILE);
@@ -85,11 +83,11 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void listAllAsc() throws DAOException {
+    void listAllAsc() throws Exception {
         LOGGER.log("TEST CASE: listAllAsc", LogLevel.DEBUG);
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -97,12 +95,12 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void listAllDesc() throws DAOException {
+    void listAllDesc() throws Exception {
         LOGGER.log("TEST CASE: listAllDesc", LogLevel.DEBUG);
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setSorting(JpaPagination.ORDER_DESC);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0100-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -110,12 +108,12 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void limitAsc() throws DAOException {
+    void limitAsc() throws Exception {
         LOGGER.log("TEST CASE: limitAsc", LogLevel.DEBUG);
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(35);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(35);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(35, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -123,13 +121,13 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void limitDesc() throws DAOException {
+    void limitDesc() throws Exception {
         LOGGER.log("TEST CASE: limitDesc", LogLevel.DEBUG);
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(3);
-        seekElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(3);
+        pivotElement.setSorting(JpaPagination.ORDER_DESC);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(3, result.size());
         assertEquals("88888888-0100-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -137,16 +135,16 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void pageAhead() throws DAOException {
+    void pageAhead() throws Exception {
         LOGGER.log("TEST CASE: pageAhead", LogLevel.DEBUG);
 
         //start element for pagination
         String primareyKey = "88888888-0027-4444-4444-cccccccccc";
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(5);
-        seekElement.setPageBreak(primareyKey);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(5);
+        pivotElement.setPageBreak(primareyKey);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -154,18 +152,18 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void pageBackwards() throws DAOException {
+    void pageBackwards() throws Exception {
         LOGGER.log("TEST CASE: pageBackwards", LogLevel.DEBUG);
 
         //start element for pagination
         String primareyKey = "88888888-0027-4444-4444-cccccccccc";
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(5);
-        seekElement.setPageBreak(primareyKey);
-        seekElement.setPaging(JpaPagination.PAGING_BACKWARD);
-        seekElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(5);
+        pivotElement.setPageBreak(primareyKey);
+        pivotElement.setPaging(JpaPagination.PAGING_BACKWARD);
+        pivotElement.setSorting(JpaPagination.ORDER_DESC);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -173,16 +171,16 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void fetchEndOfList() throws DAOException {
+    void fetchEndOfList() throws Exception {
         LOGGER.log("TEST CASE: fetchEndOfList", LogLevel.DEBUG);
 
         //start element for pagination
         String primareyKey = "88888888-0081-4444-4444-cccccccccc";
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(27);
-        seekElement.setPageBreak(primareyKey);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(27);
+        pivotElement.setPageBreak(primareyKey);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(20, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -190,12 +188,12 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void fetchLessResultsThanAPage() throws DAOException {
+    void fetchLessResultsThanAPage() throws Exception {
         LOGGER.log("TEST CASE: fetchLessResultsThanAPage", LogLevel.DEBUG);
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setPageSize(150);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setPageSize(150);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -203,16 +201,16 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void simpleResultFilterWhitoutPagination() throws DAOException {
+    void simpleResultFilterWhitoutPagination() throws Exception {
         LOGGER.log("TEST CASE: simpleResultFilterWhitoutPagination", LogLevel.DEBUG);
 
         Map<String, String> filters = new HashMap<>();
         filters.put("modulName", "default");
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterStringCriteria(filters);
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setFilterStringCriteria(filters);
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(26, result.size());
         assertEquals("88888888-0050-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -220,18 +218,18 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void simpleResultFilterWithPagination() throws DAOException {
+    void simpleResultFilterWithPagination() throws Exception {
         LOGGER.log("TEST CASE: simpleResultFilterWithPagination", LogLevel.DEBUG);
 
         Map<String, String> filters = new HashMap<>();
         filters.put("modulName", "default");
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterStringCriteria(filters);
-        seekElement.setPageSize(8);
-        seekElement.setPageBreak("88888888-0057-4444-4444-cccccccccc");
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setFilterStringCriteria(filters);
+        pivotElement.setPageSize(8);
+        pivotElement.setPageBreak("88888888-0057-4444-4444-cccccccccc");
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(8, result.size());
         assertEquals("88888888-0057-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -239,19 +237,19 @@ public class DaoPaginationTest {
     }
 
     @Test
-    void complexResultFilterWithPagination() throws DAOException {
+    void complexResultFilterWithPagination() throws Exception {
         LOGGER.log("TEST CASE: complexResultFilterWithPagination", LogLevel.DEBUG);
 
         Map<String, String> filters = new HashMap<>();
         filters.put("modulName", "test");
         filters.put("configurationSet", "AAA");
 
-        JpaPagination seekElement = new JpaPagination("uuid");
-        seekElement.setFilterStringCriteria(filters);
-        seekElement.setPageSize(8);
-        seekElement.setPageBreak("88888888-0005-4444-4444-cccccccccc");
+        JpaPagination pivotElement = new JpaPagination("uuid");
+        pivotElement.setFilterStringCriteria(filters);
+        pivotElement.setPageSize(8);
+        pivotElement.setPageBreak("88888888-0005-4444-4444-cccccccccc");
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(seekElement);
+        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals("88888888-0005-4444-4444-cccccccccc", result.get(0).getUuid());
