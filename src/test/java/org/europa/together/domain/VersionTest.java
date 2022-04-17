@@ -7,11 +7,8 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 public class VersionTest {
 
     private static final Logger LOGGER = new LogbackLogger(VersionTest.class);

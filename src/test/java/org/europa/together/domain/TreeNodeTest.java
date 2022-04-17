@@ -7,11 +7,8 @@ import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 public class TreeNodeTest {
 
     private static final Logger LOGGER = new LogbackLogger(TreeNodeTest.class);

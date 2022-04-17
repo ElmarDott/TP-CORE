@@ -1,7 +1,5 @@
 package org.europa.together.application;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureFlags;
 import org.europa.together.business.Logger;
@@ -9,7 +7,6 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -18,14 +15,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class FeatureFlagsFF4jTest {

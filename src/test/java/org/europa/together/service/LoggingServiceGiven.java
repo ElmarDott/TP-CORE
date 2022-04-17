@@ -8,8 +8,6 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * JGiven PreConditions for LoggingService Test Scenarios.
  */
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class LoggingServiceGiven extends Stage<LoggingServiceGiven> {

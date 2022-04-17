@@ -8,7 +8,6 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
-import javax.mail.internet.AddressException;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.application.JavaMailClient;
@@ -27,13 +26,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class MailClientScenarioIT extends
