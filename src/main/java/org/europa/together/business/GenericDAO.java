@@ -1,6 +1,5 @@
 package org.europa.together.business;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
@@ -8,6 +7,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.exceptions.DAOException;
+import org.europa.together.exceptions.JsonProcessingException;
 import org.springframework.stereotype.Component;
 
 /**

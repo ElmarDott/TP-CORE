@@ -1,7 +1,5 @@
 package org.europa.together.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -15,15 +13,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.GenericDAO;
+import org.europa.together.business.JsonTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.JpaPagination;
+import org.europa.together.exceptions.JsonProcessingException;
 import org.europa.together.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Abstract implementation of Domain DAO.
+ * Abstract implementation of Domain Access Object (DAO) Pattern.
  *
  * @param <T> as template.
  * @param <PK> as PrimaryKey
@@ -36,6 +37,9 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     private static final long serialVersionUID = 2L;
     private static final Logger LOGGER = new LogbackLogger(GenericHbmDAO.class);
+
+    @Autowired
+    private JsonTools jsonTools;
 
     /**
      * JPA Entity Manager for Transactions.
@@ -155,15 +159,13 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     public String serializeAsJson(final T object) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
+        return jsonTools.serializeAsJson(object);
     }
 
     @Override
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
-        ObjectMapper mapper = new ObjectMapper();
-        return (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
+        return (T) jsonTools.deserializeJsonAsObject(json, object);
     }
 
     @Override
