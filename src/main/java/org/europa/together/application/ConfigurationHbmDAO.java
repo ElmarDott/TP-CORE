@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.CryptoTools;
@@ -60,12 +62,24 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
         // create Criteria
         Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
-        query.where(builder.equal(root.get("key"), hash),
-                builder.equal(root.get("modulName"), module),
-                builder.equal(root.get("version"), version));
 
+        //Criteria SQL Parameters
+        ParameterExpression<String> paramKey = builder.parameter(String.class);
+        ParameterExpression<String> paramModulName = builder.parameter(String.class);
+        ParameterExpression<String> paramVersion = builder.parameter(String.class);
+
+        query.where(builder.equal(root.get("key"), paramKey),
+                builder.equal(root.get("modulName"), paramModulName),
+                builder.equal(root.get("version"), paramVersion));
         query.orderBy(builder.asc(root.get("uuid")));
-        ConfigurationDO entry = mainEntityManagerFactory.createQuery(query).getSingleResult();
+
+        // wire queries together with parameters
+        TypedQuery<ConfigurationDO> result = mainEntityManagerFactory.createQuery(query);
+        result.setParameter(paramKey, hash);
+        result.setParameter(paramModulName, module);
+        result.setParameter(paramVersion, version);
+
+        ConfigurationDO entry = result.getSingleResult();
         LOGGER.log("getValueByKey() : " + entry.toString(), LogLevel.DEBUG);
         return entry;
     }

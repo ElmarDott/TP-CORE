@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- *
+ * Implementation of feature toggels.
  */
 @Repository
 public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>

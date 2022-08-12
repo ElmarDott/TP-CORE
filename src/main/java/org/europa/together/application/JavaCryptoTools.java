@@ -26,7 +26,7 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of java cryptography.
+ * Implementation of Java cryptography.
  */
 @Repository
 public class JavaCryptoTools implements CryptoTools {
@@ -74,9 +74,6 @@ public class JavaCryptoTools implements CryptoTools {
         KeyPair pair = null;
         try {
             int lenght = Constraints.INT_4096;
-            if (cipher.equals(CipherAlgorithm.EC)) {
-                lenght = Constraints.INT_512;
-            }
 
             KeyPairGenerator keyring = KeyPairGenerator.getInstance(cipher.toString());
             keyring.initialize(lenght, new SecureRandom());

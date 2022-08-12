@@ -16,8 +16,6 @@ public class CipherAlgorithmTest {
 
         assertEquals("RSA",
                 CipherAlgorithm.RSA.toString());
-        assertEquals("EC",
-                CipherAlgorithm.EC.toString());
     }
 
 }

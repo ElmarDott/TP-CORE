@@ -106,7 +106,9 @@ public final class Constraints {
                 + "\n\t Operating System: " + SYSTEM_OS
                 + "\n\t User Home DIR: " + SYSTEM_USER_HOME_DIR
                 + "\n\t Application DIR: " + SYSTEM_APP_DIR
-                + "\n\t BYTE DEVISOR: " + INT_1024
+                + "\n\t BYTE 512: " + INT_512
+                + "\n\t BYTE 1024: " + INT_1024
+                + "\n\t BYTE 4096: " + INT_4096
                 + "\n\t HEX 255: " + HEX_255
                 + "\n\t HEX 256: " + HEX_256;
     }

@@ -59,11 +59,11 @@ Docker was chosen for an simple and fast database setup. In the case you wish to
   * docker start postgres
   * docker stop postgres
 
-To create default user and schemata (also for testing), you are be able to use [TP-CM/dbms/src/sql/initial_postgresql.sql](https://github.com/ElmarDott/TP-CM/blob/master/dbms/src/sql/initial_postgresql.sql) script. 
+To create default user and schemata (also for testing), you are be able to use [TP-CM/dbms/src/sql/initial_postgresql.sql](https://github.com/ElmarDott/TP-CM/blob/master/dbms/src/sql/initial_postgresql.sql) script.
 
 ### Build
 
-TP-CORE uses always the current version of Apache Maven. To build the project by your own you will need the current version from the master branch of the parent-pom from the TP-CM project (build-workflow). 
+TP-CORE uses always the current version of Apache Maven. To build the project by your own you will need the current version from the master branch of the parent-pom from the TP-CM project (build-workflow).
 
 The project configurations are available in src/main/filter/ directory.
 
@@ -109,9 +109,11 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - remove jodatime
 |        | - remove flexjson
 |        | - remove ITextRenderer for OpenPdfRenderer
+|        | - change javax to jakarta (Jakarta EE 9)
 |        | - refactor MailClient & MailService
 |        | - refactor Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |        | - refactor test cases
+|        | - refactor log output
 |        | - bugfix TreeWalker.addNode()
 |        | - bugfix Change TreeNode.value to generic object (typesafe)
 |--------|----------------------------------------------------------------------

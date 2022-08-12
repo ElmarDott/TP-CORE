@@ -20,7 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of the PropertyReader.
+ * Implementation of the Property Reader.
  */
 @Repository
 public class PropertyFileReader implements PropertyReader {

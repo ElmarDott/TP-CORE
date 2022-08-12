@@ -142,7 +142,6 @@ public class JavaCryptoToolsTest {
         LOGGER.log("TEST CASE: getMaxKeySize", LogLevel.DEBUG);
 
         try {
-            assertEquals(2147483647, cryptoTools.getMaxKeySize(CipherAlgorithm.EC));
             assertEquals(2147483647, cryptoTools.getMaxKeySize(CipherAlgorithm.RSA));
         } catch (NoSuchAlgorithmException ex) {
             LOGGER.catchException(ex);
@@ -154,17 +153,6 @@ public class JavaCryptoToolsTest {
         LOGGER.log("TEST CASE: calculateRsaKeyPair", LogLevel.DEBUG);
 
         KeyPair store = cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA);
-        byte[] privateKey = store.getPrivate().getEncoded();
-        byte[] publicKey = store.getPublic().getEncoded();
-
-        assertNotEquals(publicKey.length, privateKey.length);
-    }
-
-    @Test
-    void calculateEcKeyPair() {
-        LOGGER.log("TEST CASE: calculateEcKeyPair", LogLevel.DEBUG);
-
-        KeyPair store = cryptoTools.generateCipherKeyPair(CipherAlgorithm.EC);
         byte[] privateKey = store.getPrivate().getEncoded();
         byte[] publicKey = store.getPublic().getEncoded();
 
@@ -196,11 +184,8 @@ public class JavaCryptoToolsTest {
         cryptoTools.saveKeyPairToFile(DIRECTORY,
                 cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA));
 
-        cryptoTools.saveKeyPairToFile(DIRECTORY,
-                cryptoTools.generateCipherKeyPair(CipherAlgorithm.EC));
-
-        assertTrue(new File(DIRECTORY + CipherAlgorithm.EC + ".key").exists());
-        assertTrue(new File(DIRECTORY + CipherAlgorithm.EC + ".pub").exists());
+        assertTrue(new File(DIRECTORY + CipherAlgorithm.RSA + ".key").exists());
+        assertTrue(new File(DIRECTORY + CipherAlgorithm.RSA + ".pub").exists());
     }
 
     @Test
@@ -211,19 +196,12 @@ public class JavaCryptoToolsTest {
         cryptoTools.saveKeyPairToFile(null,
                 cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA));
 
-        cryptoTools.saveKeyPairToFile(null,
-                cryptoTools.generateCipherKeyPair(CipherAlgorithm.EC));
-
         String dir = Constraints.SYSTEM_USER_HOME_DIR + "/";
 
-        assertTrue(new File(dir + CipherAlgorithm.EC + ".key").exists());
-        assertTrue(new File(dir + CipherAlgorithm.EC + ".pub").exists());
         assertTrue(new File(dir + CipherAlgorithm.RSA + ".key").exists());
         assertTrue(new File(dir + CipherAlgorithm.RSA + ".pub").exists());
 
         try { //CLEAN UP
-            assertTrue(new File(dir + CipherAlgorithm.EC + ".key").delete());
-            assertTrue(new File(dir + CipherAlgorithm.EC + ".pub").delete());
             assertTrue(new File(dir + CipherAlgorithm.RSA + ".key").delete());
             assertTrue(new File(dir + CipherAlgorithm.RSA + ".pub").delete());
 
@@ -253,27 +231,6 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    @Order(5)
-    void loadPrivateEcKeyFromFile() {
-        LOGGER.log("TEST CASE: loadPrivateEcKeyFromFile", LogLevel.DEBUG);
-
-        PrivateKey privateEcKey = cryptoTools.loadPrivateKeyFile(
-                DIRECTORY + CipherAlgorithm.EC + ".key", CipherAlgorithm.EC);
-        assertEquals(CipherAlgorithm.EC.toString(), privateEcKey.getAlgorithm());
-    }
-
-    @Test
-    @Order(6)
-    void loadPublicKeyEcFromFile() {
-        LOGGER.log("TEST CASE: loadPublicEcKeyFromFile", LogLevel.DEBUG);
-        String file = DIRECTORY;
-
-        PublicKey publicEcKey = cryptoTools.loadPublicKeyFile(
-                DIRECTORY + CipherAlgorithm.EC + ".pub", CipherAlgorithm.EC);
-        assertEquals(CipherAlgorithm.EC.toString(), publicEcKey.getAlgorithm());
-    }
-
-    @Test
     void failLoadPrivateKeyFile() {
         LOGGER.log("TEST CASE: failLoadPrivateKeyFile", LogLevel.DEBUG);
 
@@ -284,6 +241,6 @@ public class JavaCryptoToolsTest {
     void failLoadPublicKeyFile() {
         LOGGER.log("TEST CASE: failLoadPublicKeyFile", LogLevel.DEBUG);
 
-        assertNull(cryptoTools.loadPublicKeyFile(null, CipherAlgorithm.EC));
+        assertNull(cryptoTools.loadPublicKeyFile(null, CipherAlgorithm.RSA));
     }
 }

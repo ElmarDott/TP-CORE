@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class LogbackLoggerTest {
 
-    private static final Logger LOGGER = new LogbackLogger(LogbackLogger.class);
+    private static final Logger LOGGER = new LogbackLogger(LogbackLoggerTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

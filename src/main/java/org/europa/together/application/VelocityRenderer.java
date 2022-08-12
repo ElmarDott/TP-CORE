@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.europa.together.business.TemplateRenderer;
 
 /**
- * Implementation of a VelocityRenderer.
+ * Implementation of a Template Renderer.
  */
 @Repository
 public class VelocityRenderer implements TemplateRenderer {

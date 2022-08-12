@@ -25,7 +25,7 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of useful XML Tools.
+ * Implementation of XML Tools.
  */
 @Repository
 public class SaxTools implements XmlTools {

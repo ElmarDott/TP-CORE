@@ -9,7 +9,7 @@
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:annotation-config/>
-    
+
     <!-- Package needed to be scanned for annotation for @autowired DI-->
     <context:component-scan base-package="org.europa.together">
         <context:include-filter type="annotation"

@@ -214,7 +214,7 @@ public final class Validator {
             }
 
             if (size == value10) {
-                tmp += ((value10 - i) * digit);
+                tmp += (digit * (value10 - i));
                 LOGGER.log("(ISBN-10 SUM: " + tmp, LogLevel.DEBUG);
 
             } else {

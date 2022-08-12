@@ -1,17 +1,16 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.Logger;
+import org.europa.together.domain.LogLevel;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ConstraintsTest {
+
+    private static final Logger LOGGER = new LogbackLogger(ConstraintsTest.class);
 
     @Test
     void privateConstructor() throws Exception {
@@ -26,6 +25,7 @@ public class ConstraintsTest {
     @Test
     void generateToString() {
         String info = Constraints.printConstraintInfo();
+        LOGGER.log(info, LogLevel.DEBUG);
         assertNotNull(info);
     }
 }

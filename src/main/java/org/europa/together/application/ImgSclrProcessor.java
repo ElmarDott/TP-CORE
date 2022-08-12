@@ -18,7 +18,7 @@ import org.imgscalr.Scalr;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of a simple Image Processor.
+ * Implementation of a simple image processor.
  */
 @Repository
 public class ImgSclrProcessor implements ImageProcessor {
@@ -76,7 +76,7 @@ public class ImgSclrProcessor implements ImageProcessor {
             LOGGER.log("Load Image: " + this.fileName, LogLevel.DEBUG);
 
             ImageFormat format = Imaging.guessFormat(imageFile);
-            this.fileExtension = format.getExtension();
+            this.fileExtension = format.getDefaultExtension();
             LOGGER.log("Extension: " + this.fileExtension, LogLevel.DEBUG);
 
             success = true;
