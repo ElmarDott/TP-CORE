@@ -1,7 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;

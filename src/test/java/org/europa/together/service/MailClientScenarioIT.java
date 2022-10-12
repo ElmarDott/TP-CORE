@@ -5,12 +5,13 @@ import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.tngtech.jgiven.junit5.ScenarioTest;
+import jakarta.mail.internet.MimeMessage;
 import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.application.JavaMailClient;
+import org.europa.together.application.JakartaMailClient;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -89,7 +90,8 @@ public class MailClientScenarioIT extends
     @AfterEach
     void testCaseTermination() {
         try {
-            if (SMTP_SERVER.getReceivedMessages().length > 0) {
+            MimeMessage[] messages = SMTP_SERVER.getReceivedMessages();
+            if (messages.length > 0) {
                 SMTP_SERVER.purgeEmailFromAllMailboxes();
                 LOGGER.log("Mailboxes deleted.", LogLevel.TRACE);
             }
@@ -126,7 +128,7 @@ public class MailClientScenarioIT extends
 
         try {
             //COMPOSE MAIL
-            MailClient client = new JavaMailClient();
+            MailClient client = new JakartaMailClient();
             client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
 
             // PreCondition
@@ -159,7 +161,7 @@ public class MailClientScenarioIT extends
             mail.addRecipent("otto@sample.org");
             mail.addAttachment(DIRECTORY + "/Attachment.pdf");
 
-            MailClient client = new JavaMailClient();
+            MailClient client = new JakartaMailClient();
             client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
 
             // PreCondition

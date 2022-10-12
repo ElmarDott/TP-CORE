@@ -2,8 +2,8 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import java.util.Map;
-import javax.mail.Address;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Address;
+import jakarta.mail.internet.MimeMessage;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.MailClient;
 import static org.junit.jupiter.api.Assertions.*;

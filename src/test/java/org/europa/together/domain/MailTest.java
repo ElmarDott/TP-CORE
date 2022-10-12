@@ -89,19 +89,20 @@ public class MailTest {
     void addRecipentValidationFail() throws Exception {
         LOGGER.log("TEST CASE: addRecipentValidationFail", LogLevel.DEBUG);
 
-        List<String> failure = new ArrayList<>();
-        failure.add("@domain");
-        failure.add("@domain");
-        failure.add("no_mail.domain");
-        failure.add("success@domain");
-        failure.add("success@domain");
-        failure.add("no_mail.domain");
-
         Mail mail = new Mail();
-        for (String entry : failure) {
-            assertFalse(mail.addRecipent(entry));
-        }
-        assertEquals(0, mail.getRecipentList().size());
+
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("@domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("no_mail.domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("success@domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("fail"));
+        });
     }
 
     @Test
@@ -109,7 +110,6 @@ public class MailTest {
         LOGGER.log("TEST CASE: addRecipientList", LogLevel.DEBUG);
 
         List<String> recipients = new ArrayList<>();
-        recipients.add("fail");
         recipients.add("test@sample.com");
         recipients.add("test_01@sample.com");
         recipients.add("test_02@sample.com");

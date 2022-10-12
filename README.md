@@ -109,6 +109,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - remove jodatime
 |        | - remove flexjson
 |        | - remove ITextRenderer for OpenPdfRenderer
+|        | - replace JavaMail for JakartaMail
 |        | - change javax to jakarta (Jakarta EE 9)
 |        | - refactor MailClient & MailService
 |        | - refactor Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER

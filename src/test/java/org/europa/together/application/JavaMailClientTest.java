@@ -6,9 +6,9 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import java.security.Security;
 import java.util.Map;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -90,14 +90,14 @@ public class JavaMailClientTest {
     void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(JavaMailClient.class, hasValidBeanConstructor());
+        assertThat(JakartaMailClient.class, hasValidBeanConstructor());
     }
 
     @Test
     void initialConfiguration() {
         LOGGER.log("TEST CASE: initialConfiguration", LogLevel.DEBUG);
 
-        MailClient client = new JavaMailClient();
+        MailClient client = new JakartaMailClient();
         assertEquals(-1, client.getBulkMailLimiter());
         assertEquals(-1, client.getWaitTime());
         assertEquals(10, client.getDebugActiveConfiguration().size());
@@ -108,7 +108,7 @@ public class JavaMailClientTest {
     void cleanConfiguration() {
         LOGGER.log("TEST CASE: cleanConfiguration", LogLevel.DEBUG);
 
-        MailClient client = new JavaMailClient();
+        MailClient client = new JakartaMailClient();
         client.clearConfiguration();
         assertEquals(0, client.getDebugActiveConfiguration().size());
     }

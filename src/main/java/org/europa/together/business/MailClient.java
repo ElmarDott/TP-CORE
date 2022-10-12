@@ -2,10 +2,10 @@ package org.europa.together.business;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.Mail;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * @version 2.0
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0", consumers = "JavaMailClient")
+@API(status = STABLE, since = "1.0", consumers = "JakartaMailClient")
 @Component
 public interface MailClient {
 
@@ -97,7 +97,7 @@ public interface MailClient {
      * Compose a full e-mail, ready to send.
      *
      * @param mail as Mail
-     * @throws javax.mail.MessagingException
+     * @throws jakarta.mail.MessagingException
      */
     @API(status = STABLE, since = "3.0")
     void composeMail(Mail mail) throws MessagingException;
@@ -106,7 +106,7 @@ public interface MailClient {
      * Get the configured session to connect the SMTP server.
      *
      * @return session as Session
-     * @throws javax.mail.NoSuchProviderException
+     * @throws jakarta.mail.NoSuchProviderException
      */
     @API(status = STABLE, since = "3.0")
     Session getSession() throws NoSuchProviderException;

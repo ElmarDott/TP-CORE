@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import javax.mail.Address;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.Address;
+import jakarta.mail.Transport;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LogbackLogger;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of the Mail Client Service.
+ * Service implementation for the JavaMailClient.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -36,15 +35,12 @@ public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
-
     private String configurationFile = null;
 
     @Autowired
     private CryptoTools cryptoTools;
-
     @Autowired
     private ConfigurationDAO configurationDAO;
-
     @Autowired
     private MailClient mailClient;
 
@@ -59,34 +55,32 @@ public final class MailClientService {
     /**
      * Allows to update the database configuration for the MailClient by a map
      * of configuration entries.<br>
-     * <li>mailer.host</li>
-     * <li>mailer.port</li>
-     * <li>mailer.sender</li>
-     * <li>mailer.user</li>
-     * <li>mailer.password</li>
-     * <li>mailer.ssl</li>
-     * <li>mailer.tls</li>
-     * <li>mailer.debug</li>
-     * <li>mailer.count</li>
-     * <li>mailer.wait</li>
+     * <li>mailer.host
+     * <li>mailer.port
+     * <li>mailer.sender
+     * <li>mailer.user
+     * <li>mailer.password
+     * <li>mailer.ssl
+     * <li>mailer.tls
+     * <li>mailer.debug
+     * <li>mailer.count
+     * <li>mailer.wait
      *
      * @param configurationList as Map
      * @return configuration as Map
      */
     @API(status = STABLE, since = "3.0")
     public Map<String, String> updateDatabaseConfiguration(
-            final Map<String, String> configurationList) throws DAOException {
-
+            final Map<String, String> configurationList)
+            throws DAOException {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
                         Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
-
         for (ConfigurationDO configEntry : configurationEntries) {
 
             for (Map.Entry<String, String> entry : configurationList.entrySet()) {
                 if (configEntry.getKey().equals(
                         cryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
-
                     configEntry.setValue(entry.getValue());
                     configurationDAO.update(configEntry.getUuid(), configEntry);
                 }
@@ -94,34 +88,33 @@ public final class MailClientService {
         }
         mailClient.clearConfiguration();
         mailClient.loadConfigurationFromDatabase();
-
         return mailClient.getDebugActiveConfiguration();
     }
 
     /**
      * Allows to update the property configuration file for the MailClient by a
      * map of configuration entries.<br>
-     * <li>mailer.host</li>
-     * <li>mailer.port</li>
-     * <li>mailer.sender</li>
-     * <li>mailer.user</li>
-     * <li>mailer.password</li>
-     * <li>mailer.ssl</li>
-     * <li>mailer.tls</li>
-     * <li>mailer.debug</li>
-     * <li>mailer.count</li>
-     * <li>mailer.wait</li>
+     * <li>mailer.host
+     * <li>mailer.port
+     * <li>mailer.sender
+     * <li>mailer.user
+     * <li>mailer.password
+     * <li>mailer.ssl
+     * <li>mailer.tls
+     * <li>mailer.debug
+     * <li>mailer.count
+     * <li>mailer.wait
      *
      *
      * @param content as String
      * @param resource as String
      * @return configuration as Map
-     * @throws IOException
+     * @throws java.io.IOException
      */
     @API(status = STABLE, since = "3.0")
     public Map<String, String> updatePropertyConfiguration(
-            final String content, final String resource) throws IOException {
-
+            final String content, final String resource)
+            throws IOException {
         //write updates to file
         mailClient.clearConfiguration();
         mailClient.loadConfigurationFromProperties(resource);
@@ -133,7 +126,6 @@ public final class MailClientService {
      * as Map.
      *
      * @return mailConfiguration as Map
-     * @throws java.io.IOException in case of failue
      */
     @API(status = STABLE, since = "3.0")
     public Map<String, String> loadConfiguration() {
@@ -174,18 +166,15 @@ public final class MailClientService {
             } else {
                 mailClient.loadConfigurationFromDatabase();
             }
-
             mailClient.composeMail(mail);
-
             Address[] address = new Address[1];
-            address[0] = mail.getRecipentList().get(0);
+            address[0] = (Address) mail.getRecipentList().get(0);
 
             Transport postman = mailClient.getSession().getTransport();
             postman.connect();
             postman.sendMessage(mailClient.getMimeMessage(), address);
             postman.close();
             LOGGER.log("E-Mail should send.", LogLevel.TRACE);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -206,16 +195,13 @@ public final class MailClientService {
      */
     @API(status = STABLE, since = "1.0")
     public int sendBulkMail(final Mail mail) {
-
         int countSendedMails = 0;
-
         try {
             if (this.configurationFile != null) {
                 mailClient.loadConfigurationFromProperties(configurationFile);
             } else {
                 mailClient.loadConfigurationFromDatabase();
             }
-
             mailClient.composeMail(mail);
 
             int maximumMailBulk = mailClient.getBulkMailLimiter();
@@ -224,10 +210,10 @@ public final class MailClientService {
             Transport postman = mailClient.getSession().getTransport();
             postman.connect();
 
-            for (InternetAddress recipient : mail.getRecipentList()) {
+            for (Object recipient : mail.getRecipentList()) {
 
                 Address[] address = new Address[1];
-                address[0] = recipient;
+                address[0] = (Address) recipient;
                 countSendedMails++;
                 //after x mails wait for n seconds
                 if (countSendedMails % maximumMailBulk == 0) {
@@ -246,5 +232,4 @@ public final class MailClientService {
         LOGGER.log(countSendedMails + " E-Mails should sended", LogLevel.DEBUG);
         return countSendedMails;
     }
-
 }

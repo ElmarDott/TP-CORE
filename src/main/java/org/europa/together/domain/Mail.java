@@ -2,9 +2,9 @@ package org.europa.together.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.activation.FileDataSource;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.Validator;
@@ -36,9 +36,10 @@ public class Mail {
      * Add recipients from a List of Strings (E-Mail Address).
      *
      * @param recipients as List.
-     * @throws javax.mail.internet.AddressException on failure
+     * @throws jakarta.mail.internet.AddressException
      */
-    public void addRecipientList(final List<String> recipients) throws AddressException {
+    public void addRecipientList(final List<String> recipients)
+            throws AddressException {
         for (String recipient : recipients) {
             addRecipent(recipient);
         }
@@ -125,27 +126,20 @@ public class Mail {
             throws AddressException {
         boolean success = false;
         InternetAddress mailAdress;
-        try {
+        if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
+            throw new AddressException("[" + recipient + "] is not a valid email Adress.");
+        }
+        mailAdress = new InternetAddress(recipient);
+        mailAdress.validate();
 
-            if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
-                throw new AddressException("[" + recipient + "] is not a valid email Adress.");
-            }
-            mailAdress = new InternetAddress(recipient);
-            mailAdress.validate();
-
-            //detect duplicate entries
-            if (recipientList.contains(mailAdress)) {
-                LOGGER.log("Address " + recipient + " already exist and will be ignored.",
-                        LogLevel.WARN);
-            } else {
-
-                recipientList.add(mailAdress);
-                success = true;
-                LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
-            }
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+        //detect duplicate entries
+        if (recipientList.contains(mailAdress)) {
+            LOGGER.log("Address " + recipient + " already exist and will be ignored.",
+                    LogLevel.WARN);
+        } else {
+            recipientList.add(mailAdress);
+            success = true;
+            LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
         }
         return success;
     }
