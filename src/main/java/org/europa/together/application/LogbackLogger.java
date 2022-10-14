@@ -40,7 +40,6 @@ public class LogbackLogger implements Logger {
 
     @Override
     public LogLevel log(final String message, final LogLevel level) {
-
         instanceLogger();
         switch (level) {
             case TRACE:
@@ -64,10 +63,8 @@ public class LogbackLogger implements Logger {
 
     @Override
     public LogLevel getConfiguredLogLevel() {
-
         instanceLogger();
         LogLevel level = null;
-
         if (logger.isErrorEnabled()) {
             level = LogLevel.ERROR;
         }
@@ -88,15 +85,12 @@ public class LogbackLogger implements Logger {
 
     @Override
     public String catchException(final Exception ex) {
-
         instanceLogger();
         String exceptionType = ex.getClass().getSimpleName();
         logger.error(exceptionType + ": " + ex.getMessage());
-
         if (exceptionType.equals("NullPointerException")) {
             logger.error(Arrays.toString(ex.getStackTrace()));
         }
-
         return ex.getMessage();
     }
 
@@ -107,7 +101,6 @@ public class LogbackLogger implements Logger {
         ch.qos.logback.classic.Logger root
                 = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
                         ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-
         Level filter = Level.OFF;
         if (level == LogLevel.TRACE) {
             filter = Level.TRACE;
@@ -132,5 +125,4 @@ public class LogbackLogger implements Logger {
             logger = LoggerFactory.getILoggerFactory().getLogger(instance.getName());
         }
     }
-
 }

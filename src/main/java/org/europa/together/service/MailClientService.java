@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service implementation for the JavaMailClient.
+ * Service implementation for the JakartaMailClient.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -105,7 +105,6 @@ public final class MailClientService {
      * <li>mailer.count
      * <li>mailer.wait
      *
-     *
      * @param content as String
      * @param resource as String
      * @return configuration as Map
@@ -122,7 +121,7 @@ public final class MailClientService {
     }
 
     /**
-     * Get the active configuration for the E-Mail Service and return the result
+     * Get the active configuration for the e-mail service and return the result
      * as Map.
      *
      * @return mailConfiguration as Map
@@ -146,7 +145,7 @@ public final class MailClientService {
 
     /**
      * Send an composed (single) e-mail which is configured in a Mail data
-     * class. An E-Mail can be configured as followed:  <br>
+     * class. An e-mail can be configured as followed:  <br>
      * <code>
      *  Mail mail = new Mail();
      *  mail.setSubject(subject);
@@ -182,7 +181,7 @@ public final class MailClientService {
 
     /**
      * Send a bulk of composed mails to a configured list of recipients. The
-     * Bulk Mail supports a special feature, to interrupt the sending after an
+     * bulk mail supports a special feature, to interrupt the sending after an
      * defined amount of mails fo a configured time (milliseconds) until the
      * next bulk can be send. After the termination the method return th count
      * of the send mails. This two parameters are also part of thw whole
@@ -203,15 +202,12 @@ public final class MailClientService {
                 mailClient.loadConfigurationFromDatabase();
             }
             mailClient.composeMail(mail);
-
             int maximumMailBulk = mailClient.getBulkMailLimiter();
             long countWaitTime = mailClient.getWaitTime();
-
             Transport postman = mailClient.getSession().getTransport();
             postman.connect();
 
             for (Object recipient : mail.getRecipentList()) {
-
                 Address[] address = new Address[1];
                 address[0] = (Address) recipient;
                 countSendedMails++;

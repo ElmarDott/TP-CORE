@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,6 +16,7 @@ import org.europa.together.business.JsonTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.JpaPagination;
+import org.europa.together.exceptions.DAOException;
 import org.europa.together.exceptions.JsonProcessingException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     private static final Logger LOGGER = new LogbackLogger(GenericHbmDAO.class);
 
     @Autowired
-    private JsonTools jsonTools;
+    private JsonTools<T> jsonTools;
 
     /**
      * JPA Entity Manager for Transactions.
@@ -70,24 +70,25 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    public void delete(final PK id) throws EntityNotFoundException {
+    public void delete(final PK id)
+            throws DAOException {
         T foundObject = find(id);
         if (foundObject != null) {
             mainEntityManagerFactory.remove(foundObject);
         } else {
-            throw new EntityNotFoundException("delete:" + id.toString());
+            throw new DAOException("delete:" + id.toString());
         }
     }
 
     @Override
-    public void update(final PK id, final T object) throws EntityNotFoundException {
-
+    public void update(final PK id, final T object)
+            throws DAOException {
         if (object != null && this.find(id) != null) {
             mainEntityManagerFactory.merge(object);
             LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") update",
                     LogLevel.TRACE);
         } else {
-            throw new EntityNotFoundException("update: " + id.toString()
+            throw new DAOException("update: " + id.toString()
                     + " : " + object.toString());
         }
     }
@@ -105,15 +106,11 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     @Override
     @Transactional(readOnly = true)
     public List<T> listAllElements(final JpaPagination pivotElement) {
-
         LOGGER.log("GenericDAO: " + pivotElement.toString(), LogLevel.DEBUG);
-
         CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(genericType);
         Root<T> root = query.from(genericType);
-
         int limit = pivotElement.getPageSize();
-
         // skip pagination
         int countedResults = mainEntityManagerFactory.createQuery(query).getResultList().size();
         if (limit == 0 || limit >= countedResults) {
@@ -125,20 +122,16 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         } else {
             query.orderBy(builder.desc(root.get(pivotElement.getPrimaryKey())));
         }
-
         if (!StringUtils.isEmpty(pivotElement.getAdditionalOrdering())) {
             query.orderBy(builder.asc(root.get(pivotElement.getAdditionalOrdering())));
         }
-
         // put everything together
         List<Predicate> filters = calculatePredicates(builder, root, pivotElement);
         if (!filters.isEmpty()) {
             query.where(filters.toArray(new Predicate[filters.size()]));
         }
-
         List<T> results = mainEntityManagerFactory.createQuery(query)
                 .setMaxResults(limit).getResultList();
-
         return results;
     }
 
@@ -158,14 +151,21 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    public String serializeAsJson(final T object) throws JsonProcessingException {
-        return jsonTools.serializeAsJson(object);
+    public String serializeAsJson(final T object)
+            throws JsonProcessingException {
+        return jsonTools.serializeAsJsonObject(object);
     }
 
     @Override
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
-        return (T) jsonTools.deserializeJsonAsObject(json, object);
+        return jsonTools.deserializeJsonAsObject(json, object);
+    }
+
+    @Override
+    public List<T> deserializeJsonAsList(final String json)
+            throws JsonProcessingException, ClassNotFoundException {
+        return jsonTools.deserializeJsonAsList(json);
     }
 
     @Override
@@ -179,7 +179,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     private List<Predicate> calculatePredicates(final CriteriaBuilder builder, final Root<T> root,
             final JpaPagination pivotElement) {
         List<Predicate> filters = new ArrayList<>();
-
         // get the break element
         if (!StringUtils.isEmpty(pivotElement.getPageBreak())) {
             if (pivotElement.getPaging().equals(JpaPagination.PAGING_FOREWARD)) {
@@ -192,7 +191,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
                 ));
             }
         }
-
         if (!pivotElement.getFilterStringCriteria().isEmpty()) {
             for (Map.Entry<String, String> entry
                     : pivotElement.getFilterStringCriteria().entrySet()) {
@@ -202,7 +200,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         } else {
             LOGGER.log("No String based filters are set.", LogLevel.DEBUG);
         }
-
         if (!pivotElement.getFilterBooleanCriteria().isEmpty()) {
             for (Map.Entry<String, Boolean> entry
                     : pivotElement.getFilterBooleanCriteria().entrySet()) {
@@ -212,7 +209,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         } else {
             LOGGER.log("No Boolean based filters are set.", LogLevel.DEBUG);
         }
-
         if (!pivotElement.getFilterIntegerCriteria().isEmpty()) {
             for (Map.Entry<String, Integer> entry
                     : pivotElement.getFilterIntegerCriteria().entrySet()) {
@@ -222,7 +218,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         } else {
             LOGGER.log("No Integer based filters are set.", LogLevel.DEBUG);
         }
-
         return filters;
     }
 }

@@ -24,7 +24,7 @@ public interface TemplateRenderer {
 
     /**
      * Generate a String from a template in the classpath and a Map with
-     * Variables.
+     * variables.
      *
      * @param resourcePath as String
      * @param template as String
@@ -36,7 +36,7 @@ public interface TemplateRenderer {
             Map<String, String> properties);
 
     /**
-     * Generate a String from a template using an external File and a Map with
+     * Generate a String from a template using an external file and a Map with
      * variables.
      *
      * @param resourcePath as String

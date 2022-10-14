@@ -1,10 +1,10 @@
 package org.europa.together.business;
 
 import java.util.List;
-import javax.persistence.EntityNotFoundException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.ConfigurationDO;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -111,19 +111,19 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * Restore a single entry to his default value.
      *
      * @param entry as Configuration
-     * @throws javax.persistence.EntityNotFoundException
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
     void restoreKeyToDefault(ConfigurationDO entry)
-            throws EntityNotFoundException;
+            throws DAOException;
 
     /**
      * Update a List of existing configuration entries.
      *
      * @param configuration as List&lt;Configuration&gt;
-     * @throws javax.persistence.EntityNotFoundException
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
     void updateConfigurationEntries(List<ConfigurationDO> configuration)
-            throws EntityNotFoundException;
+            throws DAOException;
 }

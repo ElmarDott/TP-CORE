@@ -1,7 +1,7 @@
 package org.europa.together.exceptions;
 
 /**
- * DAO Exception for transaction rollback.
+ * DAO Exception for CRUD operations trown in the Data Access Object.
  */
 public class DAOException extends Exception {
 

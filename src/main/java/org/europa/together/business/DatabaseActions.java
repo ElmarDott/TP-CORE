@@ -55,7 +55,7 @@ public interface DatabaseActions {
      * Load an SQL file from the classpath and execute the script.
      * <b>Attention:</b> This function should be used to populate a database and
      * so on. It is not designed to handle multiple ResultSets by using SELECT.
-     * If multiple SELECT statements appears in an SQL File, then only the
+     * If multiple SELECT statements appears in an SQL file, then only the
      * ResultSet of the last SELECT statement will be available. <br>
      * Internal call this function for each single SQL statement the
      * executeQuery() method.

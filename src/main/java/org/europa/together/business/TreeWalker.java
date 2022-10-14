@@ -43,7 +43,7 @@ public interface TreeWalker<T> {
     /**
      * Test if a node is a element of the tree. <b>This function do not validate
      * if all tree elements are well connected.</b> This tests returns true if
-     * the Element is added to the tree list.
+     * the element is added to the tree list.
      *
      * @param node as TreeNode
      * @return true on success
@@ -70,7 +70,7 @@ public interface TreeWalker<T> {
     boolean isLeaf(TreeNode<T> node);
 
     /**
-     * Removes a Node (Leaf) from the tree. This method allows just to cut
+     * Removes a Node (leaf) from the tree. This method allows just to cut
      * elements from the tree which has no children. In the case it is necessary
      * to cut a subtree use the prune() method.
      *
@@ -155,13 +155,13 @@ public interface TreeWalker<T> {
     boolean addNode(TreeNode<T> node);
 
     /**
-     * Reset al internal data of the TreeWalker.
+     * Reset all internal data of the TreeWalker.
      */
     @API(status = STABLE, since = "1.0")
     void clear();
 
     /**
-     * Remove an Element and all his child nodes from the tree.
+     * Remove an element and all his child nodes from the tree.
      *
      * @param cutNode as TreeNode
      * @throws org.europa.together.exceptions.MisconfigurationException
@@ -172,7 +172,7 @@ public interface TreeWalker<T> {
     /**
      * Merge another Tree (TreeWalker) into the present tree. After choosing a
      * node from the present tree the whole new three (including) the ROOT
-     * Element will apped on the chosen merge node.
+     * element will apped on the chosen merge node.
      *
      * @param parentUuid as String
      * @param appendingTree as TreeWalker

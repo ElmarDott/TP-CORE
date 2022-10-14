@@ -6,7 +6,7 @@ import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
- * Simple API for application Logging.
+ * Simple API for application logging.
  *
  * @author elmar.dott@gmail.com
  * @version 1.2

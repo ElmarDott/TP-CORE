@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import java.io.File;
+import java.io.IOException;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.service.LoggingService;
@@ -55,7 +56,7 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void fallbackConstructor() {
+    void fallbackConstructor() throws IOException {
         LOGGER.log("TEST CASE: fallbackConstructor", LogLevel.DEBUG);
 
         LoggingService service = new LoggingService();

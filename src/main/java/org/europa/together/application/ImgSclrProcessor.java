@@ -44,12 +44,10 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public boolean loadImage(final BufferedImage image) {
-
         boolean success = false;
         if (isImageSet()) {
             this.clearImage();
         }
-
         if (image != null) {
             this.image = image;
             this.height = image.getHeight();
@@ -61,12 +59,10 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public boolean loadImage(final File imageFile) {
-
         boolean success = false;
         if (isImageSet()) {
             this.clearImage();
         }
-
         try {
             this.image = Imaging.getBufferedImage(imageFile);
             this.metadata = Imaging.getMetadata(imageFile);
@@ -74,11 +70,9 @@ public class ImgSclrProcessor implements ImageProcessor {
             this.height = image.getHeight();
             this.width = image.getWidth();
             LOGGER.log("Load Image: " + this.fileName, LogLevel.DEBUG);
-
             ImageFormat format = Imaging.guessFormat(imageFile);
             this.fileExtension = format.getDefaultExtension();
             LOGGER.log("Extension: " + this.fileExtension, LogLevel.DEBUG);
-
             success = true;
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -88,14 +82,11 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public boolean saveImage(final BufferedImage renderedImage, final File file,
-            final String format)
-            throws MisconfigurationException {
-
+            final String format) throws MisconfigurationException {
         boolean success = false;
         if (!isFormatAccepted(format)) {
             throw new MisconfigurationException(format + " is not supported.");
         }
-
         try {
             if (format.equalsIgnoreCase("png")) {
                 ImageIO.write(renderedImage, "PNG", file);
@@ -111,7 +102,6 @@ public class ImgSclrProcessor implements ImageProcessor {
                 newImage.setRGB(0, 0, w, h, rgb, 0, w);
                 ImageIO.write(newImage, "JPG", file);
             }
-
             success = true;
             String msg = "Image " + this.fileName + " successful to: "
                     + file.getPath() + " saved.";
@@ -156,7 +146,6 @@ public class ImgSclrProcessor implements ImageProcessor {
     @Override
     public BufferedImage crop(final int x, final int y, final int height, final int width)
             throws MisconfigurationException {
-
         BufferedImage renderedImg;
         try {
             renderedImg = Scalr.crop(this.image, x, y, width, height);
@@ -199,17 +188,14 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public BufferedImage resize(final int percentage) throws MisconfigurationException {
-
         BufferedImage renderdImg;
         if (percentage < 1) {
             throw new MisconfigurationException(
                     "The size of the new Image have to have minimum 1%.");
-
         } else {
             try {
                 int newHeight = (this.height * percentage) / DIVISOR;
                 int newWidth = (this.width * percentage) / DIVISOR;
-
                 String msg = "Image " + this.fileName + " resize (" + percentage + "%)"
                         + " to height:" + newHeight
                         + " width:" + newWidth;

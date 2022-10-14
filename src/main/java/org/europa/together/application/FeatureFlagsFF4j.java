@@ -14,6 +14,7 @@ import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.ff4j.FF4j;
@@ -28,19 +29,15 @@ import org.springframework.stereotype.Repository;
  * Implementation of feature toggels.
  */
 @Repository
-public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
-        implements FeatureFlags {
+public class FeatureFlagsFF4j implements FeatureFlags {
 
     private static final long serialVersionUID = 13L;
-
     private static final Logger LOGGER = new LogbackLogger(FeatureFlagsFF4j.class);
 
     @Autowired
     private ConfigurationDAO configurationDAO;
-
     @Autowired
     private CryptoTools cryptoTools;
-
     @Autowired
     private PropertyReader reader;
 
@@ -57,13 +54,10 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
 
     @Override
     public FF4j getFeatureStore(final String propertyFile)
-            throws IOException, ConnectException {
-
+            throws IOException, ConnectException, MisconfigurationException {
         loadConfigurationFromDatabase();
         if (Boolean.parseBoolean(configuration.get("ff.activation"))) {
-
             reader.appendPropertiesFromClasspath(propertyFile);
-
             BasicDataSource cpds = new BasicDataSource();
             cpds.setDriverClassName(reader.getPropertyAsString("jdbc.driverClassName"));
             cpds.setUrl(reader.getPropertyAsString("jdbc.url"));
@@ -74,12 +68,11 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
             ff4j.setFeatureStore(new JdbcFeatureStore(cpds));
             ff4j.setPropertiesStore(new JdbcPropertyStore(cpds));
             ff4j.setEventRepository(new JdbcEventRepository(cpds));
-
             ff4j.audit(Boolean.parseBoolean(configuration.get("ff.audit")));
             ff4j.autoCreate(Boolean.parseBoolean(configuration.get("ff.autocreate")));
-
         } else {
-            LOGGER.log("Feature Flags are deactivated.", LogLevel.DEBUG);
+            String message = "Feature Flags are deactivated by database configuration";
+            throw new MisconfigurationException(message);
         }
         return ff4j;
     }
@@ -127,19 +120,15 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
         return ff4j.getFeatures();
     }
 
-    private void loadConfigurationFromDatabase() {
-
+    private void loadConfigurationFromDatabase() throws ConnectException {
         LOGGER.log("Load all configuration sets of: " + CONFIG_SET
                 + " - Version: " + CONFIG_VERSION
                 + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
-
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
                         CONFIG_VERSION, CONFIG_SET);
-
-        if (configurationEntries != null && !configurationEntries.isEmpty()) {
+        if (!configurationEntries.isEmpty()) {
             LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
-
             for (ConfigurationDO entry : configurationEntries) {
                 String value;
                 if (StringUtils.isEmpty(entry.getValue())) {
@@ -147,7 +136,6 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
                 } else {
                     value = entry.getValue();
                 }
-
                 if (entry.getKey()
                         .equals(cryptoTools.calculateHash("ff.activation",
                                 HashAlgorithm.SHA256))) {
@@ -162,7 +150,8 @@ public class FeatureFlagsFF4j extends GenericHbmDAO<Feature, String>
                     this.configuration.put("ff.autocreate", value);
                 }
             }
+        } else {
+            throw new ConnectException("Feature Flags can't access the configuration.");
         }
     }
-
 }

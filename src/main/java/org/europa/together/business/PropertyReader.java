@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -109,7 +110,7 @@ public interface PropertyReader {
     int count();
 
     /**
-     * Get the value of a property as boolean. Allowed values are:
+     * Get the value of a property as boolean.Allowed values are:
      * <ul>
      * <li>0 | 1</li>
      * <li>false | true</li>
@@ -119,51 +120,57 @@ public interface PropertyReader {
      *
      * @param key as String
      * @return property as Boolean
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    Boolean getPropertyAsBoolean(String key);
+    Boolean getPropertyAsBoolean(String key) throws MisconfigurationException;
 
     /**
      * Get the property value as Double.
      *
      * @param key as String
      * @return property as Double
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    Double getPropertyAsDouble(String key);
+    Double getPropertyAsDouble(String key) throws MisconfigurationException;
 
     /**
      * Get the property value as Float.
      *
      * @param key as String
      * @return property as Float
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    Float getPropertyAsFloat(String key);
+    Float getPropertyAsFloat(String key) throws MisconfigurationException;
 
     /**
      * Get the value of a property as Integer.
      *
      * @param key as String
      * @return property as Integer
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    Integer getPropertyAsInt(String key);
+    Integer getPropertyAsInt(String key) throws MisconfigurationException;
 
     /**
      * Get the property value as String.
      *
      * @param key as String
      * @return property as String
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    String getPropertyAsString(String key);
+    String getPropertyAsString(String key) throws MisconfigurationException;
 
     /**
      * Get the full property list as Map.
      *
      * @return propertyList as Map
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
-    Map<String, String> getPropertyList();
+    Map<String, String> getPropertyList() throws MisconfigurationException;
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -101,7 +102,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void overwriteAddPropertyList() {
+    void overwriteAddPropertyList() throws Exception {
         LOGGER.log("TEST CASE: overwriteAddPropertyList", LogLevel.DEBUG);
 
         propertyReader.clear();
@@ -184,10 +185,18 @@ public class PropertyFileReaderTest {
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
-        assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.05"));
-        assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.06"));
-        assertNull(propertyReader.getPropertyAsBoolean("boolean"));
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.5"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.06"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsBoolean("boolean"));
+        });
     }
 
     @Test
@@ -209,11 +218,21 @@ public class PropertyFileReaderTest {
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.00"));
-        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.04"));
-        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.05"));
-        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.06"));
-        assertNull(propertyReader.getPropertyAsInt("integer"));
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsInt("test.type.int.00"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsInt("test.type.int.04"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsInt("test.type.int.05"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsInt("test.type.int.06"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsInt("integer"));
+        });
     }
 
     @Test
@@ -236,7 +255,9 @@ public class PropertyFileReaderTest {
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertNull(propertyReader.getPropertyAsString("string"));
+        assertThrows(Exception.class, () -> {
+            assertNull(propertyReader.getPropertyAsString("string"));
+        });
     }
 
     @Test
@@ -262,9 +283,18 @@ public class PropertyFileReaderTest {
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
-        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.08"));
-        assertNull(propertyReader.getPropertyAsFloat("float"));
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsFloat("test.type.float.00");
+        });
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsFloat("test.type.float.08");
+        });
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsFloat("float");
+        });
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsFloat("float");
+        });
     }
 
     @Test
@@ -288,9 +318,15 @@ public class PropertyFileReaderTest {
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsDouble("test.type.double.00"));
-        assertEquals(null, propertyReader.getPropertyAsDouble("test.type.double.06"));
-        assertNull(propertyReader.getPropertyAsDouble("double"));
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsDouble("test.type.double.00");
+        });
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsDouble("test.type.double.06");
+        });
+        assertThrows(Exception.class, () -> {
+            propertyReader.getPropertyAsDouble("double");
+        });
     }
 
     @Test
@@ -347,7 +383,7 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void updateProperty() {
+    void updateProperty() throws Exception {
         LOGGER.log("TEST CASE: updateProperty", LogLevel.DEBUG);
 
         propertyReader.clear();

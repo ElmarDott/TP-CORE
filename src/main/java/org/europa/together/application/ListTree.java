@@ -81,7 +81,6 @@ public class ListTree<T> implements TreeWalker<T> {
     public boolean isLeaf(final TreeNode<T> leaf) {
         boolean isLeaf = false;
         if (!tree.isEmpty()) {
-
             boolean hasParent = false;
             for (TreeNode<T> check : this.tree) {
                 if (leaf.getUuid().equals(check.getParent())) {
@@ -92,7 +91,6 @@ public class ListTree<T> implements TreeWalker<T> {
             if (!hasParent) {
                 isLeaf = true;
             }
-
         } else {
             LOGGER.log("Operation not possible, because Tree is empty.", LogLevel.WARN);
         }
@@ -137,7 +135,6 @@ public class ListTree<T> implements TreeWalker<T> {
     @Override
     public List<TreeNode<T>> getElementByName(final String nodeName) {
         List<TreeNode<T>> elements = new ArrayList<>();
-
         if (!tree.isEmpty()) {
             for (TreeNode<T> node : this.tree) {
                 if (node.getNodeName().equals(nodeName)) {
@@ -204,9 +201,7 @@ public class ListTree<T> implements TreeWalker<T> {
     public boolean addNode(final TreeNode<T> node) {
         boolean add = true;
         if (node != null) {
-
             for (TreeNode<T> check : this.tree) {
-
                 if (node.getUuid().equals(check.getUuid())) {
                     LOGGER.log("Node with this UUID already exist.", LogLevel.WARN);
                     add = false;
@@ -215,7 +210,6 @@ public class ListTree<T> implements TreeWalker<T> {
                 if (!StringUtils.isEmpty(node.getParent())
                         && node.getParent().equals(check.getParent())
                         && node.getNodeName().equals(check.getNodeName())) {
-
                     LOGGER.log("Node with same name AND parent  already exist.",
                             LogLevel.WARN);
                     add = false;
@@ -247,7 +241,6 @@ public class ListTree<T> implements TreeWalker<T> {
                 + cutNode.getNodeName() + " ["
                 + cutNode.getUuid() + "]", LogLevel.DEBUG);
         stack.addAll(tree);
-
         if (stack.isEmpty()) {
             throw new MisconfigurationException("prune: tree is empty nothing to do");
         } else if (cutNode.equals(getRoot())) {
@@ -255,12 +248,10 @@ public class ListTree<T> implements TreeWalker<T> {
         } else if (isLeaf(cutNode)) {
             removeNode(cutNode);
         } else {
-
             TreeNode<T> node = cutNode;
             List<TreeNode<T>> helper = new ArrayList<>();
             List<TreeNode<T>> cutted = new ArrayList<>();
             cutted.add(node);
-
             for (int i = 0; i < tree.size(); i++) {
                 for (TreeNode<T> compare : stack) {
                     if (i != 0) {
@@ -300,20 +291,15 @@ public class ListTree<T> implements TreeWalker<T> {
     @Override
     public void merge(final String parentUuid, final TreeWalker<T> appendingTree) {
         if (appendingTree != null && !appendingTree.isEmpty()) {
-
             TreeNode<T> appendingRoot = appendingTree.getRoot();
             appendingRoot.setParent(parentUuid);
-
             List<TreeNode<T>> newTree = new ArrayList<>();
             newTree.addAll(appendingTree.getTree());
-
             this.tree.addAll(newTree);
             LOGGER.log("Append " + newTree.size()
                     + " Nodes to the new Tree.", LogLevel.DEBUG);
-
         } else {
             LOGGER.log("Merging tree is empty - no merge applied.", LogLevel.DEBUG);
-
         }
     }
 
@@ -324,31 +310,24 @@ public class ListTree<T> implements TreeWalker<T> {
         int marker = 0;
         int counter = 0;
         int root = 0;
-
         if (!collection.isEmpty()) {
             marker = collection.size() - 1;
             List<TreeNode<T>> comperator = new ArrayList<>();
             comperator.addAll(collection);
-
             for (TreeNode<T> node : collection) {
-
                 if (StringUtils.isEmpty(node.getParent())) {
                     counter++;
                     LOGGER.log("Element with empty parent: " + node.getNodeName(), LogLevel.DEBUG);
                 }
-
                 if (!StringUtils.isEmpty(node.getParent()) && node.getParent().equals("-1")) {
                     root++;
                     LOGGER.log("ROOT element: " + node.getNodeName(), LogLevel.DEBUG);
                 }
-
                 for (TreeNode<T> element : comperator) {
-
                     if (!StringUtils.isEmpty(node.getParent())
                             && !node.getParent().equals("-1")
                             && !element.equals(node)
                             && element.getUuid().equals(node.getParent())) {
-
                         marker--;
                         LOGGER.log("Parent of (" + node.getNodeName() + ") : " + node.getUuid()
                                 + " : (" + element.getNodeName() + ") " + element.getParent(),
@@ -357,17 +336,14 @@ public class ListTree<T> implements TreeWalker<T> {
                 }
             }
         }
-
         if (root == 0) {
             LOGGER.log("Tree has no ROOT element.", LogLevel.DEBUG);
         } else if (root > 1) {
             LOGGER.log("Tree has muliple ROOT elements.", LogLevel.DEBUG);
         }
-
         if (marker != 0) {
             LOGGER.log("Tree has " + marker + " disconnected Elemets.", LogLevel.DEBUG);
         }
-
         if (counter == 0
                 && root == 1
                 && marker == 0) {
@@ -386,7 +362,6 @@ public class ListTree<T> implements TreeWalker<T> {
                 .append("\t Nodes: ")
                 .append(tree.size())
                 .append("\n TREE >>>\n");
-
         for (TreeNode<T> node : tree) {
             out.append("\t")
                     .append(node.toString())
@@ -395,5 +370,4 @@ public class ListTree<T> implements TreeWalker<T> {
         out.append("}");
         return out.toString();
     }
-
 }

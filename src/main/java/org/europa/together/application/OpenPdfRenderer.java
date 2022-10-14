@@ -4,6 +4,7 @@ import com.lowagie.text.pdf.PdfStamper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,53 +34,39 @@ public class OpenPdfRenderer implements PdfRenderer {
     private String keywords = "";
 
     @Override
-    public PdfDocument loadDocument(final File pdfDocument) {
-        PdfDocument pdfReader = null;
-        try {
-            pdfReader = new PdfDocument(pdfDocument.getAbsolutePath());
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return pdfReader;
+    public PdfDocument loadDocument(final File pdfDocument)
+            throws IOException {
+        return new PdfDocument(pdfDocument.getAbsolutePath());
     }
 
     @Override
-    public void writeDocument(final PdfDocument pdf, final String destination) {
-        try {
-            PdfStamper pdfStamper = new PdfStamper(pdf, new FileOutputStream(destination));
-            pdfStamper.close();
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+    public void writeDocument(final PdfDocument pdf, final String destination)
+            throws IOException, FileNotFoundException {
+        PdfStamper pdfStamper = new PdfStamper(pdf, new FileOutputStream(destination));
+        pdfStamper.close();
     }
 
     @Override
-    public PdfDocument removePage(final PdfDocument pdf, final int... pages) {
-        PdfDocument newPDF = null;
-        try {
-            newPDF = new PdfDocument(pdf);
-            int pagesTotal = newPDF.getNumberOfPages();
-            List<Integer> allPages = new ArrayList<>(pagesTotal);
-            for (int i = 1; i <= pagesTotal; i++) {
-                allPages.add(i);
-            }
-            for (Integer page : pages) {
-                allPages.remove(page);
-            }
-            newPDF.selectPages(allPages);
-
-            LOGGER.log("Document contains " + newPDF.getNumberOfPages() + " Pages",
-                    LogLevel.DEBUG);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+    public PdfDocument removePage(final PdfDocument pdf, final int... pages)
+            throws IOException {
+        PdfDocument newPDF = new PdfDocument(pdf);
+        int pagesTotal = newPDF.getNumberOfPages();
+        List<Integer> allPages = new ArrayList<>(pagesTotal);
+        for (int i = 1; i <= pagesTotal; i++) {
+            allPages.add(i);
         }
+        for (Integer page : pages) {
+            allPages.remove(page);
+        }
+        newPDF.selectPages(allPages);
+        LOGGER.log("Document contains " + newPDF.getNumberOfPages() + " Pages",
+                LogLevel.DEBUG);
         return newPDF;
     }
 
     @Override
     public void renderDocumentFromHtml(final String file, final String template)
             throws FileNotFoundException {
-
         StringBuilder html = new StringBuilder();
         html.append("<html>")
                 .append("<head>")
@@ -95,18 +82,14 @@ public class OpenPdfRenderer implements PdfRenderer {
                 .append("<body>")
                 .append(template)
                 .append("</body></html>");
-
         ITextRenderer renderer = new ITextRenderer();
-
         SharedContext sharedContext = renderer.getSharedContext();
         sharedContext.setPrint(true);
         sharedContext.setInteractive(false);
         sharedContext.setReplacedElementFactory(new PdfReplacedElementFactory());
         sharedContext.getTextRenderer().setSmoothingThreshold(0);
-
         renderer.setDocumentFromString(createWellFormedHtml(html.toString()));
         renderer.layout();
-
         OutputStream os = new FileOutputStream(file);
         renderer.createPDF(os);
     }
@@ -159,5 +142,4 @@ public class OpenPdfRenderer implements PdfRenderer {
                 org.jsoup.nodes.Document.OutputSettings.Syntax.xml);
         return content.html();
     }
-
 }

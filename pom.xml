@@ -217,10 +217,11 @@
             <version>1.8.13</version>
         </dependency>
 
-        <dependency><!-- Circuit Breaker -->
+        <!-- Circuit Breaker -->
+        <!-- dependency>
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-circuitbreaker</artifactId>
             <version>1.7.1</version>
-        </dependency>
+        </dependency -->
     </dependencies>
 </project>

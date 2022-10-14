@@ -1,23 +1,23 @@
 package org.europa.together.application;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import jakarta.activation.FileDataSource;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.business.Logger;
@@ -36,17 +36,15 @@ import org.springframework.stereotype.Repository;
  * Implementation of a simple SMTP Mailer.
  */
 @Repository
-public class JavaMailClient implements MailClient {
+public class JakartaMailClient implements MailClient {
 
     private static final long serialVersionUID = 6L;
-    private static final Logger LOGGER = new LogbackLogger(JavaMailClient.class);
+    private static final Logger LOGGER = new LogbackLogger(JakartaMailClient.class);
 
     @Autowired
     private ConfigurationDAO configurationDAO;
-
     @Autowired
     private CryptoTools cryptoTools;
-
     @Autowired
     private PropertyReader propertyReader;
 
@@ -59,7 +57,7 @@ public class JavaMailClient implements MailClient {
     /**
      * Constructor.
      */
-    public JavaMailClient() {
+    public JakartaMailClient() {
         initConfig();
         configMaximumMailBulk = -1;
         configCountWaitTime = -1;
@@ -77,11 +75,10 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public boolean loadConfigurationFromProperties(final String resource) throws IOException {
-
+    public boolean loadConfigurationFromProperties(final String resource)
+            throws IOException {
         boolean success = true;
         Map<String, String> properties = new HashMap<>();
-
         try {
             propertyReader.appendPropertiesFromClasspath(resource);
             properties = propertyReader.getPropertyList();
@@ -89,7 +86,6 @@ public class JavaMailClient implements MailClient {
             success = false;
             LOGGER.catchException(ex);
         }
-
         try {
             propertyReader.appendPropertiesFromFile(resource);
             properties = propertyReader.getPropertyList();
@@ -97,7 +93,6 @@ public class JavaMailClient implements MailClient {
             success = false;
             LOGGER.catchException(ex);
         }
-
         if (!properties.isEmpty()) {
             configuration.putAll(properties);
         } else {
@@ -110,17 +105,14 @@ public class JavaMailClient implements MailClient {
     @Override
     public boolean loadConfigurationFromDatabase() {
         boolean success = false;
-
         LOGGER.log("Load all configuration sets of: " + CONFIG_SET
                 + " - Version: " + CONFIG_VERSION
                 + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
-
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
                         CONFIG_VERSION, CONFIG_SET);
-
         LOGGER.log("Size of config SET: " + configurationEntries.size(), LogLevel.DEBUG);
-        if (configurationEntries != null && configurationEntries.size() > 0) {
+        if (configurationEntries.size() > 0) {
             processConfiguration(configurationEntries);
             success = true;
         }
@@ -140,10 +132,8 @@ public class JavaMailClient implements MailClient {
     @Override
     public void composeMail(final Mail email)
             throws MessagingException {
-
         MimeMessage mimeMessage = null;
         LOGGER.log("Compose E-Mail", LogLevel.DEBUG);
-
         mimeMessage = new MimeMessage(getSession());
         //HEADER - EVENLOPE
         mimeMessage.setHeader("From: ", configuration.get("mailer.sender"));
@@ -152,7 +142,6 @@ public class JavaMailClient implements MailClient {
         mimeMessage.setSubject(email.getSubject());
         mimeMessage.setFrom(new InternetAddress(configuration.get("mailer.sender")));
         mimeMessage.setSender(new InternetAddress(configuration.get("mailer.sender")));
-
         // CONTENT
         MimeBodyPart bodypart = new MimeBodyPart();
         if (email.getMimeType().equals("html")) {
@@ -160,14 +149,11 @@ public class JavaMailClient implements MailClient {
         } else {
             bodypart.setText(email.getMessage(), "utf-8");
         }
-
         // ATTACHMENTS : http://www.jguru.com/faq/view.jsp?EID=30251
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(bodypart);
-
         if (!email.getAttachmentList().isEmpty()) {
             for (FileDataSource file : email.getAttachmentList()) {
-
                 DataSource source = file;
                 bodypart.setDataHandler(new DataHandler(source));
                 bodypart.setFileName(file.getName());
@@ -181,11 +167,10 @@ public class JavaMailClient implements MailClient {
     }
 
     @Override
-    public Session getSession() throws NoSuchProviderException {
-
+    public Session getSession()
+            throws NoSuchProviderException {
         Session connection = Session.getInstance(wireConfigurationEntries(),
-                new javax.mail.Authenticator() {
-
+                new jakarta.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(
@@ -225,7 +210,6 @@ public class JavaMailClient implements MailClient {
     private void processConfiguration(final List<ConfigurationDO> configurationEntries) {
         LOGGER.log("Process E-Mail Configuration  (" + configurationEntries.size() + ")",
                 LogLevel.DEBUG);
-
         for (ConfigurationDO entry : configurationEntries) {
             String value;
             if (StringUtils.isEmpty(entry.getValue())) {
@@ -233,7 +217,6 @@ public class JavaMailClient implements MailClient {
             } else {
                 value = entry.getValue();
             }
-
             if (entry.getKey()
                     .equals(cryptoTools.calculateHash("mailer.host",
                             HashAlgorithm.SHA256))) {
@@ -292,7 +275,6 @@ public class JavaMailClient implements MailClient {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.socketFactory.port", configuration.get("mailer.port"));
         props.put("mail.smtp.socketFactory.fallback", "false");
-
         return props;
     }
 }

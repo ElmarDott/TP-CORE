@@ -9,6 +9,7 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.JsonProcessingException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -219,7 +220,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void serilizeAsJson() throws Exception {
+    void serilizeJsonasObject() throws Exception {
         LOGGER.log("TEST CASE: serilizeAsJson", LogLevel.DEBUG);
 
         String json
@@ -228,32 +229,25 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void failSerilizeAsJson() throws Exception {
-        LOGGER.log("TEST CASE: failSerilizeAsJson", LogLevel.DEBUG);
-
-        assertEquals("null", configurationDAO.serializeAsJson(null));
-    }
-
-    @Test
-    void deserializeJson() throws Exception {
-        LOGGER.log("TEST CASE: deserilizeAsJson", LogLevel.DEBUG);
+    void deserializeJsonAsObject() throws Exception {
+        LOGGER.log("TEST CASE: deserilizeJsonAsObject", LogLevel.DEBUG);
 
         String json
                 = "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
-        ConfigurationDO deserialize = configurationDAO.deserializeJsonAsObject(json, ConfigurationDO.class);
+        ConfigurationDO deserialize
+                = configurationDAO.deserializeJsonAsObject(json, ConfigurationDO.class);
         assertEquals(configDO, deserialize);
     }
 
     @Test
-    void failDeserializeJson() throws Exception {
-        LOGGER.log("TEST CASE: failDeserilizeAsJson", LogLevel.DEBUG);
+    void deserializeJsonAsObjectList() throws Exception {
+        LOGGER.log("TEST CASE: deserializeJsonAsObjectList", LogLevel.DEBUG);
 
         String json
-                = "{\"failString\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}";
-
-        assertThrows(Exception.class, () -> {
-            configurationDAO.deserializeJsonAsObject(json, null);
-        });
+                = "["
+                + "{\"uuid\":\"QWERTZ\",\"key\":\"key\",\"value\":\"no value\",\"defaultValue\":\"DEFAULT\",\"modulName\":\"MOD\",\"version\":\"1.0\",\"configurationSet\":\"confSet\",\"deprecated\":false,\"mandatory\":false,\"comment\":null}"
+                + "]";
+        assertEquals(1, configurationDAO.deserializeJsonAsList(json).size());
     }
 
     @Test
@@ -299,7 +293,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void restoreKeyToDefault() {
+    void restoreKeyToDefault() throws Exception {
         LOGGER.log("TEST CASE: restoreKeyToDefault", LogLevel.DEBUG);
 
         ConfigurationDO before = configurationDAO.getConfigurationByKey("key", "Module_A", "2.0");
@@ -313,6 +307,18 @@ public class ConfigurationHbmDAOTest {
         assertEquals("6ff62a22-9820-406d-b55a-a86fa1c5a033", after.getUuid());
         assertEquals("Y", after.getValue());
         assertEquals("Y", after.getDefaultValue());
+    }
+
+    @Test
+    void failRestoreKeyToDefault() throws Exception {
+        LOGGER.log("TEST CASE: failRestoreKeyToDefault", LogLevel.DEBUG);
+
+        assertThrows(Exception.class, () -> {
+            ConfigurationDO entry = new ConfigurationDO();
+            entry.setKey("NOT-EXIST");
+            entry.setModulName("no-module");
+            configurationDAO.restoreKeyToDefault(entry);
+        });
     }
 
     @Test
@@ -368,7 +374,7 @@ public class ConfigurationHbmDAOTest {
     }
 
     @Test
-    void updateConfigurationEntries() {
+    void updateConfigurationEntries() throws Exception {
         LOGGER.log("TEST CASE: updateConfigurationEntries", LogLevel.DEBUG);
 
         List<ConfigurationDO> set
@@ -401,6 +407,22 @@ public class ConfigurationHbmDAOTest {
         assertEquals("a_01", configurationDAO.find(a.getUuid()).getValue());
         assertEquals("a_02", configurationDAO.find(b.getUuid()).getValue());
         assertEquals("a_03", configurationDAO.find(c.getUuid()).getValue());
+    }
+
+    @Test
+    void failUpdateConfigurationEntries() throws Exception {
+        LOGGER.log("TEST CASE: failUpdateConfigurationEntries", LogLevel.DEBUG);
+
+        ConfigurationDO entry = new ConfigurationDO();
+        entry.setKey("NOT-EXIST");
+        entry.setModulName("no-module");
+
+        List<ConfigurationDO> set = new ArrayList<>();
+        set.add(entry);
+
+        assertThrows(Exception.class, () -> {
+            configurationDAO.updateConfigurationEntries(set);
+        });
     }
 
     @Test

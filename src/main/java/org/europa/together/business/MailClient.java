@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
- * @version 2.0
+ * @version 3.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0", consumers = "JakartaMailClient")

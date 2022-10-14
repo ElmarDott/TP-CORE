@@ -16,7 +16,6 @@ import org.europa.together.utils.StringUtils;
 public final class TreeNode<T> {
 
     private static final Logger LOGGER = new LogbackLogger(TreeNode.class);
-
     private static final int HASH = 97;
 
     private String uuid;
@@ -136,10 +135,8 @@ public final class TreeNode<T> {
 
     @Override
     public boolean equals(final Object obj) {
-
         boolean success = false;
         if (obj != null && obj instanceof TreeNode) {
-
             if (this == obj) {
                 success = true;
             } else {
@@ -155,5 +152,4 @@ public final class TreeNode<T> {
         }
         return success;
     }
-
 }

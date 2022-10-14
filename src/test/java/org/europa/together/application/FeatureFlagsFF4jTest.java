@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureFlags;
 import org.europa.together.business.Logger;
@@ -70,6 +71,32 @@ public class FeatureFlagsFF4jTest {
         feature.setDescription("Temporary test feature.");
         feature.setGroup("none");
         feature.setEnable(true);
+    }
+
+    @Test
+    void failConnectDatabase() throws Exception {
+        LOGGER.log("TEST CASE: failConnectDatabase", LogLevel.DEBUG);
+
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        assertThrows(Exception.class, () -> {
+            featureFlags.getFeatureStore(PROPERTIES);
+        });
+        jdbcActions.executeSqlFromClasspath(FILE);
+    }
+
+    @Test
+    void deactivatedFeatureStore() throws Exception {
+        LOGGER.log("TEST CASE: deactivatedFeatureStore", LogLevel.DEBUG);
+
+        //deactivate feature store in DB
+        jdbcActions.executeQuery("UPDATE " + ConfigurationDO.TABLE_NAME
+                + " SET CONF_VALUE = false WHERE IDX = '776e0858-dac5-47c5-95f3-ca79234dc129';");
+        assertThrows(Exception.class, () -> {
+            featureFlags.getFeatureStore(PROPERTIES);
+        });
+        //activate feature store in DB
+        jdbcActions.executeQuery("UPDATE " + ConfigurationDO.TABLE_NAME
+                + " SET CONF_VALUE = true WHERE IDX = '776e0858-dac5-47c5-95f3-ca79234dc129';");
     }
 
     @Test

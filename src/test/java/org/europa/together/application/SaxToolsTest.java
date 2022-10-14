@@ -84,7 +84,7 @@ public class SaxToolsTest {
     }
 
     @Test
-    void parseXmlString() {
+    void parseXmlString() throws Exception {
         LOGGER.log("TEST CASE: parseXmlString", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
@@ -458,7 +458,7 @@ public class SaxToolsTest {
     }
 
     @Test
-    void shrinkXml() {
+    void shrinkXml() throws Exception {
         LOGGER.log("TEST CASE: shrinkXml", LogLevel.DEBUG);
 
         String file = Constraints.SYSTEM_APP_DIR

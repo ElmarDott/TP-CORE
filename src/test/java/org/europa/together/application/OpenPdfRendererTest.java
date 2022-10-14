@@ -7,6 +7,7 @@ import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.domain.Version;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,7 +68,7 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void loadPdf() {
+    void loadPdf() throws Exception {
         LOGGER.log("TEST CASE: loadPdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -76,13 +77,15 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failLoadPdf() {
+    void failLoadPdf() throws Exception {
         LOGGER.log("TEST CASE: failLoadPdf", LogLevel.DEBUG);
-        assertNull(pdf.loadDocument(null));
+        assertThrows(Exception.class, () -> {
+            pdf.loadDocument(null);
+        });
     }
 
     @Test
-    void loadAndWritePdf() {
+    void loadAndWritePdf() throws Exception {
         LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -95,17 +98,17 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failWritePdf() {
+    void failWritePdf() throws Exception {
         LOGGER.log("TEST CASE: failWritePdf", LogLevel.DEBUG);
 
-        String out = DIRECTORY + FILE_PATH + "/fail.pdf";
-        pdf.writeDocument(pdf.loadDocument(null), null);
-
-        assertNull(pdf.loadDocument(new File(out)));
+        assertThrows(Exception.class, () -> {
+            String out = DIRECTORY + FILE_PATH + "/fail.pdf";
+            pdf.writeDocument(pdf.loadDocument(null), null);
+        });
     }
 
     @Test
-    void removePages() {
+    void removePages() throws Exception {
         LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -121,18 +124,22 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failRemovePages() {
+    void failRemovePages() throws Exception {
         LOGGER.log("TEST CASE: failRemovePages", LogLevel.DEBUG);
-        assertNull(pdf.removePage(pdf.loadDocument(null), 1));
+        assertThrows(Exception.class, () -> {
+            pdf.removePage(pdf.loadDocument(null), 1);
+        });
     }
 
     @Test
     void failRenderHtmlToPdf() throws Exception {
         LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
 
-        assertThrows(Exception.class, () -> {
-            pdf.renderDocumentFromHtml(null, "no content");
-        });
+        assertThrows(Exception.class,
+                () -> {
+                    pdf.renderDocumentFromHtml(
+                            null, "no content");
+                });
     }
 
     @Test

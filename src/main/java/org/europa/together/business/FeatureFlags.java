@@ -5,6 +5,7 @@ import java.net.ConnectException;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;
 import org.springframework.stereotype.Component;
@@ -37,8 +38,7 @@ public interface FeatureFlags {
 
     /**
      * Connect an application to a feature store by a given database connection
-     * file.
-     * <li>jdbc.driverClassName</li>
+     * file.<li>jdbc.driverClassName</li>
      * <li>jdbc.url</li>
      * <li>jdbc.user</li>
      * <li>jdbc.password</li>
@@ -47,8 +47,10 @@ public interface FeatureFlags {
      * @return feature store as FF4j
      * @throws java.io.IOException
      * @throws java.net.ConnectException
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
-    FF4j getFeatureStore(String propertyFile) throws IOException, ConnectException;
+    FF4j getFeatureStore(String propertyFile)
+            throws IOException, ConnectException, MisconfigurationException;
 
     /**
      * Check if a feature is enbaled or not.
@@ -73,7 +75,7 @@ public interface FeatureFlags {
     void deactivateFeature(String featureId);
 
     /**
-     * Add a Feature to the feature store.
+     * Add a feature to the feature store.
      *
      *
      * @param feature as Feature
@@ -81,7 +83,7 @@ public interface FeatureFlags {
     void addFeature(Feature feature);
 
     /**
-     * Get the full Feature by a given ID from the feature store.
+     * Get the full feature by a given ID from the feature store.
      *
      * @param featureId as String
      * @return feature as Feature
@@ -89,21 +91,21 @@ public interface FeatureFlags {
     Feature getFeature(String featureId);
 
     /**
-     * Update an existing Feature in the feature store.
+     * Update an existing feature in the feature store.
      *
      * @param feature as Feature
      */
     void updateFeature(Feature feature);
 
     /**
-     * Remove an existing Feature from the feature store.
+     * Remove an existing feature from the feature store.
      *
      * @param featureId
      */
     void removeFeature(String featureId);
 
     /**
-     * Grab all in the feature store existing Features.
+     * Grab all in the feature store existing features.
      *
      * @return Feature by its featureId as Map
      */

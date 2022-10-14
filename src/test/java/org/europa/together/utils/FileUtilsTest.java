@@ -2,6 +2,7 @@ package org.europa.together.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
@@ -54,28 +55,29 @@ public class FileUtilsTest {
     }
 
     @Test
-    void writeStringToFile() {
-
-        String fileContent = "Content of the written File";
-
-        assertTrue(FileUtils.writeStringToFile(fileContent, DIRECTORY + "/test.txt"));
-        assertEquals(27, FileUtils.getFileSize(DIRECTORY + "/test.txt", null));
-
-        assertTrue(FileUtils.writeStringToFile("", DIRECTORY + "/test_empty.txt"));
-        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "/test_empty.txt", null));
-
-        assertFalse(FileUtils.writeStringToFile(null, DIRECTORY + "/test_null.txt"));
-
-        try {
-            Files.delete(Paths.get(DIRECTORY + "/test.txt"));
-            Files.delete(Paths.get(DIRECTORY + "/test_empty.txt"));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+    void writeEmptyFile() throws Exception {
+        assertTrue(FileUtils.writeStringToFile("", DIRECTORY + "/empty.txt"));
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "/empty.txt", null));
+        Files.delete(Paths.get(DIRECTORY + "/empty.txt"));
     }
 
     @Test
-    void readFileStream() {
+    void writeStringToFile() throws Exception {
+        String fileContent = "Content of the written File";
+        assertTrue(FileUtils.writeStringToFile(fileContent, DIRECTORY + "/test.txt"));
+        assertEquals(27, FileUtils.getFileSize(DIRECTORY + "/test.txt", null));
+        Files.delete(Paths.get(DIRECTORY + "/test.txt"));
+    }
+
+    @Test
+    void failWriteStringToFile() throws IOException {
+        assertThrows(IOException.class, () -> {
+            FileUtils.writeStringToFile("content", "");
+        });
+    }
+
+    @Test
+    void readFileStream() throws Exception {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.NONE));
@@ -83,12 +85,14 @@ public class FileUtilsTest {
     }
 
     @Test
-    void failReadFileStream() {
-        assertEquals("", FileUtils.readFileStream(new File("no_file")));
+    void failReadFileStream() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.readFileStream(new File("no_file"));
+        });
     }
 
     @Test
-    void appendFile() {
+    void appendFile() throws Exception {
         String file = DIRECTORY + "AppendTestFile.txt";
         FileUtils.writeStringToFile("Hello World!", file);
 
@@ -96,17 +100,14 @@ public class FileUtilsTest {
         FileUtils.appendFile(file, append);
 
         assertEquals("Hello World! more content.", FileUtils.readFileStream(new File(file)));
-
-        try {
-            Files.delete(Paths.get(file));
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        Files.delete(Paths.get(file));
     }
 
     @Test
-    void failAppendFile() {
-        FileUtils.appendFile("no_file_to_append", "appending string.");
+    void failAppendFile() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.appendFile("no_file_to_append", "appending string.");
+        });
     }
 
     @Test
@@ -141,11 +142,12 @@ public class FileUtilsTest {
 
     @Test
     void failListFileTree() {
-        assertNull(FileUtils.listFileTree(null));
+        assertNotNull(FileUtils.listFileTree(new File("")));
+        assertNotNull(FileUtils.listFileTree(null));
     }
 
     @Test
-    void copyFile() {
+    void copyFile() throws Exception {
         File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
         File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
         FileUtils.copyFile(source, destination);
@@ -154,14 +156,13 @@ public class FileUtilsTest {
 
     @Test
     void failCopyFile() throws Exception {
-
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(new File("empty/dontExist.txt"), new File("empty/dontExist-copy.txt"));
         });
     }
 
     @Test
-    void inputStreamToByteArray() {
+    void inputStreamToByteArray() throws Exception {
         byte[] byteArray = {23, 12, 1, 0, 12, 34, 9};
         InputStream input = new ByteArrayInputStream(byteArray);
 
@@ -170,6 +171,8 @@ public class FileUtilsTest {
 
     @Test
     void failInputStreamToByteArray() throws Exception {
-        assertNull(FileUtils.inputStreamToByteArray(null));
+        assertThrows(Exception.class, () -> {
+            FileUtils.inputStreamToByteArray(null);
+        });
     }
 }

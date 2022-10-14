@@ -89,7 +89,7 @@ public interface CryptoTools {
      *
      * @param keyFile as String
      * @param algorithm as CipherAlgorithm
-     * @return the PublicKey
+     * @return publicKey as PublicKey
      */
     @API(status = STABLE, since = "2.1")
     PublicKey loadPublicKeyFile(String keyFile, CipherAlgorithm algorithm);

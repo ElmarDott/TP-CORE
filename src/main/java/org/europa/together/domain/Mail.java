@@ -18,10 +18,8 @@ public class Mail {
 
     private String subject;
     private String message;
-
     private String mimeType;
     private long attachmentSize;
-
     private List<FileDataSource> attachmentList;
     private List<InternetAddress> recipientList;
 
@@ -46,7 +44,7 @@ public class Mail {
     }
 
     /**
-     * Add attachments from a List of Strings (resource path).
+     * Add attachments from a list of Strings (resource path).
      *
      * @param attachments as List
      */
@@ -57,7 +55,7 @@ public class Mail {
     }
 
     /**
-     * Return the whole List of attachments - FileDataSource.
+     * Return the whole list of attachments - FileDataSource.
      *
      * @return attachments as List
      */
@@ -66,8 +64,9 @@ public class Mail {
     }
 
     /**
-     * Add an attachment to the Attachment List.The file size of attachments can
-     * be limited. To refer an attachment, set the resource e.g.: picture.png
+     * Add an attachment to the attachment list. The file size of attachments
+     * can be limited. To refer an attachment, set the resource e.g.:
+     * picture.png
      *
      * @param resource as String
      * @return true on success
@@ -97,14 +96,14 @@ public class Mail {
     }
 
     /**
-     * Reset the Attachment List.
+     * Reset the attachment list.
      */
     public void clearAttachments() {
         attachmentList.clear();
     }
 
     /**
-     * Get the whole list of Recipients - InternetAdress.
+     * Get the whole list of recipients - InternetAdress.
      *
      * @return recipients as List
      */
@@ -113,14 +112,14 @@ public class Mail {
     }
 
     /**
-     * Add an Recipient to the Recipient List.The implementation check if the
-     * recipient already exist in the List. Also the format of an valid e-mail
-     * address will be tested. If an given E-Mail address is not valid it will
-     * not added to the List.
+     * Add an recipient to the recipient l.The implementation check if the
+     * recipient already exist in the list.Also the format of an valid e-mail
+     * address will be tested. If an given e-mail address is not valid it will
+     * not added to the list.
      *
      * @param recipient as String
      * @return true on success
-     * @throws AddressException
+     * @throws jakarta.mail.internet.AddressException
      */
     public boolean addRecipent(final String recipient)
             throws AddressException {
@@ -194,7 +193,7 @@ public class Mail {
     }
 
     /**
-     * Get the Content of a message.
+     * Get the content of a message.
      *
      * @return content as String
      */
@@ -203,7 +202,7 @@ public class Mail {
     }
 
     /**
-     * Add E-Mail content from a String.
+     * Add e-mail content from a String.
      *
      * @param message as String
      */

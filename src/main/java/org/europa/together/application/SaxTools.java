@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -52,12 +53,10 @@ public class SaxTools implements XmlTools {
 
     @Override
     public String parseXmlFile(final File xmlFile) {
-
         try {
             LOGGER.log("parse XML File: " + xmlFile.getName(), LogLevel.DEBUG);
             xmlContent = FileUtils.readFileStream(xmlFile);
             parse(xmlContent);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -79,7 +78,6 @@ public class SaxTools implements XmlTools {
 
     @Override
     public String prettyPrintXml() {
-
         String content = null;
         if (!StringUtils.isEmpty(prettyPrint)) {
             content = prettyPrint;
@@ -100,7 +98,6 @@ public class SaxTools implements XmlTools {
             Source template = new StreamSource(xslt);
             Source input = new StreamSource(xml);
             StreamResult output = new StreamResult(writer);
-
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer(template);
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -109,7 +106,6 @@ public class SaxTools implements XmlTools {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-
         return writer.toString();
     }
 
@@ -125,47 +121,36 @@ public class SaxTools implements XmlTools {
     @Override
     public boolean isValid() {
         boolean success = false;
-
         try {
             LOGGER.log("Start Validation. ", LogLevel.DEBUG);
-
             parser.reset();
             parserFactory.setNamespaceAware(true);
             parserFactory.setValidating(true);
             parser = parserFactory.newSAXParser();
-
             parser.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
             parser.setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
-
             //External XSD
             if (hasExternalSchemaFile()) {
-
                 LOGGER.log("Validate by explicit XSD (" + this.schemaFile.getName() + ") :: "
                         + this.schemaFile.getAbsolutePath(), LogLevel.DEBUG);
-
                 parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
                         "http://www.w3.org/2001/XMLSchema");
                 parserFactory.setSchema(SchemaFactory
                         .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
                         .newSchema(schemaFile));
-
             } else if (saxHandler.getSchemaFiles() != null) {
                 LOGGER.log("Validate by implicit XSD (" + saxHandler.getSchemaFiles().length + ")",
                         LogLevel.DEBUG);
-
                 parser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
                         XMLConstants.W3C_XML_SCHEMA_NS_URI);
                 parserFactory.setSchema(SchemaFactory
                         .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
                         .newSchema(saxHandler.getSchemaFiles()));
             }
-
             parser.parse(new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8)),
                     saxHandler);
-
             success = true;
             LOGGER.log("XML validation successful", LogLevel.DEBUG);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -190,7 +175,6 @@ public class SaxTools implements XmlTools {
             LOGGER.log("External Schema not add Schema because file does not exist.",
                     LogLevel.ERROR);
         } else {
-
             schemaFile = schema;
             LOGGER.log(schemaFile.getName() + " schema file added.",
                     LogLevel.DEBUG);
@@ -199,16 +183,17 @@ public class SaxTools implements XmlTools {
 
     @Override
     public void writeXmlToFile(final String content, final String destinationFile) {
-
-        FileUtils.writeStringToFile(content, destinationFile);
+        try {
+            FileUtils.writeStringToFile(content, destinationFile);
+        } catch (IOException ex) {
+            LOGGER.catchException(ex);
+        }
     }
 
     private void parse(final String xml) throws MisconfigurationException {
-
         if (StringUtils.isEmpty(xml)) {
             throw new MisconfigurationException("No XML to parse!");
         }
-
         wellformed = false;
         prettyPrint = null;
 
@@ -218,7 +203,6 @@ public class SaxTools implements XmlTools {
             parserFactory.setValidating(false);
             parserFactory.setNamespaceAware(true);
             parserFactory.setXIncludeAware(true);
-
             parser = parserFactory.newSAXParser();
             parser.setProperty("http://xml.org/sax/properties/lexical-handler", saxHandler);
             parser.setProperty("http://xml.org/sax/properties/declaration-handler", saxHandler);
@@ -228,12 +212,10 @@ public class SaxTools implements XmlTools {
 
             wellformed = true;
             prettyPrint = saxHandler.prettyPrintXml();
-
         } catch (Exception ex) {
             LOGGER.log("PARSING EXCEPTION", LogLevel.WARN);
             LOGGER.catchException(ex);
         }
         parser.reset();
     }
-
 }

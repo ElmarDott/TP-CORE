@@ -32,9 +32,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
-public class JavaMailClientTest {
+public class JakartaMailClientTest {
 
-    private static final Logger LOGGER = new LogbackLogger(JavaMailClientTest.class);
+    private static final Logger LOGGER = new LogbackLogger(JakartaMailClientTest.class);
 
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";

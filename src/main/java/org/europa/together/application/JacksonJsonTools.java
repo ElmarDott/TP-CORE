@@ -28,38 +28,36 @@ public class JacksonJsonTools<T> implements JsonTools<T> {
     }
 
     @Override
-    public String serializeAsJson(final T object) throws JsonProcessingException {
+    public String serializeAsJsonObject(final T object)
+            throws JsonProcessingException {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(object);
-
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
+            LOGGER.catchException(ex);
             throw new JsonProcessingException(ex.getOriginalMessage());
         }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
-
         try {
             ObjectMapper mapper = new ObjectMapper();
             return (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
-
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
             throw new JsonProcessingException(ex.getOriginalMessage());
         }
     }
 
     @Override
-    public List<T> deserializeJsonAsList(final String json, final Class<T> object)
+    public List<T> deserializeJsonAsList(final String json)
             throws JsonProcessingException, ClassNotFoundException {
-
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, new TypeReference<List<T>>() {
             });
-
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
             throw new JsonProcessingException(ex.getOriginalMessage());
         }

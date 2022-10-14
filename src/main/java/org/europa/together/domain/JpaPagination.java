@@ -83,76 +83,175 @@ public class JpaPagination {
                 + '}';
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
+    /**
+     * get the amount of elements will be placed on a page.
+     *
+     * @return pageSize as Integer
+     */
     public int getPageSize() {
         return pageSize;
     }
 
+    /**
+     * Define the amount of elements will be placed on a page.
+     *
+     * @param limit as Integer
+     */
     public void setPageSize(final int limit) {
         this.pageSize = limit;
     }
 
+    /**
+     * Get if the sorting is DESC or ASC.
+     *
+     * @return sorting as String
+     */
     public String getSorting() {
         return sorting;
     }
 
+    /**
+     * Define if the sorting is DESC or ASC.
+     *
+     * @param ordering as String
+     */
     public void setSorting(final String ordering) {
         this.sorting = ordering;
     }
 
+    /**
+     * Get the direction (forward or backward) of the paging.
+     *
+     * @return paging as String
+     */
     public String getPaging() {
         return paging;
     }
 
+    /**
+     * Define the direction (forward or backward) of the paging.
+     *
+     * @param direction as String
+     */
     public void setPaging(final String direction) {
         this.paging = direction;
     }
 
+    /**
+     * Get the defined primarey key of the Domain Object.
+     *
+     * @return primaryKey as String
+     */
     public String getPrimaryKey() {
         return primaryKey;
     }
 
+    /**
+     * Set the primarey key of the Domain Object.
+     *
+     * @param primaryKey as String
+     */
     public void setPrimaryKey(final String primaryKey) {
         this.primaryKey = primaryKey;
     }
 
+    /**
+     * Get the pivot element, where the page break occur.
+     *
+     * @return peageBreak as String
+     */
     public String getPageBreak() {
         return pageBreak;
     }
 
+    /**
+     * Define the pivot element, where the page break occur.
+     *
+     * @param pageBreak as String
+     */
     public void setPageBreak(final String pageBreak) {
         this.pageBreak = pageBreak;
     }
 
+    /**
+     * Get the 2 nd parameter, besides the primarey key for ordering the result
+     * set.
+     *
+     * @return additionalOrdering as String
+     */
     public String getAdditionalOrdering() {
         return additionalOrdering;
     }
 
+    /**
+     * Set the 2 nd parameter, besides the primarey key for ordering the result
+     * set.
+     *
+     * @param additionalOrdering as String
+     */
     public void setAdditionalOrdering(final String additionalOrdering) {
         this.additionalOrdering = additionalOrdering;
     }
 
+    /**
+     * Get all <b>String</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @return filterStringCriteria as Map
+     */
     public Map<String, String> getFilterStringCriteria() {
         return filterStringCriteria;
     }
 
+    /**
+     * Set all <b>String</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @param filterStringCriteria as Map
+     */
     public void setFilterStringCriteria(final Map<String, String> filterStringCriteria) {
         this.filterStringCriteria = filterStringCriteria;
     }
 
+    /**
+     * Get all <b>Boolean</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @return filterBooleanCriteria as Map
+     */
     public Map<String, Boolean> getFilterBooleanCriteria() {
         return filterBooleanCriteria;
     }
 
+    /**
+     * Set all <b>Boolean</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @param filterBooleanCriteria as Map
+     */
     public void setFilterBooleanCriteria(final Map<String, Boolean> filterBooleanCriteria) {
         this.filterBooleanCriteria = filterBooleanCriteria;
     }
 
+    /**
+     * Get all <b>Integer</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @return filterIntegerCriteria as Map
+     */
     public Map<String, Integer> getFilterIntegerCriteria() {
         return filterIntegerCriteria;
     }
 
+    /**
+     * Set all <b>Integer</b> based filters &gt;KEY, Value&lt; to reduce the
+     * result set.
+     *
+     * @param filterIntegerCriteria as Map
+     */
     public void setFilterIntegerCriteria(final Map<String, Integer> filterIntegerCriteria) {
         this.filterIntegerCriteria = filterIntegerCriteria;
     }
-
+    //</editor-fold>
 }

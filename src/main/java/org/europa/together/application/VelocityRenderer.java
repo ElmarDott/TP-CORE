@@ -37,7 +37,6 @@ public class VelocityRenderer implements TemplateRenderer {
     public String loadContentByClasspathResource(final String resourcePath,
             final String template,
             final Map<String, String> properties) {
-
         engine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         engine.setProperty("classpath.resource.loader.class",
                 ClasspathResourceLoader.class.getName());
@@ -49,7 +48,6 @@ public class VelocityRenderer implements TemplateRenderer {
     public String loadContentByFileResource(final String resourcePath,
             final String template,
             final Map<String, String> properties) {
-
         engine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resourcePath);
         engine.init();
         return processContent(template, properties);
@@ -58,28 +56,23 @@ public class VelocityRenderer implements TemplateRenderer {
     @Override
     public String loadContentByStringResource(final String resource,
             final Map<String, String> properties) {
-
         engine.setProperty(Velocity.RESOURCE_LOADER, "string");
         engine.addProperty("string.resource.loader.class",
                 StringResourceLoader.class.getName());
         engine.addProperty("string.resource.loader.repository.static", "false");
         engine.init();
-
         StringResourceRepository templateRepository
                 = (StringResourceRepository) engine
                         .getApplicationAttribute(StringResourceLoader.REPOSITORY_NAME_DEFAULT);
         templateRepository.putStringResource("stringResource", resource);
-
         return processContent("stringResource", properties);
     }
 
     private String processContent(final String resource,
             final Map<String, String> properties) {
-
         Template template = engine.getTemplate(resource);
         StringWriter writer = new StringWriter();
         writer.flush();
-
         VelocityContext context = new VelocityContext();
         if (properties != null) {
             for (Map.Entry<String, String> entry : properties.entrySet()) {
@@ -88,7 +81,6 @@ public class VelocityRenderer implements TemplateRenderer {
         } else {
             context.put("__init__", "");
         }
-
         template.merge(context, writer);
         return writer.toString();
     }

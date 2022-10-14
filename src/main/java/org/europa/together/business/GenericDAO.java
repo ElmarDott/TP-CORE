@@ -2,7 +2,6 @@ package org.europa.together.business;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityNotFoundException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JpaPagination;
@@ -51,10 +50,10 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * delete, otherwise a EntityNotFoundException will thrown.
      *
      * @param id as Generic
-     * @throws javax.persistence.EntityNotFoundException
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
-    void delete(PK id) throws EntityNotFoundException;
+    void delete(PK id) throws DAOException;
 
     /**
      * Search an entity in the persistence context and update it.If it's not
@@ -62,10 +61,10 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @param id as Generic
      * @param object as Generic
-     * @throws javax.persistence.EntityNotFoundException
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
-    void update(PK id, T object) throws EntityNotFoundException;
+    void update(PK id, T object) throws DAOException;
 
     /**
      * Count the entries of corresponding table to the domain object is
@@ -100,6 +99,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      *
      * @param object as Generic
      * @return JSON object as String
+     * @throws org.europa.together.exceptions.JsonProcessingException
      * @throws com.fasterxml.jackson.core.JsonProcessingException
      */
     @API(status = STABLE, since = "1.0")
@@ -110,11 +110,25 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * Tried to create a entity object from a given JSON String.
      *
      * @param json as String
-     * @param clazz as Class
+     * @param object as T
      * @return Entity as Generic
+     * @throws org.europa.together.exceptions.JsonProcessingException
+     * @throws java.lang.ClassNotFoundException
      */
     @API(status = STABLE, since = "2.1")
-    T deserializeJsonAsObject(String json, Class<T> clazz)
+    T deserializeJsonAsObject(String json, Class<T> object)
+            throws JsonProcessingException, ClassNotFoundException;
+
+    /**
+     * Tries to create from a collection of JSON objects a list of enties.
+     *
+     * @param json as String
+     * @return List of Entities
+     * @throws JsonProcessingException
+     * @throws ClassNotFoundException
+     */
+    @API(status = STABLE, since = "3.0")
+    List<T> deserializeJsonAsList(String json)
             throws JsonProcessingException, ClassNotFoundException;
 
     /**
