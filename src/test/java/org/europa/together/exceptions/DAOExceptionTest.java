@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("unchecked")
 public class DAOExceptionTest {
 
-    @Test()
+    @Test
     void exceptionObject() {
         DAOException ex_00 = new DAOException("DAO Exception");
         assertEquals("DAO Exception", ex_00.getMessage());

@@ -3,12 +3,12 @@ package org.europa.together.application;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
-import org.europa.together.domain.ConfigurationDO;
+import org.europa.together.business.PaginationTestDAO;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.domain.PaginationTestDO;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,13 +28,11 @@ public class DaoPaginationTest {
     private static final Logger LOGGER = new LogbackLogger(DaoPaginationTest.class);
 
     private static final String FLUSH_TABLE
-            = "TRUNCATE TABLE " + ConfigurationDO.TABLE_NAME + ";";
+            = "TRUNCATE TABLE " + PaginationTestDO.TABLE_NAME + ";";
     private static final String FILE
             = "org/europa/together/sql/pagination-test.sql";
 
-    @Autowired
-    private ConfigurationDAO configurationDAO;
-
+    private final PaginationTestDAO paginationTestDAO = new PaginationTestHbmDAO();
     private static DatabaseActions jdbcActions = new JdbcActions();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
@@ -69,7 +66,7 @@ public class DaoPaginationTest {
 
         jdbcActions.executeQuery(FLUSH_TABLE);
         JpaPagination pivotElement = new JpaPagination("uuid");
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         //restore DB before test in the case the tests fail
         jdbcActions.executeSqlFromClasspath(FILE);
@@ -83,7 +80,7 @@ public class DaoPaginationTest {
         LOGGER.log("TEST CASE: listAllAsc", LogLevel.DEBUG);
 
         JpaPagination pivotElement = new JpaPagination("uuid");
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -96,7 +93,7 @@ public class DaoPaginationTest {
 
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0100-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -109,7 +106,7 @@ public class DaoPaginationTest {
 
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setPageSize(35);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(35, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -123,7 +120,7 @@ public class DaoPaginationTest {
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setPageSize(3);
         pivotElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(3, result.size());
         assertEquals("88888888-0100-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -140,7 +137,7 @@ public class DaoPaginationTest {
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setPageSize(5);
         pivotElement.setPageBreak(primareyKey);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -159,7 +156,7 @@ public class DaoPaginationTest {
         pivotElement.setPageBreak(primareyKey);
         pivotElement.setPaging(JpaPagination.PAGING_BACKWARD);
         pivotElement.setSorting(JpaPagination.ORDER_DESC);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -176,7 +173,7 @@ public class DaoPaginationTest {
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setPageSize(27);
         pivotElement.setPageBreak(primareyKey);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(20, result.size());
         assertEquals(primareyKey, result.get(0).getUuid());
@@ -189,7 +186,7 @@ public class DaoPaginationTest {
 
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setPageSize(150);
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(101, result.size());
         assertEquals("88888888-0000-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -206,7 +203,7 @@ public class DaoPaginationTest {
         JpaPagination pivotElement = new JpaPagination("uuid");
         pivotElement.setFilterStringCriteria(filters);
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(26, result.size());
         assertEquals("88888888-0050-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -225,7 +222,7 @@ public class DaoPaginationTest {
         pivotElement.setPageSize(8);
         pivotElement.setPageBreak("88888888-0057-4444-4444-cccccccccc");
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(8, result.size());
         assertEquals("88888888-0057-4444-4444-cccccccccc", result.get(0).getUuid());
@@ -245,7 +242,7 @@ public class DaoPaginationTest {
         pivotElement.setPageSize(8);
         pivotElement.setPageBreak("88888888-0005-4444-4444-cccccccccc");
 
-        List<ConfigurationDO> result = configurationDAO.listAllElements(pivotElement);
+        List<PaginationTestDO> result = paginationTestDAO.listAllElements(pivotElement);
 
         assertEquals(5, result.size());
         assertEquals("88888888-0005-4444-4444-cccccccccc", result.get(0).getUuid());

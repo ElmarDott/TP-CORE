@@ -71,7 +71,7 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         ParameterExpression<String> paramKey = builder.parameter(String.class);
         ParameterExpression<String> paramModulName = builder.parameter(String.class);
         ParameterExpression<String> paramVersion = builder.parameter(String.class);
-
+        //Prevent SQL Injections
         query.where(builder.equal(root.get("key"), paramKey),
                 builder.equal(root.get("modulName"), paramModulName),
                 builder.equal(root.get("version"), paramVersion));
@@ -157,7 +157,6 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
                 LogLevel.DEBUG);
         ConfigurationDO entry = getConfigurationByKey(key, module, version);
         value = entry.getValue();
-
         if (StringUtils.isEmpty(value)) {
             value = entry.getDefaultValue();
             LOGGER.log("getValueByKey() returns the defaultValue " + value, LogLevel.DEBUG);

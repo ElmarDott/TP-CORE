@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureFlags;
 import org.europa.together.business.Logger;

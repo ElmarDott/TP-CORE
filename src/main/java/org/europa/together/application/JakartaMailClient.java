@@ -86,6 +86,7 @@ public class JakartaMailClient implements MailClient {
             success = false;
             LOGGER.catchException(ex);
         }
+
         try {
             propertyReader.appendPropertiesFromFile(resource);
             properties = propertyReader.getPropertyList();
@@ -93,6 +94,7 @@ public class JakartaMailClient implements MailClient {
             success = false;
             LOGGER.catchException(ex);
         }
+
         if (!properties.isEmpty()) {
             configuration.putAll(properties);
         } else {
@@ -160,7 +162,6 @@ public class JakartaMailClient implements MailClient {
                 multipart.addBodyPart(bodypart);
             }
         }
-
         mimeMessage.setContent(multipart);
         this.message = mimeMessage;
         this.email = email;
@@ -264,12 +265,10 @@ public class JakartaMailClient implements MailClient {
     private Properties wireConfigurationEntries() {
         configCountWaitTime = Long.parseLong(configuration.get("mailer.wait"));
         configMaximumMailBulk = Integer.parseInt(configuration.get("mailer.count"));
-
         Properties props = new Properties();
         props.put("mail.smtp.host", configuration.get("mailer.host"));
         props.put("mail.smtp.port", configuration.get("mailer.port"));
         props.put("mail.smtp.auth", "true");
-
         props.put("mail.smtp.starttls.enable", configuration.get("mailer.tls"));
         props.put("mail.smtp.ssl.enable", configuration.get("mailer.ssl"));
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

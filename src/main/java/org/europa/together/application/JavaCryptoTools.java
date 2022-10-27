@@ -51,11 +51,9 @@ public class JavaCryptoTools implements CryptoTools, Serializable {
             MessageDigest md = MessageDigest.getInstance(algorithm.toString());
             md.reset();
             hash = StringUtils.byteToString(md.digest(plainText.getBytes("UTF-8")));
-
             String msg = "Utils.calculateHash(" + algorithm.toString() + ")"
                     + " plaintext: " + plainText + " hash: " + hash;
             LOGGER.log(msg, LogLevel.DEBUG);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -76,7 +74,6 @@ public class JavaCryptoTools implements CryptoTools, Serializable {
             KeyPairGenerator keyring = KeyPairGenerator.getInstance(cipher.toString());
             keyring.initialize(lenght, new SecureRandom());
             pair = keyring.generateKeyPair();
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

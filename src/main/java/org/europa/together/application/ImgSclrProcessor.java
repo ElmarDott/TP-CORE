@@ -224,11 +224,10 @@ public class ImgSclrProcessor implements ImageProcessor {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ImageMetadataItem> getMetaData() {
         List<ImageMetadataItem> collection = new ArrayList<>();
         if (this.metadata != null) {
-            collection = (List<ImageMetadataItem>) metadata.getItems();
+            collection.addAll(metadata.getItems());
         }
         return collection;
     }

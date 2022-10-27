@@ -9,7 +9,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.JpaPagination;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.JsonProcessingException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

@@ -39,7 +39,6 @@ public class JdbcActions implements DatabaseActions {
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnection = null;
     private Statement statement = null;
-
     private DatabaseMetaData metadata;
     private String connectionUrl;
     private String driverClass;
@@ -59,7 +58,6 @@ public class JdbcActions implements DatabaseActions {
         try {
             fetchProperties(propertyFile);
             establishPooledConnection();
-
         } catch (Exception ex) {
             connected = false;
             LOGGER.log("Connection failed!", LogLevel.WARN);
@@ -96,7 +94,8 @@ public class JdbcActions implements DatabaseActions {
     }
 
     @Override
-    public ResultSet executeQuery(final String sql) throws SQLException {
+    public ResultSet executeQuery(final String sql)
+            throws SQLException {
         ResultSet resultSet = null;
         if (jdbcConnection != null) {
             statement = jdbcConnection.createStatement();
@@ -109,7 +108,8 @@ public class JdbcActions implements DatabaseActions {
     }
 
     @Override
-    public int countResultSets(final ResultSet results) throws SQLException {
+    public int countResultSets(final ResultSet results)
+            throws SQLException {
         int count = 0;
         while (results.next()) {
             count++;
@@ -118,7 +118,8 @@ public class JdbcActions implements DatabaseActions {
     }
 
     @Override
-    public JdbcConnection getJdbcMetaData() throws SQLException {
+    public JdbcConnection getJdbcMetaData()
+            throws SQLException {
         Map<String, String> properties = new HashMap<>();
         metadata = jdbcConnection.getMetaData();
         String url = metadata.getURL();

@@ -1,11 +1,9 @@
 package org.europa.together.application;
 
-import java.util.List;
 import org.europa.together.business.JsonTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.JacksonObjectTest;
-import org.europa.together.exceptions.JsonProcessingException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

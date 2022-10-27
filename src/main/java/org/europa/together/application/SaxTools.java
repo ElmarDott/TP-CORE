@@ -21,7 +21,6 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.FileUtils;
 import org.europa.together.business.XmlTools;
-import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -82,7 +81,6 @@ public class SaxTools implements XmlTools {
         if (!StringUtils.isEmpty(prettyPrint)) {
             content = prettyPrint;
         }
-        LOGGER.log("prettyPrintXml() => \n" + prettyPrint, LogLevel.TRACE);
         return content;
     }
 
@@ -102,7 +100,6 @@ public class SaxTools implements XmlTools {
             Transformer transformer = factory.newTransformer(template);
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.transform(input, output);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -182,21 +179,14 @@ public class SaxTools implements XmlTools {
     }
 
     @Override
-    public void writeXmlToFile(final String content, final String destinationFile) {
-        try {
-            FileUtils.writeStringToFile(content, destinationFile);
-        } catch (IOException ex) {
-            LOGGER.catchException(ex);
-        }
+    public void writeXmlToFile(final String content, final String destinationFile)
+            throws IOException {
+        FileUtils.writeStringToFile(content, destinationFile);
     }
 
-    private void parse(final String xml) throws MisconfigurationException {
-        if (StringUtils.isEmpty(xml)) {
-            throw new MisconfigurationException("No XML to parse!");
-        }
+    private void parse(final String xml) {
         wellformed = false;
         prettyPrint = null;
-
         try {
             //Sax
             saxHandler = new SaxDocumentHandler();
@@ -209,7 +199,6 @@ public class SaxTools implements XmlTools {
             parser.parse(
                     new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)),
                     saxHandler);
-
             wellformed = true;
             prettyPrint = saxHandler.prettyPrintXml();
         } catch (Exception ex) {

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,14 +217,9 @@ public class SaxToolsTest {
     }
 
     @Test
+//    @Disabled
     void prettyPrintXml() {
         LOGGER.log("TEST CASE: prettyPrint", LogLevel.DEBUG);
-
-        xmlTools = new SaxTools();
-        String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_01.xml"));
-
-        assertNotNull(input);
-        assertTrue(xmlTools.isWellFormed());
 
         String reference = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "\n"
@@ -248,8 +244,10 @@ public class SaxToolsTest {
                 + "        </XXX>\n"
                 + "    </Employee>\n"
                 + "</EmployeeInfo>\n";
-        String output = xmlTools.prettyPrintXml();
 
+        xmlTools = new SaxTools();
+        String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_01.xml"));
+        String output = xmlTools.prettyPrintXml();
         assertNotEquals(input, output);
         assertEquals(reference, output);
     }
@@ -295,7 +293,7 @@ public class SaxToolsTest {
     }
 
     @Test
-    void writeXmlToFile() {
+    void writeXmlToFile() throws Exception {
         LOGGER.log("TEST CASE: writeXmlToFile", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
@@ -308,6 +306,16 @@ public class SaxToolsTest {
         assertTrue(file.exists());
         file.delete();
         assertFalse(file.exists());
+    }
+
+    @Test
+    void failWriteXmlToFile() throws Exception {
+        LOGGER.log("TEST CASE: failWriteXmlToFile", LogLevel.DEBUG);
+
+        xmlTools = new SaxTools();
+        assertThrows(Exception.class, () -> {
+            xmlTools.writeXmlToFile("", null);
+        });
     }
 
     @Test
@@ -467,11 +475,9 @@ public class SaxToolsTest {
 
         xmlTools = new SaxTools();
         String transform = xmlTools.shrinkContent(orgin);
-        xmlTools.parseXmlString(transform);
-
-        LOGGER.log("Shrink: " + transform, LogLevel.DEBUG);
 
         assertNotEquals(orgin, transform);
+        xmlTools.parseXmlString(transform);
         assertTrue(xmlTools.isWellFormed());
     }
 }

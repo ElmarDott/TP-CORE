@@ -77,7 +77,8 @@ public final class LoggingService {
      * @param file as String
      */
     @API(status = STABLE, since = "1.1")
-    public void writeLogConfiguration(final String content, final String file) {
+    public void writeLogConfiguration(final String content, final String file)
+            throws IOException {
         XmlTools xmlTools = new SaxTools();
         xmlTools.parseXmlString(content);
         LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);

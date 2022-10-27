@@ -22,7 +22,6 @@ public class LoggingServiceOutcome extends Stage<LoggingServiceOutcome> {
             = new LogbackLogger(LoggingServiceOutcome.class);
 
     private String configFile = Constraints.SYSTEM_APP_DIR + "/logback.xml";
-
     private LoggingService loggingService = new LoggingService();
 
     public LoggingServiceOutcome configuration_is_present_in_application_directory() {

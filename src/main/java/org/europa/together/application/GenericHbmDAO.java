@@ -38,9 +38,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     private static final long serialVersionUID = 2L;
     private static final Logger LOGGER = new LogbackLogger(GenericHbmDAO.class);
 
-    @Autowired
-    private JsonTools<T> jsonTools;
-
     /**
      * JPA Entity Manager for Transactions.
      */
@@ -48,14 +45,17 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public transient EntityManager mainEntityManagerFactory;
 
+    @Autowired
+    private JsonTools<T> jsonTools;
+
     private final Class<T> genericType;
 
     /**
      * Constructor.
      */
     public GenericHbmDAO() {
-        genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
+        ParameterizedType clazz = (ParameterizedType) getClass().getGenericSuperclass();
+        genericType = (Class<T>) clazz.getActualTypeArguments()[0];
         LOGGER.log("instance class", LogLevel.INFO);
     }
 
@@ -88,8 +88,14 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             LOGGER.log("DAO (" + object.getClass().getSimpleName() + ") update",
                     LogLevel.TRACE);
         } else {
-            throw new DAOException("update: " + id.toString()
-                    + " : " + object.toString());
+            String message = "update faild. -> ";
+            if (id != null) {
+                message += id.toString();
+            }
+            if (object != null) {
+                message += " : " + object.toString();
+            }
+            throw new DAOException(message);
         }
     }
 

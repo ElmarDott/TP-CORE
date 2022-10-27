@@ -1,6 +1,7 @@
 package org.europa.together.business;
 
 import java.io.File;
+import java.io.IOException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
@@ -140,7 +141,9 @@ public interface XmlTools {
      *
      * @param content as string
      * @param destinationFile as String
+     * @throws java.io.IOException
      */
     @API(status = STABLE, since = "1.0")
-    void writeXmlToFile(String content, String destinationFile);
+    void writeXmlToFile(String content, String destinationFile)
+            throws IOException;
 }
