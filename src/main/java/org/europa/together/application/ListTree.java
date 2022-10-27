@@ -165,7 +165,7 @@ public class ListTree<T> implements TreeWalker<T> {
 
     @Override
     public List<TreeNode<T>> getTree() {
-        return this.tree;
+        return List.copyOf(tree);
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,7 +33,9 @@ public class DaoPaginationTest {
     private static final String FILE
             = "org/europa/together/sql/pagination-test.sql";
 
-    private final PaginationTestDAO paginationTestDAO = new PaginationTestHbmDAO();
+    @Autowired
+    private PaginationTestDAO paginationTestDAO;
+
     private static DatabaseActions jdbcActions = new JdbcActions();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">

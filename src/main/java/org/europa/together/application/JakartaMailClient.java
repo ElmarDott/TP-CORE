@@ -66,7 +66,7 @@ public class JakartaMailClient implements MailClient {
 
     @Override
     public Map<String, String> getDebugActiveConfiguration() {
-        return configuration;
+        return Map.copyOf(configuration);
     }
 
     @Override

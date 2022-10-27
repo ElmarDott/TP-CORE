@@ -74,7 +74,7 @@ public class FeatureFlagsFF4j implements FeatureFlags {
             String message = "Feature Flags are deactivated by database configuration";
             throw new MisconfigurationException(message);
         }
-        return ff4j;
+        return ff4j.audit();
     }
 
     @Override

@@ -60,7 +60,7 @@ public class Mail {
      * @return attachments as List
      */
     public List<FileDataSource> getAttachmentList() {
-        return attachmentList;
+        return List.copyOf(attachmentList);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Mail {
      * @return recipients as List
      */
     public List<InternetAddress> getRecipentList() {
-        return recipientList;
+        return List.copyOf(recipientList);
     }
 
     /**

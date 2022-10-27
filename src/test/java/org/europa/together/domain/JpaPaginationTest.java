@@ -16,8 +16,13 @@ public class JpaPaginationTest {
         LOGGER.log("TEST CASE: domainObject", LogLevel.DEBUG);
 
         assertThat(JpaPagination.class, hasValidBeanConstructor());
-        assertThat(JpaPagination.class, hasValidBeanToString());
-        assertThat(JpaPagination.class, hasValidGettersAndSetters());
+        assertThat(JpaPagination.class, hasValidBeanToStringExcluding("filterBooleanCriteria",
+                "filterIntegerCriteria",
+                "filterStringCriteria"));
+        assertThat(JpaPagination.class,
+                hasValidGettersAndSettersExcluding("filterBooleanCriteria",
+                        "filterIntegerCriteria",
+                        "filterStringCriteria"));
     }
 
 }

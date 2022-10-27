@@ -77,9 +77,9 @@ public class JpaPagination {
                 + ", primaryKey=" + primaryKey
                 + ", pageBreak=" + pageBreak
                 + ", additionalOrdering=" + additionalOrdering
-                + ", filterStringCriteria=" + filterStringCriteria
-                + ", filterBooleanCriteria=" + filterBooleanCriteria
-                + ", filterIntegerCriteria=" + filterIntegerCriteria
+                + ", filterStringCriteria=" + this.filterStringCriteria
+                + ", filterBooleanCriteria=" + this.filterBooleanCriteria
+                + ", filterIntegerCriteria=" + this.filterIntegerCriteria
                 + '}';
     }
 
@@ -201,7 +201,7 @@ public class JpaPagination {
      * @return filterStringCriteria as Map
      */
     public Map<String, String> getFilterStringCriteria() {
-        return filterStringCriteria;
+        return Map.copyOf(filterStringCriteria);
     }
 
     /**
@@ -211,7 +211,7 @@ public class JpaPagination {
      * @param filterStringCriteria as Map
      */
     public void setFilterStringCriteria(final Map<String, String> filterStringCriteria) {
-        this.filterStringCriteria = filterStringCriteria;
+        this.filterStringCriteria.putAll(filterStringCriteria);
     }
 
     /**
@@ -221,7 +221,7 @@ public class JpaPagination {
      * @return filterBooleanCriteria as Map
      */
     public Map<String, Boolean> getFilterBooleanCriteria() {
-        return filterBooleanCriteria;
+        return Map.copyOf(filterBooleanCriteria);
     }
 
     /**
@@ -231,7 +231,7 @@ public class JpaPagination {
      * @param filterBooleanCriteria as Map
      */
     public void setFilterBooleanCriteria(final Map<String, Boolean> filterBooleanCriteria) {
-        this.filterBooleanCriteria = filterBooleanCriteria;
+        this.filterBooleanCriteria.putAll(filterBooleanCriteria);
     }
 
     /**
@@ -241,7 +241,7 @@ public class JpaPagination {
      * @return filterIntegerCriteria as Map
      */
     public Map<String, Integer> getFilterIntegerCriteria() {
-        return filterIntegerCriteria;
+        return Map.copyOf(filterIntegerCriteria);
     }
 
     /**
@@ -251,7 +251,7 @@ public class JpaPagination {
      * @param filterIntegerCriteria as Map
      */
     public void setFilterIntegerCriteria(final Map<String, Integer> filterIntegerCriteria) {
-        this.filterIntegerCriteria = filterIntegerCriteria;
+        this.filterIntegerCriteria.putAll(filterIntegerCriteria);
     }
     //</editor-fold>
 }

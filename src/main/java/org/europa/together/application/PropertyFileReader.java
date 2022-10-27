@@ -218,7 +218,7 @@ public class PropertyFileReader implements PropertyReader {
 
     @Override
     public Map<String, String> getPropertyList() {
-        return propertyList;
+        return Map.copyOf(propertyList);
     }
 
     private void printPropertyList() {

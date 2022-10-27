@@ -28,6 +28,7 @@ Components - Release: 2.0
  * [CORE-12] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-12%5D-Image-Processor)
  * [CORE-13] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-13%5D-Feature-Toggle)
  * [CORE-14] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-14%5D-Crypto-Tools)
+ * [CORE-15] [JSON Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-15%5D-JsonTools)
 
 Please also check out the [Wiki](https://github.com/ElmarDott/TP-CORE/wiki/home) for futher information.
 
