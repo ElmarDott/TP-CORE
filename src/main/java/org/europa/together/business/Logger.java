@@ -51,13 +51,4 @@ public interface Logger {
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
-
-    /**
-     * Set the LogLevel programmatically. <br>
-     * Log-Level: TRACE | DEBUG | INFO | WARN | ERROR
-     *
-     * @param level as LogLevel
-     */
-    @API(status = STABLE, since = "1.1")
-    void setLogLevel(LogLevel level);
 }

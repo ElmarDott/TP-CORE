@@ -44,10 +44,12 @@ public class JacksonJsonTools<T> implements JsonTools<T> {
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
         try {
-//            Class<T> clazz = (Class<T>) ((ParameterizedType) getClass()
-//                    .getGenericSuperclass()).getActualTypeArguments()[0];
+//            ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+//            Class<?> clazz = (Class<?>) type.getActualTypeArguments()[0];
+
+            Class<?> clazz = Class.forName(object.getCanonicalName());
             ObjectMapper mapper = new ObjectMapper();
-            return (T) mapper.readValue(json, Class.forName(object.getCanonicalName()));
+            return (T) mapper.readValue(json, clazz);
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
             throw new JsonProcessingException(ex.getOriginalMessage());
         }

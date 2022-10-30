@@ -45,7 +45,7 @@ Docker was chosen for an simple and fast database setup. In the case you wish to
   -e POSTGRES_PASSWORD=s3cr3t \
   -e PGPASSWORD=s3cr3t \
   -v /home/user/docker/postgres:/var/lib/postgresql/data \
-  postgres:11
+  postgres:11.1
 
   docker run -d --name pgadmin --restart=no \
   -p 8004:80 --net services --ip 172.18.0.98 \
@@ -78,7 +78,7 @@ All released artifacts are available on Maven Central for free usage. You are be
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.2.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
