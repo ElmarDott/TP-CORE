@@ -1,4 +1,4 @@
-<img src="https://elmar-dott.com/wp-content/uploads/ElmarDott.com_.jpg" style="float:left; height:50%; width:50%;" />
+<img src="https://elmar-dott.com/wp-content/uploads/ElmarDott.com-HEADER.jpg" style="float:left; height:50%; width:50%;" />
 
 # Together Platform :: CORE
 
@@ -34,7 +34,7 @@ Please also check out the [Wiki](https://github.com/ElmarDott/TP-CORE/wiki/home)
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans, Maven and Java SE (openJDK). The most important dependencies are Hibernate, Spring and JUnit 5. As Database Server (DBMS) PostgeSQL DBMS 11 is recommended.
+The CORE Module is build with NetBeans, Maven and Java 17 SE (openJDK). The most important dependencies are Hibernate, Spring and JUnit 5. As Database Server (DBMS) PostgeSQL DBMS 11.1 is recommended.
 
 Docker was chosen for an simple and fast database setup. In the case you wish to have a short introduction about docker, you can check my tutorial on [BitCute](https://elmar-dott.com/articles/tutorial/docker-basics/). After on your system docker is running, you are be able to setup the database by the following steps:
 
@@ -102,16 +102,18 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
-| 3.0.0  | in progress
+| 3.1.0  | in prgress
+|        | -
+|--------|----------------------------------------------------------------------
+| 3.0    | published 10/2022
 |        | - implement FeatureFlags based FF4j
 |        | - extend Validator.IP4_ADDRESS
 |        | - extend Validator.isIsbn10() + isIsbn13()
 |        | - extend GenericDAO.listAll() with pagination
 |        | - remove jodatime
-|        | - remove flexjson
-|        | - remove ITextRenderer for OpenPdfRenderer
+|        | - replace flexjson for Jackson
+|        | - replace ITextRenderer for OpenPdfRenderer
 |        | - replace JavaMail for JakartaMail
-|        | - change javax to jakarta (Jakarta EE 9)
 |        | - refactor MailClient & MailService
 |        | - refactor Validator.VERSION_NUMBER to SEMANTIC_VERSION_NUMBER
 |        | - refactor test cases
@@ -119,7 +121,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - bugfix TreeWalker.addNode()
 |        | - bugfix Change TreeNode.value to generic object (typesafe)
 |--------|----------------------------------------------------------------------
-| 2.2.0  | published 10/2021
+| 2.2.0  | published 10/2021 - EOL
 |        | - add OpenPDF Renderer (iText 5 will removed in Version 3.0)
 |--------|----------------------------------------------------------------------
 | 2.1.0  | published 12/2020
@@ -143,13 +145,11 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - bugfix; DAO visibilities
 |--------|----------------------------------------------------------------------
 | 2.0    | published 11/2019
+|        | - change license to Apache License 2.0
 |        | - Change bean validation to version 2.0
 |        | - API changes: renaming impl classes
 |        | - GenericDAO CRUD operations remove final
 |        | - Add Functionality: CryptoTool
-|--------|----------------------------------------------------------------------
-| 1.2    | in process
-|        | - change license to Apache License 2.0
 |        | - Add Functionality: Feature Toggle
 |        | - Extend Application Configuration by Version() data class
 |        | - provide JDBC connection object in DatabaseActions
@@ -157,7 +157,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - fix TreeNode hashCode() & equals()
 |        | - add TreeNode.copy()
 |--------|----------------------------------------------------------------------
-| 1.1    | published 10/2018
+| 1.1    | published 10/2018 - EOL
 |        | - optimize overall Test Coverage
 |        | - Fix (medium) :: MailClient.loadConfigFromDatabase() {MODUL_VERSION}
 |        | - Add Functionality: XmlTools:transformXslt()
