@@ -52,16 +52,14 @@ public class JakartaMailClientTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        //DBMS
+        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         //SMTP Test Server
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
-        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning());
-        //DBMS
-        Assumptions.assumeTrue(jdbcActions.connect("test"));
-
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning(), "GreenMail embedded SMTP Server fail to start.");
     }
 
     @AfterAll
@@ -73,7 +71,6 @@ public class JakartaMailClientTest {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -82,7 +79,6 @@ public class JakartaMailClientTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

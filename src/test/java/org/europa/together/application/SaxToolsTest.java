@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +48,8 @@ public class SaxToolsTest {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.xsd"), SCHEMA);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
-            Assumptions.assumeTrue(false);
+            Assumptions.assumeTrue(false, "XML grammar definition files faild to copy.");
         }
-
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -63,8 +60,6 @@ public class SaxToolsTest {
         if (SCHEMA.exists()) {
             SCHEMA.delete();
         }
-
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -73,7 +68,6 @@ public class SaxToolsTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

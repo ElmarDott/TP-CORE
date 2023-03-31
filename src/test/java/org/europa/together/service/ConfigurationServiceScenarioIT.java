@@ -8,6 +8,7 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
+import static org.europa.together.service.MailClientScenarioIT.CONNECTION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -32,16 +33,13 @@ public class ConfigurationServiceScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(CONNECTION.connect("test"));
-
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        Assumptions.assumeTrue(CONNECTION.connect("test"), "JDBC DBMS Connection failed.");
     }
 
     @AfterAll
     static void tearDown() {
         try {
             CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
-            LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -54,7 +52,6 @@ public class ConfigurationServiceScenarioIT extends
     @AfterEach
     void testCaseTermination() throws SQLException {
         CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
 

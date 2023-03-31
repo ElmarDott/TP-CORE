@@ -42,16 +42,13 @@ public class FeatureFlagsFF4jTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"));
-
+        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -61,7 +58,6 @@ public class FeatureFlagsFF4jTest {
     @AfterEach
     void testCaseTermination() throws Exception {
         jdbcActions.executeSqlFromClasspath("schema-drop.sql");
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

@@ -49,18 +49,7 @@ public class MailClientScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-
-        boolean socket = CONNECTION.connect("test");
-        if (!socket) {
-            check = false;
-        }
-
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
-
-        //DBMS Table setup
+        Assumptions.assumeTrue(CONNECTION.connect("test"), "JDBC DBMS Connection failed.");
         CONNECTION.executeSqlFromClasspath(SQL_FILE);
 
         //SMTP Test Server
@@ -68,6 +57,7 @@ public class MailClientScenarioIT extends
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
+        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning(), "GreenMail embedded SMTP Server fail to start.");
     }
 
     @AfterAll
@@ -75,9 +65,6 @@ public class MailClientScenarioIT extends
         try {
             SMTP_SERVER.stop();
             CONNECTION.executeQuery("TRUNCATE TABLE app_config;");
-
-            LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -98,7 +85,6 @@ public class MailClientScenarioIT extends
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
 

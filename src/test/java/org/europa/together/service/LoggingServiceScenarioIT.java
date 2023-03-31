@@ -30,11 +30,7 @@ public class LoggingServiceScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
     }
 
     @AfterAll
@@ -51,7 +47,6 @@ public class LoggingServiceScenarioIT extends
         if (config.exists()) {
             config.delete();
         }
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
     }
     //</editor-fold>
 

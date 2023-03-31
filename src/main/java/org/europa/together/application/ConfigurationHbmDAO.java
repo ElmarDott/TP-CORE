@@ -71,12 +71,12 @@ public class ConfigurationHbmDAO extends GenericHbmDAO<ConfigurationDO, String>
         ParameterExpression<String> paramKey = builder.parameter(String.class);
         ParameterExpression<String> paramModulName = builder.parameter(String.class);
         ParameterExpression<String> paramVersion = builder.parameter(String.class);
-        //Prevent SQL Injections
+
         query.where(builder.equal(root.get("key"), paramKey),
                 builder.equal(root.get("modulName"), paramModulName),
                 builder.equal(root.get("version"), paramVersion));
         query.orderBy(builder.asc(root.get("uuid")));
-        // wire queries together with parameters
+        // wire queries tog parametersether with parameters
         TypedQuery<ConfigurationDO> result = mainEntityManagerFactory.createQuery(query);
         result.setParameter(paramKey, hash);
         result.setParameter(paramModulName, module);

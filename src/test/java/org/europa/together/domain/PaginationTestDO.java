@@ -1,6 +1,7 @@
 package org.europa.together.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,29 +23,29 @@ public class PaginationTestDO implements Serializable {
     @Column(name = "IDX")
     private String uuid;
 
+    @Column(name = "INT_VALUE")
+    private Integer int_number;
+
+    @Column(name = "FLOAT_VALUE")
+    private Float float_number;
+
+    @Column(name = "DATE_VALUE")
+    private Date currentDate;
+
     @Column(name = "CONF_KEY")
     private String key;
 
     @Column(name = "CONF_VALUE")
     private String value;
 
-    @Column(name = "DEFAULT_VALUE")
-    private String defaultValue;
-
     @Column(name = "MODUL_NAME")
     private String modulName;
-
-    @Column(name = "SERVICE_VERSION")
-    private String version;
 
     @Column(name = "CONF_SET")
     private String configurationSet;
 
     @Column(name = "DEPRECATED")
     private boolean deprecated;
-
-    @Column(name = "MANDATORY")
-    private boolean mandatory;
 
     /**
      * Constructor.
@@ -54,77 +55,76 @@ public class PaginationTestDO implements Serializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
-    public boolean isDeprecated() {
-        return deprecated;
+    public String getUuid() {
+        return uuid;
     }
 
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setConfigurationSet(final String configurationSet) {
-        this.configurationSet = configurationSet;
-    }
-
-    public void setDefaultValue(final String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public void setDeprecated(final boolean deprecated) {
-        this.deprecated = deprecated;
-    }
-
-    public void setMandatory(final boolean mandatory) {
-        this.mandatory = mandatory;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
-    }
-
-    public void setModulName(final String modulName) {
-        this.modulName = modulName;
-    }
-
-    public void setUuid(final String uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public void setValue(final String value) {
-        this.value = value;
+    public Integer getInt_number() {
+        return int_number;
     }
 
-    public void setVersion(final String version) {
-        this.version = version;
+    public void setInt_number(Integer int_number) {
+        this.int_number = int_number;
     }
 
-    public String getConfigurationSet() {
-        return configurationSet;
+    public Float getFloat_number() {
+        return float_number;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
+    public void setFloat_number(Float float_number) {
+        this.float_number = float_number;
+    }
+
+    public Date getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
     }
 
     public String getKey() {
         return key;
     }
 
-    public String getModulName() {
-        return modulName;
-    }
-
-    public String getUuid() {
-        return uuid;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getValue() {
         return value;
     }
 
-    public String getVersion() {
-        return version;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getModulName() {
+        return modulName;
+    }
+
+    public void setModulName(String modulName) {
+        this.modulName = modulName;
+    }
+
+    public String getConfigurationSet() {
+        return configurationSet;
+    }
+
+    public void setConfigurationSet(String configurationSet) {
+        this.configurationSet = configurationSet;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
     //</editor-fold>
-
 }

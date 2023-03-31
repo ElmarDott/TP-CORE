@@ -1,5 +1,6 @@
 package org.europa.together.domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +45,8 @@ public class JpaPagination {
     private Map<String, String> filterStringCriteria = new HashMap<>();
     private Map<String, Boolean> filterBooleanCriteria = new HashMap<>();
     private Map<String, Integer> filterIntegerCriteria = new HashMap<>();
+    private Map<String, Float> filterFloatCriteria = new HashMap<>();
+    private Map<String, Date> filterDateCriteria = new HashMap<>();
 
     /**
      * Default Constructor.
@@ -80,6 +83,8 @@ public class JpaPagination {
                 + ", filterStringCriteria=" + this.filterStringCriteria
                 + ", filterBooleanCriteria=" + this.filterBooleanCriteria
                 + ", filterIntegerCriteria=" + this.filterIntegerCriteria
+                + ", filterFloatCriteria=" + this.filterFloatCriteria
+                + ", filterDateCriteria=" + this.filterDateCriteria
                 + '}';
     }
 
