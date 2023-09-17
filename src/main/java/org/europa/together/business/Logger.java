@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
  * Wrapper for the SLF4j and Logback Logging Framework.
  *
  * @author elmar.dott@gmail.com
- * @version 1.1
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "LogbackLogger")
 @Component
 public interface Logger {
 

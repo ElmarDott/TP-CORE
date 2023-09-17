@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
  * Velocity Template Renderer.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "VelocityRenderer")
 @Component
 public interface TemplateRenderer {
 
