@@ -8,47 +8,27 @@ import java.util.Collection;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
-import org.europa.together.domain.LogLevel;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class FileUtilsTest {
 
     private static final Logger LOGGER = new LogbackLogger(FileUtilsTest.class);
+
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
-    }
-    //</editor-fold>
-
     @Test
-    void testPrivateConstructor() throws Exception {
+    void privateConstructor() throws Exception {
         Constructor<FileUtils> clazz
                 = FileUtils.class.getDeclaredConstructor();
         clazz.setAccessible(true);
@@ -58,11 +38,11 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testGetFileSize() {
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
-        assertEquals(266026, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", " "));
-        assertEquals(259, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
+    void getFileSize() {
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", null));
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", ""));
+        assertEquals(146329, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", " "));
+        assertEquals(142, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "kilo"));
 
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "mega"));
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "Attachment.pdf", "giga"));
@@ -70,12 +50,12 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testFailGetFileSize() {
+    void failGetFileSize() {
         assertEquals(0, FileUtils.getFileSize(DIRECTORY + "no_file", null));
     }
 
     @Test
-    void testWriteStringToFile() {
+    void writeStringToFile() {
 
         String fileContent = "Content of the written File";
 
@@ -96,7 +76,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testReadFile() {
+    void readFile() {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.NONE));
@@ -104,12 +84,12 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testFailReadFile() {
+    void failReadFile() {
         assertEquals("", FileUtils.readFileStream(new File("no_file")));
     }
 
     @Test
-    void testAppendFile() {
+    void appendFile() {
         String file = DIRECTORY + "AppendTestFile.txt";
         FileUtils.writeStringToFile("Hello World!", file);
 
@@ -126,12 +106,12 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testFailAppendFile() {
+    void failAppendFile() {
         FileUtils.appendFile("no_file_to_append", "appending string.");
     }
 
     @Test
-    void testListFileTree() {
+    void listFileTree() {
         File file = new File(DIRECTORY + "dir-test");
         Collection<File> filelist = FileUtils.listFileTree(file);
 
@@ -153,7 +133,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testFailCopyFile() throws Exception {
+    void failCopyFile() throws Exception {
 
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(null, new File(""));
@@ -173,7 +153,7 @@ public class FileUtilsTest {
     }
 
     @Test
-    void testCopyFile() {
+    void copyFile() {
         try {
             File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
             File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");

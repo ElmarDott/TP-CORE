@@ -29,7 +29,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class VelocityRendererTest {
 
     private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
-    private static final String FILE_PATH = "org/europa/together/velocity";
+
+    private static final String FILE_PATH
+            = "org/europa/together/velocity";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
@@ -41,18 +43,9 @@ public class VelocityRendererTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(TemplateRenderer.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -71,30 +64,23 @@ public class VelocityRendererTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(VelocityRenderer.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testGenerateContent() {
-        LOGGER.log("TEST CASE: generateContent()", LogLevel.DEBUG);
+    void generateContent() {
+        LOGGER.log("TEST CASE: generateContent", LogLevel.DEBUG);
 
-        instance = new VelocityRenderer();
-
-        if (properties != null) {
-            properties.clear();
-        }
-        properties.put("property_key", "value");
-
-        assertEquals("Hello World?", instance.loadContentByStringResource("Hello World?", null));
-        assertEquals("Hello World? : value", instance.loadContentByStringResource("Hello World? : $property_key", properties));
+        assertEquals("Hello World?",
+                instance.loadContentByStringResource("Hello World?", null));
     }
 
     @Test
-    void testLoadContentByClasspathResource() {
-        LOGGER.log("TEST CASE: loadContentByClasspathResource()", LogLevel.DEBUG);
+    void generateContentWithProperties() {
+        LOGGER.log("TEST CASE: generateContentWithProperties", LogLevel.DEBUG);
 
         instance = new VelocityRenderer();
         if (properties != null) {
@@ -102,49 +88,78 @@ public class VelocityRendererTest {
         }
         properties.put("property_key", "value");
 
-        LOGGER.log("case 1: plain template", LogLevel.ERROR);
-        String result_00
-                = instance.loadContentByClasspathResource(FILE_PATH, "/template.vm", properties);
-        String result_01
-                = instance.loadContentByClasspathResource(FILE_PATH, "/template.vm", null);
-        assertEquals("Hello World?", result_00);
-        assertEquals("Hello World?", result_01);
-
-        LOGGER.log("case 1: with properties", LogLevel.ERROR);
-        String result_02
-                = instance.loadContentByClasspathResource(FILE_PATH, "/template_1.vm", properties);
-        String result_03
-                = instance.loadContentByClasspathResource(FILE_PATH, "/template_1.vm", null);
-        assertEquals("Hello World? : value", result_02);
-        assertEquals("Hello World? : $property_key", result_03);
+        assertEquals("Hello World? : value",
+                instance.loadContentByStringResource("Hello World? : $property_key", properties));
     }
 
     @Test
-    void testLoadContentByFileResource() {
-        LOGGER.log("TEST CASE: loadContentByFileResource()", LogLevel.DEBUG);
+    void generateComplexContent() {
+        LOGGER.log("TEST CASE: generateContentWithProperties", LogLevel.DEBUG);
+
+        String template = "## single line comment \n"
+                + "#set( $var = \"Velocity\" ) \n"
+                + "Hello $var World?"
+                + "#if($property_key==\"value\") : $property_key #end";
 
         instance = new VelocityRenderer();
-        System.out.println("\n PATH: " + DIRECTORY + "\n");
-
         if (properties != null) {
             properties.clear();
         }
         properties.put("property_key", "value");
 
-        LOGGER.log("case 1: plain template", LogLevel.ERROR);
-        String result_00
-                = instance.loadContentByFileResource(DIRECTORY, "/template.vm", properties);
-        String result_01
-                = instance.loadContentByFileResource(DIRECTORY, "template.vm", null);
-        assertEquals("Hello World?", result_00);
-        assertEquals("Hello World?", result_01);
+        assertEquals("Hello Velocity World? : value ",
+                instance.loadContentByStringResource(template, properties));
+    }
 
-        LOGGER.log("case 2: with properties", LogLevel.ERROR);
-        String result_02
-                = instance.loadContentByFileResource(DIRECTORY, "/template_1.vm", properties);
-        String result_03
-                = instance.loadContentByFileResource(DIRECTORY, "/template_1.vm", null);
-        assertEquals("Hello World? : value", result_02);
-        assertEquals("Hello World? : $property_key", result_03);
+    @Test
+    void loadContentByClasspathResource() {
+        LOGGER.log("TEST CASE: loadContentByClasspathResource", LogLevel.DEBUG);
+
+        instance = new VelocityRenderer();
+        if (properties != null) {
+            properties.clear();
+        }
+        properties.put("property_key", "value");
+
+        String result
+                = instance.loadContentByClasspathResource(FILE_PATH, "/TemplateWithProperties.vm", properties);
+        assertEquals("Hello World? : value", result);
+    }
+
+    @Test
+    void failLoadContentByClasspathResource() throws Exception {
+        LOGGER.log("TEST CASE: failLoadContentByClasspathResource", LogLevel.DEBUG);
+
+        instance = new VelocityRenderer();
+        assertThrows(Exception.class, () -> {
+            instance.loadContentByClasspathResource(FILE_PATH, "notExist.vm", null);
+        });
+    }
+
+    @Test
+    void loadContentByFileResource() {
+        LOGGER.log("TEST CASE: loadContentByFileResource", LogLevel.DEBUG);
+
+        instance = new VelocityRenderer();
+        if (properties != null) {
+            properties.clear();
+        }
+        properties.put("property_key", "value");
+
+        LOGGER.log("\n PATH: " + DIRECTORY + "\n", LogLevel.ERROR);
+
+        String result
+                = instance.loadContentByFileResource(DIRECTORY, "/TemplateWithProperties.vm", properties);
+        assertEquals("Hello World? : value", result);
+    }
+
+    @Test
+    void failLoadContentByFileResource() {
+        LOGGER.log("TEST CASE: failLoadContentByFileResource", LogLevel.DEBUG);
+
+        instance = new VelocityRenderer();
+        assertThrows(Exception.class, () -> {
+            instance.loadContentByFileResource(DIRECTORY, "/notExist.vm", null);
+        });
     }
 }

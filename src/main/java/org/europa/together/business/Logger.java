@@ -1,13 +1,12 @@
 package org.europa.together.business;
 
-import java.nio.file.Paths;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
- * Wrapper for the SLF4j and Logback Logging Framework.
+ * Simple API for application Logging.
  *
  * @author elmar.dott@gmail.com
  * @version 1.2
@@ -21,25 +20,7 @@ public interface Logger {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0001";
-
-    /**
-     * Define the Configuration Set for the Logger.
-     */
-    @API(status = STABLE, since = "1.1")
-    String CONFIG_SET = "logger";
-
-    /**
-     * Defines for which MODULE_VERSION the configuration will work.
-     */
-    @API(status = STABLE, since = "1.1")
-    String CONFIG_VERSION = "0";
-
-    /**
-     * Detect the Directory where the application is running.
-     */
-    @API(status = STABLE, since = "1.1")
-    String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
+    String FEATURE_ID = "CM-01";
 
     /**
      * Create a Log-Entry with the given message for the configured Log-Level.
@@ -72,8 +53,8 @@ public interface Logger {
     String catchException(Exception ex);
 
     /**
-     * Set the LogLevel programmatically. Log-Level: TRACE | DEBUG | INFO | WARN
-     * | ERROR
+     * Set the LogLevel programmatically. <br>
+     * Log-Level: TRACE | DEBUG | INFO | WARN | ERROR
      *
      * @param level as LogLevel
      */

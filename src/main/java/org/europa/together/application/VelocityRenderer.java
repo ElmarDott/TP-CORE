@@ -10,9 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
-import static org.europa.together.business.TemplateRenderer.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Repository;
 import org.europa.together.business.TemplateRenderer;
@@ -21,7 +19,6 @@ import org.europa.together.business.TemplateRenderer;
  * Implementation of a VelocityRenderer.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class VelocityRenderer implements TemplateRenderer {
 
     private static final long serialVersionUID = 3L;

@@ -1,8 +1,9 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import com.itextpdf.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
+import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,31 +27,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
-public class PdfTextRendererTest {
+public class OpenPdfRendererTest {
 
-    private static final Logger LOGGER = new LogbackLogger(PdfTextRendererTest.class);
+    private static final Logger LOGGER = new LogbackLogger(OpenPdfRendererTest.class);
     private static final String FILE_PATH = "org/europa/together/pdf";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    @Autowired
-    private PdfRenderer pdf;
+    //@Autowired
+    private PdfRenderer pdf = new OpenPdfRenderer();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(PdfRenderer.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -70,53 +61,34 @@ public class PdfTextRendererTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        assertThat(ITextRenderer.class, hasValidBeanConstructor());
-
-        pdf.setAuthor("John Doe");
-        assertEquals(pdf.getAuthor(), "John Doe");
-
-        pdf.setKeywords("John, Doe");
-        assertEquals(pdf.getKeywords(), "John, Doe");
-
-        pdf.setSubject("Document Subject");
-        assertEquals(pdf.getSubject(), "Document Subject");
-
-        pdf.setTitle("MyTitle");
-        assertEquals(pdf.getTitle(), "MyTitle");
+        assertThat(OpenPdfRenderer.class, hasValidBeanConstructor());
+        assertThat(OpenPdfRenderer.class, hasValidGettersAndSetters());
     }
 
     @Test
-    void testReadPdf() {
-        LOGGER.log("TEST CASE: readPdf", LogLevel.DEBUG);
+    void loadPdf() {
+        LOGGER.log("TEST CASE: loadPdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
-        PdfReader document = pdf.readDocument(file);
+        PdfReader document = pdf.loadDocument(file);
         assertEquals(5, document.getNumberOfPages());
     }
 
     @Test
-    void testFailReadPdf() {
-        LOGGER.log("TEST CASE: failReadPdf", LogLevel.DEBUG);
-        assertNull(pdf.readDocument(null));
+    void failLoadPdf() {
+        LOGGER.log("TEST CASE: failLoadPdf", LogLevel.DEBUG);
+        assertNull(pdf.loadDocument(null));
     }
 
     @Test
-    void testFailRenderHtmlToPdf() {
-        LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
-
-        pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
-        assertFalse(new File(DIRECTORY + "fail.pdf").exists());
-    }
-
-    @Test
-    void testLoadAndWritePdf() {
+    void loadAndWritePdf() {
         LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
-        PdfReader document = pdf.readDocument(file);
+        PdfDocument document = pdf.loadDocument(file);
 
         String out = DIRECTORY + FILE_PATH + "/copy.pdf";
         pdf.writeDocument(document, out);
@@ -125,24 +97,13 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testFailWritePdf() {
+    void failWritePdf() {
         LOGGER.log("TEST CASE: failWritePdf", LogLevel.DEBUG);
 
         String out = DIRECTORY + FILE_PATH + "/fail.pdf";
-        pdf.writeDocument(null, out);
+        pdf.writeDocument(pdf.loadDocument(null), null);
 
-        assertNull(pdf.readDocument(new File(out)));
-    }
-
-    @Test
-    void testRenderHtmlToPdf() {
-        LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
-
-        String html = "<h1>My First PDF Document</h1 > <p>"
-                + StringUtils.generateLoremIpsum(0) + "</p>";
-
-        pdf.renderDocumentFromHtml(DIRECTORY + "test.pdf", html);
-        assertTrue(new File(DIRECTORY + "test.pdf").exists());
+        assertNull(pdf.loadDocument(new File(out)));
     }
 
     @Test
@@ -150,10 +111,10 @@ public class PdfTextRendererTest {
         LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
-        PdfReader document = pdf.readDocument(file);
+        PdfDocument document = pdf.loadDocument(file);
         assertEquals(5, document.getNumberOfPages());
 
-        PdfReader reduced = pdf.removePage(document, 1, 3, 5);
+        PdfDocument reduced = pdf.removePage(document, 1, 3, 5);
 
         String out = DIRECTORY + FILE_PATH + "/reduced.pdf";
         pdf.writeDocument(reduced, out);
@@ -162,8 +123,30 @@ public class PdfTextRendererTest {
     }
 
     @Test
-    void testFailRemovePages() {
+    void failRemovePages() {
         LOGGER.log("TEST CASE: failRemovePages", LogLevel.DEBUG);
-        assertNull(pdf.removePage(null, 1));
+        assertNull(pdf.removePage(pdf.loadDocument(null), 1));
     }
+
+    @Test
+    void failRenderHtmlToPdf() {
+        LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
+
+        pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
+        assertFalse(new File(DIRECTORY + "fail.pdf").exists());
+    }
+
+    @Test
+    void simpleRenderHtmlToPdf() {
+        LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
+
+        String html = "<h1>My First PDF Document</h1 > <p>"
+                + StringUtils.generateLoremIpsum(0) + "</p>";
+
+        pdf.renderDocumentFromHtml(DIRECTORY + "test.pdf", html);
+
+        assertTrue(new File(DIRECTORY + "test.pdf").exists());
+        assertNotEquals(0, new File(DIRECTORY + "test.pdf").length());
+    }
+
 }

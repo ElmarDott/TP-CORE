@@ -38,6 +38,25 @@ public final class FileUtils {
     }
 
     /**
+     * Convert an InputStream to an ByteArray.
+     *
+     * @param input InputStream
+     * @return byte[] as Array
+     */
+    public static byte[] inputStreamToByteArray(final InputStream input) {
+
+        byte[] byteArray = null;
+
+        try {
+            byteArray = input.readAllBytes();
+        } catch (IOException ex) {
+            LOGGER.catchException(ex);
+        }
+
+        return byteArray;
+    }
+
+    /**
      * Write a string to a File.
      *
      * @param content as String
@@ -92,18 +111,18 @@ public final class FileUtils {
                 default:
                     break;
                 case "kilo":
-                    size = size / Constraints.BYTE_DEVISOR;
+                    size = size / Constraints.INT_1024;
                     break;
                 case "mega":
-                    size = (size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
+                    size = (size / Constraints.INT_1024) / Constraints.INT_1024;
                     break;
                 case "giga":
-                    size = ((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
-                            / Constraints.BYTE_DEVISOR;
+                    size = ((size / Constraints.INT_1024) / Constraints.INT_1024)
+                            / Constraints.INT_1024;
                     break;
                 case "tera":
-                    size = (((size / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR)
-                            / Constraints.BYTE_DEVISOR) / Constraints.BYTE_DEVISOR;
+                    size = (((size / Constraints.INT_1024) / Constraints.INT_1024)
+                            / Constraints.INT_1024) / Constraints.INT_1024;
                     break;
             }
 

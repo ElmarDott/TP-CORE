@@ -4,7 +4,6 @@ import java.time.ZonedDateTime;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.joda.time.DateTime;
 
 /**
  * A simple RexEx Validator.
@@ -69,6 +68,22 @@ public final class Validator {
             = "((0[0-9])|(1[0-9])|(2[0-3])):((0[0-9])|([1-5][0-9]))";
 
     /**
+     * IP Adress (Version 4) with optional Port e. g.: 127.0.0.1:80
+     * (1-255).(0-255).(0-255).(0-255):(1-65535)
+     */
+    public static final String IP4_ADDRESS
+            = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 1
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 2
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 3
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])" //    4
+            // Optinal Port
+            + "(:[1-5]?[0-9]{0,4}" //           1-59.999
+            + "|:6[0-4][0-9][0-9][0-9]" // 60.000-64.999
+            + "|:65[0-4][0-9][0-9]" //     65.000-65.499
+            + "|:655[0-2][0-9]" //         65.500-65.529
+            + "|:6553[0-5])?"; //          65.530-65.535
+
+    /**
      * Test if a Email Address in the typical format, like:<br>
      * _a-zA-Z0-9-(.)_a-zA-Z0-9-(@)[a-zA-Z0-9-]*(.)a-zA-Z{2}.
      */
@@ -79,8 +94,11 @@ public final class Validator {
      * Version number based on semantic versioning. Major.Minor.Patch-SNAPSHOT :
      * 1.0; 1.0-SNAPSHOT; 1.0.0-SNAPSHOT :: 000.000.000-ABCDEFGHIJ
      */
-    public static final String VERSION_NUMBER
-            = "([0-9]{1,3})\\.([0-9]){1,3}(\\.[0-9]{1,3})?(-[A-Z]{1,10})?";
+    public static final String SEMANTIC_VERSION_NUMBER
+            = "[1-9][0-9]*"
+            + "(\\.[0-9]|\\.[1-9][0-9]*)?"
+            + "(\\.[0-9]|\\.[1-9][0-9]*)?"
+            + "(-?[A-Za-z]){0,10}";
 
     /**
      * Check if the Variable test inside the range of the borders min and max.
@@ -151,70 +169,6 @@ public final class Validator {
      */
     public static boolean isDateInRange(
             final ZonedDateTime check, final ZonedDateTime min, final ZonedDateTime max) {
-
-        boolean success = false;
-        if (check != null && min != null && max != null) {
-            if (isDateBefore(check, max) && isDateAfter(check, min)) {
-                success = true;
-            } else {
-                LOGGER.log("Date: " + check.toString() + " is not in range.", LogLevel.WARN);
-            }
-        }
-        return success;
-    }
-
-    /**
-     * Check if is a given date after the given boundary. If the check date
-     * equal to the after boundary, the validation will fail.<br>
-     * Sample:
-     * <code>Validator.isDateAfter(new DateTime(), new DateTime(2015, 12, 31, 23, 59));</code>
-     * Validate to TRUE because: now() is after 2015
-     *
-     * @param check as DateTime
-     * @param after as DateTime
-     * @return true on success
-     */
-    @Deprecated
-    public static boolean isDateAfter(final DateTime check, final DateTime after) {
-        boolean success = false;
-        if (check != null && after != null) {
-            success = check.isAfter(after);
-        }
-        return success;
-    }
-
-    /**
-     * Check if is a given date before the given boundary. If the check date
-     * equal to the before boundary, the validation will fail.<br>
-     * Sample:
-     * <code>Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime());</code>
-     * Validate to TRUE because: 2015 is before now()
-     *
-     * @param check as DateTime
-     * @param before as DateTime
-     * @return true on success
-     */
-    @Deprecated
-    public static boolean isDateBefore(final DateTime check, final DateTime before) {
-        boolean success = false;
-        if (check != null && before != null) {
-            success = check.isBefore(before);
-        }
-        return success;
-    }
-
-    /**
-     * Test if a given Date is inside a range between a min and max. The
-     * boundaries are inside the range.
-     *
-     * @param check as DateTime
-     * @param min as DateTime
-     * @param max as DateTime
-     * @return true on success
-     */
-    @Deprecated
-    public static boolean isDateInRange(
-            final DateTime check, final DateTime min, final DateTime max) {
 
         boolean success = false;
         if (check != null && min != null && max != null) {

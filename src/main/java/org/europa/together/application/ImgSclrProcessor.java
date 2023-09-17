@@ -10,9 +10,7 @@ import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.ImageProcessor;
-import static org.europa.together.business.ImageProcessor.FEATURE_ID;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
@@ -23,7 +21,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of a simple Image Processor.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class ImgSclrProcessor implements ImageProcessor {
 
     private static final long serialVersionUID = 12L;
@@ -128,7 +125,7 @@ public class ImgSclrProcessor implements ImageProcessor {
     @Override
     public long getImageSize(final BufferedImage image) {
         long size = 0;
-        if (isImageSet()) {
+        if (image != null) {
             DataBuffer dataBuffer = image.getData().getDataBuffer();
             size = ((long) dataBuffer.getSize()) * MULTIPLIER;
         }
@@ -241,6 +238,7 @@ public class ImgSclrProcessor implements ImageProcessor {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ImageMetadataItem> getMetaData() {
         List<ImageMetadataItem> collection = new ArrayList<>();
         if (this.metadata != null) {

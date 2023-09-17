@@ -14,8 +14,8 @@ public class ByteOrderMarkTest {
     private static final Logger LOGGER = new LogbackLogger(ByteOrderMarkTest.class);
 
     @Test
-    void testEnumName() {
-        LOGGER.log("TEST CASE: enumName()", LogLevel.DEBUG);
+    void enumName() {
+        LOGGER.log("TEST CASE: enumName", LogLevel.DEBUG);
 
         assertEquals("NONE",
                 ByteOrderMark.NONE.name());
@@ -34,8 +34,8 @@ public class ByteOrderMarkTest {
     }
 
     @Test
-    void testGetBytes() {
-        LOGGER.log("TEST CASE: getBytes()", LogLevel.DEBUG);
+    void getBytes() {
+        LOGGER.log("TEST CASE: getBytes", LogLevel.DEBUG);
 
         assertArrayEquals(new byte[]{},
                 ByteOrderMark.NONE.getBytes());
@@ -53,8 +53,8 @@ public class ByteOrderMarkTest {
     }
 
     @Test
-    void testEnumValues() {
-        LOGGER.log("TEST CASE: enumValues()", LogLevel.DEBUG);
+    void enumValues() {
+        LOGGER.log("TEST CASE: enumValues", LogLevel.DEBUG);
 
         assertEquals("NONE",
                 ByteOrderMark.NONE.toString());

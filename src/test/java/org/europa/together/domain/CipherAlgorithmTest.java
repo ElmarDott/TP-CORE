@@ -14,8 +14,8 @@ public class CipherAlgorithmTest {
     private static final Logger LOGGER = new LogbackLogger(CipherAlgorithmTest.class);
 
     @Test
-    void testEnumValues() {
-        LOGGER.log("TEST CASE: enumValues()", LogLevel.DEBUG);
+    void enumValues() {
+        LOGGER.log("TEST CASE: enumValues", LogLevel.DEBUG);
 
         assertEquals("RSA",
                 CipherAlgorithm.RSA.toString());

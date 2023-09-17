@@ -16,9 +16,7 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import static org.europa.together.business.CryptoTools.FEATURE_ID;
 import org.europa.together.business.CryptoTools;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.CipherAlgorithm;
 import org.europa.together.domain.HashAlgorithm;
@@ -31,7 +29,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of java cryptography.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class JavaCryptoTools implements CryptoTools {
 
     private static final long serialVersionUID = 14L;
@@ -75,12 +72,12 @@ public class JavaCryptoTools implements CryptoTools {
     public KeyPair generateCipherKeyPair(final CipherAlgorithm cipher) {
 
         KeyPair pair = null;
-        int lenght = 4096;
-        if (cipher.equals(CipherAlgorithm.EC)) {
-            lenght = 512;
-        }
-
         try {
+            int lenght = Constraints.INT_4096;
+            if (cipher.equals(CipherAlgorithm.EC)) {
+                lenght = Constraints.INT_512;
+            }
+
             KeyPairGenerator keyring = KeyPairGenerator.getInstance(cipher.toString());
             keyring.initialize(lenght, new SecureRandom());
             pair = keyring.generateKeyPair();

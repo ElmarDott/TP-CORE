@@ -31,6 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ZxingGeneratorTest {
 
     private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
+
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
@@ -39,18 +40,9 @@ public class ZxingGeneratorTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(QrCodeGenerator.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -69,15 +61,15 @@ public class ZxingGeneratorTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(ZxingGenerator.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testQrCodeGenerator() {
-        LOGGER.log("TEST CASE: qrCodeGenerator()", LogLevel.DEBUG);
+    void qrCodeGenerator() {
+        LOGGER.log("TEST CASE: qrCodeGenerator", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "QrCode-0000.png";
         QrCodeGenerator generator = new ZxingGenerator();
@@ -88,8 +80,8 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testFailEncode() {
-        LOGGER.log("TEST CASE: failEncode()", LogLevel.DEBUG);
+    void failEncode() {
+        LOGGER.log("TEST CASE: failEncode", LogLevel.DEBUG);
 
         QrCodeGenerator generator = new ZxingGenerator();
         generator.setup("/fail.png", 100);
@@ -98,16 +90,16 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testFailDecode() {
-        LOGGER.log("TEST CASE: failDecode()", LogLevel.DEBUG);
+    void failDecode() {
+        LOGGER.log("TEST CASE: failDecode", LogLevel.DEBUG);
 
         QrCodeGenerator generator = new ZxingGenerator();
         assertNull(generator.decode(null));
     }
 
     @Test
-    void testVCard() {
-        LOGGER.log("TEST CASE: vCard()", LogLevel.DEBUG);
+    void vCard() {
+        LOGGER.log("TEST CASE: vCard", LogLevel.DEBUG);
 
         Map<String, String> vCard = new HashMap<>();
         vCard.put("gender", "Mr.");
@@ -140,8 +132,8 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testEmptyVCard() {
-        LOGGER.log("TEST CASE: emptyVCard()", LogLevel.DEBUG);
+    void emptyVCard() {
+        LOGGER.log("TEST CASE: emptyVCard", LogLevel.DEBUG);
 
         QrCodeGenerator generator = new ZxingGenerator();
         assertNull(generator.generateDataForvCard(new HashMap<>()));
@@ -149,8 +141,8 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testGeoInfo() {
-        LOGGER.log("TEST CASE: geoInfo()", LogLevel.DEBUG);
+    void geoInfo() {
+        LOGGER.log("TEST CASE: geoInfo", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_geoInfo.png";
         QrCodeGenerator generator = new ZxingGenerator();
@@ -160,8 +152,8 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testUrl() {
-        LOGGER.log("TEST CASE: url()", LogLevel.DEBUG);
+    void url() {
+        LOGGER.log("TEST CASE: url", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_url.png";
         QrCodeGenerator generator = new ZxingGenerator();
@@ -171,15 +163,15 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testCalendar() {
-        LOGGER.log("TEST CASE: calendar()", LogLevel.DEBUG);
+    void calendar() {
+        LOGGER.log("TEST CASE: calendar", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_event.png";
         QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
 
         assertTrue(generator.encode(
-                generator.generateDataForCalenderEvent("Appointment",
+                generator.generateDataForCalendarEvent("Appointment",
                         ZonedDateTime.of(2017, 1, 1, 1, 0, 0, 0, ZoneId.of("UTC")),
                         ZonedDateTime.of(2017, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
                 )

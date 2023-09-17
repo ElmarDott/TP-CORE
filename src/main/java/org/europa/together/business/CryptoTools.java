@@ -23,7 +23,7 @@ public interface CryptoTools {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "2.0")
-    String FEATURE_ID = "CM-0014";
+    String FEATURE_ID = "CM-14";
 
     /**
      * Calculates from a given String an hash.

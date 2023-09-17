@@ -2,7 +2,6 @@ package org.europa.together.domain;
 
 import java.util.Objects;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Validator;
@@ -33,7 +32,6 @@ import org.europa.together.utils.Validator;
  * both artifacts with the same name have the same version it is impossible to
  * distinguish them.
  */
-@FeatureToggle(featureID = "CM-0005.DO02")
 public class Version implements Comparable<Version> {
 
     private static final Logger LOGGER = new LogbackLogger(Version.class);
@@ -52,9 +50,9 @@ public class Version implements Comparable<Version> {
 
         try {
 
-            if (!Validator.validate(version, Validator.VERSION_NUMBER)) {
+            if (!Validator.validate(version, Validator.SEMANTIC_VERSION_NUMBER)) {
                 String msg = "The version number " + version
-                        + " do not match the Pattern: [000].[000].[000]-[LABEL].";
+                        + " do not match the Pattern: [1].[2].[3]-[LABEL].";
                 throw new MisconfigurationException(msg);
             }
 

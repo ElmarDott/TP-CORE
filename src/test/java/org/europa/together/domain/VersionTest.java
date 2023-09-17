@@ -5,11 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -20,31 +16,9 @@ public class VersionTest {
 
     private static final Logger LOGGER = new LogbackLogger(VersionTest.class);
 
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        LOGGER.log("Assumption terminated. TestSuite will be executed.\n", LogLevel.TRACE);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
-    }
-    //</editor-fold>
-
     @Test
-    void testCreateDomainObject() {
-        LOGGER.log("TEST CASE: createDomainObject()", LogLevel.DEBUG);
+    void createDomainObject() {
+        LOGGER.log("TEST CASE: createDomainObject", LogLevel.DEBUG);
 
         Version version = new Version("1.2.3-SNAPSHOT");
 
@@ -55,8 +29,8 @@ public class VersionTest {
     }
 
     @Test
-    void testDomainObjectWithoutOptional() {
-        LOGGER.log("TEST CASE: createDomainObjectbyMandatoryFields()", LogLevel.DEBUG);
+    void domainObjectWithoutOptional() {
+        LOGGER.log("TEST CASE: createDomainObjectbyMandatoryFields", LogLevel.DEBUG);
 
         Version version_1 = new Version("1.10");
         assertEquals(1, version_1.getMajor());
@@ -78,8 +52,8 @@ public class VersionTest {
     }
 
     @Test
-    void testFailCreateDomainObject() throws Exception {
-        LOGGER.log("TEST CASE: failCreateDomainObject()", LogLevel.DEBUG);
+    void failCreateDomainObject() throws Exception {
+        LOGGER.log("TEST CASE: failCreateDomainObject", LogLevel.DEBUG);
 
         Version version = new Version("x.y.z");
         assertEquals(-1, version.getMajor());
@@ -89,8 +63,8 @@ public class VersionTest {
     }
 
     @Test
-    void testGetVersion() {
-        LOGGER.log("TEST CASE: getVersion()", LogLevel.DEBUG);
+    void getVersion() {
+        LOGGER.log("TEST CASE: getVersion", LogLevel.DEBUG);
 
         assertEquals("1.3.6-TEST", new Version("1.3.6-TEST").getVersion());
         assertEquals("2.4.6", new Version("2.4.6").getVersion());
@@ -99,8 +73,8 @@ public class VersionTest {
     }
 
     @Test
-    void testHashCode() {
-        LOGGER.log("TEST CASE: hashCode()", LogLevel.DEBUG);
+    void processHashCode() {
+        LOGGER.log("TEST CASE: processHashCode", LogLevel.DEBUG);
 
         Version version_1 = new Version("1.4.2");
         assertEquals(7, version_1.hashCode());
@@ -110,8 +84,8 @@ public class VersionTest {
     }
 
     @Test
-    void testIsEqual() {
-        LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
+    void isEqual() {
+        LOGGER.log("TEST CASE: isEqual", LogLevel.DEBUG);
 
         Version x = new Version("1.1.1");
         assertEquals(x, x);
@@ -131,8 +105,8 @@ public class VersionTest {
     }
 
     @Test
-    void testIsNotEqual() {
-        LOGGER.log("TEST CASE: isNotEqual()", LogLevel.DEBUG);
+    void isNotEqual() {
+        LOGGER.log("TEST CASE: isNotEqual", LogLevel.DEBUG);
 
         LOGGER.log("ASSERT FALSE", LogLevel.DEBUG);
         assertFalse(new Version("1.2.3").equals(new Version("2.3.4")));
@@ -152,8 +126,8 @@ public class VersionTest {
     }
 
     @Test
-    void testCompare() {
-        LOGGER.log("TEST CASE: compare()", LogLevel.DEBUG);
+    void compare() {
+        LOGGER.log("TEST CASE: compare", LogLevel.DEBUG);
 
         Version a = new Version("1.0");
         Version b = new Version("2.0");
@@ -181,8 +155,8 @@ public class VersionTest {
     }
 
     @Test
-    void testSort() {
-        LOGGER.log("TEST CASE: sort()", LogLevel.DEBUG);
+    void sort() {
+        LOGGER.log("TEST CASE: sort", LogLevel.DEBUG);
 
         List<Version> list = new ArrayList<>();
         list.add(new Version("3.1.2"));

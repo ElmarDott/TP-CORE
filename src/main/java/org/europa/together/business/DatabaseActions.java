@@ -1,6 +1,7 @@
 package org.europa.together.business;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.JdbcConnection;
@@ -24,7 +25,7 @@ public interface DatabaseActions {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0008";
+    String FEATURE_ID = "CM-08";
 
     /**
      * Establish an JDBC Connection. If the propertyFile Parameter is empty,
@@ -39,13 +40,16 @@ public interface DatabaseActions {
     boolean connect(String propertyFile);
 
     /**
-     * Execute a plain SQL Query.
+     * Execute a plain SQL Query and get the ResultSet.If there exist multiple
+     * SELECT statements, then the ResultSet contains only the rusultSet of the
+     * last SELECT statement.
      *
      * @param sql as String
-     * @return true on success
+     * @return result as ResultSet
+     * @throws java.sql.SQLException in case of failure
      */
-    @API(status = STABLE, since = "1.0")
-    boolean executeQuery(String sql);
+    @API(status = STABLE, since = "3.0")
+    ResultSet executeQuery(String sql) throws SQLException;
 
     /**
      * Load an SQL File from the classpath and execute the script.
@@ -63,45 +67,21 @@ public interface DatabaseActions {
     boolean executeSqlFromClasspath(String sqlFile);
 
     /**
-     * Get the port for the configured database connection.
+     * Count the size of a ResultSet.
      *
-     * @return port as int
+     * @param results as ResultSet
+     * @return count the results
+     * @throws SQLException in case of failure
      */
-    @API(status = STABLE, since = "1.0")
-    int getPort();
-
-    /**
-     * Count the entries of an ResultSet.
-     *
-     * @return count as int
-     */
-    @API(status = STABLE, since = "1.0")
-    int getResultCount();
-
-    /**
-     * Get the ResultSet from an SQL Query. RestultSet get produced by
-     * executeQuery(). If exist in an SQL File multiple SELECT statements, then
-     * the ResultSet contains only the rusultSet of the last SELECT statement.
-     *
-     * @return results as ResultSet
-     */
-    @API(status = STABLE, since = "1.0")
-    ResultSet getResultSet();
+    @API(status = STABLE, since = "3.0")
+    int countResultSets(ResultSet results) throws SQLException;
 
     /**
      * Return a object with all JDBC Connection meta date.
      *
      * @return JdbcConnection as Object
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException on failure
      */
-    @API(status = STABLE, since = "1.2")
-    JdbcConnection getJdbcMetaData();
-
-    /**
-     * Get the host URL / IP of the configured Database connection.
-     *
-     * @return uri as String
-     */
-    @API(status = STABLE, since = "1.0")
-    String getUri();
+    @API(status = STABLE, since = "3.0")
+    JdbcConnection getJdbcMetaData() throws SQLException;
 }

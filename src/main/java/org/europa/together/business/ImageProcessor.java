@@ -27,7 +27,13 @@ public interface ImageProcessor {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0012";
+    String FEATURE_ID = "CM-12";
+
+    /**
+     * Supported JPEG file format.
+     */
+    @API(status = STABLE, since = "3.0")
+    String FORMAT_JPEG = "jpeg";
 
     /**
      * Supported JPG file format.

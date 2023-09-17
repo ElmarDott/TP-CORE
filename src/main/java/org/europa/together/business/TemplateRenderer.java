@@ -6,7 +6,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
- * Velocity Template Renderer.
+ * Wrapper for the Velocity Template Renderer.
  *
  * @author elmar.dott@gmail.com
  * @version 1.2
@@ -20,7 +20,7 @@ public interface TemplateRenderer {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0003";
+    String FEATURE_ID = "CM-03";
 
     /**
      * Generate a String from a Template in the classpath and a Map with

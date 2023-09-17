@@ -3,7 +3,8 @@ package org.europa.together.business;
 import java.io.Serializable;
 import java.util.List;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.domain.PagingDimension;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,15 +17,15 @@ import org.springframework.stereotype.Component;
  * <br><br>
  * This configuration us a MySQL Database connection to local host with the
  * following account: <br>
- * - jdbc.main.schema=collab<br>
- * - jdbc.main.user=collab<br>
- * - jdbc.main.password=collab
+ * - jdbc.schema=collab<br>
+ * - jdbc.user=collab<br>
+ * - jdbc.password=collab
  *
  * @param <T> the Entity to Save
  * @param <PK> the Primary Key
  *
  * @author elmar.dott@gmail.com
- * @version 1.2111111
+ * @version 1.3
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0", consumers = "GenrericHbmDAO")
@@ -35,7 +36,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0002";
+    String FEATURE_ID = "CM-02";
 
     /**
      * Persist a new Entity and return TRUE if it was successful. In the case
@@ -70,16 +71,17 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
     boolean update(PK id, T object);
 
     /**
-     * Count the entries of an database table. THis function call native SQL
+     * Count the entries of an database table.THis function call native SQL
      * code, to be efficient in the performance of the execution time. This is
      * designed for huge datasets. SQL: <br>
-     * <code>SELECT COUNT(*) FROM &lt;TABLE&gt;</code>
+     * <code>SELECT COUNT(*) FROM &lt;TABLE&gt;</code> Return the amount of all
+     * existing elements for a DAO as int.
      *
      * @param table as String
-     * @return resultSet as int
+     * @return count as long
      */
-    @API(status = STABLE, since = "1.0")
-    long countEntries(String table);
+    @API(status = STABLE, since = "3.0")
+    long countAllElements(String table);
 
     /**
      * Get all persited entries of an Entity.
@@ -119,15 +121,6 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
     T deserializeJsonAsObject(String json, Class<T> clazz);
 
     /**
-     * Tried to create a Object from a given JSON String.
-     *
-     * @param json as String
-     * @return Entity as Object
-     */
-    @API(status = DEPRECATED, since = "1.0")
-    T deserializeJsonAsObject(String json);
-
-    /**
      * try to find a persitence Object.
      *
      * @param id as Object
@@ -135,4 +128,24 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
      */
     @API(status = STABLE, since = "1.0")
     T find(PK id);
+
+    /**
+     * Calculates the pagination for DAO Objects, to limit the result set for
+     * queries. dimension = {start, end, page, pageSize, allEntries};
+     * <br>
+     * <li><b>start</b> - define the first element appears in the result
+     * set</li>
+     * <li><b>end</b> - define the last element appears in the result set</li>
+     * <li><b>page</b> - tells the exakt page number for the result set</li>
+     * <li><b>pageSize</b> - limit the count of elements appears on a page</li>
+     * <li><b>resultCount</b> - the abslout amount of elements for the whole
+     * result set</li>
+     * example: 1, 50, 1, 50, 713 | 700, 713, 15, 50, 713 ...
+     *
+     *
+     * @param dimension as PagingDimension
+     * @return dimension as PagingDimension
+     */
+    @API(status = STABLE, since = "3.0")
+    PagingDimension calculatePagination(PagingDimension dimension);
 }

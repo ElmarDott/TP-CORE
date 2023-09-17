@@ -9,9 +9,7 @@ import javax.persistence.Index;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
@@ -34,7 +32,6 @@ import org.europa.together.utils.StringUtils;
                     = {"MODUL_NAME", "SERVICE_VERSION", "CONF_KEY"})
         }
 )
-@FeatureToggle(featureID = "CM-0005.DO01")
 public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 102L;
@@ -49,34 +46,27 @@ public class ConfigurationDO implements Serializable {
     @Column(name = "IDX")
     private String uuid;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_KEY", nullable = false)
     private String key;
 
     @Column(name = "CONF_VALUE")
     private String value;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "DEFAULT_VALUE", nullable = false)
     private String defaultValue;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MODUL_NAME", nullable = false)
     private String modulName;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "SERVICE_VERSION", nullable = false)
     private String version;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @NotNull(message = "{validation.notnull}")
-    @Column(name = "DEPECATED", nullable = false)
-    private boolean depecated;
+    @Column(name = "DEPRECATED", nullable = false)
+    private boolean deprecated;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MANDATORY", nullable = false)
     private boolean mandatory;
 
@@ -111,7 +101,7 @@ public class ConfigurationDO implements Serializable {
         //optional
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         this.comment = "";
     }
@@ -124,19 +114,19 @@ public class ConfigurationDO implements Serializable {
     public void prePersist() {
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         LOGGER.log("@PrePersist [ConfigurationDO]", LogLevel.INFO);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
     /**
-     * Show if entry is depecated.
+     * Show if entry is deprecated.
      *
-     * @return true if is depecated
+     * @return true if is deprecated
      */
-    public boolean isDepecated() {
-        return depecated;
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
     /**
@@ -176,12 +166,12 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Set if a entry is depecated.
+     * Set if a entry is deprecated.
      *
-     * @param depecated as boolean
+     * @param deprecated as boolean
      */
-    public void setDepecated(final boolean depecated) {
-        this.depecated = depecated;
+    public void setDeprecated(final boolean deprecated) {
+        this.deprecated = deprecated;
     }
 
     /**
@@ -349,7 +339,7 @@ public class ConfigurationDO implements Serializable {
                 + ", modulName=" + modulName
                 + ", configurationSet=" + configurationSet
                 + ", version=" + version
-                + ", depecated=" + depecated
+                + ", deprecated=" + deprecated
                 + ", mandatory=" + mandatory
                 + ", comment=" + comment + '}';
     }

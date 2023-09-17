@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 public class UnsupportedVersionExceptionTest {
 
     @Test()
-    void testExceptionObject() {
+    void exceptionObject() {
         UnsupportedVersionException ex_00 = new UnsupportedVersionException("Unsupported Version Exception");
         assertEquals("Unsupported Version Exception", ex_00.getMessage());
 

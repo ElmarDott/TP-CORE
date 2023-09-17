@@ -14,8 +14,8 @@ public class LogLevelTest {
     private static final Logger LOGGER = new LogbackLogger(LogLevelTest.class);
 
     @Test
-    void testEnumValues() {
-        LOGGER.log("TEST CASE: enumValues()", LogLevel.DEBUG);
+    void enumValues() {
+        LOGGER.log("TEST CASE: enumValues", LogLevel.DEBUG);
 
         assertEquals("TRACE",
                 LogLevel.TRACE.toString());

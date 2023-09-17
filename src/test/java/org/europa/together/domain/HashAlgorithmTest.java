@@ -14,8 +14,8 @@ public class HashAlgorithmTest {
     private static final Logger LOGGER = new LogbackLogger(HashAlgorithmTest.class);
 
     @Test
-    void testEnumValues() {
-        LOGGER.log("TEST CASE: enumValues()", LogLevel.DEBUG);
+    void enumValues() {
+        LOGGER.log("TEST CASE: enumValues", LogLevel.DEBUG);
 
         assertEquals("MD5",
                 HashAlgorithm.MD5.toString());

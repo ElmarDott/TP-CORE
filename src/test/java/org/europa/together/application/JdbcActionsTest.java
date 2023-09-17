@@ -1,6 +1,8 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.JdbcConnection;
@@ -26,35 +28,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JdbcActionsTest {
 
+    private static final Logger LOGGER = new LogbackLogger(JdbcActionsTest.class);
+
     private final String sql_create
             = "CREATE TABLE IF NOT EXISTS test (column_01 int, column_02 char(255));";
     private final String sql_drop = "DROP TABLE IF EXISTS test;";
 
-    private static final Logger LOGGER = new LogbackLogger(JdbcActionsTest.class);
-    private static final DatabaseActions actions = new JdbcActions();
-
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(DatabaseActions.FEATURE_ID);
-        boolean socket = actions.connect("default");
-        if (!toggle || !socket) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        actions.executeQuery("TRUNCATE TABLE test;");
-        actions.executeQuery("TRUNCATE TABLE app_config;");
         LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
@@ -69,38 +58,23 @@ public class JdbcActionsTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(JdbcActions.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testGetPort() {
-        LOGGER.log("TEST CASE: getPort()", LogLevel.DEBUG);
+    void connect() {
+        LOGGER.log("TEST CASE: connect", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        assertEquals(0, dbms.getPort());
+        assertTrue(dbms.connect("test"));
     }
 
     @Test
-    void testGetUri() {
-        LOGGER.log("TEST CASE: getUri()", LogLevel.DEBUG);
-
-        DatabaseActions dbms = new JdbcActions();
-        assertEquals(null, dbms.getUri());
-    }
-
-    @Test
-    void testConnection() {
-        LOGGER.log("TEST CASE: connection()", LogLevel.DEBUG);
-        DatabaseActions dbms = new JdbcActions();
-        assertTrue(dbms.connect("default"));
-    }
-
-    @Test
-    void testFailedConnection() {
-        LOGGER.log("TEST CASE: faildConnection()", LogLevel.DEBUG);
+    void failConnect() {
+        LOGGER.log("TEST CASE: failConnect", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
         assertFalse(dbms.connect(Constraints.SYSTEM_APP_DIR
@@ -109,72 +83,101 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void testFallbackLoadProperties() {
-        LOGGER.log("TEST CASE: fallbackLoadProperties()", LogLevel.DEBUG);
+    void fallbackLoadProperties() {
+        LOGGER.log("TEST CASE: fallbackLoadProperties", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
         assertTrue(dbms.connect(null));
     }
 
     @Test
-    void testExecuteQuery() {
-        LOGGER.log("TEST CASE: executeQuery()", LogLevel.DEBUG);
-
-        assertTrue(actions.executeQuery(sql_drop));
-        assertTrue(actions.executeQuery(sql_create));
-    }
-
-    @Test
-    void testFailSqlExecuteQuery() {
-        LOGGER.log("TEST CASE: failSqlExecuteQuery()", LogLevel.DEBUG);
-        assertFalse(actions.executeQuery("SELECT * FROM foo;"));
-    }
-
-    @Test
-    void testFailExecuteQuery() {
-        LOGGER.log("TEST CASE: failExecuteQuery()", LogLevel.DEBUG);
+    void executeQuery() throws SQLException {
+        LOGGER.log("TEST CASE: executeQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
-        dbms.connect(Constraints.SYSTEM_APP_DIR
-                + "/target/test-classes/"
-                + "org/europa/together/properties/jdbc-test-fail.properties");
-        assertFalse(dbms.executeQuery("SELECT * FROM test;"));
+        dbms.connect("test");
+
+        assertNull(dbms.executeQuery(sql_drop));
+        assertNull(dbms.executeQuery(sql_create));
+        dbms.executeQuery(sql_drop);
     }
 
     @Test
-    void testExecuteSqlFile() {
-        LOGGER.log("TEST CASE: executeSqlFile()", LogLevel.DEBUG);
+    void failExecuteQuery() throws SQLException {
+        LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
+        DatabaseActions dbms = new JdbcActions();
+        dbms.connect("test");
+        assertThrows(Exception.class, () -> {
+            dbms.executeQuery("SELECT * FROM foo;");
+        });
+    }
+
+    @Test
+    void failExecuteQueryNoConnection() throws SQLException {
+        LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new JdbcActions();
+        assertNull(dbms.executeQuery("SELECT * FROM foo;"));
+    }
+
+    @Test
+    void executeSqlFileFromClasspath() throws SQLException {
+        LOGGER.log("TEST CASE: executeSqlFileFromClasspath", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new JdbcActions();
+        dbms.connect("test");
+        dbms.executeQuery(sql_drop);
         String file = "org/europa/together/sql/test.sql";
-        assertTrue(actions.executeSqlFromClasspath(file));
+        assertTrue(dbms.executeSqlFromClasspath(file));
+        dbms.executeQuery(sql_drop);
     }
 
     @Test
-    void testSqlFileNotFound() {
-        LOGGER.log("TEST CASE: sqlFileNotFound()", LogLevel.DEBUG);
+    void sqlFileNotFound() {
+        LOGGER.log("TEST CASE: sqlFileNotFound", LogLevel.DEBUG);
 
+        DatabaseActions dbms = new JdbcActions();
+        dbms.connect("test");
         String file = "org/europa/together/sql/file-not-exist.sql";
-        assertFalse(actions.executeSqlFromClasspath(file));
+        assertFalse(dbms.executeSqlFromClasspath(file));
     }
 
     @Test
-    void testResultSet() {
-        LOGGER.log("TEST CASE: resultSet()", LogLevel.DEBUG);
+    void getResultSet() throws SQLException {
+        LOGGER.log("TEST CASE: getResultSet", LogLevel.DEBUG);
 
         String SQL_FILE
-                = "org/europa/together/sql/configuration-test.sql";
-        actions.connect("default");
-        assertTrue(actions.executeSqlFromClasspath(SQL_FILE));
-        assertTrue(actions.executeQuery("SELECT * FROM app_config;"));
-        assertNotNull(actions.getResultSet());
+                = "org/europa/together/sql/test.sql";
+        DatabaseActions dbms = new JdbcActions();
+        dbms.connect("test");
+
+        assertTrue(dbms.executeSqlFromClasspath(SQL_FILE));
+
+        ResultSet results = dbms.executeQuery("SELECT * FROM test;");
+        assertEquals(1, dbms.countResultSets(results));
+
+        dbms.executeQuery(sql_drop);
     }
 
     @Test
-    void testJdbcMetaData() {
-        LOGGER.log("TEST CASE: getJdbcMetaData()", LogLevel.DEBUG);
+    void getJdbcMetaData() throws SQLException {
+        LOGGER.log("TEST CASE: getJdbcMetaData", LogLevel.DEBUG);
 
-        JdbcConnection metaData = actions.getJdbcMetaData();
+        DatabaseActions dbms = new JdbcActions();
+        dbms.connect("test");
+        JdbcConnection metaData = dbms.getJdbcMetaData();
         LOGGER.log(metaData.toString(), LogLevel.DEBUG);
         assertNotNull(metaData);
+    }
+
+    @Test
+    void failGetJdbcMetaData() throws Exception {
+        LOGGER.log("TEST CASE: failGetJdbcMetaData", LogLevel.DEBUG);
+
+        DatabaseActions dbms = new JdbcActions();
+        assertThrows(Exception.class, () -> {
+            dbms.getJdbcMetaData();
+        });
     }
 }

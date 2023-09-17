@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
@@ -171,4 +172,19 @@ public class ITextRenderer implements PdfRenderer {
         return title;
     }
     //</editor-fold>
+
+    @Override
+    public void writeDocument(PdfDocument pdf, String destination) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PdfDocument removePage(PdfDocument pdf, int... pages) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PdfDocument loadDocument(File pdfDocument) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

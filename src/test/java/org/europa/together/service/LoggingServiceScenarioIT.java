@@ -3,7 +3,6 @@ package org.europa.together.service;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.io.File;
-import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -34,23 +33,10 @@ public class LoggingServiceScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        boolean check = true;
 
-        FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(Logger.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
-        boolean check;
-        String out;
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        } else {
-            out = "executed.";
-            check = true;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 

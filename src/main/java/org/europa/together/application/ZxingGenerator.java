@@ -19,25 +19,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
-import static org.europa.together.business.QrCodeGenerator.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 /**
  * Implementation of the QR Code Generator.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class ZxingGenerator implements QrCodeGenerator {
 
     private static final long serialVersionUID = 7L;
     private static final Logger LOGGER = new LogbackLogger(ZxingGenerator.class);
-
-    private static final int SUBSTRING = 8;
 
     private final String charset;
     private int dimensionHeight;
@@ -106,25 +100,13 @@ public class ZxingGenerator implements QrCodeGenerator {
     }
 
     @Override
-    public String generateDataForCalenderEvent(final String event,
+    public String generateDataForCalendarEvent(final String event,
             final ZonedDateTime start, final ZonedDateTime end) {
 
         String data = "BEGIN:VEVENT\n"
                 + "SUMMARY:" + event
                 + "\n DTSTART:" + start.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))
                 + "\n DTEND: " + end.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))
-                + "\n END:VEVENT";
-        return data;
-    }
-
-    @Override
-    public String generateDataForCalenderEvent(final String event,
-            final DateTime start, final DateTime end) {
-
-        String data = "BEGIN:VEVENT\n"
-                + "SUMMARY:" + event
-                + "\n DTSTART:" + formatDateTime(start)
-                + "\n DTEND: " + formatDateTime(end)
                 + "\n END:VEVENT";
         return data;
     }
@@ -177,14 +159,5 @@ public class ZxingGenerator implements QrCodeGenerator {
         }
 
         return decode;
-    }
-
-    //deprecated
-    private String formatDateTime(final DateTime date) {
-        String format = date.toString();
-        format = format.replace("-", "");
-        format = format.replace(":", "");
-        format = format.substring(0, format.length() - SUBSTRING);
-        return format + "Z";
     }
 }

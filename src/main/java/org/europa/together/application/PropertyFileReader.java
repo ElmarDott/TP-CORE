@@ -3,6 +3,7 @@ package org.europa.together.application;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -10,10 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
-import static org.europa.together.business.PropertyReader.FEATURE_ID;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.MisconfigurationException;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Repository;
  * Implementation of the PropertyReader.
  */
 @Repository
-@FeatureToggle(featureID = FEATURE_ID)
 public class PropertyFileReader implements PropertyReader {
 
     private static final long serialVersionUID = 4L;
@@ -72,84 +70,76 @@ public class PropertyFileReader implements PropertyReader {
     }
 
     @Override
-    public boolean appendPropertiesFromClasspath(final String resource) {
+    public boolean appendPropertiesFromClasspath(final String resource)
+            throws UnsupportedEncodingException, IOException {
+
         boolean success = false;
         ApplicationContext context = new ClassPathXmlApplicationContext();
 
-        try {
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        context.getResource(resource).getInputStream(), "UTF8")
+        );
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            context.getResource(resource).getInputStream(), "UTF8")
-            );
-
-            String line;
-            int count = 1;
-            while ((line = reader.readLine()) != null) {
-                String test = line;
-                if (test.isEmpty() || test.charAt(0) == '#') {
-                    continue;
-                }
-
-                String[] parts = test.split("=");
-                String key = parts[0];
-                String value = "";
-                if (parts.length == 2) {
-                    value = parts[1];
-                }
-                propertyList.put(key, value);
-                count++;
+        String line;
+        int count = 1;
+        while ((line = reader.readLine()) != null) {
+            String test = line;
+            if (test.isEmpty() || test.charAt(0) == '#') {
+                continue;
             }
-            reader.close();
 
-            String logMsg = "readPropertyFromClasspath(" + resource + ") "
-                    + count + " Properties read.";
-            LOGGER.log(logMsg, LogLevel.DEBUG);
-
-            success = true;
-
-        } catch (IOException ex) {
-            LOGGER.catchException(ex);
+            String[] parts = test.split("=");
+            String key = parts[0];
+            String value = "";
+            if (parts.length == 2) {
+                value = parts[1];
+            }
+            propertyList.put(key, value);
+            count++;
         }
+        reader.close();
+
+        String logMsg = "readPropertyFromClasspath(" + resource + ") "
+                + count + " Properties read.";
+        LOGGER.log(logMsg, LogLevel.DEBUG);
+
+        success = true;
 
         this.printPropertyList();
         return success;
     }
 
     @Override
-    public boolean appendPropertiesFromFile(final String resource) {
+    public boolean appendPropertiesFromFile(final String resource)
+            throws IOException {
+
         boolean success = false;
 
-        try {
+        Stream<String> stream = Files.lines(Paths.get(resource));
+        List<String> content = stream
+                .filter(line -> !line.startsWith("#"))
+                .filter(line -> !line.isEmpty())
+                .collect(Collectors.toList());
 
-            Stream<String> stream = Files.lines(Paths.get(resource));
-            List<String> content = stream
-                    .filter(line -> !line.startsWith("#"))
-                    .filter(line -> !line.isEmpty())
-                    .collect(Collectors.toList());
+        int count = 1;
+        for (String entry : content) {
 
-            int count = 1;
-            for (String entry : content) {
-
-                String[] parts = entry.split("=");
-                String key = parts[0];
-                String value = "";
-                if (parts.length == 2) {
-                    value = parts[1];
-                }
-                propertyList.put(key, value);
-                count++;
+            String[] parts = entry.split("=");
+            String key = parts[0];
+            String value = "";
+            if (parts.length == 2) {
+                value = parts[1];
             }
-
-            String logMsg = "readPropertyFromFile(" + resource + ") "
-                    + count + " Properties read.";
-            LOGGER.log(logMsg, LogLevel.DEBUG);
-
-            success = true;
-
-        } catch (IOException ex) {
-            LOGGER.catchException(ex);
+            propertyList.put(key, value);
+            count++;
         }
+
+        String logMsg = "readPropertyFromFile(" + resource + ") "
+                + count + " Properties read.";
+        LOGGER.log(logMsg, LogLevel.DEBUG);
+
+        success = true;
 
         this.printPropertyList();
         return success;

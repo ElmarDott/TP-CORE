@@ -6,18 +6,17 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.tngtech.jgiven.junit5.ScenarioTest;
 import java.security.Security;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import javax.mail.internet.AddressException;
 import org.europa.together.application.JdbcActions;
-import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.application.JavaMailClient;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.domain.Mail;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -53,27 +52,15 @@ public class MailClientScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        boolean check = true;
 
-        FF4jProcessor feature = new FF4jProcessor();
-        boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
-        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
-
-        boolean socket = CONNECTION.connect("default");
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
-
-        boolean check;
-        String out;
-        if (!toggle || !socket) {
-            out = "skiped.";
+        boolean socket = CONNECTION.connect("test");
+        if (!socket) {
             check = false;
-        } else {
-            out = "executed.";
-            check = true;
         }
 
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
         //DBMS Table setup
@@ -123,29 +110,28 @@ public class MailClientScenarioIT extends
     }
 
     @Test
-    void scenario_sendBulkMail() {
+    void scenario_sendBulkMail() throws AddressException {
         LOGGER.log("Scenario A: Bulk Mail", LogLevel.DEBUG);
 
-        List<String> recipientList = new ArrayList<>();
-        recipientList.add("recipient_01@sample.org");
-        recipientList.add("recipient_02@sample.org");
-        recipientList.add("recipient_03@sample.org");
-        recipientList.add("recipient_04@sample.org");
-        recipientList.add("recipient_05@sample.org");
-        recipientList.add("recipient_06@sample.org");
-        recipientList.add("recipient_07@sample.org");
-        recipientList.add("recipient_08@sample.org");
-        recipientList.add("recipient_09@sample.org");
-        recipientList.add("recipient_10@sample.org");
+        Mail mail = new Mail();
+        mail.setSubject("JGiven Test E-Mail");
+        mail.setMessage(StringUtils.generateLoremIpsum(0));
+        mail.addRecipent("recipient_01@sample.org");
+        mail.addRecipent("recipient_02@sample.org");
+        mail.addRecipent("recipient_03@sample.org");
+        mail.addRecipent("recipient_04@sample.org");
+        mail.addRecipent("recipient_05@sample.org");
+        mail.addRecipent("recipient_06@sample.org");
+        mail.addRecipent("recipient_07@sample.org");
+        mail.addRecipent("recipient_08@sample.org");
+        mail.addRecipent("recipient_09@sample.org");
+        mail.addRecipent("recipient_10@sample.org");
+        mail.addAttachment(DIRECTORY + "/Attachment.pdf");
 
         try {
             //COMPOSE MAIL
             MailClient client = new JavaMailClient();
             client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
-            client.setSubject("JGiven Test E-Mail");
-            client.setContent(StringUtils.generateLoremIpsum(0));
-            client.addAttachment(DIRECTORY + "/Attachment.pdf");
-            client.addRecipientList(recipientList);
 
             // PreCondition
             given().email_get_configuration(client)
@@ -155,7 +141,7 @@ public class MailClientScenarioIT extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().send_bulk_email(client);
+            when().send_bulk_email(mail);
 
             //PostCondition
             then().mass_emails_are_arrived(SMTP_SERVER.getReceivedMessages());
@@ -171,12 +157,14 @@ public class MailClientScenarioIT extends
 
         try {
             //COMPOSE MAIL
+            Mail mail = new Mail();
+            mail.setSubject("JGiven Test E-Mail");
+            mail.setMessage(StringUtils.generateLoremIpsum(0));
+            mail.addRecipent("otto@sample.org");
+            mail.addAttachment(DIRECTORY + "/Attachment.pdf");
+
             MailClient client = new JavaMailClient();
             client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
-            client.setSubject("JGiven Test E-Mail");
-            client.setContent(StringUtils.generateLoremIpsum(0));
-            client.addAttachment(DIRECTORY + "/Attachment.pdf");
-            client.addRecipent("otto@sample.org");
 
             // PreCondition
             given().email_get_configuration(client)
@@ -186,7 +174,7 @@ public class MailClientScenarioIT extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().send_email(client);
+            when().send_email(mail);
 
             //PostCondition
             then().email_is_arrived(SMTP_SERVER.getReceivedMessages()[0]);

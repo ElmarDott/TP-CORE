@@ -7,7 +7,6 @@ import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.utils.FileUtils;
-import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -30,12 +29,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class SaxToolsTest {
 
     private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
-    private static final String FILE_PATH = "org/europa/together/xml";
+
+    private static final String FILE_PATH
+            = "org/europa/together/xml";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
-    private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
+    private static final File DTD
+            = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
+    private static final File SCHEMA
+            = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 
     @Autowired
     private XmlTools xmlTools;
@@ -43,27 +46,15 @@ public class SaxToolsTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
-
         try {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.dtd"), DTD);
             FileUtils.copyFile(new File(DIRECTORY + "/simple.xsd"), SCHEMA);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
+            Assumptions.assumeTrue(false);
         }
 
-        boolean toggle = feature.deactivateUnitTests(XmlTools.FEATURE_ID);
-        boolean hasInternet
-                = SocketTimeout.isUrlAvailable("http://www.google.com");
-        if (!toggle || !hasInternet) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -89,15 +80,15 @@ public class SaxToolsTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(SaxTools.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testParseXmlString() {
-        LOGGER.log("TEST CASE: parseXmlString()", LogLevel.DEBUG);
+    void parseXmlString() {
+        LOGGER.log("TEST CASE: parseXmlString", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         String xml = FileUtils.readFileStream(new File(DIRECTORY + "/test_wellformed.xml"));
@@ -132,16 +123,16 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailParseXmlString() {
-        LOGGER.log("TEST CASE: failParseXmlString()", LogLevel.DEBUG);
+    void fFailParseXmlString() {
+        LOGGER.log("TEST CASE: failParseXmlString", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         assertNull(xmlTools.parseXmlString(null));
     }
 
     @Test
-    void testParseXmlFile() {
-        LOGGER.log("TEST CASE: parseXmlFile()", LogLevel.DEBUG);
+    void parseXmlFile() {
+        LOGGER.log("TEST CASE: parseXmlFile", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         String output = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
@@ -175,16 +166,16 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailParsingXmlFile() {
-        LOGGER.log("TEST CASE: failParseXmlFile()", LogLevel.DEBUG);
+    void failParsingXmlFile() {
+        LOGGER.log("TEST CASE: failParseXmlFile", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         assertNull(xmlTools.parseXmlFile(null));
     }
 
     @Test
-    void testIsWellFormed() {
-        LOGGER.log("TEST CASE: isWellFormed()", LogLevel.DEBUG);
+    void isWellFormed() {
+        LOGGER.log("TEST CASE: isWellFormed", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_wellformed.xml"));
@@ -192,8 +183,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testIsNotWellFormed() {
-        LOGGER.log("TEST CASE: isNotWellFormed()", LogLevel.DEBUG);
+    void isNotWellFormed() {
+        LOGGER.log("TEST CASE: isNotWellFormed", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
 
@@ -219,8 +210,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailPrettyPrint() {
-        LOGGER.log("TEST CASE: failPrettyPrint()", LogLevel.DEBUG);
+    void failPrettyPrint() {
+        LOGGER.log("TEST CASE: failPrettyPrint", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(null);
@@ -228,8 +219,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testPrettyPrintXml() {
-        LOGGER.log("TEST CASE: prettyPrint()", LogLevel.DEBUG);
+    void prettyPrintXml() {
+        LOGGER.log("TEST CASE: prettyPrint", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         String input = xmlTools.parseXmlFile(new File(DIRECTORY + "/test_pretty_print_01.xml"));
@@ -267,8 +258,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testPrettyPrintXmlInlineDtd() {
-        LOGGER.log("TEST CASE: prettyPrintXmlInlineDtd()", LogLevel.DEBUG);
+    void prettyPrintXmlInlineDtd() {
+        LOGGER.log("TEST CASE: prettyPrintXmlInlineDtd", LogLevel.DEBUG);
 
         try {
             xmlTools = new SaxTools();
@@ -307,8 +298,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testWriteXmlToFile() {
-        LOGGER.log("TEST CASE: writeXmlToFile()", LogLevel.DEBUG);
+    void writeXmlToFile() {
+        LOGGER.log("TEST CASE: writeXmlToFile", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         String newFilePath = DIRECTORY + "/new_xml_file.xml";
@@ -323,8 +314,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testNoGrammar() {
-        LOGGER.log("TEST CASE: noGrammar()", LogLevel.DEBUG);
+    void noGrammar() {
+        LOGGER.log("TEST CASE: noGrammar", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_no_grammar.xml"));
@@ -333,8 +324,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailValidation() {
-        LOGGER.log("TEST CASE: failValidation()", LogLevel.DEBUG);
+    void failValidation() {
+        LOGGER.log("TEST CASE: failValidation", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(""));
@@ -343,8 +334,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testValidInternalDtd() {
-        LOGGER.log("TEST CASE: validInternalDtd()", LogLevel.DEBUG);
+    void validInternalDtd() {
+        LOGGER.log("TEST CASE: validInternalDtd", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_valid_internal.xml"));
@@ -353,8 +344,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testInvalidDtd() {
-        LOGGER.log("TEST CASE: invalidDtd()", LogLevel.DEBUG);
+    void invalidDtd() {
+        LOGGER.log("TEST CASE: invalidDtd", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_invalid.xml"));
@@ -363,8 +354,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testValidDtd() {
-        LOGGER.log("TEST CASE: invalidDtd()", LogLevel.DEBUG);
+    void vValidDtd() {
+        LOGGER.log("TEST CASE: invalidDtd", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_dtd_valid.xml"));
@@ -373,8 +364,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailSetSchema() {
-        LOGGER.log("TEST CASE: failSetSchema()", LogLevel.DEBUG);
+    void failSetSchema() {
+        LOGGER.log("TEST CASE: failSetSchema", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
@@ -390,8 +381,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testSetSchema() {
-        LOGGER.log("TEST CASE: setSchema()", LogLevel.DEBUG);
+    void setSchema() {
+        LOGGER.log("TEST CASE: setSchema", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_valid.xml"));
@@ -405,8 +396,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testResetExternalSchemaFile() {
-        LOGGER.log("TEST CASE: resetExternalSchemaFile()", LogLevel.DEBUG);
+    void resetExternalSchemaFile() {
+        LOGGER.log("TEST CASE: resetExternalSchemaFile", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         assertFalse(xmlTools.hasExternalSchemaFile());
@@ -419,8 +410,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testInvalidSchema() {
-        LOGGER.log("TEST CASE: invalidSchema()", LogLevel.DEBUG);
+    void invalidSchema() {
+        LOGGER.log("TEST CASE: invalidSchema", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         xmlTools.parseXmlFile(new File(DIRECTORY + "/test_schema_invalid.xml"));
@@ -430,8 +421,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testValidSchemaByWebResorce() {
-        LOGGER.log("TEST CASE: validSchemaByWebResorce()", LogLevel.DEBUG);
+    void validSchemaByWebResorce() {
+        LOGGER.log("TEST CASE: validSchemaByWebResorce", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         //check spring config
@@ -446,8 +437,8 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testXsltTransformation() {
-        LOGGER.log("TEST CASE: xsltTransformation()", LogLevel.DEBUG);
+    void xsltTransformation() {
+        LOGGER.log("TEST CASE: xsltTransformation", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         String xml = DIRECTORY + "/xml_datasource.xml";
@@ -462,16 +453,16 @@ public class SaxToolsTest {
     }
 
     @Test
-    void testFailTransformation() {
-        LOGGER.log("TEST CASE: failXsltTransformation()", LogLevel.DEBUG);
+    void failTransformation() {
+        LOGGER.log("TEST CASE: failXsltTransformation", LogLevel.DEBUG);
 
         xmlTools = new SaxTools();
         assertEquals("", xmlTools.transformXslt(null, null));
     }
 
     @Test
-    void testShrinkXml() {
-        LOGGER.log("TEST CASE: shrinkXml()", LogLevel.DEBUG);
+    void shrinkXml() {
+        LOGGER.log("TEST CASE: shrinkXml", LogLevel.DEBUG);
 
         String file = Constraints.SYSTEM_APP_DIR
                 + "/target/test-classes/org/europa/together/xml/shrink.xml";

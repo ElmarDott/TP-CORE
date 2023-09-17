@@ -30,6 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ImgSclrProcessorTest {
 
     private static final Logger LOGGER = new LogbackLogger(ImgSclrProcessorTest.class);
+
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/org/europa/together/images/";
 
@@ -39,18 +40,9 @@ public class ImgSclrProcessorTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(ImageProcessor.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -70,23 +62,23 @@ public class ImgSclrProcessorTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(ImgSclrProcessor.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testLoadImageAsFile() {
-        LOGGER.log("TEST CASE: loadImageAsFile()", LogLevel.DEBUG);
+    void loadImageAsFile() {
+        LOGGER.log("TEST CASE: loadImageAsFile", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
     }
 
     @Test
-    void testLoadImageAsBufferedImage() {
-        LOGGER.log("TEST CASE: loadImageAsBufferedImage()", LogLevel.DEBUG);
+    void loadImageAsBufferedImage() {
+        LOGGER.log("TEST CASE: loadImageAsBufferedImage", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -95,8 +87,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailLoadImage() {
-        LOGGER.log("TEST CASE: failLoadImage()", LogLevel.DEBUG);
+    void failLoadImage() {
+        LOGGER.log("TEST CASE: failLoadImage", LogLevel.DEBUG);
 
         assertFalse(processor.loadImage(new File(DIRECTORY + "No_Image.gif")));
         BufferedImage img = null;
@@ -104,8 +96,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testSaveImageAsJpg() {
-        LOGGER.log("TEST CASE: saveImageAsJpg()", LogLevel.DEBUG);
+    void saveImageAsJpg() {
+        LOGGER.log("TEST CASE: saveImageAsJpg", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -118,8 +110,22 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testSaveImageAsGif() {
-        LOGGER.log("TEST CASE: saveImageAsGif()", LogLevel.DEBUG);
+    void saveImageAsJpeg() {
+        LOGGER.log("TEST CASE: saveImageAsJpeg", LogLevel.DEBUG);
+
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        BufferedImage img = processor.getImage();
+        try {
+            assertTrue(processor.saveImage(img, new File(DIRECTORY + "image_save.jpeg"),
+                    ImageProcessor.FORMAT_JPEG));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void saveImageAsGif() {
+        LOGGER.log("TEST CASE: saveImageAsGif", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -132,8 +138,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testSaveImageAsPng() {
-        LOGGER.log("TEST CASE: saveImageAsPng()", LogLevel.DEBUG);
+    void saveImageAsPng() {
+        LOGGER.log("TEST CASE: saveImageAsPng", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -146,8 +152,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testSaveImageWrongType() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: saveImageWrongType()", LogLevel.DEBUG);
+    void saveImageWrongType() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: saveImageWrongType", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -158,15 +164,15 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailSaveImage() throws Exception {
-        LOGGER.log("TEST CASE: failSaveImage()", LogLevel.DEBUG);
+    void failSaveImage() throws Exception {
+        LOGGER.log("TEST CASE: failSaveImage", LogLevel.DEBUG);
 
         assertFalse(processor.saveImage(null, null, "jpg"));
     }
 
     @Test
-    void testImageDimensions() {
-        LOGGER.log("TEST CASE: imageDimensions()", LogLevel.DEBUG);
+    void imageDimensions() {
+        LOGGER.log("TEST CASE: imageDimensions", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertEquals(407, processor.getHeight());
@@ -174,8 +180,15 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testCalculateImageSize() {
-        LOGGER.log("TEST CASE: calculateImageSize()", LogLevel.DEBUG);
+    void calculateImageSize() {
+        LOGGER.log("TEST CASE: calculateImageSize", LogLevel.DEBUG);
+
+        assertEquals(0, processor.getImageSize(null));
+    }
+
+    @Test
+    void failCalculateImageSize() {
+        LOGGER.log("TEST CASE: failCalculateImageSize", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
@@ -183,8 +196,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testReset() {
-        LOGGER.log("TEST CASE: reset()", LogLevel.DEBUG);
+    void reset() {
+        LOGGER.log("TEST CASE: reset", LogLevel.DEBUG);
 
         assertFalse(processor.isImageSet());
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
@@ -194,8 +207,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testResizeImageReduce() {
-        LOGGER.log("TEST CASE: resizeImageReduce()", LogLevel.DEBUG);
+    void resizeImageReduce() {
+        LOGGER.log("TEST CASE: resizeImageReduce", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -214,8 +227,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testResizeImageNoEffect() {
-        LOGGER.log("TEST CASE: resizeImageNoEffect()", LogLevel.DEBUG);
+    void resizeImageNoEffect() {
+        LOGGER.log("TEST CASE: resizeImageNoEffect", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -234,8 +247,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testResizeImageInflate() {
-        LOGGER.log("TEST CASE: resizeImageInflate()", LogLevel.DEBUG);
+    void resizeImageInflate() {
+        LOGGER.log("TEST CASE: resizeImageInflate", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -254,8 +267,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailResize() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failResize()", LogLevel.DEBUG);
+    void failResize() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failResize", LogLevel.DEBUG);
 
         assertThrows(MisconfigurationException.class, () -> {
             processor.resize(50);
@@ -263,8 +276,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailResizeImage() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failResizeImage()", LogLevel.DEBUG);
+    void failResizeImage() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failResizeImage", LogLevel.DEBUG);
 
         processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
         assertTrue(processor.isImageSet());
@@ -275,8 +288,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testImageRotate() {
-        LOGGER.log("TEST CASE: imageRotate()", LogLevel.DEBUG);
+    void imageRotate() {
+        LOGGER.log("TEST CASE: imageRotate", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -296,8 +309,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailImageRotate() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failImageRotate()", LogLevel.DEBUG);
+    void failImageRotate() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failImageRotate", LogLevel.DEBUG);
 
         assertThrows(MisconfigurationException.class, () -> {
             processor.rotateRight();
@@ -305,8 +318,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testImageFlipVertical() {
-        LOGGER.log("TEST CASE: imageFlipVertical()", LogLevel.DEBUG);
+    void imageFlipVertical() {
+        LOGGER.log("TEST CASE: imageFlipVertical", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -321,8 +334,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailFlipVertical() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failFlipVertical()", LogLevel.DEBUG);
+    void failFlipVertical() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failFlipVertical", LogLevel.DEBUG);
 
         assertThrows(MisconfigurationException.class, () -> {
             processor.flipVertical();
@@ -330,8 +343,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testImageFlipHorizontal() {
-        LOGGER.log("TEST CASE: imageFlipHorizontal()", LogLevel.DEBUG);
+    void imageFlipHorizontal() {
+        LOGGER.log("TEST CASE: imageFlipHorizontal", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -346,8 +359,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailFlipHorizontal() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failFlipHorizontal()", LogLevel.DEBUG);
+    void failFlipHorizontal() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failFlipHorizontal", LogLevel.DEBUG);
 
         assertThrows(MisconfigurationException.class, () -> {
             processor.flipHorizontal();
@@ -355,8 +368,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testCropImage() {
-        LOGGER.log("TEST CASE: cropImage()", LogLevel.DEBUG);
+    void cropImage() {
+        LOGGER.log("TEST CASE: cropImage", LogLevel.DEBUG);
 
         try {
             processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
@@ -376,8 +389,8 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testFailCropImage() throws MisconfigurationException {
-        LOGGER.log("TEST CASE: failCropImage()", LogLevel.DEBUG);
+    void failCropImage() throws MisconfigurationException {
+        LOGGER.log("TEST CASE: failCropImage", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         assertThrows(MisconfigurationException.class, () -> {
@@ -386,11 +399,20 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void testToString() {
-        LOGGER.log("TEST CASE: toString()", LogLevel.DEBUG);
+    void generateToString() {
+        LOGGER.log("TEST CASE: generateToString", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "135621.jpg")));
-        LOGGER.log("toString:" + processor.toString(), LogLevel.DEBUG);
+        LOGGER.log("toString: " + processor.toString(), LogLevel.DEBUG);
         assertNotEquals("No meta data from 135621.jpg extracted.", processor.toString());
+    }
+
+    @Test
+    void generateToStringWhitoutMetaData() {
+        LOGGER.log("TEST CASE: generateToStringWhitoutMetaData", LogLevel.DEBUG);
+
+        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
+        LOGGER.log("toString: " + processor.toString(), LogLevel.DEBUG);
+        assertEquals("No meta data from duke_java_mascot.png extracted.", processor.toString());
     }
 }

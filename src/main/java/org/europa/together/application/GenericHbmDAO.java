@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import flexjson.JSONDeserializer;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -9,11 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.GenericDAO;
-import static org.europa.together.business.GenericDAO.FEATURE_ID;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.domain.PagingDimension;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("unchecked")
 @Repository
 @Transactional
-@FeatureToggle(featureID = FEATURE_ID)
 public abstract class GenericHbmDAO<T, PK extends Serializable>
         implements GenericDAO<T, PK> {
 
@@ -93,7 +90,7 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
 
     @Override
     @Transactional(readOnly = true)
-    public long countEntries(final String table) {
+    public long countAllElements(final String table) {
         String sql = "SELECT COUNT(*) FROM " + table;
         Session session = mainEntityManagerFactory.unwrap(Session.class);
         String count = String.valueOf(session.createSQLQuery(sql).uniqueResult());
@@ -107,6 +104,12 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
         CriteriaQuery<T> query = builder.createQuery(genericType);
         // create Criteria
         query.from(genericType);
+
+        // count all entries
+        int count = mainEntityManagerFactory.createQuery(query).getResultList().size();
+        // define pagination
+        // get selected results
+
         return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
@@ -150,21 +153,6 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
     }
 
     @Override
-    @Deprecated
-    public T deserializeJsonAsObject(final String json) {
-        T retVal = null;
-        try {
-            LOGGER.log("DEPECTED METHOD.", LogLevel.DEBUG);
-            retVal = new JSONDeserializer<T>().deserialize(json);
-
-//            retVal = mapper.readValue(json, Foo.class);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return retVal;
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public T find(final PK id) {
         T retVal = mainEntityManagerFactory.find(genericType, id);
@@ -172,5 +160,25 @@ public abstract class GenericHbmDAO<T, PK extends Serializable>
             LOGGER.log("404 - Entity not found.", LogLevel.ERROR);
         }
         return retVal;
+    }
+
+    @Override
+    public PagingDimension calculatePagination(final PagingDimension input) {
+
+        int restElements = input.getAllEntries() % input.getPageSize();
+        int start = ((input.getPage() - 1) * input.getPageSize()) + 1;
+        int end = start + input.getPageSize();
+        if (restElements != 0) {
+            end = start + restElements;
+        }
+
+        PagingDimension result = new PagingDimension();
+        result.setAllEntries(input.getAllEntries());
+        result.setPageSize(input.getPageSize());
+        result.setPage(input.getPage());
+        result.setStart(start);
+        result.setEnd(end);
+
+        return result;
     }
 }

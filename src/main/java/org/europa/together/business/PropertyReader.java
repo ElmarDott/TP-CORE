@@ -1,15 +1,16 @@
 package org.europa.together.business;
 
+import java.io.IOException;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
 
 /**
- * The PropertyReader is be able to read properties from different resources
- * like File, Database or from the classpath. It is also possible to manipulate
- * the property list. The key feature are the different cast methods for the
- * property values to get them in the correct datatype.
+ * The PropertyReader is able to read properties from different resources like
+ * File, Database or from the classpath. It is also possible to manipulate the
+ * property list. The key feature are the different cast methods for the
+ * property values to load them in the correct datatype.
  * <br><br>
  * A property set contains for each line a key=value pair. Comments starts with
  * the # character.
@@ -26,7 +27,7 @@ public interface PropertyReader {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0004";
+    String FEATURE_ID = "CM-04";
 
     /**
      * Add a single Property to the Property list. If the property already exist
@@ -54,9 +55,10 @@ public interface PropertyReader {
      *
      * @param resource as String
      * @return true on success
+     * @throws java.io.IOException on failure
      */
-    @API(status = STABLE, since = "1.0")
-    boolean appendPropertiesFromClasspath(String resource);
+    @API(status = STABLE, since = "3.0")
+    boolean appendPropertiesFromClasspath(String resource) throws IOException;
 
     /**
      * Load a property List from an external file. eg:
@@ -64,9 +66,10 @@ public interface PropertyReader {
      *
      * @param resource as String
      * @return true on success
+     * @throws java.io.IOException on failure
      */
-    @API(status = STABLE, since = "1.0")
-    boolean appendPropertiesFromFile(String resource);
+    @API(status = STABLE, since = "3.0")
+    boolean appendPropertiesFromFile(String resource) throws IOException;
 
     /**
      * Clear the entire property list.
@@ -87,7 +90,7 @@ public interface PropertyReader {
     boolean removeProperty(String key);
 
     /**
-     * Update an existing property entry. In the case the entry don't exist, he
+     * Update an existing property entry. In the case the entry don't exist, it
      * will be created.
      *
      * @param key as String

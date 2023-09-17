@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.Logger;
@@ -29,6 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class PropertyFileReaderTest {
 
     private static final Logger LOGGER = new LogbackLogger(PropertyFileReaderTest.class);
+
     private static final String FILE_PATH
             = "org/europa/together/properties/properties-test-classpath.properties";
     private static final String DIRECTORY
@@ -40,18 +42,9 @@ public class PropertyFileReaderTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(PropertyReader.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -70,109 +63,157 @@ public class PropertyFileReaderTest {
     //</editor-fold>
 
     @Test
-    void testConstructor() {
+    void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
         assertThat(PropertyFileReader.class, hasValidBeanConstructor());
     }
 
     @Test
-    void testAddPropertyList() {
-        LOGGER.log("TEST CASE: addPropertyList()", LogLevel.DEBUG);
-
-        Map<String, String> resource = new HashMap<>();
-        resource.put("1", "1");
-        resource.put("2", "1");
-        resource.put("3", "1");
-        propertyReader.clear();
-        propertyReader.addPropertyList(resource);
-        assertEquals(3, propertyReader.count());
-
-        Map<String, String> update = new HashMap<>();
-        propertyReader.addPropertyList(update);
-        assertEquals(3, propertyReader.count());
-    }
-
-    @Test
-    void testOverwriteAddPropertyList() {
-        LOGGER.log("TEST CASE: overwriteAddPropertyList()", LogLevel.DEBUG);
-
-        Map<String, String> resource = new HashMap<>();
-        resource.put("1", "1");
-        resource.put("2", "1");
-        resource.put("3", "1");
-        propertyReader.clear();
-        propertyReader.addPropertyList(resource);
-        assertEquals(3, propertyReader.count());
-
-        propertyReader.addPropertyList(resource);
-        assertEquals(3, propertyReader.count());
-    }
-
-    @Test
-    void testAppendPropertiesFromExternalFile() {
-        LOGGER.log("TEST CASE: appendPropertiesFromExternalFile()", LogLevel.DEBUG);
+    void addPropertyList() {
+        LOGGER.log("TEST CASE: addPropertyList", LogLevel.DEBUG);
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
-        propertyReader.appendPropertiesFromFile(DIRECTORY);
-        assertEquals(33, propertyReader.count());
+
+        Map<String, String> resource = new HashMap<>();
+        resource.put("1", "1");
+        resource.put("2", "1");
+        resource.put("3", "1");
+
+        propertyReader.addPropertyList(resource);
+        assertEquals(3, propertyReader.count());
     }
 
     @Test
-    void testAppendPropertiesFromExternalFileException() throws Exception {
-        LOGGER.log("TEST CASE: appendPropertiesFromExternalFileException()", LogLevel.DEBUG);
+    void failAddEmptyPropertyList() {
+        LOGGER.log("TEST CASE: failAddEmptyPropertyList", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        assertEquals(0, propertyReader.count());
+
+        Map<String, String> resource_01 = new HashMap<>();
+        resource_01.put("1", "1");
+        resource_01.put("2", "1");
+
+        Map<String, String> resource_02 = new HashMap<>();
+
+        assertTrue(propertyReader.addPropertyList(resource_01));
+        assertFalse(propertyReader.addPropertyList(resource_02));
+
+        assertEquals(2, propertyReader.count());
+    }
+
+    @Test
+    void overwriteAddPropertyList() {
+        LOGGER.log("TEST CASE: overwriteAddPropertyList", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        assertEquals(0, propertyReader.count());
+
+        Map<String, String> resource = new HashMap<>();
+        resource.put("1", "1");
+        resource.put("2", "1");
+        resource.put("3", "1");
+
+        propertyReader.addPropertyList(resource);
+        assertEquals(3, propertyReader.count());
+
+        resource.put("3", "8");
+        propertyReader.addPropertyList(resource);
+
+        assertEquals(3, propertyReader.count());
+        assertEquals("8", propertyReader.getPropertyAsString("3"));
+    }
+
+    @Test
+    void appendPropertiesFromExternalFile() throws IOException {
+        LOGGER.log("TEST CASE: appendPropertiesFromExternalFile", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        assertEquals(0, propertyReader.count());
+
+        propertyReader.appendPropertiesFromFile(DIRECTORY);
+        assertEquals(35, propertyReader.count());
+    }
+
+    @Test
+    void failAppendPropertiesFromExternalFile() throws Exception {
+        LOGGER.log("TEST CASE: failAppendPropertiesFromExternalFile", LogLevel.DEBUG);
 
         propertyReader.clear();
         assertThrows(Exception.class, () -> {
-            propertyReader.appendPropertiesFromFile("");
+            propertyReader.appendPropertiesFromFile("NotExist");
         });
     }
 
     @Test
-    void testAppendPropertiesFromClasspath() {
-        LOGGER.log("TEST CASE: appendPropertiesFromClasspath()", LogLevel.DEBUG);
+    void appendPropertiesFromClasspath() throws IOException {
+        LOGGER.log("TEST CASE: appendPropertiesFromClasspath", LogLevel.DEBUG);
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
+
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
-        assertEquals(33, propertyReader.count());
+        assertEquals(35, propertyReader.count());
     }
 
     @Test
-    void testAppendPropertiesFromClasspathException() {
-        LOGGER.log("TEST CASE: appendPropertiesFromClasspathException()", LogLevel.DEBUG);
+    void fileAppendPropertiesFromClasspath() throws Exception {
+        LOGGER.log("TEST CASE: fileAppendPropertiesFromClasspath", LogLevel.DEBUG);
 
         propertyReader.clear();
-        assertFalse(propertyReader.appendPropertiesFromClasspath(" "));
+        assertThrows(Exception.class, () -> {
+            propertyReader.appendPropertiesFromClasspath("NotExist");
+        });
     }
 
     @Test
-    void testGetPropertyAsBoolean() {
-        LOGGER.log("TEST CASE: getPropertyAsBoolean()", LogLevel.DEBUG);
+    void getPropertyAsBoolean() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyAsBoolean", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
         assertTrue(propertyReader.getPropertyAsBoolean("test.type.boolean.01"));
         assertFalse(propertyReader.getPropertyAsBoolean("test.type.boolean.02"));
         assertTrue(propertyReader.getPropertyAsBoolean("test.type.boolean.03"));
         assertFalse(propertyReader.getPropertyAsBoolean("test.type.boolean.04"));
+    }
+
+    @Test
+    void failGetPropertyAsBoolean() throws IOException {
+        LOGGER.log("TEST CASE: failGetPropertyAsBoolean", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+
+        assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.00"));
         assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.05"));
         assertNull(propertyReader.getPropertyAsBoolean("test.type.boolean.06"));
         assertNull(propertyReader.getPropertyAsBoolean("boolean"));
     }
 
     @Test
-    void testGetPropertyAsInt() {
-        LOGGER.log("TEST CASE: getPropertyAsInt()", LogLevel.DEBUG);
+    void getPropertyAsInt() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyAsInt", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.00"));
         assertEquals(Integer.valueOf(-1), propertyReader.getPropertyAsInt("test.type.int.01"));
         assertEquals(Integer.valueOf(0), propertyReader.getPropertyAsInt("test.type.int.02"));
         assertEquals(Integer.valueOf(1), propertyReader.getPropertyAsInt("test.type.int.03"));
+    }
+
+    @Test
+    void failGetPropertyAsInt() throws IOException {
+        LOGGER.log("TEST CASE: failGetPropertyAsInt", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+
+        assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.00"));
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.04"));
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.05"));
         assertEquals(null, propertyReader.getPropertyAsInt("test.type.int.06"));
@@ -180,25 +221,35 @@ public class PropertyFileReaderTest {
     }
 
     @Test
-    void testGetPropertyAsString() {
-        LOGGER.log("TEST CASE: getPropertyAsString()", LogLevel.DEBUG);
+    void getPropertyAsString() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyAsString", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
         assertEquals("", propertyReader.getPropertyAsString("test.type.string.00"));
         assertEquals("string", propertyReader.getPropertyAsString("test.type.string.01"));
         assertEquals("1", propertyReader.getPropertyAsString("test.type.string.02"));
         assertEquals("@_001_string", propertyReader.getPropertyAsString("test.type.string.03"));
+    }
+
+    @Test
+    void failGetPropertyAsString() throws IOException {
+        LOGGER.log("TEST CASE: failGetPropertyAsString", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+
         assertNull(propertyReader.getPropertyAsString("string"));
     }
 
     @Test
-    void testGetPropertyAsFloat() {
-        LOGGER.log("TEST CASE: getPropertyAsFloat()", LogLevel.DEBUG);
+    void getPropertyAsFloat() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyAsFloat", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(Float.valueOf(0), propertyReader.getPropertyAsFloat("test.type.float.01"));
         assertEquals(Float.valueOf(0), propertyReader.getPropertyAsFloat("test.type.float.02"));
         assertEquals(Float.valueOf("-1.123"), propertyReader.getPropertyAsFloat("test.type.float.03"));
@@ -206,81 +257,141 @@ public class PropertyFileReaderTest {
         assertEquals(Float.valueOf("13E12"), propertyReader.getPropertyAsFloat("test.type.float.05"));
         assertEquals(Float.valueOf("-8E5"), propertyReader.getPropertyAsFloat("test.type.float.06"));
         assertEquals(Float.valueOf("-8.012E7"), propertyReader.getPropertyAsFloat("test.type.float.07"));
+    }
+
+    @Test
+    void failGetPropertyAsFloat() throws IOException {
+        LOGGER.log("TEST CASE: failGetPropertyAsFloat", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+
+        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
+        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.08"));
         assertNull(propertyReader.getPropertyAsFloat("float"));
     }
 
     @Test
-    void testGetPropertyAsDouble() {
-        LOGGER.log("TEST CASE: getPropertyAsDouble()", LogLevel.DEBUG);
+    void getPropertyAsDouble() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyAsDouble", LogLevel.DEBUG);
 
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
 
-        assertEquals(null, propertyReader.getPropertyAsFloat("test.type.float.00"));
         assertEquals(Double.valueOf(0), propertyReader.getPropertyAsDouble("test.type.double.01"));
         assertEquals(Double.valueOf(13E12), propertyReader.getPropertyAsDouble("test.type.double.02"));
         assertEquals(Double.valueOf(-8E5), propertyReader.getPropertyAsDouble("test.type.double.03"));
         assertEquals(Double.valueOf(-8.012E7), propertyReader.getPropertyAsDouble("test.type.double.04"));
         assertEquals(Double.valueOf(345.2132), propertyReader.getPropertyAsDouble("test.type.double.05"));
+    }
+
+    @Test
+    void failGetPropertyAsDouble() throws IOException {
+        LOGGER.log("TEST CASE: failGetPropertyAsDouble", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+
+        assertEquals(null, propertyReader.getPropertyAsDouble("test.type.double.00"));
+        assertEquals(null, propertyReader.getPropertyAsDouble("test.type.double.06"));
         assertNull(propertyReader.getPropertyAsDouble("double"));
     }
 
     @Test
-    void testAddProperty() {
-        LOGGER.log("TEST CASE: addProperty()", LogLevel.DEBUG);
+    void addProperty() throws IOException {
+        LOGGER.log("TEST CASE: addProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
         assertEquals(0, propertyReader.count());
+
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
-        assertEquals(33, propertyReader.count());
+        assertEquals(35, propertyReader.count());
+
         assertTrue(propertyReader.addProperty("test", "testValue"));
-        assertEquals(34, propertyReader.count());
-        assertEquals("testValue", propertyReader.getPropertyAsString("test"));
-        assertFalse(propertyReader.addProperty("test", "otherValue"));
+        assertEquals(36, propertyReader.count());
         assertEquals("testValue", propertyReader.getPropertyAsString("test"));
     }
 
     @Test
-    void testRemoveProperty() {
-        LOGGER.log("TEST CASE: removeProperty()", LogLevel.DEBUG);
+    void failAddProperty() throws IOException {
+        LOGGER.log("TEST CASE: failAddProperty", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        assertEquals(0, propertyReader.count());
 
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
-        assertEquals(33, propertyReader.count());
+
+        assertFalse(propertyReader.addProperty("test.type.string.00", "overwrite"));
+        assertEquals("", propertyReader.getPropertyAsString("test.type.string.00"));
+        assertEquals(35, propertyReader.count());
+    }
+
+    @Test
+    void removeProperty() throws IOException {
+        LOGGER.log("TEST CASE: removeProperty", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+        assertEquals(35, propertyReader.count());
+
         assertFalse(propertyReader.removeProperty("propertyFile"));
         assertTrue(propertyReader.removeProperty("test.type.double.02"));
-        assertEquals(32, propertyReader.count());
+        assertEquals(34, propertyReader.count());
     }
 
     @Test
-    void testUpdateProperty() {
-        LOGGER.log("TEST CASE: updateProperty()", LogLevel.DEBUG);
-
-        propertyReader.addProperty("test_A", "Value_A");
-        propertyReader.addProperty("test_B", "Value_B");
-        propertyReader.addProperty("test_C", "Value_C");
-        assertTrue(propertyReader.updateProperty("test_B", "update_test_B"));
-        assertTrue(propertyReader.updateProperty("test_D", "update_test_D"));
-        assertEquals("Value_A", propertyReader.getPropertyAsString("test_A"));
-        assertEquals("update_test_B", propertyReader.getPropertyAsString("test_B"));
-        assertEquals("Value_C", propertyReader.getPropertyAsString("test_C"));
-        assertEquals("update_test_D", propertyReader.getPropertyAsString("test_D"));
-    }
-
-    @Test
-    void testClearProperties() {
-        LOGGER.log("TEST CASE: clearProperties()", LogLevel.DEBUG);
+    void failRemoveProperty() throws IOException {
+        LOGGER.log("TEST CASE: failRemoveProperty", LogLevel.DEBUG);
 
         propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
-        assertEquals(33, propertyReader.count());
-        assertTrue(propertyReader.clear());
-        assertEquals(0, propertyReader.count());
-        assertFalse(propertyReader.clear());
+
+        assertFalse(propertyReader.removeProperty("NotExist"));
+        assertEquals(35, propertyReader.count());
     }
 
     @Test
-    void testGetPropertyList() {
-        LOGGER.log("TEST CASE: getPropertyList()", LogLevel.DEBUG);
+    void updateProperty() {
+        LOGGER.log("TEST CASE: updateProperty", LogLevel.DEBUG);
 
+        propertyReader.clear();
+        propertyReader.addProperty("test_A", "Value_A");
+        propertyReader.addProperty("test_B", "Value_B");
+
+        assertTrue(propertyReader.updateProperty("test_A", "update_test_A"));
+        assertTrue(propertyReader.updateProperty("test_B", "update_test_B"));
+
+        assertEquals("update_test_A", propertyReader.getPropertyAsString("test_A"));
+        assertEquals("update_test_B", propertyReader.getPropertyAsString("test_B"));
+
+        assertEquals(2, propertyReader.count());
+    }
+
+    @Test
+    void failUpdateProperty() {
+        LOGGER.log("TEST CASE: failUpdateProperty", LogLevel.DEBUG);
+
+        propertyReader.clear();
+        propertyReader.addProperty("test_A", "Value_A");
+
+        assertTrue(propertyReader.updateProperty("NotExist", "empty"));
+        assertEquals(2, propertyReader.count());
+    }
+
+    @Test
+    void clearProperties() throws IOException {
+        LOGGER.log("TEST CASE: clearProperties", LogLevel.DEBUG);
+
+        propertyReader.appendPropertiesFromClasspath(FILE_PATH);
+        propertyReader.clear();
+        assertEquals(0, propertyReader.count());
+    }
+
+    @Test
+    void getPropertyList() throws IOException {
+        LOGGER.log("TEST CASE: getPropertyList", LogLevel.DEBUG);
+
+        propertyReader.clear();
         propertyReader.appendPropertiesFromClasspath(FILE_PATH);
         int listCount = propertyReader.getPropertyList().size();
         assertEquals(listCount, propertyReader.count());

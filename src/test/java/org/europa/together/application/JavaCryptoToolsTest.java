@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.io.File;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +12,7 @@ import org.europa.together.domain.CipherAlgorithm;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,25 +38,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class JavaCryptoToolsTest {
 
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoToolsTest.class);
+
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
+
     @Autowired
     private CryptoTools cryptoTools;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        boolean check = true;
-        String out = "executed";
-        FF4jProcessor feature = new FF4jProcessor();
+        Assumptions.assumeTrue(true);
 
-        boolean toggle = feature.deactivateUnitTests(CryptoTools.FEATURE_ID);
-        if (!toggle) {
-            out = "skiped.";
-            check = false;
-        }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
     }
 
     @AfterAll
@@ -73,8 +69,15 @@ public class JavaCryptoToolsTest {
     //</editor-fold>
 
     @Test
-    void testCalculateMD5Hashes() {
-        LOGGER.log("TEST CASE: CalculateMD5Hashes()", LogLevel.DEBUG);
+    void constructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
+        assertThat(JavaCryptoTools.class, hasValidBeanConstructor());
+    }
+
+    @Test
+    void calculateMD5Hashes() {
+        LOGGER.log("TEST CASE: calculateMD5Hashes", LogLevel.DEBUG);
 
         //ZERO HASH
         assertEquals("d41d8cd98f00b204e9800998ecf8427e",
@@ -88,8 +91,8 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testCalculateSHA1Hashes() {
-        LOGGER.log("TEST CASE: CalculateSHA1Hashes()", LogLevel.DEBUG);
+    void calculateSHA1Hashes() {
+        LOGGER.log("TEST CASE: calculateSHA1Hashes", LogLevel.DEBUG);
 
         assertEquals("da39a3ee5e6b4b0d3255bfef95601890afd80709",
                 cryptoTools.calculateHash("", HashAlgorithm.SHA));
@@ -102,8 +105,8 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testCalculateSHA512Hashes() {
-        LOGGER.log("TEST CASE: CalculateSHA512Hashes", LogLevel.DEBUG);
+    void calculateSHA512Hashes() {
+        LOGGER.log("TEST CASE: calculateSHA512Hashes", LogLevel.DEBUG);
 
         assertEquals("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
                 cryptoTools.calculateHash("", HashAlgorithm.SHA512));
@@ -116,8 +119,8 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testCalculateSHA256Hashes() {
-        LOGGER.log("TEST CASE: CalculateSHA256Hashess", LogLevel.DEBUG);
+    void calculateSHA256Hashes() {
+        LOGGER.log("TEST CASE: calculateSHA256Hashess", LogLevel.DEBUG);
 
         assertEquals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
                 cryptoTools.calculateHash("", HashAlgorithm.SHA256));
@@ -130,16 +133,16 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testFailCalculateHashes() {
-        LOGGER.log("TEST CASE: FailCalculateHashes()", LogLevel.DEBUG);
+    void failCalculateHashes() {
+        LOGGER.log("TEST CASE: failCalculateHashes", LogLevel.DEBUG);
 
         assertNull(cryptoTools.calculateHash(null, HashAlgorithm.SHA));
         assertNull(cryptoTools.calculateHash("wrong algorithm", null));
     }
 
     @Test
-    void testGetMaxKeySize() {
-        LOGGER.log("TEST CASE: GetMaxKeySize()", LogLevel.DEBUG);
+    void getMaxKeySize() {
+        LOGGER.log("TEST CASE: getMaxKeySize", LogLevel.DEBUG);
 
         try {
             assertEquals(2147483647, cryptoTools.getMaxKeySize(CipherAlgorithm.EC));
@@ -150,8 +153,8 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testCalculateRsaKeyPair() {
-        LOGGER.log("TEST CASE: CalculateRsaKeyPair()", LogLevel.DEBUG);
+    void calculateRsaKeyPair() {
+        LOGGER.log("TEST CASE: calculateRsaKeyPair", LogLevel.DEBUG);
 
         KeyPair store = cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA);
         byte[] privateKey = store.getPrivate().getEncoded();
@@ -161,8 +164,8 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testCalculateEcKeyPair() {
-        LOGGER.log("TEST CASE: CalculateEcKeyPair()", LogLevel.DEBUG);
+    void calculateEcKeyPair() {
+        LOGGER.log("TEST CASE: calculateEcKeyPair", LogLevel.DEBUG);
 
         KeyPair store = cryptoTools.generateCipherKeyPair(CipherAlgorithm.EC);
         byte[] privateKey = store.getPrivate().getEncoded();
@@ -172,18 +175,26 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    void testFailCalculateKeyPair() throws Exception {
-        LOGGER.log("TEST CASE: FailCalculateKeyPair()", LogLevel.DEBUG);
+    void failCalculateKeyPair() {
+        LOGGER.log("TEST CASE: failCalculateKeyPair", LogLevel.DEBUG);
 
-        assertThrows(Exception.class, () -> {
-            cryptoTools.generateCipherKeyPair(null);
-        });
+        assertNull(cryptoTools.generateCipherKeyPair(null));
+    }
+
+    @Test
+    void failWriteKeyPairToFile() {
+        LOGGER.log("TEST CASE: failWriteKeyPairToFile", LogLevel.DEBUG);
+
+        cryptoTools.saveKeyPairToFile(DIRECTORY, null);
+
+        assertFalse(new File(DIRECTORY + "NotExist.key").exists());
+        assertFalse(new File(DIRECTORY + "NotExist.pub").exists());
     }
 
     @Test
     @Order(1)
-    void testWriteKeyPairToFile() {
-        LOGGER.log("TEST CASE: WriteKeyPairToFile()", LogLevel.DEBUG);
+    void writeKeyPairToFile() {
+        LOGGER.log("TEST CASE: writeKeyPairToFile", LogLevel.DEBUG);
 
         cryptoTools.saveKeyPairToFile(DIRECTORY,
                 cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA));
@@ -193,14 +204,41 @@ public class JavaCryptoToolsTest {
 
         assertTrue(new File(DIRECTORY + CipherAlgorithm.EC + ".key").exists());
         assertTrue(new File(DIRECTORY + CipherAlgorithm.EC + ".pub").exists());
-        assertTrue(new File(DIRECTORY + CipherAlgorithm.RSA + ".key").exists());
-        assertTrue(new File(DIRECTORY + CipherAlgorithm.RSA + ".pub").exists());
     }
 
     @Test
     @Order(2)
-    void testLoadPrivateRsaKeyFromFile() {
-        LOGGER.log("TEST CASE: LoadPrivateRsaKeyFromFile()", LogLevel.DEBUG);
+    void writeKeyPairToFileInHomeDir() {
+        LOGGER.log("TEST CASE: writeKeyPairToFile", LogLevel.DEBUG);
+
+        cryptoTools.saveKeyPairToFile(null,
+                cryptoTools.generateCipherKeyPair(CipherAlgorithm.RSA));
+
+        cryptoTools.saveKeyPairToFile(null,
+                cryptoTools.generateCipherKeyPair(CipherAlgorithm.EC));
+
+        String dir = Constraints.SYSTEM_USER_HOME_DIR + "/";
+
+        assertTrue(new File(dir + CipherAlgorithm.EC + ".key").exists());
+        assertTrue(new File(dir + CipherAlgorithm.EC + ".pub").exists());
+        assertTrue(new File(dir + CipherAlgorithm.RSA + ".key").exists());
+        assertTrue(new File(dir + CipherAlgorithm.RSA + ".pub").exists());
+
+        try { //CLEAN UP
+            assertTrue(new File(dir + CipherAlgorithm.EC + ".key").delete());
+            assertTrue(new File(dir + CipherAlgorithm.EC + ".pub").delete());
+            assertTrue(new File(dir + CipherAlgorithm.RSA + ".key").delete());
+            assertTrue(new File(dir + CipherAlgorithm.RSA + ".pub").delete());
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    @Order(3)
+    void loadPrivateRsaKeyFromFile() {
+        LOGGER.log("TEST CASE: loadPrivateRsaKeyFromFile", LogLevel.DEBUG);
 
         PrivateKey privateKey = cryptoTools.loadPrivateKeyFile(
                 DIRECTORY + CipherAlgorithm.RSA + ".key", CipherAlgorithm.RSA);
@@ -208,9 +246,9 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    @Order(3)
-    void testLoadPublicKeyRsaFromFile() {
-        LOGGER.log("TEST CASE: LoadPublicRsaKeyFromFile()", LogLevel.DEBUG);
+    @Order(4)
+    void loadPublicKeyRsaFromFile() {
+        LOGGER.log("TEST CASE: loadPublicRsaKeyFromFile", LogLevel.DEBUG);
 
         PublicKey publicRsaKey = cryptoTools.loadPublicKeyFile(
                 DIRECTORY + CipherAlgorithm.RSA + ".pub", CipherAlgorithm.RSA);
@@ -218,9 +256,9 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    @Order(4)
-    void testLoadPrivateEcKeyFromFile() {
-        LOGGER.log("TEST CASE: LoadPrivateEcKeyFromFile()", LogLevel.DEBUG);
+    @Order(5)
+    void loadPrivateEcKeyFromFile() {
+        LOGGER.log("TEST CASE: loadPrivateEcKeyFromFile", LogLevel.DEBUG);
 
         PrivateKey privateEcKey = cryptoTools.loadPrivateKeyFile(
                 DIRECTORY + CipherAlgorithm.EC + ".key", CipherAlgorithm.EC);
@@ -228,13 +266,27 @@ public class JavaCryptoToolsTest {
     }
 
     @Test
-    @Order(5)
-    void testLoadPublicKeyEcFromFile() {
-        LOGGER.log("TEST CASE: LoadPublicEcKeyFromFile()", LogLevel.DEBUG);
+    @Order(6)
+    void loadPublicKeyEcFromFile() {
+        LOGGER.log("TEST CASE: loadPublicEcKeyFromFile", LogLevel.DEBUG);
         String file = DIRECTORY;
 
         PublicKey publicEcKey = cryptoTools.loadPublicKeyFile(
                 DIRECTORY + CipherAlgorithm.EC + ".pub", CipherAlgorithm.EC);
         assertEquals(CipherAlgorithm.EC.toString(), publicEcKey.getAlgorithm());
+    }
+
+    @Test
+    void failLoadPrivateKeyFile() {
+        LOGGER.log("TEST CASE: failLoadPrivateKeyFile", LogLevel.DEBUG);
+
+        assertNull(cryptoTools.loadPrivateKeyFile(null, CipherAlgorithm.RSA));
+    }
+
+    @Test
+    void failLoadPublicKeyFile() {
+        LOGGER.log("TEST CASE: failLoadPublicKeyFile", LogLevel.DEBUG);
+
+        assertNull(cryptoTools.loadPublicKeyFile(null, CipherAlgorithm.EC));
     }
 }

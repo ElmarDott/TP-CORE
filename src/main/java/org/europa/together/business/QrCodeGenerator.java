@@ -5,8 +5,6 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +24,7 @@ public interface QrCodeGenerator {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0007";
+    String FEATURE_ID = "CM-07";
 
     /**
      * Configure the Generator with the dimension (height and width) of the QR
@@ -105,18 +103,7 @@ public interface QrCodeGenerator {
      * @return dataStructure as String
      */
     @API(status = STABLE, since = "2.1")
-    String generateDataForCalenderEvent(String event, ZonedDateTime start, ZonedDateTime end);
-
-    /**
-     * Encode an calender event.
-     *
-     * @param event as String
-     * @param start as DateTime
-     * @param end as DateTime
-     * @return dataStructure as String
-     */
-    @API(status = DEPRECATED, since = "1.0")
-    String generateDataForCalenderEvent(String event, DateTime start, DateTime end);
+    String generateDataForCalendarEvent(String event, ZonedDateTime start, ZonedDateTime end);
 
     /**
      * Encode an URL which will opened in a web browser.

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * entries.<br>
  *
  * Domain Object: ID, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME,
- * MODUL_VERSION, DEPECATED, COMMENT<br>
+ * MODUL_VERSION, DEPRECATED, COMMENT<br>
  *
  * The keys are stored as SHA-256 hash, to protect the Database against direct
  * editing.
@@ -30,7 +30,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * Identifier for the given feature to enable toggles.
      */
     @API(status = STABLE, since = "1.2")
-    String FEATURE_ID = "CM-0005";
+    String FEATURE_ID = "CM-05";
 
     /**
      * Get the whole configuration object by a given key, module and the version
@@ -73,7 +73,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @return deprecated as List&lt;Configuration&gt;
      */
     @API(status = STABLE, since = "1.0")
-    List<ConfigurationDO> getAllDepecatedEntries();
+    List<ConfigurationDO> getAllDeprecatedEntries();
 
     /**
      * In the case that for a module exist more versions than one. fFor example
