@@ -33,7 +33,7 @@ public interface GenericDAO<T, PK extends Serializable> extends Serializable {
 
     /**
      * Persist a new Entity and return TRUE if it was successful. In the case
-     * that the entity is already existing or the persist pobject is not a valid
+     * that the entity is already existing or the persist project is not a valid
      * entity the method return FALSE.
      *
      * @param object of an Entity

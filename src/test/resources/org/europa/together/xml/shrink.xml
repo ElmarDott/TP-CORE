@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <EmployeeInfo><![CDATA[some stuff]]>
+        <Employee  EmployeeNumber="105">
+            <Name>Masashi Okamura</Name>
+            <Department>Design Department</Department>
+            <Telephone>03-1452-4567</Telephone>
+            <Email>okamura@xmltr.co.jp</Email>
+        </Employee>
+        <!-- THIs Is AN XML COMMENT -->
+    </EmployeeInfo>
+
+    <EmployeeInfo><![CDATA[some stuff]]>
+        <Employee  EmployeeNumber="105">
+            <Name>Masashi Okamura</Name>
+            <Department>Design Department</Department>
+            <Telephone>03-1452-4567</Telephone>
+            <Email />
+        </Employee>
+        <!-- THIs Is AN XML COMMENT -->
+    </EmployeeInfo>
+</root>
+

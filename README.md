@@ -25,7 +25,7 @@ Components - Release: 1.0
 
 The CORE Module is build with NetBeans 8.2, Maven 3.5.3 and Java 8 SE. The
 implementation is also designed to run in Java EE 7 (e.g. Tomcat) environments.
-The most important dependencies are Hibernate 4.3, Spring 5 and JUnit 5. As
+The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL.
 
 ### Build
@@ -42,12 +42,13 @@ hosting restriction on Sonatype Open Source Project Repository Hosting was neces
 to change the POM GAV. As Result the java packages do not fit with the pom GAV. SO you
 are be able to use TP-CORE in your project as dependency wit the following entry:
 
+Please check the Release Notes for published Artifact Versions.
 **Maven**
 ```
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -67,9 +68,26 @@ like this project, let me know it an rate it with a star.
 ## Release Notes
 
 |Version | Comment
-+--------+----------------------------------------------------------------------
+|--------|----------------------------------------------------------------------
 | 1.0    | Rejected : not published
-+--------+----------------------------------------------------------------------
-| 1.0.1  | published 04/2018
+|--------|----------------------------------------------------------------------
+| 1.0.1  | Rejected : not published
 |        | - change Maven POM GAV for Open Source Project Repository Hosting
-+--------+----------------------------------------------------------------------
+|--------|----------------------------------------------------------------------
+| 1.0.2  | published 04/2018
+|        | - include PGP signing for all
+|--------|----------------------------------------------------------------------
+| 1.1    | published 10/2018
+|        | - optimize overall Test Coverage
+|        | - Fix (medium) :: MailClient.loadConfigFromDatabase() {MODUL_VERSION}
+|        | - Add Functionality: XmlTools:transformXslt()
+|        | - Add Functionality: XmlTools:shrinkXml()
+|        | - REFRACTOR XmlToolsImpl
+|        | - Add Functionality: PdFRenderer.removePage()
+|        | - Add Functionality: Logger.setLogLevel()
+|        | - Add Functionality: DatabaseActions.getMetaData
+|        | - Migrate DAO to Hibernate 5.3 (JPA 2.1)
+|        | - Add swagger support
+
+
+

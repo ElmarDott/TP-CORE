@@ -39,15 +39,29 @@
         <!--property name="contextClassLoaderSource" value="library" -->
         <!--property name="privilegeSpawnedThreads" value="true" -->
 
-        <!-- debug, not for production -->
-        <!--property name="debugUnreturnedConnectionStackTraces" value="true"/-->
-        <!--property name="unreturnedConnectionTimeout" value="5" /-->
-        <!-- (if we have unreturned connections, we have a BIG problem) -->
+        <!--
+            DEBUG, not for production -
+            (if we have unreturned connections, we have a BIG problem)
+        -->
+        <!-- property name="debugUnreturnedConnectionStackTraces" value="true"/>
+        <property name="unreturnedConnectionTimeout" value="5" / -->
     </bean>
 
-    <!-- ENTITY MANAGER for MAIN Database Schemata -->
+    <!-- SESSION FACTORY (Hibernate Standard) -->
+    <!-- bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="mainSchemata"/>
+        <property name="packagesToScan" value="eu.freeplace.infrastructure.domain"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+            </props>
+        </property>
+    </bean -->
+
+    <!-- ENTITY MANAGER for MAIN Database Schemata (JPA Standard) -->
     <bean id="mainEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="dataSource" ref="mainSchemata" />
         <property name="packagesToScan">
             <list>
@@ -71,8 +85,8 @@
                     create: creates the schema, destroying previous data.
                     create-drop: drop the schema at the end of the session.
                 -->
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <!-- prop key="hibernate.id.new_generator_mappings">true</prop -->
                 <!--prop key="hibernate.cache.use_second_level_cache">true</prop-->
                 <!--prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop-->
@@ -83,9 +97,11 @@
 
     <!-- TRANSACTION MANAGER -->
     <bean id="mainTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="entityManagerFactory" ref="mainEntityManagerFactory" />
     </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <tx:annotation-driven transaction-manager="mainTransactionManager"/>
 </beans>

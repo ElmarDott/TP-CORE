@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- Logback Configuration Template -->
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
 
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />

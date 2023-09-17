@@ -6,9 +6,7 @@ import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -40,8 +38,8 @@ public class ConfigurationServiceOutcome extends Stage<ConfigurationServiceOutco
 
             boolean test = false;
             for (ConfigurationDO entry : entryList) {
-                if (entry.getValue().equals("X") | entry.equals("Y")
-                        | entry.equals("a") | entry.equals("b") | entry.equals("c")) {
+                if (entry.getValue().equals("X") || entry.equals("Y")
+                        || entry.equals("a") || entry.equals("b") || entry.equals("c")) {
                     test = true;
                 } else {
                     test = false;

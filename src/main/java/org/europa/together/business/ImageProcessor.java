@@ -43,7 +43,7 @@ public interface ImageProcessor {
 
     /**
      * Load an BufferdImage. In te case an Image is already loaded, this method
-     * overwrite the prvieous image.
+     * overwrite the previous image.
      *
      * @param image as BufferdImage
      * @return true on success
@@ -53,7 +53,7 @@ public interface ImageProcessor {
 
     /**
      * Load an image from a file. In te case an Image is already loaded, this
-     * method overwrite the prvieous image.
+     * method overwrite the previous image.
      *
      * @param image as File
      * @return true on success
@@ -69,7 +69,7 @@ public interface ImageProcessor {
     boolean isImageSet();
 
     /**
-     * Save a modified Image to a given name and path wich is definde as file.
+     * Save a modified Image to a given name and path which is defined as file.
      * Also the format (GIF, PNG, BMP or JPG) has to be defined. <br>
      * <code>
      *   saveImage(renderedImage, new File("/my/file/image.png"), FORMAT_PNG);
@@ -156,10 +156,10 @@ public interface ImageProcessor {
     BufferedImage getImage();
 
     /**
-     * Resize an given imag to a new Size. The new scale is given in percent and
-     * is be automatic calculated from the original Image. The calculation is
-     * rounded, because of the mathematic operation as Integer.<br>
-     * calculation: int (orginal.size / 100) * percent<br>
+     * Resize an given image to a new Size. The new scale is given in percent
+     * and is be automatic calculated from the original Image. The calculation
+     * is rounded, because of the mathematic operation as Integer.<br>
+     * calculation: int (original.size / 100) * percent<br>
      *
      * @param percentage as int
      * @return renderdImage as BufferedImage
@@ -186,7 +186,8 @@ public interface ImageProcessor {
     @API(status = EXPERIMENTAL, since = "1.1")
     default BufferedImage setMetaData()
             throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
+        //TODO: setMetaData()
+        throw new UnsupportedVersionException("Method not implemented in this Version.");
     }
 
     /**
@@ -198,7 +199,7 @@ public interface ImageProcessor {
     @API(status = EXPERIMENTAL, since = "1.1")
     default Map<String, String> getMetaData()
             throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
+        //TODO: getMetaData()
+        throw new UnsupportedVersionException("Method not implemented in this Version.");
     }
-
 }

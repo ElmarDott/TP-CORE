@@ -38,15 +38,14 @@ public final class SocketTimeout {
             try {
                 Socket socket = new Socket(uri, port);
                 socket.setSoTimeout(milliseconds);
-                if (socket.isConnected()) {
-                    LOGGER.log("[After " + i + " tries] Socket connection to " + uri
-                            + ":" + port + " can be established.",
-                            LogLevel.DEBUG);
-                    socket.close();
-                    success = true;
-                    break;
-                }
                 socket.close();
+
+                success = true;
+                LOGGER.log("[After " + i + " tries] Socket connection to " + uri
+                        + ":" + port + " can be established.",
+                        LogLevel.DEBUG);
+                break;
+
             } catch (Exception ex) {
                 LOGGER.catchException(ex);
             }

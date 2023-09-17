@@ -60,9 +60,9 @@ public class PropertyReaderImpl implements PropertyReader {
 
         if (size > sizeOrginalList) {
             success = true;
-            LOGGER.log(sizeNewList + " Properties apended.", LogLevel.DEBUG);
+            LOGGER.log(sizeNewList + " Properties appended.", LogLevel.DEBUG);
         } else {
-            LOGGER.log("Could not append Properties. Size Orginal List: "
+            LOGGER.log("Could not append Properties. Size Original List: "
                     + sizeOrginalList + " : Size New List: " + sizeNewList, LogLevel.WARN);
         }
         return success;
@@ -100,7 +100,7 @@ public class PropertyReaderImpl implements PropertyReader {
             reader.close();
 
             String logMsg = "readPropertyFromClasspath(" + resource + ") "
-                    + count + " Properties readed.";
+                    + count + " Properties read.";
             LOGGER.log(logMsg, LogLevel.DEBUG);
 
             success = true;
@@ -138,7 +138,7 @@ public class PropertyReaderImpl implements PropertyReader {
             }
 
             String logMsg = "readPropertyFromFile(" + resource + ") "
-                    + count + " Properties readed.";
+                    + count + " Properties read.";
             LOGGER.log(logMsg, LogLevel.DEBUG);
 
             success = true;
@@ -153,7 +153,7 @@ public class PropertyReaderImpl implements PropertyReader {
 
     @Override
     public boolean clear() {
-        Boolean success = false;
+        boolean success = false;
         if (propertyList.isEmpty()) {
             LOGGER.log("PropertyList is EMPTY, nothing to remove.", LogLevel.WARN);
         } else {

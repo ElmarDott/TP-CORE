@@ -1,7 +1,6 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import java.sql.ResultSet;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
 import static org.europa.together.service.ConfigurationServiceScenarioTest.CONNECTION;

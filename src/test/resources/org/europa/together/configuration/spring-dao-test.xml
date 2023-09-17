@@ -25,16 +25,6 @@
         <property name="driverClass" value="${jdbc.driverClassName}"/>
         <property name="user" value="${jdbc.test.user}"/>
         <property name="password" value="${jdbc.test.password}"/>
-        <!-- 3CPO Connection POOL -->
-        <property name="acquireIncrement" value="1"/> <!-- How many Connects try reconnect at same time -->
-        <property name="acquireRetryAttempts" value="10"/> <!-- How many retries default=30 -->
-        <property name="acquireRetryDelay" value="3000"/> <!-- ms, retry delay default=1000 -->
-        <property name="idleConnectionTestPeriod" value="300"/>
-        <property name="maxStatements" value="1000"/>
-        <property name="initialPoolSize" value="3"/>
-        <property name="minPoolSize" value="3"/> <!-- default=3 -->
-        <property name="maxPoolSize" value="10"/>
-        <property name="maxIdleTimeExcessConnections" value="1800"/> <!-- seconds, idle timeout for > minPoolSize -->
 
         <!-- debug, not for production -->
         <property name="debugUnreturnedConnectionStackTraces" value="true" />
@@ -60,27 +50,19 @@
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
-                <!--
-                    validate: validate the schema, makes no changes to the database.
-                    update: update the schema.
-                    create: creates the schema, destroying previous data.
-                    create-drop: drop the schema at the end of the session.
-                -->
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <!-- prop key="hibernate.id.new_generator_mappings">true</prop -->
-                <!--prop key="hibernate.cache.use_second_level_cache">true</prop-->
-                <!--prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop-->
-                <!--prop key="hibernate.jdbc.batch_size">100</prop-->
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
             </props>
         </property>
     </bean>
 
     <!-- TRANSACTION MANAGER -->
     <bean id="mainTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="entityManagerFactory" ref="mainEntityManagerFactory" />
     </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <tx:annotation-driven transaction-manager="mainTransactionManager"/>
 </beans>

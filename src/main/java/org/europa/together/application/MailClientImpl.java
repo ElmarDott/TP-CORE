@@ -19,6 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.business.PropertyReader;
@@ -83,8 +84,8 @@ public class MailClientImpl implements MailClient {
 
     @Override
     public void addRecipientList(final List<String> recipientList) {
-        for (String recipent : recipientList) {
-            addRecipent(recipent);
+        for (String recipient : recipientList) {
+            addRecipent(recipient);
         }
     }
 
@@ -96,6 +97,20 @@ public class MailClientImpl implements MailClient {
     @Override
     public void clearRecipents() {
         recipients.clear();
+    }
+
+    @Override
+    public void populateConfiguration() {
+
+        DatabaseActions actions = new DatabaseActionsImpl();
+
+        String properties
+                = "classpath://org/europa/together/configuration/jdbc.properties";
+        String sql
+                = "org/europa/together/sql/mail-configuration.sql";
+
+        actions.connect(properties);
+        actions.executeSqlFromClasspath(sql);
     }
 
     @Override
@@ -155,27 +170,27 @@ public class MailClientImpl implements MailClient {
     }
 
     @Override
-    public boolean addRecipent(final String recipent) {
+    public boolean addRecipent(final String recipient) {
 
         boolean success = false;
         InternetAddress mailAdress;
         try {
 
-            if (!Validator.validate(recipent, Validator.E_MAIL_ADDRESS)) {
-                throw new AddressException("[" + recipent + "] is not a valid email Adress.");
+            if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
+                throw new AddressException("[" + recipient + "] is not a valid email Adress.");
             }
-            mailAdress = new InternetAddress(recipent);
+            mailAdress = new InternetAddress(recipient);
             mailAdress.validate();
 
             //detect duplicate entries
             if (getRecipentList().contains(mailAdress)) {
-                LOGGER.log("Address " + recipent + " allready exist and will be ignored.",
+                LOGGER.log("Address " + recipient + " already exist and will be ignored.",
                         LogLevel.WARN);
             } else {
 
                 recipients.add(mailAdress);
                 success = true;
-                LOGGER.log("Add " + recipent + " to the recipient list.", LogLevel.DEBUG);
+                LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
             }
 
         } catch (Exception ex) {
@@ -212,12 +227,12 @@ public class MailClientImpl implements MailClient {
 
         try {
             LOGGER.log("Load all configuration sets of: " + CONFIG_SET
-                    + " - Version: " + Constraints.MODULE_VERSION
+                    + " - Version: " + CONFIG_VERSION
                     + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
 
             List<ConfigurationDO> configurationEntries
                     = configurationDAO.getAllConfigurationSetEntries(Constraints.MODULE_NAME,
-                            Constraints.MODULE_VERSION, CONFIG_SET);
+                            CONFIG_VERSION, CONFIG_SET);
 
             for (ConfigurationDO entry : configurationEntries) {
 

@@ -31,6 +31,12 @@ public interface MailClient {
     String CONFIG_SET = "email";
 
     /**
+     * Defines for which MODULE_VERSION the configuration will work.
+     */
+    @API(status = STABLE, since = "1.1")
+    String CONFIG_VERSION = "1.0";
+
+    /**
      * Add attachments from a given List of strings to the mail attachments. A
      * list entry represents the full path to the attachment as String.
      *
@@ -50,7 +56,7 @@ public interface MailClient {
     void addRecipientList(List<String> recipientList);
 
     /**
-     * Reset the Attchment List.
+     * Reset the Attachment List.
      *
      */
     @API(status = STABLE, since = "1.0")
@@ -61,6 +67,12 @@ public interface MailClient {
      */
     @API(status = STABLE, since = "1.0")
     void clearRecipents();
+
+    /**
+     * Population the database with the MailClient Configuration.
+     */
+    @API(status = STABLE, since = "1.1")
+    void populateConfiguration();
 
     /**
      * Allow a re-connection to the configured SMTP Server.
@@ -116,16 +128,16 @@ public interface MailClient {
     boolean addAttachment(final String resource);
 
     /**
-     * Add an Recipient to the Recipent List. The implementation check if the
+     * Add an Recipient to the Recipient List. The implementation check if the
      * recipient already exist in the List. Also the format of an valid e-mail
      * address will be tested. If an given E-Mail address is not valid it will
      * not added to the List.
      *
-     * @param recipent as String
+     * @param recipient as String
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean addRecipent(final String recipent);
+    boolean addRecipent(final String recipient);
 
     /**
      *
@@ -221,7 +233,7 @@ public interface MailClient {
     /**
      * Compose a full E-Mail, ready to send.
      *
-     * @param recipient as InternetAdress
+     * @param recipient as InternetAddress
      * @return e-mail as MimeMessage
      */
     @API(status = STABLE, since = "1.0")

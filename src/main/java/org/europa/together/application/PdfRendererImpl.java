@@ -2,10 +2,15 @@ package org.europa.together.application;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
 import org.europa.together.domain.LogLevel;
@@ -39,6 +44,17 @@ public class PdfRendererImpl implements PdfRenderer {
     }
 
     @Override
+    public void writeDocument(final PdfReader pdf, final String destination) {
+        try {
+            PdfStamper pdfStamper = new PdfStamper(pdf, new FileOutputStream(destination));
+            pdfStamper.close();
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Override
     public void renderDocumentFromHtml(final String file, final String template) {
         try {
 
@@ -52,7 +68,7 @@ public class PdfRendererImpl implements PdfRenderer {
             document.open();
             document.addCreationDate();
 
-            //Meta Informaion
+            //Meta Information
             document.addTitle(title);
             document.addSubject(subject);
             document.addAuthor(author);
@@ -75,6 +91,39 @@ public class PdfRendererImpl implements PdfRenderer {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+    }
+
+    @Override
+    public PdfReader readDocument(final File pdfDocument) {
+        PdfReader pdfReader = null;
+        try {
+            pdfReader = new PdfReader(pdfDocument.getAbsolutePath());
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return pdfReader;
+    }
+
+    @Override
+    public PdfReader removePage(final PdfReader pdf, final int... pages) {
+        PdfReader newPDF = new PdfReader(pdf);
+        try {
+            int pagesTotal = newPDF.getNumberOfPages();
+            List<Integer> allPages = new ArrayList<>(pagesTotal);
+            for (int i = 1; i <= pagesTotal; i++) {
+                allPages.add(i);
+            }
+            for (Integer page : pages) {
+                allPages.remove(page);
+            }
+            newPDF.selectPages(allPages);
+
+            LOGGER.log("Document contains " + newPDF.getNumberOfPages() + " Pages",
+                    LogLevel.DEBUG);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return newPDF;
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import org.europa.together.application.LoggerImpl;
 import org.europa.together.business.Logger;
+import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -98,6 +99,8 @@ public class FileUtilsTest {
     void testReadFile() {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
+        assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.NONE));
+        assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.UTF_8));
     }
 
     @Test
@@ -124,11 +127,11 @@ public class FileUtilsTest {
 
     @Test
     void testFailAppendFile() {
-        FileUtils.appendFile("no_file_to_append", "apending string.");
+        FileUtils.appendFile("no_file_to_append", "appending string.");
     }
 
     @Test
-    void testlistFileTree() {
+    void testListFileTree() {
         File file = new File(DIRECTORY + "dir-test");
         Collection<File> filelist = FileUtils.listFileTree(file);
 
@@ -146,6 +149,33 @@ public class FileUtilsTest {
                 assertEquals("/media/veracrypt1/workspace/togetherPlatform/modules/core/target/test-classes/dir-test/level_1.0/file_a.txt",
                         entry.getAbsolutePath());
             }
+        }
+    }
+
+    @Test
+    void testFailCopyFile() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(null, new File(""));
+        });
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(new File(""), null);
+        });
+
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(new File("NULL"), new File(""));
+        });
+    }
+
+    @Test
+    void testCopyFile() {
+        try {
+            File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
+            File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
+            FileUtils.copyFile(source, destination);
+            assertTrue(destination.exists());
+
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
     }
 }

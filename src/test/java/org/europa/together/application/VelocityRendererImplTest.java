@@ -21,23 +21,24 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class VelocityRendererImplTest {
 
-    Map<String, String> properties = new HashMap<>();
-
     private static final String FILE_PATH = "org/europa/together/velocity";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
     private static final Logger LOGGER = new LoggerImpl(VelocityRendererImplTest.class);
+    private VelocityRenderer instance = new VelocityRendererImpl();
+    private Map<String, String> properties = new HashMap<>();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be excecuted.\n", LogLevel.TRACE);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE TERMINATED.", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -46,19 +47,22 @@ public class VelocityRendererImplTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
+        LOGGER.log("TEST CASE TERMINATED.\n", LogLevel.TRACE);
     }
     //</editor-fold>
 
     @Test
     void testConstructor() {
+        LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
+
         assertThat(VelocityRendererImpl.class, hasValidBeanConstructor());
     }
 
     @Test
     void testGenerateContent() {
+        LOGGER.log("TEST CASE: generateContent()", LogLevel.DEBUG);
 
-        VelocityRenderer instance = new VelocityRendererImpl();
+        instance = new VelocityRendererImpl();
 
         if (properties != null) {
             properties.clear();
@@ -71,34 +75,36 @@ public class VelocityRendererImplTest {
 
     @Test
     void testLoadContentByClasspathResource() {
+        LOGGER.log("TEST CASE: loadContentByClasspathResource()", LogLevel.DEBUG);
 
-        VelocityRenderer instance = new VelocityRendererImpl();
+        instance = new VelocityRendererImpl();
         if (properties != null) {
             properties.clear();
         }
         properties.put("property_key", "value");
 
-        //plain template
+        LOGGER.log("case 1: plain template", LogLevel.ERROR);
         String result_00
                 = instance.loadContentByClasspathResource(FILE_PATH, "/template.vm", properties);
         String result_01
                 = instance.loadContentByClasspathResource(FILE_PATH, "/template.vm", null);
-        //with properties
+        assertEquals("Hello World?", result_00);
+        assertEquals("Hello World?", result_01);
+
+        LOGGER.log("case 1: with properties", LogLevel.ERROR);
         String result_02
                 = instance.loadContentByClasspathResource(FILE_PATH, "/template_1.vm", properties);
         String result_03
                 = instance.loadContentByClasspathResource(FILE_PATH, "/template_1.vm", null);
-
-        assertEquals("Hello World?", result_00);
-        assertEquals("Hello World?", result_01);
         assertEquals("Hello World? : value", result_02);
         assertEquals("Hello World? : $property_key", result_03);
     }
 
     @Test
     void testLoadContentByFileResource() {
+        LOGGER.log("TEST CASE: loadContentByFileResource()", LogLevel.DEBUG);
 
-        VelocityRenderer instance = new VelocityRendererImpl();
+        instance = new VelocityRendererImpl();
         System.out.println("\n PATH: " + DIRECTORY + "\n");
 
         if (properties != null) {
@@ -106,21 +112,20 @@ public class VelocityRendererImplTest {
         }
         properties.put("property_key", "value");
 
-        //plain template
+        LOGGER.log("case 1: plain template", LogLevel.ERROR);
         String result_00
                 = instance.loadContentByFileResource(DIRECTORY, "/template.vm", properties);
         String result_01
                 = instance.loadContentByFileResource(DIRECTORY, "template.vm", null);
-        //with properties
+        assertEquals("Hello World?", result_00);
+        assertEquals("Hello World?", result_01);
+
+        LOGGER.log("case 2: with properties", LogLevel.ERROR);
         String result_02
                 = instance.loadContentByFileResource(DIRECTORY, "/template_1.vm", properties);
         String result_03
                 = instance.loadContentByFileResource(DIRECTORY, "/template_1.vm", null);
-
-        assertEquals("Hello World?", result_00);
-        assertEquals("Hello World?", result_01);
         assertEquals("Hello World? : value", result_02);
         assertEquals("Hello World? : $property_key", result_03);
     }
-
 }

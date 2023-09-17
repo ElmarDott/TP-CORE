@@ -1,5 +1,7 @@
 package org.europa.together.business;
 
+import com.itextpdf.text.pdf.PdfReader;
+import java.io.File;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
@@ -16,8 +18,17 @@ import org.springframework.stereotype.Component;
 public interface PdfRenderer {
 
     /**
+     * Writes a PDF document (PdfReader) to the given Destination.
+     *
+     * @param pdf as PdfReader
+     * @param destination as String
+     */
+    @API(status = STABLE, since = "1.1")
+    void writeDocument(PdfReader pdf, String destination);
+
+    /**
      * Generate a PDF Document in the size A4 from a HTML String. The file
-     * parameter define the path were the PDF will sored an how the documed is
+     * parameter define the path were the PDF will sored an how the document is
      * named.
      *
      * @param file as String
@@ -57,6 +68,30 @@ public interface PdfRenderer {
      */
     @API(status = STABLE, since = "1.0")
     void setTitle(String title);
+
+    /**
+     * Read a PDF from FILE as PdfReader.
+     *
+     * @param pdfDocument as File
+     * @return pdf as PdfReader
+     */
+    @API(status = STABLE, since = "1.1")
+    PdfReader readDocument(File pdfDocument);
+
+    /**
+     * Remove from a given PDF pages. Usage:<br>
+     * <code>
+     *  PdfReader pdf = readDocument(new File(document.pdf));
+     *  File newPdf = removePages(pdf, 2, 4, 12);
+     * </code><br>
+     * Removes from the PDF document the Pages: 2,4 and 12.
+     *
+     * @param pdf as PdfReader
+     * @param pages as int
+     * @return pdf as PdfReader
+     */
+    @API(status = STABLE, since = "1.1")
+    PdfReader removePage(PdfReader pdf, int... pages);
 
     /**
      * Get the author of the document.

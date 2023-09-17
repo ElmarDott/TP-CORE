@@ -73,6 +73,8 @@ public class ConfigurationServiceScenarioTest extends
 
     @Test
     void testResetModuleToDefault() {
+        LOGGER.log("Scenario A: Reset a full module to the default entries.", LogLevel.DEBUG);
+
         try {
             // PreCondition
             given().service_has_database_connection()
@@ -90,6 +92,8 @@ public class ConfigurationServiceScenarioTest extends
 
     @Test
     void testFilterMandatoryFieldsOfConfigSet() {
+        LOGGER.log("Scenario B: Filter the mandatory fields of a config set.", LogLevel.DEBUG);
+
         try {
             // PreCondition
             given().service_has_database_connection()

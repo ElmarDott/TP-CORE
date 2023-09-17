@@ -10,6 +10,7 @@ import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.MailClientImpl;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -68,7 +69,7 @@ public final class MailClientService {
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
-                        Constraints.MODULE_NAME, Constraints.MODULE_VERSION, MailClient.CONFIG_SET);
+                        Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
 
         for (ConfigurationDO configEntry : configurationEntries) {
 
@@ -85,7 +86,7 @@ public final class MailClientService {
 
     /**
      * Send an composed (single) e-mail which is configured in a MailClient. An
-     * E-Mail can be configured as follwed:  <br>
+     * E-Mail can be configured as followed:  <br>
      * <code>
      *  MailClient mailer = new MailCLientImpl();
      *  mailer.loadConfigurationFromDatabase();
@@ -110,7 +111,7 @@ public final class MailClientService {
             postman.connect();
             postman.sendMessage(msg, addresses);
             postman.close();
-            LOGGER.log("E-Mail schould be sended.", LogLevel.TRACE);
+            LOGGER.log("E-Mail should be send.", LogLevel.TRACE);
 
         } catch (Exception ex) {
             LOGGER.catchException(ex);
@@ -121,8 +122,8 @@ public final class MailClientService {
      * Send a bulk of composed mails to a configured list of recipients. The
      * Bulk Mail supports a special feature, to interrupt the sending after an
      * defined amount of mails fo a configured time (milliseconds) until the
-     * next bulk can be send. After the termination the methot return th count
-     * of the sended mails.
+     * next bulk can be send. After the termination the method return th count
+     * of the send mails.
      *
      * @param mail as MailClient
      * @return sendedEmails as int
@@ -152,7 +153,21 @@ public final class MailClientService {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log(countSendedMails + " E-Mails was sended", LogLevel.DEBUG);
+        LOGGER.log(countSendedMails + " E-Mails was send", LogLevel.DEBUG);
         return countSendedMails;
+    }
+
+    /**
+     * Get the Configuration for the E-Mail Service from the Database and return
+     * the result as Map.
+     *
+     * @return mailConfiguration as Map
+     */
+    @API(status = STABLE, since = "1.1")
+    public Map<String, String> getDbConfiguration() {
+
+        MailClient client = new MailClientImpl();
+        client.loadConfigurationFromDatabase();
+        return client.getConfiguration();
     }
 }

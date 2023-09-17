@@ -115,5 +115,4 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      */
     @API(status = STABLE, since = "1.0")
     void updateConfigurationEntries(List<ConfigurationDO> configuration);
-
 }

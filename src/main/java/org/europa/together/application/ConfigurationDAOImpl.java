@@ -1,15 +1,15 @@
 package org.europa.together.application;
 
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of the ConfigurationDAO.
  */
 @Repository
-@SuppressWarnings("unchecked")
 public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String>
         implements ConfigurationDAO {
 
@@ -44,21 +43,18 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     public ConfigurationDO getConfigurationByKey(final String key,
             final String module, final String version) {
 
-        ConfigurationDO entry = null;
         String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        entry = (ConfigurationDO) session.createCriteria(ConfigurationDO.class)
-                .add(Restrictions.eq("key", hash))
-                .add(Restrictions.eq("modulName", module))
-                .add(Restrictions.eq("version", version))
-                .uniqueResult();
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
 
-        if (entry != null) {
-            LOGGER.log("getValueByKey() : " + entry.toString(), LogLevel.DEBUG);
-        } else {
-            LOGGER.log("ConfigurationByKey() : key: " + key + " for "
-                    + module + " not found.", LogLevel.WARN);
-        }
+        // create Criteria
+        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
+        query.where(builder.equal(root.get("key"), hash),
+                builder.equal(root.get("modulName"), module),
+                builder.equal(root.get("version"), version));
+
+        ConfigurationDO entry = mainEntityManagerFactory.createQuery(query).getSingleResult();
+        LOGGER.log("getValueByKey() : " + entry.toString(), LogLevel.DEBUG);
         return entry;
     }
 
@@ -66,32 +62,47 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllConfigurationSetEntries(final String module,
             final String version, final String configSet) {
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        return session.createCriteria(ConfigurationDO.class)
-                .add(Restrictions.eq("modulName", module))
-                .add(Restrictions.eq("version", version))
-                .add(Restrictions.eq("configurationSet", configSet))
-                .list();
+
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
+
+        // create Criteria
+        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
+        query.where(builder.equal(root.get("modulName"), module),
+                builder.equal(root.get("version"), version),
+                builder.equal(root.get("configurationSet"), configSet));
+
+        return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllModuleEntries(final String module) {
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        return session.createCriteria(ConfigurationDO.class)
-                .add(Restrictions.eq("modulName", module))
-                .addOrder(Order.asc("version"))
-                .list();
+
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
+
+        // create Criteria
+        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
+        query.where(builder.equal(root.get("modulName"), module));
+        query.orderBy(builder.asc(root.get("version")));
+
+        return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ConfigurationDO> getAllDepecatedEntries() {
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        return session.createCriteria(ConfigurationDO.class)
-                .add(Restrictions.eq("depecated", true))
-                .addOrder(Order.asc("version"))
-                .list();
+
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
+
+        // create Criteria
+        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
+        query.where(builder.equal(root.get("depecated"), Boolean.TRUE));
+        query.orderBy(builder.asc(root.get("version")));
+
+        return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
     @Override
@@ -100,13 +111,17 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
             final String key, final String configSet) {
 
         String hash = StringUtils.calculateHash(key, HashAlgorithm.SHA256);
-        Session session = mainEntityManagerFactory.unwrap(Session.class);
-        return session.createCriteria(ConfigurationDO.class)
-                .add(Restrictions.eq("key", hash))
-                .add(Restrictions.eq("modulName", module))
-                .add(Restrictions.eq("configurationSet", configSet))
-                .addOrder(Order.asc("version"))
-                .list();
+        CriteriaBuilder builder = mainEntityManagerFactory.getCriteriaBuilder();
+        CriteriaQuery<ConfigurationDO> query = builder.createQuery(ConfigurationDO.class);
+
+        // create Criteria
+        Root<ConfigurationDO> root = query.from(ConfigurationDO.class);
+        query.where(builder.equal(root.get("key"), hash),
+                builder.equal(root.get("modulName"), module),
+                builder.equal(root.get("configurationSet"), configSet));
+        query.orderBy(builder.asc(root.get("version")));
+
+        return mainEntityManagerFactory.createQuery(query).getResultList();
     }
 
     @Override
@@ -117,14 +132,11 @@ public class ConfigurationDAOImpl extends GenericDAOImpl<ConfigurationDO, String
         LOGGER.log("Module: " + module + " :: Version: " + version + " :: Key: " + key,
                 LogLevel.DEBUG);
         ConfigurationDO entry = getConfigurationByKey(key, module, version);
+        value = entry.getValue();
 
-        if (entry != null) {
-            value = entry.getValue();
-
-            if (StringUtils.isEmpty(value)) {
-                value = entry.getDefaultValue();
-                LOGGER.log("getValueByKey() returns the defaultValue " + value, LogLevel.DEBUG);
-            }
+        if (StringUtils.isEmpty(value)) {
+            value = entry.getDefaultValue();
+            LOGGER.log("getValueByKey() returns the defaultValue " + value, LogLevel.DEBUG);
         }
         return value;
     }

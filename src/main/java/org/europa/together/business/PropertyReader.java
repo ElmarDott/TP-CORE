@@ -144,7 +144,7 @@ public interface PropertyReader {
     /**
      * Get the property value as String.
      *
-     * @param key property given as Stirng
+     * @param key property given as String
      * @return String PropertyAsString
      */
     @API(status = STABLE, since = "1.0")

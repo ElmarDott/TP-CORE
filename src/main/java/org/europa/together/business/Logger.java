@@ -1,5 +1,6 @@
 package org.europa.together.business;
 
+import java.nio.file.Paths;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.LogLevel;
@@ -15,6 +16,18 @@ import org.springframework.stereotype.Component;
 @API(status = STABLE, since = "1.0")
 @Component
 public interface Logger {
+
+    /**
+     * Define the Configuration Set for the Logger.
+     */
+    @API(status = STABLE, since = "1.1")
+    String CONFIG_SET = "logger";
+
+    /**
+     * Detect the Directory where the application is running.
+     */
+    @API(status = STABLE, since = "1.1")
+    String SYSTEM_APP_DIR = Paths.get("").toAbsolutePath().toString();
 
     /**
      * Create a Log-Entry with the given message for the configured Log-Level.
@@ -41,9 +54,17 @@ public interface Logger {
      * NullPointerException is thrown, the StackTrace will be logged too.
      *
      * @param ex as Exception
-     * @return exception MEssage as String
+     * @return exception Message as String
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
 
+    /**
+     * Set the LogLevel programmatically. Log-Level: TRACE | DEBUG | INFO | WARN
+     * | ERROR
+     *
+     * @param level as LogLevel
+     */
+    @API(status = STABLE, since = "1.1")
+    void setLogLevel(LogLevel level);
 }
