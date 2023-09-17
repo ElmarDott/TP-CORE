@@ -124,7 +124,7 @@ public interface MailClient {
      * @param subject as String
      */
     @API(status = STABLE, since = "1.0")
-    void setSubject(final String subject);
+    void setSubject(String subject);
 
     /**
      * Add an attachment to the Attachment List. The file size of attachments
@@ -135,7 +135,7 @@ public interface MailClient {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean addAttachment(final String resource);
+    boolean addAttachment(String resource);
 
     /**
      * Add an Recipient to the Recipient List. The implementation check if the
@@ -147,7 +147,7 @@ public interface MailClient {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean addRecipent(final String recipient);
+    boolean addRecipent(String recipient);
 
     /**
      *
@@ -155,7 +155,7 @@ public interface MailClient {
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean loadConfigurationFromProperties(final String resource);
+    boolean loadConfigurationFromProperties(String resource);
 
     /**
      *

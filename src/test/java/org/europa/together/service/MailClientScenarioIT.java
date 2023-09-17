@@ -27,33 +27,28 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
-public class MailClientScenarioTest extends
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
+public class MailClientScenarioIT extends
         ScenarioTest<MailServiceGiven, MailServiceAction, MailServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LogbackLogger(MailClientScenarioTest.class);
+            = new LogbackLogger(MailClientScenarioIT.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
 
-    public static DatabaseActions CONNECTION = new JdbcActions(true);
+    public static DatabaseActions CONNECTION = new JdbcActions();
     public static GreenMail SMTP_SERVER = null;
-    private MailClient client = null;
-
-    public MailClientScenarioTest() {
-        client = new JavaMailClient();
-        //COMPOSE MAIL
-        client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
-        client.setSubject("JGiven Test E-Mail");
-        client.setContent(StringUtils.generateLoremIpsum(0));
-        client.addAttachment(DIRECTORY + "/Attachment.pdf");
-    }
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -143,10 +138,15 @@ public class MailClientScenarioTest extends
         recipientList.add("recipient_09@sample.org");
         recipientList.add("recipient_10@sample.org");
 
-        client.clearRecipents();
-        client.addRecipientList(recipientList);
-
         try {
+            //COMPOSE MAIL
+            MailClient client = new JavaMailClient();
+            client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
+            client.setSubject("JGiven Test E-Mail");
+            client.setContent(StringUtils.generateLoremIpsum(0));
+            client.addAttachment(DIRECTORY + "/Attachment.pdf");
+            client.addRecipientList(recipientList);
+
             // PreCondition
             given().email_get_configuration(client)
                     .and().smpt_server_is_available()
@@ -169,9 +169,15 @@ public class MailClientScenarioTest extends
     void scenario_sendSingleEmail() {
         LOGGER.log("Scenario B: Single Mail", LogLevel.DEBUG);
 
-        client.clearRecipents();
-        client.addRecipent("otto@sample.org");
         try {
+            //COMPOSE MAIL
+            MailClient client = new JavaMailClient();
+            client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
+            client.setSubject("JGiven Test E-Mail");
+            client.setContent(StringUtils.generateLoremIpsum(0));
+            client.addAttachment(DIRECTORY + "/Attachment.pdf");
+            client.addRecipent("otto@sample.org");
+
             // PreCondition
             given().email_get_configuration(client)
                     .and().smpt_server_is_available()

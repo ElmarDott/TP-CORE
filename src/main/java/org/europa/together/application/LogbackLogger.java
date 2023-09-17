@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of the Logger as Wrapper for SLF4j and logback Framework.
  */
+//@Repository
 @FeatureToggle(featureID = FEATURE_ID)
 public class LogbackLogger implements Logger {
 

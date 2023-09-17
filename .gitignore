@@ -1,5 +1,6 @@
 /target/
 /nbproject/
+/catalina*/
 /nbactions.xml
 /nb-configuration.xml
 /.idea/
@@ -11,3 +12,4 @@
 /*.log.*
 /cobertura.ser
 /faces-config.NavData
+/**/swagger-API.json

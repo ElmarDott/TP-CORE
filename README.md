@@ -1,4 +1,4 @@
-<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
+x<img src="https://enrebaja.files.wordpress.com/2018/04/logo_250x250.png" style="float:left; height:50%; width:50%;" />
 
 # together Platform :: CORE
 
@@ -17,7 +17,7 @@ charge for any kind of usage, commercial and private,
 
 ## Getting Started
 
-Components - Release: 1.0
+Components - Release: 2.0
  * [CORE-0001] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0001%5D-Application-Logger)
  * [CORE-0002] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0002%5D-generic-Data-Access-Object---DAO)
  * [CORE-0003] [Velocity Template Engine](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0003%5D-Velocity-Template-Engine)
@@ -33,14 +33,14 @@ Components - Release: 1.0
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
  * [CORE-0014] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
 
-Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
+Basic concepts of this project are: KISS (Keep it simple, stupid), COC (Convention
 over configurations) and DRY (Don't repeat yourself). Also we following the programming
-paradigms of: Test Driven Development (TDD), Behavirol Driven Development (BDD)
+paradigms of: Test Driven Development (TDD), Behavioral Driven Development (BDD)
 and Domain Driven Development (DDD).
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans 11.0, Maven 3.5.3 and Java 11 SE. The
+The CORE Module is build with NetBeans 11.3, Maven 3.6.1 and Java 11 SE. The
 implementation is also designed to run in Java EE 8 (e.g. Tomcat) environments.
 The most important dependencies are Hibernate 5.3, Spring 5.1 and JUnit 5. As
 Database Server (DBMS) we recommend PostgeSQL DBMS 11.
@@ -57,7 +57,7 @@ is running you are be able to setup the database by the following steps:
   DOC/>  https://docs.docker.com/samples/library/postgres/
 
 To create user and schemata (also for testing), you are be able to use TP-CM/dbms/src/sql/initial_postgresql.sql
-script. If you need a short introduction about docker, you can check our short tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
+script. If you need a short introduction about docker, you can check our tutorial on [YouTube](https://www.youtube.com/channel/UCBdJ0zh8xnMrQ-xQ4Gymy2Q).
 
 ### Build
 
@@ -71,16 +71,17 @@ access will skipped.
 ### Installing
 All released Artifacts will be available on Maven Central for usage. To fit with the
 hosting restriction on Sonatype Open Source Project Repository Hosting, it was necessary
-to change the POM GAV. As Result the java packages do not fit with the pom GAV. So you
-are be able to use TP-CORE in your project as dependency wit the following entry:
+to change the POM GAV. As Result the Java packages do not fit with the pom GAV. So you
+are be able to use the artifact in your project as dependency with the following entry:
 
 Please check the Release Notes for published Artifact Versions.
 **Maven**
+
 ```
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.2</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -99,8 +100,8 @@ project. Everyone is welcome, even beginners in programming. We also appreciate
 help by optimizing our documentation and creating tutorials.
 
 Mistakes happen. But we only able to fix them, when we you inform us you find a
-bug. Do not heasitat to send a report in the way you feel common. We try to give
-as much as possile fast & direct support.
+bug. Do not hesitate to send a report in the way you feel common. We try to give
+as much as possible fast & direct support.
 
 In the case you like this project, let me know it and rate it with a star.
 
@@ -108,11 +109,22 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
+| 2.1.0  | published 12/2020
+|        | - extend StringUtils.createDateFromString()
+|        | - extend TreeWalker.validate()
+|        | - extend CryptoTools.generateKeyPair()
+|        | - extend Constraints with TimeZone entry
+|        | - separate UnitTests from IntegrationTests
+|        | - JSON lib replace flexjson for Jackson data-bind
+|        | - bugfix: optimize Spring DI
+|        | - replace JodaTime for java.time Java 8 compatibility (QRCodeGenerator & Validator)
+|        | - replace 3CPO Connection Pool with Commons DBCP2 for Java 8 compatibility
+|--------|----------------------------------------------------------------------
 | 2.0.2  | published 01/2020
 |        | - move internal implementation classes to package internal
-|        | - bugfix; add Java Modul name to MANIFEST.MF
+|        | - bugfix: add Java Modul name to MANIFEST.MF
 |        | - bugfix; cleanup test case imports
-|        | - bugfix; ConfigurationDO rename MODUL_VERSION to SERVIC_VERSION
+|        | - bugfix; ConfigurationDO rename MODULE_VERSION to SERVICE_VERSION
 |--------|----------------------------------------------------------------------
 | 2.0.1  | published 12/2019
 |        | - bugfix; DAO visibilities

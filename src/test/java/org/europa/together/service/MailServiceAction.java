@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -18,13 +19,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class MailServiceAction extends Stage<MailServiceAction> {
 
     private static final Logger LOGGER
             = new LogbackLogger(MailServiceAction.class);
 
-    private final MailClientService service = new MailClientService();
+    private MailClientService service = new MailClientService();
 
     public MailServiceAction send_email(MailClient client) {
         try {

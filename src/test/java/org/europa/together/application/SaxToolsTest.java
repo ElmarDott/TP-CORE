@@ -1,6 +1,6 @@
 package org.europa.together.application;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.io.File;
 import org.europa.together.business.Logger;
 import org.europa.together.business.XmlTools;
@@ -16,21 +16,28 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class SaxToolsTest {
 
+    private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
     private static final String FILE_PATH = "org/europa/together/xml";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
 
-    private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
     private static final File DTD = new File(Constraints.SYSTEM_APP_DIR + "/simple.dtd");
     private static final File SCHEMA = new File(Constraints.SYSTEM_APP_DIR + "/simple.xsd");
 
+    @Autowired
     private XmlTools xmlTools;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
@@ -85,8 +92,6 @@ public class SaxToolsTest {
     void testConstructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
 
-        xmlTools = new SaxTools();
-        LOGGER.log("regular call", LogLevel.DEBUG);
         assertThat(SaxTools.class, hasValidBeanConstructor());
     }
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -18,14 +19,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class LoggingServiceOutcome extends Stage<LoggingServiceOutcome> {
 
     private static final Logger LOGGER
             = new LogbackLogger(LoggingServiceOutcome.class);
 
     private String configFile = Constraints.SYSTEM_APP_DIR + "/logback.xml";
-    private final LoggingService loggingService = new LoggingService();
+
+    private LoggingService loggingService = new LoggingService();
 
     public LoggingServiceOutcome configuration_is_present_in_application_directory() {
 

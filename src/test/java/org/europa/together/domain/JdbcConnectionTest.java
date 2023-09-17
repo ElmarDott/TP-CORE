@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 public class JdbcConnectionTest {
 
     private static final Logger LOGGER = new LogbackLogger(JdbcConnectionTest.class);
-    private static DatabaseActions actions = new JdbcActions(true);
+    private static DatabaseActions actions = new JdbcActions();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -79,7 +79,7 @@ public class JdbcConnectionTest {
         LOGGER.log("TEST CASE: getJdbcMetaData()", LogLevel.DEBUG);
 
         try {
-            DatabaseActions actions = new JdbcActions(true);
+            DatabaseActions actions = new JdbcActions();
             actions.connect("default");
             JdbcConnection metaData = actions.getJdbcMetaData();
 

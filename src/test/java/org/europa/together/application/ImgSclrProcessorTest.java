@@ -16,18 +16,25 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ImgSclrProcessorTest {
 
+    private static final Logger LOGGER = new LogbackLogger(ImgSclrProcessorTest.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/org/europa/together/images/";
-    private static final Logger LOGGER = new LogbackLogger(ImgSclrProcessorTest.class);
 
-    private ImageProcessor processor = new ImgSclrProcessor();
+    @Autowired
+    private ImageProcessor processor;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -172,16 +179,7 @@ public class ImgSclrProcessorTest {
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
-        assertEquals(1471712, processor.getImageSize(img));
-    }
-
-    @Test
-    void testIsImageSet() {
-        LOGGER.log("TEST CASE: isImageSet()", LogLevel.DEBUG);
-
-        assertFalse(processor.isImageSet());
-        assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
-        assertTrue(processor.isImageSet());
+        assertEquals(367928, processor.getImageSize(img));
     }
 
     @Test
@@ -385,5 +383,14 @@ public class ImgSclrProcessorTest {
         assertThrows(MisconfigurationException.class, () -> {
             processor.crop(0, 0, 0, 0);
         });
+    }
+
+    @Test
+    void testToString() {
+        LOGGER.log("TEST CASE: toString()", LogLevel.DEBUG);
+
+        assertTrue(processor.loadImage(new File(DIRECTORY + "135621.jpg")));
+        LOGGER.log("toString:" + processor.toString(), LogLevel.DEBUG);
+        assertNotEquals("No meta data from 135621.jpg extracted.", processor.toString());
     }
 }

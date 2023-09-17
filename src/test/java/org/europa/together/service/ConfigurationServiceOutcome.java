@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -21,14 +20,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class ConfigurationServiceOutcome extends Stage<ConfigurationServiceOutcome> {
 
     private static final Logger LOGGER
             = new LogbackLogger(ConfigurationServiceOutcome.class);
 
     @Autowired
-    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     public ConfigurationServiceOutcome check_default_entries() {

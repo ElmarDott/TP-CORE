@@ -4,6 +4,7 @@ import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.TreeNode;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,7 +39,9 @@ public interface TreeWalker {
     boolean addRoot(TreeNode root);
 
     /**
-     * Test if a node is a element of the tree.
+     * Test if a node is a element of the tree. <b>This function do not validate
+     * if all tree elements are well connected.</b> This tests returns true if
+     * the Element is added to the tree list.
      *
      * @param node as TreeNode
      * @return true on success
@@ -129,12 +132,14 @@ public interface TreeWalker {
     TreeNode getNodeByUuid(String uuid);
 
     /**
-     * Get the root TreeNode.
+     * Get the root TreeNode. If no root is set the function throw a
+     * MisconfigurationException.
      *
      * @return root as TreeNode
+     * @throws org.europa.together.exceptions.MisconfigurationException on Error
      */
     @API(status = STABLE, since = "1.0")
-    TreeNode getRoot();
+    TreeNode getRoot() throws MisconfigurationException;
 
     /**
      * Add the node to the tree. Check if the node is already exist in the tree
@@ -173,4 +178,19 @@ public interface TreeWalker {
      */
     @API(status = STABLE, since = "1.0")
     void merge(String parentUuid, TreeWalker appendingTree);
+
+    /**
+     * Check if the tree is valid.A valid tree has no "unconnected" elements
+     * (treeNodes). There are three failure types:<br>
+     * <li>1: Single TreeNode elements without a parent</li>
+     * <li>2: Connected TreeNode fragments without a root</li>
+     * <li>3: Multiple Trees with root element</li>
+     * Those three types can occur in various combinations.
+     *
+     * @param tree as List
+     * @return true on success
+     * @throws org.europa.together.exceptions.MisconfigurationException on Error
+     */
+    @API(status = STABLE, since = "2.1")
+    boolean validateTree(List<TreeNode> tree) throws MisconfigurationException;
 }

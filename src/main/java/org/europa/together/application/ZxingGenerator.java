@@ -13,6 +13,9 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
@@ -66,6 +69,9 @@ public class ZxingGenerator implements QrCodeGenerator {
         if (contact == null || contact.isEmpty()) {
             LOGGER.log("Contact information are empty.", LogLevel.WARN);
         } else {
+            LocalDateTime now = LocalDateTime.now();
+            String dateStr
+                    = now.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"));
 
             data = "BEGIN:VCARD\n VERSION:3.0\n PROFILE:VCARD\n"
                     + "N:" + contact.get("name") + ";"
@@ -94,8 +100,20 @@ public class ZxingGenerator implements QrCodeGenerator {
                     + contact.get("home-zipcode") + "\\n " + contact.get("home-country") + "\n"
                     + "URL:" + contact.get("homepage") + "\n"
                     + "EMAIL:" + contact.get("e-mail") + "\n"
-                    + "REV:" + formatDateTime(new DateTime()) + "\nEND:VCARD";
+                    + "REV:" + dateStr + "\nEND:VCARD";
         }
+        return data;
+    }
+
+    @Override
+    public String generateDataForCalenderEvent(final String event,
+            final ZonedDateTime start, final ZonedDateTime end) {
+
+        String data = "BEGIN:VEVENT\n"
+                + "SUMMARY:" + event
+                + "\n DTSTART:" + start.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))
+                + "\n DTEND: " + end.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))
+                + "\n END:VEVENT";
         return data;
     }
 
@@ -104,9 +122,10 @@ public class ZxingGenerator implements QrCodeGenerator {
             final DateTime start, final DateTime end) {
 
         String data = "BEGIN:VEVENT\n"
-                + "SUMMARY:" + event + "\n DTSTART:" + formatDateTime(start)
-                + "\n DTEND: " + formatDateTime(end) + "\n"
-                + "END:VEVENT";
+                + "SUMMARY:" + event
+                + "\n DTSTART:" + formatDateTime(start)
+                + "\n DTEND: " + formatDateTime(end)
+                + "\n END:VEVENT";
         return data;
     }
 
@@ -160,6 +179,7 @@ public class ZxingGenerator implements QrCodeGenerator {
         return decode;
     }
 
+    //deprecated
     private String formatDateTime(final DateTime date) {
         String format = date.toString();
         format = format.replace("-", "");
@@ -167,5 +187,4 @@ public class ZxingGenerator implements QrCodeGenerator {
         format = format.substring(0, format.length() - SUBSTRING);
         return format + "Z";
     }
-
 }

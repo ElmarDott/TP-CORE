@@ -26,29 +26,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao-test.xml"})
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JavaMailClientTest {
 
+    private static final Logger LOGGER = new LogbackLogger(JavaMailClientTest.class);
+    private static DatabaseActions CONNECTION = new JdbcActions();
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
-
-    private static final Logger LOGGER = new LogbackLogger(JavaMailClientTest.class);
+    private static GreenMail SMTP_SERVER;
 
     @Autowired
-    @Qualifier("javaMailClient")
     private MailClient mailer;
-
-    private static DatabaseActions CONNECTION = new JdbcActions(true);
-    private static GreenMail SMTP_SERVER;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll

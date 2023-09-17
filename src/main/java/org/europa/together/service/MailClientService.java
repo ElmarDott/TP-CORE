@@ -19,11 +19,9 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.application.JavaCryptoTools;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,10 +39,9 @@ public final class MailClientService {
     private static final long serialVersionUID = 206L;
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
 
-    private CryptoTools cryptoTools = new JavaCryptoTools();
-
     @Autowired
-    @Qualifier("configurationHbmDAO")
+    private CryptoTools cryptoTools;
+    @Autowired
     private ConfigurationDAO configurationDAO;
 
     /**

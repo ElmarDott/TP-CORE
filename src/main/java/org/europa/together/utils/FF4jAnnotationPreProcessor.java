@@ -21,6 +21,7 @@ import org.europa.together.application.internal.AnnotatedClass;
 import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper;
 import org.europa.together.business.FeatureToggle;
 import org.ff4j.core.Feature;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * PreProcessor for the @FeatureToggle Annotation.
@@ -33,8 +34,9 @@ import org.ff4j.core.Feature;
 public class FF4jAnnotationPreProcessor extends AbstractProcessor {
 
     private FF4jProcessor ff4j;
-    private FF4jAnnotationPreProcessorHelper annotationHelper;
     private Filer filer;
+    @Autowired
+    private FF4jAnnotationPreProcessorHelper annotationHelper;
 
     /**
      * Constructor.
@@ -46,8 +48,6 @@ public class FF4jAnnotationPreProcessor extends AbstractProcessor {
 
         ff4j = new FF4jProcessor();
 //        ff4j.setConfigFile(testConfigFile);
-
-        annotationHelper = new FF4jAnnotationPreProcessorHelper();
     }
 
     @Override

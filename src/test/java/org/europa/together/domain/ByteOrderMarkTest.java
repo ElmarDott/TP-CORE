@@ -34,7 +34,7 @@ public class ByteOrderMarkTest {
     }
 
     @Test
-    public void testGetBytes() {
+    void testGetBytes() {
         LOGGER.log("TEST CASE: getBytes()", LogLevel.DEBUG);
 
         assertArrayEquals(new byte[]{},

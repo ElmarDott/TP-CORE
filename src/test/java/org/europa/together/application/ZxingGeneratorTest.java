@@ -2,6 +2,8 @@ package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.io.File;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.Logger;
@@ -9,7 +11,6 @@ import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,19 +18,23 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
 @RunWith(JUnitPlatform.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ZxingGeneratorTest {
 
+    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + FILE_PATH;
-
-    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -166,15 +171,18 @@ public class ZxingGeneratorTest {
     }
 
     @Test
-    void testCaledar() {
-        LOGGER.log("TEST CASE: caledar()", LogLevel.DEBUG);
+    void testCalendar() {
+        LOGGER.log("TEST CASE: calendar()", LogLevel.DEBUG);
 
         String out = Constraints.SYSTEM_APP_DIR + "/target/test-classes/" + "100_event.png";
         QrCodeGenerator generator = new ZxingGenerator();
         generator.setup(out, 100);
+
         assertTrue(generator.encode(
                 generator.generateDataForCalenderEvent("Appointment",
-                        new DateTime(2017, 1, 1, 0, 1, 0),
-                        new DateTime(2017, 12, 31, 23, 59, 0))));
+                        ZonedDateTime.of(2017, 1, 1, 1, 0, 0, 0, ZoneId.of("UTC")),
+                        ZonedDateTime.of(2017, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC"))
+                )
+        ));
     }
 }

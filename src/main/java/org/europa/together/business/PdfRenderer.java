@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0", consumers = "ITextRenderer")
+@API(status = STABLE, since = "1.0", consumers = "ITextRenderer, OpenPdfRenderer")
 @Component
 public interface PdfRenderer {
 
