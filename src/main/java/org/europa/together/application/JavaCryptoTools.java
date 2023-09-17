@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,10 +27,10 @@ import org.europa.together.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of java cryptography.
+ * Implementation of Java cryptography.
  */
 @Repository
-public class JavaCryptoTools implements CryptoTools {
+public class JavaCryptoTools implements CryptoTools, Serializable {
 
     private static final long serialVersionUID = 14L;
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoTools.class);
@@ -45,17 +46,14 @@ public class JavaCryptoTools implements CryptoTools {
     @Override
     public String calculateHash(final String plainText,
             final HashAlgorithm algorithm) {
-
         String hash = null;
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm.toString());
             md.reset();
             hash = StringUtils.byteToString(md.digest(plainText.getBytes("UTF-8")));
-
             String msg = "Utils.calculateHash(" + algorithm.toString() + ")"
                     + " plaintext: " + plainText + " hash: " + hash;
             LOGGER.log(msg, LogLevel.DEBUG);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -70,18 +68,12 @@ public class JavaCryptoTools implements CryptoTools {
 
     @Override
     public KeyPair generateCipherKeyPair(final CipherAlgorithm cipher) {
-
         KeyPair pair = null;
         try {
             int lenght = Constraints.INT_4096;
-            if (cipher.equals(CipherAlgorithm.EC)) {
-                lenght = Constraints.INT_512;
-            }
-
             KeyPairGenerator keyring = KeyPairGenerator.getInstance(cipher.toString());
             keyring.initialize(lenght, new SecureRandom());
             pair = keyring.generateKeyPair();
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -95,28 +87,23 @@ public class JavaCryptoTools implements CryptoTools {
         if (!StringUtils.isEmpty(path)) {
             destination = path;
         }
-
         OutputStream privateFile = null;
         OutputStream publicFile = null;
-
         try {
             byte[] publicKey = keyRing.getPublic().getEncoded();
             byte[] privateKey = keyRing.getPrivate().getEncoded();
-
             String privateCipher = keyRing.getPrivate().getAlgorithm();
             privateFile = new FileOutputStream(destination + "/"
                     + privateCipher + ".key");
             privateFile.write(privateKey);
             privateFile.close();
             LOGGER.log("Private Key stored in PKCS#8 format.", LogLevel.DEBUG);
-
             String publicCipher = keyRing.getPublic().getAlgorithm();
             publicFile = new FileOutputStream(destination + "/"
                     + publicCipher + ".pub");
             publicFile.write(publicKey);
             publicFile.close();
             LOGGER.log("Public Kex stored in X.509 format.", LogLevel.DEBUG);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -128,7 +115,6 @@ public class JavaCryptoTools implements CryptoTools {
         try {
             Path path = Paths.get(keyFile);
             byte[] bytes = Files.readAllBytes(path);
-
             PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(bytes);
             KeyFactory kf = KeyFactory.getInstance(algorithm.toString());
             key = kf.generatePrivate(ks);
@@ -144,7 +130,6 @@ public class JavaCryptoTools implements CryptoTools {
         try {
             Path path = Paths.get(keyFile);
             byte[] bytes = Files.readAllBytes(path);
-
             X509EncodedKeySpec ks = new X509EncodedKeySpec(bytes);
             KeyFactory kf = KeyFactory.getInstance(algorithm.toString());
             key = kf.generatePublic(ks);

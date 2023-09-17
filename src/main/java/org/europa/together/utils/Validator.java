@@ -6,14 +6,14 @@ import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 
 /**
- * A simple RexEx Validator.
+ * A simple RexEx Validator.<br>
+ * ### REGEX VALIDATION PATTERN<br>
+ * ### * = 0 or more quantifier<br>
+ * ### + = 1 or more quantifier<br>
+ * ### ? = 0 or 1 quantifier
  */
 public final class Validator {
 
-    //  ### REGEX VALIDATION PATTERN
-    //  ###  * = 0 or more quantifier
-    //  ###  + = 1 or more quantifier
-    //  ###  ? = 0 or 1 quantifier
     private static final Logger LOGGER = new LogbackLogger(Validator.class);
 
     /**
@@ -24,7 +24,7 @@ public final class Validator {
     }
 
     /**
-     * Printable ASCII Character: a-z A-Z.
+     * Printable ASCII character: a-z A-Z.
      */
     public static final String ASCII_CHARACTER = "[a-zA-Z ]+";
 
@@ -39,7 +39,7 @@ public final class Validator {
     public static final String DIGIT = "[0-9 ]+";
 
     /**
-     * Floating Point.
+     * Floating point.
      */
     public static final String FLOATING_POINT = "-?[0-9 ]+(.[0-9]+)?";
 
@@ -68,7 +68,7 @@ public final class Validator {
             = "((0[0-9])|(1[0-9])|(2[0-3])):((0[0-9])|([1-5][0-9]))";
 
     /**
-     * IP Adress (Version 4) with optional Port e. g.: 127.0.0.1:80
+     * IP Adress (Version 4) with optional port e. g.: 127.0.0.1:80
      * (1-255).(0-255).(0-255).(0-255):(1-65535)
      */
     public static final String IP4_ADDRESS
@@ -84,7 +84,7 @@ public final class Validator {
             + "|:6553[0-5])?"; //          65.530-65.535
 
     /**
-     * Test if a Email Address in the typical format, like:<br>
+     * Test if a email address in the typical format, like:<br>
      * _a-zA-Z0-9-(.)_a-zA-Z0-9-(@)[a-zA-Z0-9-]*(.)a-zA-Z{2}.
      */
     public static final String E_MAIL_ADDRESS = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -101,13 +101,13 @@ public final class Validator {
             + "(-?[A-Za-z]){0,10}";
 
     /**
-     * Check if the Variable test inside the range of the borders min and max.
+     * Check if the variable test inside the range of the borders min and max.
      * The borders and all numbers between are allowed values for the variable.
      *
      * @param test as Integer
      * @param min as Integer
      * @param max as Integer
-     * @return result as Boolean
+     * @return true on success
      */
     public static boolean isIntegerInRange(final int test, final int min, final int max) {
         boolean check = false;
@@ -159,7 +159,7 @@ public final class Validator {
     }
 
     /**
-     * Test if a given Date is inside a range between a min and max. The
+     * Test if a given date is inside a range between a min and max. The
      * boundaries are inside the range.
      *
      * @param check as DateTime
@@ -169,13 +169,68 @@ public final class Validator {
      */
     public static boolean isDateInRange(
             final ZonedDateTime check, final ZonedDateTime min, final ZonedDateTime max) {
-
         boolean success = false;
         if (check != null && min != null && max != null) {
             if (isDateBefore(check, max) && isDateAfter(check, min)) {
                 success = true;
             } else {
                 LOGGER.log("Date: " + check.toString() + " is not in range.", LogLevel.WARN);
+            }
+        }
+        return success;
+    }
+
+    /**
+     * Test if a 10 or 13 digit ISBN number is valid.
+     *
+     * @param isbn as String
+     * @return true on success
+     */
+    public static boolean isIsbn(final String isbn)
+            throws NumberFormatException {
+        boolean success = false;
+        final int value09 = 9;
+        final int value10 = 10;
+        final int value11 = 11;
+        final int value13 = 13;
+        int tmp = 0;
+        String check = isbn.replaceAll("-", "");
+        int size = check.length();
+        if (StringUtils.isEmpty(isbn) || size != value10 && size != value13) {
+            throw new NumberFormatException(
+                    "The format has not the correct lenght of a valid ISBN.");
+        }
+
+        for (int i = 0; i < size; i++) {
+            String element = check.substring(i, i + 1);
+
+            int digit;
+            if (size == value10 && i == value09 && element.equalsIgnoreCase("x")) {
+                digit = value10;
+            } else {
+                digit = Integer.parseInt(element);
+            }
+
+            if (size == value10) {
+                tmp += digit * (value10 - i);
+                LOGGER.log("(ISBN-10 SUM: " + tmp, LogLevel.DEBUG);
+            } else {
+                if (i % 2 == 0) {
+                    tmp += digit;
+                } else {
+                    tmp += digit * 3;
+                }
+                LOGGER.log("(ISBN-13 SUM: " + tmp, LogLevel.DEBUG);
+            }
+        }
+
+        if (size == value10) {
+            if (tmp % value11 == 0) {
+                success = true;
+            }
+        } else {
+            if (tmp % value10 == 0) {
+                success = true;
             }
         }
         return success;
@@ -199,5 +254,4 @@ public final class Validator {
         }
         return test;
     }
-
 }

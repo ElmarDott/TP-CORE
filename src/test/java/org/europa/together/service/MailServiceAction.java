@@ -4,12 +4,9 @@ import com.tngtech.jgiven.Stage;
 import java.util.Map;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.europa.together.business.MailClient;
 import org.europa.together.domain.Mail;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * JGiven Invariants for MailService Test Scenarios.
  */
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class MailServiceAction extends Stage<MailServiceAction> {

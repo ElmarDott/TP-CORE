@@ -6,14 +6,11 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
@@ -176,6 +173,7 @@ public class ValidatorTest {
         assertTrue(Validator.validate("21:00", Validator.TIME_24H));
         assertTrue(Validator.validate("22:00", Validator.TIME_24H));
         assertTrue(Validator.validate("23:00", Validator.TIME_24H));
+        assertTrue(Validator.validate("23:59", Validator.TIME_24H));
     }
 
     @Test
@@ -319,14 +317,14 @@ public class ValidatorTest {
         assertTrue(Validator.validate("9", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0.0", Validator.SEMANTIC_VERSION_NUMBER));
-//        assertTrue(Validator.validate("1.10", Validator.SEMANTIC_VERSION_NUMBER));
+        assertTrue(Validator.validate("1.10", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.0.10", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("10.100.1000", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("123.1234.12345", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1234", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("12.1-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.109.1234567890", Validator.SEMANTIC_VERSION_NUMBER));
-//
+
         assertTrue(Validator.validate("1-xYz", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.2-SNAPSHOT", Validator.SEMANTIC_VERSION_NUMBER));
         assertTrue(Validator.validate("1.2.3-xyzXYZxyzX", Validator.SEMANTIC_VERSION_NUMBER));
@@ -449,7 +447,13 @@ public class ValidatorTest {
     }
 
     @Test
-    void isDateNotInRange_LowerBondery() {
+    void isDateNotInRange() {
+        ZonedDateTime check = ZonedDateTime.now();
+        assertFalse(Validator.isDateInRange(check, check, check));
+    }
+
+    @Test
+    void isDateNotInRange_LowerBoundry() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
                 ZonedDateTime.of(2014, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
@@ -457,6 +461,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_UpperBoundry() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2016, 12, 31, 23, 59, 0, 0, ZoneId.of("UTC")),
@@ -465,6 +470,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_After() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2017, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC")),
@@ -473,6 +479,7 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_Before() {
         assertFalse(Validator.isDateInRange(
                 ZonedDateTime.of(2013, 1, 1, 0, 0, 0, 0, ZoneId.of("UTC")),
@@ -481,14 +488,80 @@ public class ValidatorTest {
         ));
     }
 
+    @Test
     void isDateNotInRange_NullPointer() {
-        assertFalse(Validator.isDateInRange(null, null, null));
+        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now()));
+        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), ZonedDateTime.now(), null));
+
         assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, null));
         assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), null));
         assertFalse(Validator.isDateInRange(null, null, ZonedDateTime.now()));
-        assertFalse(Validator.isDateInRange(null, ZonedDateTime.now(), ZonedDateTime.now()));
-        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), ZonedDateTime.now(), null));
-        assertFalse(Validator.isDateInRange(ZonedDateTime.now(), null, ZonedDateTime.now())
-        );
+
+        assertFalse(Validator.isDateInRange(null, null, null));
+    }
+
+    @Test
+    void isValidIsbn10() {
+        assertTrue(Validator.isIsbn("3836278340"));
+        assertTrue(Validator.isIsbn("38-3627-834-0"));
+        assertTrue(Validator.isIsbn("0-9752298-0-X"));
+    }
+
+    @Test
+    void isInvalidIsbn10() {
+        assertFalse(Validator.isIsbn("3836278344"));
+        assertFalse(Validator.isIsbn("9836278340"));
+    }
+
+    @Test
+    void isValidIsbn13() {
+        assertTrue(Validator.isIsbn("9783836278348"));
+        assertTrue(Validator.isIsbn("978-3-8362-7834-8"));
+    }
+
+    @Test
+    void isInvalidIsbn13() {
+        assertFalse(Validator.isIsbn("9783846278348"));
+    }
+
+    @Test
+    void isInvalidIsbn_NotInterger() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("d836278340");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn_empty() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn10_toShort() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("383627834");
+        });
+    }
+
+    void isInvalidIsbn10_tolong() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("38362783400");
+        });
+    }
+
+    @Test
+    void isInvalidIsbn13_toShort() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("978383627834");
+        });
+    }
+
+    void isInvalidIsbn13_tolong() throws Exception {
+        assertThrows(Exception.class, () -> {
+            Validator.isIsbn("97838362783481");
+        });
     }
 }

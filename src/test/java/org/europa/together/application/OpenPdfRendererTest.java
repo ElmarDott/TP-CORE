@@ -18,13 +18,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class OpenPdfRendererTest {
@@ -34,8 +32,8 @@ public class OpenPdfRendererTest {
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
-    //@Autowired
-    private PdfRenderer pdf = new OpenPdfRenderer();
+    @Autowired
+    private PdfRenderer pdf;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -69,7 +67,7 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void loadPdf() {
+    void loadPdf() throws Exception {
         LOGGER.log("TEST CASE: loadPdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -78,13 +76,15 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failLoadPdf() {
+    void failLoadPdf() throws Exception {
         LOGGER.log("TEST CASE: failLoadPdf", LogLevel.DEBUG);
-        assertNull(pdf.loadDocument(null));
+        assertThrows(Exception.class, () -> {
+            pdf.loadDocument(null);
+        });
     }
 
     @Test
-    void loadAndWritePdf() {
+    void loadAndWritePdf() throws Exception {
         LOGGER.log("TEST CASE: loadAndWritePdf", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -97,17 +97,17 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failWritePdf() {
+    void failWritePdf() throws Exception {
         LOGGER.log("TEST CASE: failWritePdf", LogLevel.DEBUG);
 
-        String out = DIRECTORY + FILE_PATH + "/fail.pdf";
-        pdf.writeDocument(pdf.loadDocument(null), null);
-
-        assertNull(pdf.loadDocument(new File(out)));
+        assertThrows(Exception.class, () -> {
+            String out = DIRECTORY + FILE_PATH + "/fail.pdf";
+            pdf.writeDocument(pdf.loadDocument(null), null);
+        });
     }
 
     @Test
-    void testRemovePages() {
+    void removePages() throws Exception {
         LOGGER.log("TEST CASE: removePages", LogLevel.DEBUG);
 
         File file = new File(DIRECTORY + FILE_PATH + "/document.pdf");
@@ -123,26 +123,35 @@ public class OpenPdfRendererTest {
     }
 
     @Test
-    void failRemovePages() {
+    void failRemovePages() throws Exception {
         LOGGER.log("TEST CASE: failRemovePages", LogLevel.DEBUG);
-        assertNull(pdf.removePage(pdf.loadDocument(null), 1));
+        assertThrows(Exception.class, () -> {
+            pdf.removePage(pdf.loadDocument(null), 1);
+        });
     }
 
     @Test
-    void failRenderHtmlToPdf() {
+    void failRenderHtmlToPdf() throws Exception {
         LOGGER.log("TEST CASE: failRenderHtmlToPdf", LogLevel.DEBUG);
 
-        pdf.renderDocumentFromHtml(DIRECTORY + "fail.pdf", "");
-        assertFalse(new File(DIRECTORY + "fail.pdf").exists());
+        assertThrows(Exception.class,
+                () -> {
+                    pdf.renderDocumentFromHtml(
+                            null, "no content");
+                });
     }
 
     @Test
-    void simpleRenderHtmlToPdf() {
+    void simpleRenderHtmlToPdf() throws Exception {
         LOGGER.log("TEST CASE: renderHtmlToPdf", LogLevel.DEBUG);
 
         String html = "<h1>My First PDF Document</h1 > <p>"
                 + StringUtils.generateLoremIpsum(0) + "</p>";
 
+        pdf.setTitle("OpenPDF test document");
+        pdf.setAuthor("Elmar Dott");
+        pdf.setSubject("JUnit test");
+        pdf.setKeywords("test, junit5, openPDF");
         pdf.renderDocumentFromHtml(DIRECTORY + "test.pdf", html);
 
         assertTrue(new File(DIRECTORY + "test.pdf").exists());

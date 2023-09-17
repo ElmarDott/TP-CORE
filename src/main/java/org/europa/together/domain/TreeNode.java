@@ -6,21 +6,22 @@ import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
 /**
- * Data structure for a tree. A node is unique by is UUID, but in real
+ * Data structure for a tree.A node is unique by is UUID, but in real
  * environments is a more specified definition necessary. A parent node can not
  * have two child nods with the same name. for a user is then hard to
  * distinguish which child node is the right one. (e.g. Files and Folders)
+ *
+ * @param <T> as generic Class
  */
-public final class TreeNode {
+public final class TreeNode<T> {
 
     private static final Logger LOGGER = new LogbackLogger(TreeNode.class);
-
     private static final int HASH = 97;
 
     private String uuid;
     private String nodeName;
     private String parent;
-    private Object attributes;
+    private T value;
 
     /**
      * Constructor.
@@ -81,8 +82,8 @@ public final class TreeNode {
      *
      * @return value as Object
      */
-    public Object getValue() {
-        return attributes;
+    public T getValue() {
+        return value;
     }
 
     /**
@@ -90,8 +91,8 @@ public final class TreeNode {
      *
      * @param value as Object
      */
-    public void setValue(final Object value) {
-        this.attributes = value;
+    public void setValue(final T value) {
+        this.value = value;
     }
 
     /**
@@ -110,14 +111,12 @@ public final class TreeNode {
      * @param node as TreeNode
      * @return a copy of the TreeNode
      */
-    public TreeNode copy(final TreeNode node) {
-        TreeNode copy = new TreeNode();
-
+    public TreeNode<T> copy(final TreeNode<T> node) {
+        TreeNode<T> copy = new TreeNode<>();
         copy.uuid = node.uuid;
         copy.nodeName = node.nodeName;
         copy.parent = node.parent;
-        copy.attributes = node.attributes;
-
+        copy.value = node.value;
         return copy;
     }
 
@@ -126,7 +125,7 @@ public final class TreeNode {
         return "TreeNode{" + "uuid=" + uuid
                 + ", nodeName=" + nodeName
                 + ", parent=" + parent
-                + ", value=" + attributes + '}';
+                + ", value=" + value + '}';
     }
 
     @Override
@@ -136,14 +135,12 @@ public final class TreeNode {
 
     @Override
     public boolean equals(final Object obj) {
-
         boolean success = false;
         if (obj != null && obj instanceof TreeNode) {
-
             if (this == obj) {
                 success = true;
             } else {
-                final TreeNode other = (TreeNode) obj;
+                final TreeNode<?> other = (TreeNode<?>) obj;
                 if (Objects.equals(this.parent, other.parent)
                         && Objects.equals(this.nodeName, other.nodeName)) {
                     success = true;
@@ -155,5 +152,4 @@ public final class TreeNode {
         }
         return success;
     }
-
 }

@@ -5,8 +5,7 @@ package org.europa.together.domain;
  */
 public enum CipherAlgorithm {
 
-    RSA("RSA"),
-    EC("EC");
+    RSA("RSA");
 
     private final String value;
 

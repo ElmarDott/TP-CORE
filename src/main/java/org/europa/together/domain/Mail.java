@@ -2,9 +2,9 @@ package org.europa.together.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.activation.FileDataSource;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.Validator;
@@ -18,10 +18,8 @@ public class Mail {
 
     private String subject;
     private String message;
-
     private String mimeType;
     private long attachmentSize;
-
     private List<FileDataSource> attachmentList;
     private List<InternetAddress> recipientList;
 
@@ -36,16 +34,17 @@ public class Mail {
      * Add recipients from a List of Strings (E-Mail Address).
      *
      * @param recipients as List.
-     * @throws javax.mail.internet.AddressException on failure
+     * @throws jakarta.mail.internet.AddressException
      */
-    public void addRecipientList(final List<String> recipients) throws AddressException {
+    public void addRecipientList(final List<String> recipients)
+            throws AddressException {
         for (String recipient : recipients) {
             addRecipent(recipient);
         }
     }
 
     /**
-     * Add attachments from a List of Strings (resource path).
+     * Add attachments from a list of Strings (resource path).
      *
      * @param attachments as List
      */
@@ -56,17 +55,18 @@ public class Mail {
     }
 
     /**
-     * Return the whole List of attachments - FileDataSource.
+     * Return the whole list of attachments - FileDataSource.
      *
      * @return attachments as List
      */
     public List<FileDataSource> getAttachmentList() {
-        return attachmentList;
+        return List.copyOf(attachmentList);
     }
 
     /**
-     * Add an attachment to the Attachment List.The file size of attachments can
-     * be limited. To refer an attachment, set the resource e.g.: picture.png
+     * Add an attachment to the attachment list. The file size of attachments
+     * can be limited. To refer an attachment, set the resource e.g.:
+     * picture.png
      *
      * @param resource as String
      * @return true on success
@@ -96,56 +96,49 @@ public class Mail {
     }
 
     /**
-     * Reset the Attachment List.
+     * Reset the attachment list.
      */
     public void clearAttachments() {
         attachmentList.clear();
     }
 
     /**
-     * Get the whole list of Recipients - InternetAdress.
+     * Get the whole list of recipients - InternetAdress.
      *
      * @return recipients as List
      */
     public List<InternetAddress> getRecipentList() {
-        return recipientList;
+        return List.copyOf(recipientList);
     }
 
     /**
-     * Add an Recipient to the Recipient List.The implementation check if the
-     * recipient already exist in the List. Also the format of an valid e-mail
-     * address will be tested. If an given E-Mail address is not valid it will
-     * not added to the List.
+     * Add an recipient to the recipient l.The implementation check if the
+     * recipient already exist in the list.Also the format of an valid e-mail
+     * address will be tested. If an given e-mail address is not valid it will
+     * not added to the list.
      *
      * @param recipient as String
      * @return true on success
-     * @throws AddressException
+     * @throws jakarta.mail.internet.AddressException
      */
     public boolean addRecipent(final String recipient)
             throws AddressException {
         boolean success = false;
         InternetAddress mailAdress;
-        try {
+        if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
+            throw new AddressException("[" + recipient + "] is not a valid email Adress.");
+        }
+        mailAdress = new InternetAddress(recipient);
+        mailAdress.validate();
 
-            if (!Validator.validate(recipient, Validator.E_MAIL_ADDRESS)) {
-                throw new AddressException("[" + recipient + "] is not a valid email Adress.");
-            }
-            mailAdress = new InternetAddress(recipient);
-            mailAdress.validate();
-
-            //detect duplicate entries
-            if (recipientList.contains(mailAdress)) {
-                LOGGER.log("Address " + recipient + " already exist and will be ignored.",
-                        LogLevel.WARN);
-            } else {
-
-                recipientList.add(mailAdress);
-                success = true;
-                LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
-            }
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+        //detect duplicate entries
+        if (recipientList.contains(mailAdress)) {
+            LOGGER.log("Address " + recipient + " already exist and will be ignored.",
+                    LogLevel.WARN);
+        } else {
+            recipientList.add(mailAdress);
+            success = true;
+            LOGGER.log("Add " + recipient + " to the recipient list.", LogLevel.DEBUG);
         }
         return success;
     }
@@ -200,7 +193,7 @@ public class Mail {
     }
 
     /**
-     * Get the Content of a message.
+     * Get the content of a message.
      *
      * @return content as String
      */
@@ -209,7 +202,7 @@ public class Mail {
     }
 
     /**
-     * Add E-Mail content from a String.
+     * Add e-mail content from a String.
      *
      * @param message as String
      */

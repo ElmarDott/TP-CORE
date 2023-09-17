@@ -1,7 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -9,8 +9,6 @@ import static org.europa.together.service.MailClientScenarioIT.CONNECTION;
 import static org.europa.together.service.MailClientScenarioIT.SMTP_SERVER;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -19,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * JGiven PreConditions for MailService Test Scenarios.
  */
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class MailServiceGiven extends Stage<MailServiceGiven> {
@@ -32,7 +29,7 @@ public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     public MailServiceGiven service_has_database_connection() {
         try {
-            assertTrue(CONNECTION.connect("default"));
+            assertTrue(CONNECTION.connect("test"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

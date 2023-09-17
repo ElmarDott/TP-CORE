@@ -3,21 +3,13 @@ package org.europa.together.domain;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.ArrayList;
 import java.util.List;
-import javax.mail.internet.AddressException;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 public class MailTest {
 
@@ -61,7 +53,7 @@ public class MailTest {
     }
 
     @Test
-    void recipients() throws AddressException {
+    void recipients() throws Exception {
         LOGGER.log("TEST CASE: recipients", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -82,7 +74,7 @@ public class MailTest {
     }
 
     @Test
-    void addRecipentDetectDoubleEntries() throws AddressException {
+    void addRecipentDetectDoubleEntries() throws Exception {
         LOGGER.log("TEST CASE: addRecipentDetectDoubleEntries", LogLevel.DEBUG);
 
         Mail mail = new Mail();
@@ -94,30 +86,30 @@ public class MailTest {
     }
 
     @Test
-    void addRecipentValidationFail() throws AddressException {
+    void addRecipentValidationFail() throws Exception {
         LOGGER.log("TEST CASE: addRecipentValidationFail", LogLevel.DEBUG);
 
-        List<String> failure = new ArrayList<>();
-        failure.add("@domain");
-        failure.add("@domain");
-        failure.add("no_mail.domain");
-        failure.add("success@domain");
-        failure.add("success@domain");
-        failure.add("no_mail.domain");
-
         Mail mail = new Mail();
-        for (String entry : failure) {
-            assertFalse(mail.addRecipent(entry));
-        }
-        assertEquals(0, mail.getRecipentList().size());
+
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("@domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("no_mail.domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("success@domain"));
+        });
+        assertThrows(Exception.class, () -> {
+            assertFalse(mail.addRecipent("fail"));
+        });
     }
 
     @Test
-    void addRecipientList() throws AddressException {
+    void addRecipientList() throws Exception {
         LOGGER.log("TEST CASE: addRecipientList", LogLevel.DEBUG);
 
         List<String> recipients = new ArrayList<>();
-        recipients.add("fail");
         recipients.add("test@sample.com");
         recipients.add("test_01@sample.com");
         recipients.add("test_02@sample.com");

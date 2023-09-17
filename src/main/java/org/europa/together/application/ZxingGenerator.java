@@ -52,13 +52,11 @@ public class ZxingGenerator implements QrCodeGenerator {
     public void setup(final String fileOutputPath, final int dimensions) {
         this.dimensionHeight = dimensions;
         this.dimensionWidth = dimensions;
-
         this.fileOutputPath = fileOutputPath;
     }
 
     @Override
     public String generateDataForvCard(final Map<String, String> contact) {
-
         String data = null;
         if (contact == null || contact.isEmpty()) {
             LOGGER.log("Contact information are empty.", LogLevel.WARN);
@@ -66,7 +64,6 @@ public class ZxingGenerator implements QrCodeGenerator {
             LocalDateTime now = LocalDateTime.now();
             String dateStr
                     = now.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"));
-
             data = "BEGIN:VCARD\n VERSION:3.0\n PROFILE:VCARD\n"
                     + "N:" + contact.get("name") + ";"
                     + contact.get("surname") + ";;" + contact.get("gender") + ";\n"
@@ -102,7 +99,6 @@ public class ZxingGenerator implements QrCodeGenerator {
     @Override
     public String generateDataForCalendarEvent(final String event,
             final ZonedDateTime start, final ZonedDateTime end) {
-
         String data = "BEGIN:VEVENT\n"
                 + "SUMMARY:" + event
                 + "\n DTSTART:" + start.format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss"))
@@ -125,7 +121,6 @@ public class ZxingGenerator implements QrCodeGenerator {
     @Override
     public boolean encode(final String data) {
         boolean success = false;
-
         try {
             BitMatrix matrix = new MultiFormatWriter().encode(
                     new String(data.getBytes(charset), charset),
@@ -135,11 +130,9 @@ public class ZxingGenerator implements QrCodeGenerator {
                     errorMap);
             MatrixToImageWriter.writeToPath(matrix, "png", Paths.get(fileOutputPath));
             success = true;
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-
         return success;
     }
 
@@ -153,11 +146,9 @@ public class ZxingGenerator implements QrCodeGenerator {
                                     new BufferedImageLuminanceSource(
                                             ImageIO.read(new FileInputStream(qrCode)))));
             decode = new MultiFormatReader().decode(binaryBitmap).getText();
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-
         return decode;
     }
 }

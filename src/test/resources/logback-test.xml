@@ -11,11 +11,12 @@
     </appender>
 
     <logger name="ch.qos.logback" level="WARN" />
-    <logger name="com.tngtech.jgiven" level="WARN" />
-    <logger name="com.icegreen.greenmail" level="WARN" />
     <logger name="org.springframework" level="WARN" />
-    <logger name="org.hibernate" level="WARN" />
-    <logger name="com.mchange.v2" level="WARN" />
+    <logger name="org.hibernate.orm.bind" level="TRACE" />
+    <logger name="org.apache.commons.dbcp2" level="WARN" />
+    <logger name="com.icegreen.greenmail" level="WARN" />
+    <logger name="org.apache.velocity" level="WARN" />
+    <logger name="com.tngtech.jgiven" level="WARN" />
 
     <root level="TRACE">
         <appender-ref ref="CONSOLE" />

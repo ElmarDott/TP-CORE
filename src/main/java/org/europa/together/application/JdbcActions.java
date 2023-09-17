@@ -19,6 +19,7 @@ import org.europa.together.business.Logger;
 import org.europa.together.business.PropertyReader;
 import org.europa.together.domain.JdbcConnection;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.exceptions.TimeOutException;
 import org.europa.together.utils.StringUtils;
 import org.europa.together.utils.Validator;
@@ -38,7 +39,6 @@ public class JdbcActions implements DatabaseActions {
     private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnection = null;
     private Statement statement = null;
-
     private DatabaseMetaData metadata;
     private String connectionUrl;
     private String driverClass;
@@ -54,12 +54,10 @@ public class JdbcActions implements DatabaseActions {
 
     @Override
     public boolean connect(final String propertyFile) {
-
         boolean connected = true;
         try {
             fetchProperties(propertyFile);
             establishPooledConnection();
-
         } catch (Exception ex) {
             connected = false;
             LOGGER.log("Connection failed!", LogLevel.WARN);
@@ -70,7 +68,6 @@ public class JdbcActions implements DatabaseActions {
 
     @Override
     public boolean executeSqlFromClasspath(final String sqlFile) {
-
         boolean success = true;
         BufferedReader reader = null;
         StringBuilder sql = new StringBuilder();
@@ -80,7 +77,6 @@ public class JdbcActions implements DatabaseActions {
                     new InputStreamReader(
                             context.getResource(sqlFile).getInputStream(), "UTF8")
             );
-
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("--")) {
@@ -89,21 +85,19 @@ public class JdbcActions implements DatabaseActions {
             }
             this.executeQuery(sql.toString());
             reader.close();
-
         } catch (Exception ex) {
             success = false;
             LOGGER.catchException(ex);
         }
-
         LOGGER.log("File (" + sqlFile + "): " + sql.toString(), LogLevel.DEBUG);
         return success;
     }
 
     @Override
-    public ResultSet executeQuery(final String sql) throws SQLException {
+    public ResultSet executeQuery(final String sql)
+            throws SQLException {
         ResultSet resultSet = null;
         if (jdbcConnection != null) {
-
             statement = jdbcConnection.createStatement();
             statement.execute(sql);
             resultSet = statement.getResultSet();
@@ -114,7 +108,8 @@ public class JdbcActions implements DatabaseActions {
     }
 
     @Override
-    public int countResultSets(final ResultSet results) throws SQLException {
+    public int countResultSets(final ResultSet results)
+            throws SQLException {
         int count = 0;
         while (results.next()) {
             count++;
@@ -123,13 +118,11 @@ public class JdbcActions implements DatabaseActions {
     }
 
     @Override
-    public JdbcConnection getJdbcMetaData() throws SQLException {
-
+    public JdbcConnection getJdbcMetaData()
+            throws SQLException {
         Map<String, String> properties = new HashMap<>();
         metadata = jdbcConnection.getMetaData();
-
         String url = metadata.getURL();
-
         properties.put("metaJdbcVersion",
                 metadata.getJDBCMajorVersion() + "." + metadata.getJDBCMinorVersion());
         properties.put("metaJdbcDriverName",
@@ -145,21 +138,17 @@ public class JdbcActions implements DatabaseActions {
         properties.put("metaCatalog",
                 metadata.getConnection().getCatalog());
         properties.put("metaUrl", url);
-
         String[] result = grabIpAndPort(url).split(":");
         String ip = result[0];
         String port = result[1];
-
         properties.put("metaIP", ip);
         properties.put("metaPort", port);
-
         return new JdbcConnection(properties);
     }
 
     //  ----------------------------------------------------------------------------
     private String grabIpAndPort(final String connectionUrl) {
         LOGGER.log("Grab IP4 Adress an Port from connection string.", LogLevel.DEBUG);
-
         Pattern pattern = Pattern.compile(Validator.IP4_ADDRESS);
         Matcher matcher = pattern.matcher(connectionUrl);
         LOGGER.log("RegEx match found: " + matcher.find()
@@ -171,23 +160,19 @@ public class JdbcActions implements DatabaseActions {
 
     private void establishPooledConnection()
             throws TimeOutException, ClassNotFoundException, PropertyVetoException, SQLException {
-
         LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
         Class.forName(driverClass);
-
         BasicDataSource cpds = new BasicDataSource();
         cpds.setDriverClassName(driverClass);
         cpds.setUrl(connectionUrl);
         cpds.setUsername(user);
         cpds.setPassword(pwd);
-
         this.jdbcConnection = cpds.getConnection();
     }
 
     private void fetchProperties(final String propertyFile) throws IOException {
         String properties = propertyFile;
         PropertyReader reader = new PropertyFileReader();
-
         if (StringUtils.isEmpty(properties) || propertyFile.equals("test")) {
             LOGGER.log("Append (test) properties: " + jdbcProperties, LogLevel.DEBUG);
             reader.appendPropertiesFromClasspath(jdbcProperties);
@@ -195,10 +180,13 @@ public class JdbcActions implements DatabaseActions {
             LOGGER.log("Append properties from: " + propertyFile, LogLevel.DEBUG);
             reader.appendPropertiesFromFile(propertyFile);
         }
-
-        this.driverClass = reader.getPropertyAsString("jdbc.driverClassName");
-        this.user = reader.getPropertyAsString("jdbc.user");
-        this.pwd = reader.getPropertyAsString("jdbc.password");
-        this.connectionUrl = reader.getPropertyAsString("jdbc.url");
+        try {
+            this.driverClass = reader.getPropertyAsString("jdbc.driverClassName");
+            this.user = reader.getPropertyAsString("jdbc.user");
+            this.pwd = reader.getPropertyAsString("jdbc.password");
+            this.connectionUrl = reader.getPropertyAsString("jdbc.url");
+        } catch (MisconfigurationException ex) {
+            LOGGER.catchException(ex);
+        }
     }
 }

@@ -6,7 +6,7 @@ import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
- * Simple API for application Logging.
+ * Simple API for application logging.
  *
  * @author elmar.dott@gmail.com
  * @version 1.2
@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
 public interface Logger {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-01";
 
     /**
-     * Create a Log-Entry with the given message for the configured Log-Level.
+     * Create a log entry with the given message for the configured LogLevel.
      * Log-Level: TRACE | DEBUG | INFO | WARN | ERROR
      *
-     * @param message the LogMessage as String.
+     * @param message as String.
      * @param level as LogLevel.
      * @return LogLevel
      */
@@ -42,22 +42,13 @@ public interface Logger {
     LogLevel getConfiguredLogLevel();
 
     /**
-     * Modified Method to log Exceptions. The output will be the exception Name
-     * and the exception message in the LogLevel Error. In the case a
+     * Modified method to log exceptions. The output will be the exception name
+     * and the exception message in the LogLevel ERROR. In the case a
      * NullPointerException is thrown, the StackTrace will be logged too.
      *
      * @param ex as Exception
-     * @return exception Message as String
+     * @return exception message as String
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
-
-    /**
-     * Set the LogLevel programmatically. <br>
-     * Log-Level: TRACE | DEBUG | INFO | WARN | ERROR
-     *
-     * @param level as LogLevel
-     */
-    @API(status = STABLE, since = "1.1")
-    void setLogLevel(LogLevel level);
 }

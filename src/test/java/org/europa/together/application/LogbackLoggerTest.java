@@ -1,6 +1,7 @@
 package org.europa.together.application;
 
 import java.io.File;
+import java.io.IOException;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.service.LoggingService;
@@ -13,18 +14,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class LogbackLoggerTest {
 
-    private static final Logger LOGGER = new LogbackLogger(LogbackLogger.class);
+    private static final Logger LOGGER = new LogbackLogger(LogbackLoggerTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -58,7 +56,7 @@ public class LogbackLoggerTest {
     }
 
     @Test
-    void fallbackConstructor() {
+    void fallbackConstructor() throws IOException {
         LOGGER.log("TEST CASE: fallbackConstructor", LogLevel.DEBUG);
 
         LoggingService service = new LoggingService();
@@ -140,65 +138,5 @@ public class LogbackLoggerTest {
         Logger logger = new LogbackLogger(Logger.class);
         assertEquals("Logging exception test.",
                 logger.catchException(new NullPointerException("Logging exception test.")));
-    }
-
-    @Test
-    void failManipulateLogLevel() {
-        LOGGER.log("TEST CASE: failManipulateLogLevel", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(null);
-
-        assertNull(logger.getConfiguredLogLevel());
-    }
-
-    @Test
-    void manipulateLogLeveltoTrace() {
-        LOGGER.log("TEST CASE: manipulateLogLeveltoTrace", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(LogLevel.TRACE);
-
-        assertEquals(LogLevel.TRACE, logger.getConfiguredLogLevel());
-    }
-
-    @Test
-    void manipulateLogLeveltoDebug() {
-        LOGGER.log("TEST CASE: manipulateLogLeveltoDebug", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(LogLevel.DEBUG);
-
-        assertEquals(LogLevel.DEBUG, logger.getConfiguredLogLevel());
-    }
-
-    @Test
-    void manipulateLogLeveltoInfo() {
-        LOGGER.log("TEST CASE: manipulateLogLeveltoInfo", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(LogLevel.INFO);
-
-        assertEquals(LogLevel.INFO, logger.getConfiguredLogLevel());
-    }
-
-    @Test
-    void manipulateLogLeveltoWarn() {
-        LOGGER.log("TEST CASE: manipulateLogLeveltoWarn", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(LogLevel.WARN);
-
-        assertEquals(LogLevel.WARN, logger.getConfiguredLogLevel());
-    }
-
-    @Test
-    void manipulateLogLeveltoError() {
-        LOGGER.log("TEST CASE: manipulateLogLeveltoError", LogLevel.DEBUG);
-
-        Logger logger = new LogbackLogger(Logger.class);
-        logger.setLogLevel(LogLevel.ERROR);
-
-        assertEquals(LogLevel.ERROR, logger.getConfiguredLogLevel());
     }
 }

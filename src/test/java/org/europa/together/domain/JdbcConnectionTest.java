@@ -7,11 +7,8 @@ import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 public class JdbcConnectionTest {
 
     private static final Logger LOGGER = new LogbackLogger(JdbcConnectionTest.class);

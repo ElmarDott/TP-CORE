@@ -18,11 +18,10 @@ import org.europa.together.domain.LogLevel;
  */
 public final class StringUtils {
 
+    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
+    private static final Charset CHARSET = Charset.forName("UTF-8");
     private static final int LIMES = 9;
     private static final int LIMIT = 2100;
-    private static final Charset CHARSET = Charset.forName("UTF-8");
-
-    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
 
     /**
      * Constructor.
@@ -32,11 +31,12 @@ public final class StringUtils {
     }
 
     /**
-     * Test a String if is Empty or NULL. The test don't figure out when a Sting
-     * contains only non printable or whitespace characters.
+     * Test a String if is empty or NULL. Return TRUE when the String is empty
+     * or NULL. The test don't figure out when a Sting contains only non
+     * printable or whitespace characters.
      *
      * @param string as String
-     * @return true if the string is empty or null
+     * @return true on success
      */
     public static boolean isEmpty(final String string) {
         boolean test = false;
@@ -81,10 +81,6 @@ public final class StringUtils {
                 list.add(s);
             }
         }
-
-        if (list.isEmpty()) {
-            list = null;
-        }
         return list;
     }
 
@@ -108,7 +104,7 @@ public final class StringUtils {
      * Concatenate a list of Strings using StringBuilder.
      *
      * @param strings as String
-     * @return string as string
+     * @return string as String
      */
     public static String concatString(final String... strings) {
         StringBuilder result = new StringBuilder();
@@ -125,7 +121,7 @@ public final class StringUtils {
      * SQL Injections for user modified content.
      *
      * @param content as String
-     * @return escapedHtml as String
+     * @return escapedXml as String
      */
     public static String escapeXmlCharacters(final String content) {
         //do not change ordering!
@@ -138,7 +134,7 @@ public final class StringUtils {
     }
 
     /**
-     * Produce a lorem ipsum Text with 4 paragraphs and 2100 characters. The
+     * Produce a lorem ipsum text with 4 paragraphs and 2100 characters. The
      * parameter chars reduce the output to the given count of characters. To
      * get the whole text set chars to 0.
      *
@@ -198,7 +194,6 @@ public final class StringUtils {
         StringBuilder sb = new StringBuilder(length);
         int counter = 0;
         for (int i = 0; i < length; ++i) {
-
             sb.append(counter);
             counter++;
             if (counter > LIMES) {
@@ -216,7 +211,6 @@ public final class StringUtils {
      * @return UUID as String
      */
     public static String generateUUID() {
-
         UUID uuid = UUID.randomUUID();
         LOGGER.log("generateUUID() " + uuid, LogLevel.DEBUG);
         return uuid.toString();
@@ -227,7 +221,7 @@ public final class StringUtils {
      * The shrinker removes comments and unnecessary whitespace and line breaks.
      *
      * @param content as String
-     * @return shrink content as String
+     * @return shrinked content as String
      */
     public static String shrink(final String content) {
         //Comments
@@ -238,7 +232,6 @@ public final class StringUtils {
         shrink = shrink.replaceAll("\\s+", " ");
         shrink = shrink.replaceAll("  ", " ");
         shrink = shrink.replaceAll(">.*?<", "><");
-
         return shrink;
     }
 
@@ -249,26 +242,20 @@ public final class StringUtils {
      * @return utf-8 String
      */
     public static String skipBom(final String content) {
-
         if (content.isEmpty()) {
             throw new NullPointerException("The String in StringUtils.skipBom() is null.");
         }
-
         List<ByteOrderMark> bomList = new ArrayList<>();
         bomList.add(ByteOrderMark.UTF_8);
         bomList.add(ByteOrderMark.UTF_16LE);
         bomList.add(ByteOrderMark.UTF_16BE);
         bomList.add(ByteOrderMark.UTF_32LE);
         bomList.add(ByteOrderMark.UTF_32BE);
-
         String clean = content;
         byte[] array = content.getBytes(CHARSET);
-
         for (ByteOrderMark entry : bomList) {
-
             boolean hasBOM = true;
             for (int i = 0; i < entry.getBytes().length; i++) {
-
                 byte[] s = {array[i]};
                 byte[] d = {entry.getBytes()[i]};
                 LOGGER.log(i + "> " + byteToString(s) + " : " + byteToString(d),
@@ -289,7 +276,6 @@ public final class StringUtils {
                 LOGGER.log("No BOM detected for: " + entry.toString(), LogLevel.DEBUG);
             }
         }
-
         return clean;
     }
 
@@ -299,11 +285,10 @@ public final class StringUtils {
      *
      * @param timestamp as Sting
      * @return timestamp as Date
-     * @throws java.text.ParseException on failure
+     * @throws java.text.ParseException
      */
     public static Date createDateFromString(final String timestamp)
             throws ParseException {
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.parse(timestamp);
     }

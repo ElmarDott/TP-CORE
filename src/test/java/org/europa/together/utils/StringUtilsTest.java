@@ -16,13 +16,10 @@ import org.europa.together.domain.LogLevel;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
@@ -82,7 +79,7 @@ public class StringUtilsTest {
 
         assertEquals(check, StringUtils.stringListBuilder("foo", "more"));
         assertEquals(check, StringUtils.stringListBuilder("foo", null, "more"));
-        assertNull(StringUtils.stringListBuilder());
+        assertTrue(StringUtils.stringListBuilder().isEmpty());
     }
 
     @Test
@@ -158,7 +155,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void withoutBom() {
+    void withoutBom() throws Exception {
         String check = "Text File without BOM - Byte Order Mark";
         String bom = FileUtils.readFileStream(new File(FILE_PATH + "/no-BOM"));
 
@@ -167,7 +164,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void removeUtf8Bom() {
+    void removeUtf8Bom() throws Exception {
         String check = " UTF-8 BOM";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
@@ -178,7 +175,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void removeUtf16LeBom() {
+    void removeUtf16LeBom() throws Exception {
         String check = " UTF-16 BOM LE";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
@@ -191,7 +188,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void removeUtf16BeBom() {
+    void removeUtf16BeBom() throws Exception {
         String check = " UTF-16 BOM BE";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
@@ -204,7 +201,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void removeUtf32LeBom() {
+    void removeUtf32LeBom() throws Exception {
         String check = " UTF-32 BOM LE";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
@@ -217,7 +214,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void removeUtf32BeBom() {
+    void removeUtf32BeBom() throws Exception {
         String check = " UTF-32 BOM BE";
         LOGGER.log("Test:" + check, LogLevel.DEBUG);
 
@@ -230,7 +227,7 @@ public class StringUtilsTest {
     }
 
     @Test
-    void shrinkContent() {
+    void shrinkContent() throws Exception {
         String shrink = " = \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy \" + \"eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam \" + \"voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet \" + \"clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit \" + \"amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam \" + \"nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed \" + \"diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. \" + \"Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor \" + \"sitView Generated Project Site amet. Lorem ipsum dolor sit amet, consetetur \" + \"sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore \" + \"magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo \" + \"dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus \" + \"est Lorem ipsum dolor sit amet.\\n\" function createCache() { var keys = []; function cache(key, value) { if (keys.push(key + \" \") ><catalog><cd><title></title><artist></artist><country></country><company></company><price></price><year></year></cd></catalog>";
         String content = FileUtils.readFileStream(new File(Constraints.SYSTEM_APP_DIR + "/target/test-classes/shrink.txt"));
 

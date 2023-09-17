@@ -20,7 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementation of the PropertyReader.
+ * Implementation of the Property Reader.
  */
 @Repository
 public class PropertyFileReader implements PropertyReader {
@@ -42,7 +42,6 @@ public class PropertyFileReader implements PropertyReader {
         boolean success = false;
         try {
             this.lookupForPropertyKey(key);
-
         } catch (Exception ex) {
             propertyList.put(key, value);
             LOGGER.catchException(ex);
@@ -58,7 +57,6 @@ public class PropertyFileReader implements PropertyReader {
         int sizeNewList = resource.size();
         int size = sizeOrginalList + sizeNewList;
         propertyList.putAll(resource);
-
         if (size > sizeOrginalList) {
             success = true;
             LOGGER.log(sizeNewList + " Properties appended.", LogLevel.DEBUG);
@@ -72,15 +70,12 @@ public class PropertyFileReader implements PropertyReader {
     @Override
     public boolean appendPropertiesFromClasspath(final String resource)
             throws UnsupportedEncodingException, IOException {
-
         boolean success = false;
         ApplicationContext context = new ClassPathXmlApplicationContext();
-
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         context.getResource(resource).getInputStream(), "UTF8")
         );
-
         String line;
         int count = 1;
         while ((line = reader.readLine()) != null) {
@@ -88,7 +83,6 @@ public class PropertyFileReader implements PropertyReader {
             if (test.isEmpty() || test.charAt(0) == '#') {
                 continue;
             }
-
             String[] parts = test.split("=");
             String key = parts[0];
             String value = "";
@@ -99,13 +93,10 @@ public class PropertyFileReader implements PropertyReader {
             count++;
         }
         reader.close();
-
         String logMsg = "readPropertyFromClasspath(" + resource + ") "
                 + count + " Properties read.";
         LOGGER.log(logMsg, LogLevel.DEBUG);
-
         success = true;
-
         this.printPropertyList();
         return success;
     }
@@ -113,18 +104,14 @@ public class PropertyFileReader implements PropertyReader {
     @Override
     public boolean appendPropertiesFromFile(final String resource)
             throws IOException {
-
         boolean success = false;
-
         Stream<String> stream = Files.lines(Paths.get(resource));
         List<String> content = stream
                 .filter(line -> !line.startsWith("#"))
                 .filter(line -> !line.isEmpty())
                 .collect(Collectors.toList());
-
         int count = 1;
         for (String entry : content) {
-
             String[] parts = entry.split("=");
             String key = parts[0];
             String value = "";
@@ -134,13 +121,10 @@ public class PropertyFileReader implements PropertyReader {
             propertyList.put(key, value);
             count++;
         }
-
         String logMsg = "readPropertyFromFile(" + resource + ") "
                 + count + " Properties read.";
         LOGGER.log(logMsg, LogLevel.DEBUG);
-
         success = true;
-
         this.printPropertyList();
         return success;
     }
@@ -166,7 +150,6 @@ public class PropertyFileReader implements PropertyReader {
             propertyList.remove(key);
             success = true;
             LOGGER.log(key + " successful removed.", LogLevel.DEBUG);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
@@ -179,7 +162,6 @@ public class PropertyFileReader implements PropertyReader {
             this.lookupForPropertyKey(key);
             propertyList.put(key, value);
             LOGGER.log("Entry " + key + " will be updated.", LogLevel.INFO);
-
         } catch (Exception ex) {
             LOGGER.catchException(ex);
             propertyList.put(key, value);
@@ -193,80 +175,58 @@ public class PropertyFileReader implements PropertyReader {
     }
 
     @Override
-    public Boolean getPropertyAsBoolean(final String key) {
-        Boolean value = null;
-        try {
-            this.lookupForPropertyKey(key);
-            if (propertyList.get(key).matches("true|false|TRUE|FALSE|0")) {
-                value = Boolean.parseBoolean(propertyList.get(key));
-            }
-            if (propertyList.get(key).equals("1")) {
-                value = true;
-            }
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
+    public Boolean getPropertyAsBoolean(final String key)
+            throws MisconfigurationException {
+        this.lookupForPropertyKey(key);
+        if (propertyList.get(key).matches("true|false|TRUE|FALSE|0")) {
+            return Boolean.parseBoolean(propertyList.get(key));
+        } else if (propertyList.get(key).equals("1")) {
+            return true;
+        } else {
+            throw new MisconfigurationException(key + " is not a Boolean value. ("
+                    + propertyList.get(key) + ")");
         }
-        return value;
     }
 
     @Override
-    public Double getPropertyAsDouble(final String key) {
-        Double value = null;
-        try {
-            this.lookupForPropertyKey(key);
-            value = Double.parseDouble(propertyList.get(key));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return value;
+    public Double getPropertyAsDouble(final String key)
+            throws MisconfigurationException {
+        this.lookupForPropertyKey(key);
+        return Double.parseDouble(propertyList.get(key));
     }
 
     @Override
-    public Float getPropertyAsFloat(final String key) {
-        Float value = null;
-        try {
-            this.lookupForPropertyKey(key);
-            value = Float.parseFloat(propertyList.get(key));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return value;
+    public Float getPropertyAsFloat(final String key)
+            throws MisconfigurationException {
+        this.lookupForPropertyKey(key);
+        return Float.parseFloat(propertyList.get(key));
     }
 
     @Override
-    public Integer getPropertyAsInt(final String key) {
-        Integer value = null;
-        try {
-            this.lookupForPropertyKey(key);
-            value = Integer.parseInt(propertyList.get(key));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return value;
+    public Integer getPropertyAsInt(final String key)
+            throws MisconfigurationException {
+        this.lookupForPropertyKey(key);
+        return Integer.parseInt(propertyList.get(key));
     }
 
     @Override
-    public String getPropertyAsString(final String key) {
-        String value = null;
-        try {
-            this.lookupForPropertyKey(key);
-            value = propertyList.get(key);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return value;
+    public String getPropertyAsString(final String key)
+            throws MisconfigurationException {
+        this.lookupForPropertyKey(key);
+        return propertyList.get(key);
     }
 
     @Override
     public Map<String, String> getPropertyList() {
-        return propertyList;
+        return Map.copyOf(propertyList);
     }
 
     private void printPropertyList() {
         LOGGER.log(propertyList.toString(), LogLevel.TRACE);
     }
 
-    private boolean lookupForPropertyKey(final String key) throws Exception {
+    private boolean lookupForPropertyKey(final String key)
+            throws MisconfigurationException {
         boolean success = false;
         if (propertyList.containsKey(key)) {
             success = true;

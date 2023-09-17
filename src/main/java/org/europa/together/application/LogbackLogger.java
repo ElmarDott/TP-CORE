@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import ch.qos.logback.classic.Level;
 import java.io.File;
 import java.util.Arrays;
 import org.europa.together.business.Logger;
@@ -40,7 +39,6 @@ public class LogbackLogger implements Logger {
 
     @Override
     public LogLevel log(final String message, final LogLevel level) {
-
         instanceLogger();
         switch (level) {
             case TRACE:
@@ -64,10 +62,8 @@ public class LogbackLogger implements Logger {
 
     @Override
     public LogLevel getConfiguredLogLevel() {
-
         instanceLogger();
         LogLevel level = null;
-
         if (logger.isErrorEnabled()) {
             level = LogLevel.ERROR;
         }
@@ -88,43 +84,13 @@ public class LogbackLogger implements Logger {
 
     @Override
     public String catchException(final Exception ex) {
-
         instanceLogger();
         String exceptionType = ex.getClass().getSimpleName();
         logger.error(exceptionType + ": " + ex.getMessage());
-
         if (exceptionType.equals("NullPointerException")) {
             logger.error(Arrays.toString(ex.getStackTrace()));
         }
-
         return ex.getMessage();
-    }
-
-    @Override
-    public void setLogLevel(final LogLevel level) {
-
-        instanceLogger();
-        ch.qos.logback.classic.Logger root
-                = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(
-                        ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-
-        Level filter = Level.OFF;
-        if (level == LogLevel.TRACE) {
-            filter = Level.TRACE;
-        }
-        if (level == LogLevel.DEBUG) {
-            filter = Level.DEBUG;
-        }
-        if (level == LogLevel.INFO) {
-            filter = Level.INFO;
-        }
-        if (level == LogLevel.WARN) {
-            filter = Level.WARN;
-        }
-        if (level == LogLevel.ERROR) {
-            filter = Level.ERROR;
-        }
-        root.setLevel(filter);
     }
 
     private void instanceLogger() {
@@ -132,5 +98,4 @@ public class LogbackLogger implements Logger {
             logger = LoggerFactory.getILoggerFactory().getLogger(instance.getName());
         }
     }
-
 }

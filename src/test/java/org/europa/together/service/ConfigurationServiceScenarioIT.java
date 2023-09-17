@@ -16,13 +16,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:org/europa/together/configuration/spring-dao.xml"})
 public class ConfigurationServiceScenarioIT extends
@@ -35,16 +32,9 @@ public class ConfigurationServiceScenarioIT extends
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        Assumptions.assumeTrue(CONNECTION.connect("test"));
+
         LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
-        boolean check = true;
-
-        boolean socket = CONNECTION.connect("test");
-        if (!socket) {
-            check = false;
-        }
-
-        LOGGER.log("Assumption terminated. TestSuite execution: " + check, LogLevel.TRACE);
-        Assumptions.assumeTrue(check);
     }
 
     @AfterAll

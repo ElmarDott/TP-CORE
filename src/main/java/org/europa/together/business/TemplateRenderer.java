@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component;
 public interface TemplateRenderer {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-03";
 
     /**
-     * Generate a String from a Template in the classpath and a Map with
-     * Variables.
+     * Generate a String from a template in the classpath and a Map with
+     * variables.
      *
      * @param resourcePath as String
      * @param template as String
@@ -36,8 +36,8 @@ public interface TemplateRenderer {
             Map<String, String> properties);
 
     /**
-     * Generate a String from a Template from a external File and a Map with
-     * Variables.
+     * Generate a String from a template using an external file and a Map with
+     * variables.
      *
      * @param resourcePath as String
      * @param template as String
@@ -49,7 +49,7 @@ public interface TemplateRenderer {
             Map<String, String> properties);
 
     /**
-     * Render a Template (resource) with a Map of Variables from an input String
+     * Render a template (resource) with a Map of variables from an input String
      * and process the output also as String.
      *
      * @param resource as String

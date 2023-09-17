@@ -2,7 +2,6 @@ package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.JdbcConnection;
@@ -17,13 +16,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JdbcActionsTest {
@@ -91,7 +87,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void executeQuery() throws SQLException {
+    void executeQuery() throws Exception {
         LOGGER.log("TEST CASE: executeQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -103,7 +99,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void failExecuteQuery() throws SQLException {
+    void failExecuteQuery() throws Exception {
         LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -114,7 +110,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void failExecuteQueryNoConnection() throws SQLException {
+    void failExecuteQueryNoConnection() throws Exception {
         LOGGER.log("TEST CASE: failExecuteQuery", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -122,7 +118,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void executeSqlFileFromClasspath() throws SQLException {
+    void executeSqlFileFromClasspath() throws Exception {
         LOGGER.log("TEST CASE: executeSqlFileFromClasspath", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();
@@ -144,7 +140,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void getResultSet() throws SQLException {
+    void getResultSet() throws Exception {
         LOGGER.log("TEST CASE: getResultSet", LogLevel.DEBUG);
 
         String SQL_FILE
@@ -161,7 +157,7 @@ public class JdbcActionsTest {
     }
 
     @Test
-    void getJdbcMetaData() throws SQLException {
+    void getJdbcMetaData() throws Exception {
         LOGGER.log("TEST CASE: getJdbcMetaData", LogLevel.DEBUG);
 
         DatabaseActions dbms = new JdbcActions();

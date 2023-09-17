@@ -2,37 +2,37 @@ package org.europa.together.business;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.Mail;
 import org.springframework.stereotype.Component;
 
 /**
- * Simple SMTP E Mail Client with SSL to send E-Mails from a configured Mail
- * Account (SMTP Server). The Mailer allows sending mass mails (e.g.
+ * Simple SMTP e-mail client with SSL to send E-Mails from a configured mail
+ * account (SMTP server). The mailer allows sending mass mails (e.g.
  * newsletter), this feature needs a timer to interrupt after a configured
  * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
- * @version 2.0
+ * @version 3.0
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0", consumers = "JavaMailClient")
+@API(status = STABLE, since = "1.0", consumers = "JakartaMailClient")
 @Component
 public interface MailClient {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-06";
 
     /**
-     * Define the Configuration Set for the MailClient.
+     * Define the configuration set for the MailClient.
      */
     @API(status = STABLE, since = "1.0")
     String CONFIG_SET = "email";
@@ -42,13 +42,6 @@ public interface MailClient {
      */
     @API(status = STABLE, since = "1.1")
     String CONFIG_VERSION = "1.0";
-
-    /**
-     * Population the database with the MailClient Configuration.
-     *
-     * @param sqlFile as String
-     */
-    void populateDbConfiguration(String sqlFile);
 
     /**
      * Get the full active configuration of the mail client for debugging.
@@ -69,7 +62,7 @@ public interface MailClient {
      *
      * @param resource as String return true on success
      * @return true on success
-     * @throws java.io.IOException on failure
+     * @throws java.io.IOException
      */
     @API(status = STABLE, since = "3.0")
     boolean loadConfigurationFromProperties(String resource) throws IOException;
@@ -92,7 +85,7 @@ public interface MailClient {
     int getBulkMailLimiter();
 
     /**
-     * Get the Configured wait time in milliseconds until the next mail bulk can
+     * Get the configured wait time in milliseconds until the next mail bulk can
      * be send.
      *
      * @return waitTime as long
@@ -101,19 +94,19 @@ public interface MailClient {
     long getWaitTime();
 
     /**
-     * Compose a full E-Mail, ready to send.
+     * Compose a full e-mail, ready to send.
      *
      * @param mail as Mail
-     * @throws javax.mail.MessagingException by error
+     * @throws jakarta.mail.MessagingException
      */
     @API(status = STABLE, since = "3.0")
     void composeMail(Mail mail) throws MessagingException;
 
     /**
-     * Get the configured session to connect the SMTP Server.
+     * Get the configured session to connect the SMTP server.
      *
      * @return session as Session
-     * @throws javax.mail.NoSuchProviderException
+     * @throws jakarta.mail.NoSuchProviderException
      */
     @API(status = STABLE, since = "3.0")
     Session getSession() throws NoSuchProviderException;

@@ -9,11 +9,12 @@ import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of the Configuration Service.
+ * Service implementation for the ConfigutarionDAO.
  *
  * @author elmar.dott@gmail.com
  * @version 1.0
@@ -44,8 +45,8 @@ public final class ConfigurationService {
      * @param module as String
      */
     @API(status = STABLE, since = "1.0")
-    public void resetModuleToDefault(final String module) {
-
+    public void resetModuleToDefault(final String module)
+            throws DAOException {
         List<ConfigurationDO> configurationEntries = configurationDAO.getAllModuleEntries(module);
         for (ConfigurationDO entry : configurationEntries) {
             configurationDAO.restoreKeyToDefault(entry);
@@ -53,17 +54,16 @@ public final class ConfigurationService {
     }
 
     /**
-     * Filter all mandatory Entries of a ConfigSet.
+     * Filter all mandatory entries of a ConfigSet.
      *
      * @param module as String
      * @param version as String
      * @param configSet as String
-     * @return mandatory as List&lt;Configuration&gt;
+     * @return mandatoryEntries as List
      */
     @API(status = STABLE, since = "1.0")
     public List<ConfigurationDO> filterMandatoryFieldsOfConfigSet(
             final String module, final String version, final String configSet) {
-
         List<ConfigurationDO> mandantoryEntries = new ArrayList<>();
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(module, version, configSet);
@@ -74,5 +74,4 @@ public final class ConfigurationService {
         }
         return mandantoryEntries;
     }
-
 }

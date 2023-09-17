@@ -1,7 +1,7 @@
 package org.europa.together.domain;
 
 /**
- * Available Hash Algorithms.
+ * Available Hash algorithms.
  */
 public enum HashAlgorithm {
 

@@ -6,7 +6,6 @@ import java.io.File;
 import org.europa.together.business.ImageProcessor;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.MisconfigurationException;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -17,14 +16,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ImgSclrProcessorTest {
@@ -152,13 +148,13 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void saveImageWrongType() throws MisconfigurationException {
+    void saveImageWrongType() throws Exception {
         LOGGER.log("TEST CASE: saveImageWrongType", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
         BufferedImage img = processor.getImage();
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.saveImage(img, new File(DIRECTORY + "image_fail_safe.png"), "bpm");
         });
     }
@@ -221,7 +217,7 @@ public class ImgSclrProcessorTest {
             assertEquals(203, processor.getHeight());
             assertEquals(113, processor.getWidth());
 
-        } catch (MisconfigurationException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
     }
@@ -241,7 +237,7 @@ public class ImgSclrProcessorTest {
             assertEquals(407, processor.getHeight());
             assertEquals(226, processor.getWidth());
 
-        } catch (MisconfigurationException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
     }
@@ -261,28 +257,28 @@ public class ImgSclrProcessorTest {
             assertEquals(610, processor.getHeight());
             assertEquals(339, processor.getWidth());
 
-        } catch (MisconfigurationException ex) {
+        } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
     }
 
     @Test
-    void failResize() throws MisconfigurationException {
+    void failResize() throws Exception {
         LOGGER.log("TEST CASE: failResize", LogLevel.DEBUG);
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.resize(50);
         });
     }
 
     @Test
-    void failResizeImage() throws MisconfigurationException {
+    void failResizeImage() throws Exception {
         LOGGER.log("TEST CASE: failResizeImage", LogLevel.DEBUG);
 
         processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png"));
         assertTrue(processor.isImageSet());
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             BufferedImage img = processor.resize(0);
         });
     }
@@ -309,10 +305,10 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void failImageRotate() throws MisconfigurationException {
+    void failImageRotate() throws Exception {
         LOGGER.log("TEST CASE: failImageRotate", LogLevel.DEBUG);
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.rotateRight();
         });
     }
@@ -334,10 +330,10 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void failFlipVertical() throws MisconfigurationException {
+    void failFlipVertical() throws Exception {
         LOGGER.log("TEST CASE: failFlipVertical", LogLevel.DEBUG);
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.flipVertical();
         });
     }
@@ -359,10 +355,10 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void failFlipHorizontal() throws MisconfigurationException {
+    void failFlipHorizontal() throws Exception {
         LOGGER.log("TEST CASE: failFlipHorizontal", LogLevel.DEBUG);
 
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.flipHorizontal();
         });
     }
@@ -389,11 +385,11 @@ public class ImgSclrProcessorTest {
     }
 
     @Test
-    void failCropImage() throws MisconfigurationException {
+    void failCropImage() throws Exception {
         LOGGER.log("TEST CASE: failCropImage", LogLevel.DEBUG);
 
         assertTrue(processor.loadImage(new File(DIRECTORY + "duke_java_mascot.png")));
-        assertThrows(MisconfigurationException.class, () -> {
+        assertThrows(Exception.class, () -> {
             processor.crop(0, 0, 0, 0);
         });
     }

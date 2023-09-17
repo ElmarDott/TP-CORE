@@ -1,6 +1,9 @@
 package org.europa.together.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,12 +14,9 @@ import org.europa.together.domain.ByteOrderMark;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
@@ -55,28 +55,29 @@ public class FileUtilsTest {
     }
 
     @Test
-    void writeStringToFile() {
-
-        String fileContent = "Content of the written File";
-
-        assertTrue(FileUtils.writeStringToFile(fileContent, DIRECTORY + "/test.txt"));
-        assertEquals(27, FileUtils.getFileSize(DIRECTORY + "/test.txt", null));
-
-        assertTrue(FileUtils.writeStringToFile("", DIRECTORY + "/test_empty.txt"));
-        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "/test_empty.txt", null));
-
-        assertFalse(FileUtils.writeStringToFile(null, DIRECTORY + "/test_null.txt"));
-
-        try {
-            Files.delete(Paths.get(DIRECTORY + "/test.txt"));
-            Files.delete(Paths.get(DIRECTORY + "/test_empty.txt"));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+    void writeEmptyFile() throws Exception {
+        assertTrue(FileUtils.writeStringToFile("", DIRECTORY + "/empty.txt"));
+        assertEquals(0, FileUtils.getFileSize(DIRECTORY + "/empty.txt", null));
+        Files.delete(Paths.get(DIRECTORY + "/empty.txt"));
     }
 
     @Test
-    void readFile() {
+    void writeStringToFile() throws Exception {
+        String fileContent = "Content of the written File";
+        assertTrue(FileUtils.writeStringToFile(fileContent, DIRECTORY + "/test.txt"));
+        assertEquals(27, FileUtils.getFileSize(DIRECTORY + "/test.txt", null));
+        Files.delete(Paths.get(DIRECTORY + "/test.txt"));
+    }
+
+    @Test
+    void failWriteStringToFile() throws IOException {
+        assertThrows(IOException.class, () -> {
+            FileUtils.writeStringToFile("content", "");
+        });
+    }
+
+    @Test
+    void readFileStream() throws Exception {
         String file = DIRECTORY + "TestFile";
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file)));
         assertEquals("Hello World!", FileUtils.readFileStream(new File(file), ByteOrderMark.NONE));
@@ -84,12 +85,14 @@ public class FileUtilsTest {
     }
 
     @Test
-    void failReadFile() {
-        assertEquals("", FileUtils.readFileStream(new File("no_file")));
+    void failReadFileStream() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.readFileStream(new File("no_file"));
+        });
     }
 
     @Test
-    void appendFile() {
+    void appendFile() throws Exception {
         String file = DIRECTORY + "AppendTestFile.txt";
         FileUtils.writeStringToFile("Hello World!", file);
 
@@ -97,17 +100,14 @@ public class FileUtilsTest {
         FileUtils.appendFile(file, append);
 
         assertEquals("Hello World! more content.", FileUtils.readFileStream(new File(file)));
-
-        try {
-            Files.delete(Paths.get(file));
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+        Files.delete(Paths.get(file));
     }
 
     @Test
-    void failAppendFile() {
-        FileUtils.appendFile("no_file_to_append", "appending string.");
+    void failAppendFile() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.appendFile("no_file_to_append", "appending string.");
+        });
     }
 
     @Test
@@ -133,35 +133,46 @@ public class FileUtilsTest {
     }
 
     @Test
+    void listFileTreeWithEmptyDir() {
+        File file = new File(DIRECTORY + "dir-test/empty");
+        assertTrue(file.mkdir());
+        assertEquals(0, FileUtils.listFileTree(file).size());
+        assertTrue(file.delete());
+    }
+
+    @Test
+    void failListFileTree() {
+        assertNotNull(FileUtils.listFileTree(new File("")));
+        assertNotNull(FileUtils.listFileTree(null));
+    }
+
+    @Test
+    void copyFile() throws Exception {
+        File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
+        File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
+        FileUtils.copyFile(source, destination);
+        assertTrue(destination.exists());
+    }
+
+    @Test
     void failCopyFile() throws Exception {
-
         assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(null, new File(""));
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(new File(""), null);
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(null, null);
-        });
-
-        assertThrows(Exception.class, () -> {
-            FileUtils.copyFile(new File("NULL"), new File(""));
+            FileUtils.copyFile(new File("empty/dontExist.txt"), new File("empty/dontExist-copy.txt"));
         });
     }
 
     @Test
-    void copyFile() {
-        try {
-            File source = new File(Constraints.SYSTEM_APP_DIR + "/README.md");
-            File destination = new File(Constraints.SYSTEM_APP_DIR + "/target/README-COPY.md");
-            FileUtils.copyFile(source, destination);
-            assertTrue(destination.exists());
+    void inputStreamToByteArray() throws Exception {
+        byte[] byteArray = {23, 12, 1, 0, 12, 34, 9};
+        InputStream input = new ByteArrayInputStream(byteArray);
 
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+        assertArrayEquals(byteArray, FileUtils.inputStreamToByteArray(input));
+    }
+
+    @Test
+    void failInputStreamToByteArray() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.inputStreamToByteArray(null);
+        });
     }
 }

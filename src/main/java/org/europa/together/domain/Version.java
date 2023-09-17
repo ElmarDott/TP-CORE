@@ -4,6 +4,7 @@ import java.util.Objects;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.exceptions.MisconfigurationException;
+import org.europa.together.utils.StringUtils;
 import org.europa.together.utils.Validator;
 
 /**
@@ -39,53 +40,44 @@ public class Version implements Comparable<Version> {
     private int major = -1;
     private int minor = -1;
     private int patch = -1;
-    private String label = null;
+    private String label = "";
 
     /**
      * Constructor.
      *
      * @param version as String
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
-    public Version(final String version) {
+    public Version(final String version)
+            throws MisconfigurationException {
+        if (!Validator.validate(version, Validator.SEMANTIC_VERSION_NUMBER)) {
+            String msg = "The version number " + version
+                    + " do not match the Pattern: [1].[2].[3]-[LABEL].";
+            throw new MisconfigurationException(msg);
+        }
+        String[] fragments = version.split("\\.");
+        LOGGER.log("Fragments: " + fragments.length, LogLevel.DEBUG);
 
-        try {
-
-            if (!Validator.validate(version, Validator.SEMANTIC_VERSION_NUMBER)) {
-                String msg = "The version number " + version
-                        + " do not match the Pattern: [1].[2].[3]-[LABEL].";
-                throw new MisconfigurationException(msg);
-            }
-
-            String[] fragments = version.split("\\.");
-            LOGGER.log("Fragments: " + fragments.length, LogLevel.DEBUG);
-
-            major = Integer.parseInt(fragments[0]);
-
+        major = Integer.parseInt(fragments[0]);
+        if (fragments.length > 1) {
             if (!fragments[1].contains("-")) {
                 minor = Integer.parseInt(fragments[1]);
             } else {
                 LOGGER.log("Lable after minor.", LogLevel.DEBUG);
-
                 String[] optional = fragments[1].split("-");
                 minor = Integer.parseInt(optional[0]);
                 label = optional[1];
             }
-
-            if (fragments.length > 2) {
-                String[] optional = fragments[2].split("-");
-
-                patch = Integer.parseInt(optional[0]);
-                if (optional.length == 2) { //prevent index out of bound exception
-                    label = optional[1];
-                }
-            }
-
-            LOGGER.log("Version: " + toString(), LogLevel.DEBUG);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
         }
+        if (fragments.length > 2) {
+            String[] optional = fragments[2].split("-");
 
+            patch = Integer.parseInt(optional[0]);
+            if (optional.length == 2) { //prevent index out of bound exception
+                label = optional[1];
+            }
+        }
+        LOGGER.log("Version: " + toString(), LogLevel.DEBUG);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
@@ -108,7 +100,7 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Return the Patch Level section of a version number as int. OPTIONAL. If
+     * Return the Patch level section of a version number as int. OPTIONAL. If
      * the patch level not exist the method return -1.
      *
      * @return Patch as int
@@ -119,7 +111,7 @@ public class Version implements Comparable<Version> {
 
     /**
      * Return the Label section of a version number as String. OPTIONAL. If the
-     * lable not exist the method return null.
+     * label not exist the method return an empty String.
      *
      * @return Label as String
      */
@@ -133,13 +125,14 @@ public class Version implements Comparable<Version> {
      * @return version as String
      */
     public String getVersion() {
-
-        String version = null;
-        version = major + "." + minor;
+        String version = Integer.toString(major);
+        if (minor != -1) {
+            version = version + "." + minor;
+        }
         if (patch != -1) {
             version = version + "." + patch;
         }
-        if (label != null) {
+        if (!StringUtils.isEmpty(label)) {
             version = version + "-" + label;
         }
         return version;
@@ -150,13 +143,11 @@ public class Version implements Comparable<Version> {
     public int compareTo(final Version o) {
         // -1:smaller | 0:equal | 1:greater
         int compare;
-
         if (this.major > o.major) {
             compare = 1;
         } else if (this.major < o.major) {
             compare = -1;
         } else {
-
             if (this.minor > o.minor) {
                 compare = 1;
             } else if (this.minor < o.minor) {
@@ -176,25 +167,19 @@ public class Version implements Comparable<Version> {
     }
 
     @Override
-    @SuppressWarnings("PMD.CollapsibleIfStatements")
     public boolean equals(final Object object) {
-
         boolean success = false;
         if (object != null && object instanceof Version) {
-
             if (this == object) {
                 success = true;
             } else {
-
                 final Version other = (Version) object;
                 if (Objects.equals(this.major, other.major)
-                        && Objects.equals(this.minor, other.minor)) {
-
-                    if ((this.patch == -1 || this.patch == 0)
-                            && (other.patch == -1 || other.patch == 0)
-                            || Objects.equals(this.patch, other.patch)) {
-                        success = true;
-                    }
+                        && Objects.equals(this.minor, other.minor)
+                        && ((this.patch == -1 || this.patch == 0)
+                        && (other.patch == -1 || other.patch == 0)
+                        || Objects.equals(this.patch, other.patch))) {
+                    success = true;
                 }
             }
         }

@@ -1,6 +1,7 @@
 package org.europa.together.business;
 
 import java.io.File;
+import java.io.IOException;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 public interface XmlTools {
 
     /**
-     * Identifier for the given feature to enable toggles.
+     * Identifier for the given feature.
      */
     @API(status = STABLE, since = "1.2")
     String FEATURE_ID = "CM-10";
@@ -44,7 +45,7 @@ public interface XmlTools {
     String parseXmlString(String xml);
 
     /**
-     * Before you write a XML Document on a file, especially computer generated
+     * Before writeing a XML Document on a file, especially computer generated
      * XML Content, the content should formatted by a CodeBeautifier. This
      * function Beautifies the XML Sources with the following rules:<br>
      * <li> set content to UTF-8 without BOM (Byte Order Mark)
@@ -58,8 +59,8 @@ public interface XmlTools {
     String prettyPrintXml();
 
     /**
-     * Shrink the XML Content to reduce the file size for a higher performance
-     * in automated processing.The following option will be executed:
+     * Shrink the XML content to reduce the file size for a higher performance
+     * in automated processing. The following option will be executed:
      * <li>remove XML comments</li>
      * <li>remove whitespace</li>
      * <li>remove linebreak</li>
@@ -83,7 +84,7 @@ public interface XmlTools {
     String transformXslt(File xml, File xslt);
 
     /**
-     * Check if a external Schema File s configured.
+     * Check if a external schema file s configured.
      *
      * @return true on success
      */
@@ -101,7 +102,7 @@ public interface XmlTools {
     boolean isValid();
 
     /**
-     * Check XML Content (XML 1.0) if is well formed. the well formed rules for
+     * Check XML content (XML 1.0) if is well formed. the well formed rules for
      * XML are defined as:<br>
      * <li> the structure of a XML document is a tree and each node is defined
      * as TAG
@@ -121,7 +122,7 @@ public interface XmlTools {
     boolean isWellFormed();
 
     /**
-     * Reset the external Schema File to NULL.
+     * Reset the external schema file to NULL.
      */
     @API(status = STABLE, since = "1.1")
     void resetExternalSchema();
@@ -136,11 +137,13 @@ public interface XmlTools {
     void setSchemaFile(File schema);
 
     /**
-     * Writes a XML String into a new File.
+     * Writes a XML String into a new file.
      *
      * @param content as string
      * @param destinationFile as String
+     * @throws java.io.IOException
      */
     @API(status = STABLE, since = "1.0")
-    void writeXmlToFile(String content, String destinationFile);
+    void writeXmlToFile(String content, String destinationFile)
+            throws IOException;
 }
