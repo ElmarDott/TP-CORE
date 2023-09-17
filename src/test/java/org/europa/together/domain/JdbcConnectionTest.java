@@ -1,14 +1,11 @@
 package org.europa.together.domain;
 
-import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.lang.reflect.Constructor;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
-import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
-import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,4 +1,4 @@
-package org.europa.together.domain;
+package org.europa.together.application.internal;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,14 +1,13 @@
-package org.europa.together.application;
+package org.europa.together.application.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Element;
 import org.europa.together.business.FeatureToggle;
-import org.europa.together.domain.AnnotatedClass;
 import org.europa.together.utils.StringUtils;
 
 /**
- * During the processing of annotations some simple functions are needed, wich
+ * During the processing of annotations some simple functions are needed, which
  * implemented for reuse in this class.
  *
  * Processing Annotations have achive several challenges. As first, everything

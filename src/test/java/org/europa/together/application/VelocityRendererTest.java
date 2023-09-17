@@ -1,6 +1,6 @@
 package org.europa.together.application;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
+import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.business.Logger;

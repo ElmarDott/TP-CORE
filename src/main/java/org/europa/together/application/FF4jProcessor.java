@@ -3,6 +3,7 @@ package org.europa.together.application;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper;
 import org.europa.together.business.FeatureToggle;
 import org.ff4j.FF4j;
 import org.ff4j.core.Feature;

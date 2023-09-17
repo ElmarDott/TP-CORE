@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @FeatureToggle(featureID = FEATURE_ID)
 public class JavaCryptoTools implements CryptoTools {
 
-    private static final long serialVersionUID = 15L;
+    private static final long serialVersionUID = 14L;
     private static final Logger LOGGER = new LogbackLogger(JavaCryptoTools.class);
 
     @Override

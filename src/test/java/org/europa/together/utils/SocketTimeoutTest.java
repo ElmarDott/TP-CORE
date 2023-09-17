@@ -1,11 +1,8 @@
 package org.europa.together.utils;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
-import org.europa.together.application.FF4jProcessor;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

@@ -3,7 +3,7 @@
 # together Platform :: CORE
 
 [![License Apache 2](https://img.shields.io/github/license/ElmarDott/TP-CORE)](https://www.apache.org/licenses/LICENSE-2.0)
-[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.0.1-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
+[![Maven Central](https://img.shields.io/badge/Maven%20Central-2.0.2-green.svg)](https://mvnrepository.com/artifact/io.github.together.modules/core)
 [![Javadocs](https://www.javadoc.io/badge/io.github.together.modules/core.svg)](https://www.javadoc.io/doc/io.github.together.modules/core)
 [![Build Status](https://travis-ci.org/ElmarDott/TP-CORE.svg?branch=master)](https://travis-ci.org/ElmarDott/TP-CORE)
 [![Coverage Status](https://coveralls.io/repos/github/ElmarDott/TP-CORE/badge.svg?branch=master)](https://coveralls.io/github/ElmarDott/TP-CORE)
@@ -31,8 +31,7 @@ Components - Release: 1.0
  * [CORE-0011] [PDF Renderer](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0011%5D-PDF-Renderer)
  * [CORE-0012] [Image Processor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0012%5D-Image-Processor)
  * [CORE-0013] [Feature Toggle](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0013%5D-Feature-Toggle)
- * [CORE-0014] [TextProcessor](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Text-Processor)
- * [CORE-0015] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0015%5D-Crypto-Tools)
+ * [CORE-0014] [Crypto Tools](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-0014%5D-Crypto-Tools)
 
 Basic conecpts of this project are: KISS (Keep it simple, stupid), COC (Convention
 over configurations) and DRY (Don't repeat yourself). Also we following the programming
@@ -81,7 +80,7 @@ Please check the Release Notes for published Artifact Versions.
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 
@@ -108,6 +107,12 @@ In the case you like this project, let me know it and rate it with a star.
 ## Release Notes
 
 |Version | Comment
+|--------|----------------------------------------------------------------------
+| 2.0.2  | published 01/2020
+|        | - move internal implementation classes to package internal
+|        | - bugfix; add Java Modul name to MANIFEST.MF
+|        | - bugfix; cleanup test case imports
+|        | - bugfix; ConfigurationDO rename MODUL_VERSION to SERVIC_VERSION
 |--------|----------------------------------------------------------------------
 | 2.0.1  | published 12/2019
 |        | - bugfix; DAO visibilities

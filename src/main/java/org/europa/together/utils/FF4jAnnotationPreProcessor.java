@@ -1,4 +1,4 @@
-package org.europa.together.application;
+package org.europa.together.utils;
 
 import java.io.Writer;
 import java.util.ArrayList;
@@ -16,8 +16,10 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
+import org.europa.together.application.FF4jProcessor;
+import org.europa.together.application.internal.AnnotatedClass;
+import org.europa.together.application.internal.FF4jAnnotationPreProcessorHelper;
 import org.europa.together.business.FeatureToggle;
-import org.europa.together.domain.AnnotatedClass;
 import org.ff4j.core.Feature;
 
 /**

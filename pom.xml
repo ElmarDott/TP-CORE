@@ -20,7 +20,7 @@
 
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -94,12 +94,12 @@
                         <configuration>
                             <proc>none</proc>
                             <includes>
-                                <include>org/europa/together/business/FeatureToggle.java</include>
-                                <include>org/europa/together/domain/AnnotatedClass.java</include>
-                                <include>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</include>
-                                <include>org/europa/together/application/FF4jProcessor.java</include>
-                                <include>org/europa/together/application/FF4jAnnotationPreProcessor.java</include>
+                                <include>org/europa/together/utils/FF4jAnnotationPreProcessor.java</include>
                                 <include>org/europa/together/configuration/FeatureToggles.xml</include>
+                                <include>org/europa/together/business/FeatureToggle.java</include>
+                                <include>org/europa/together/application/FF4jProcessor.java</include>
+                                <include>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</include>
+                                <include>org/europa/together/application/internal/AnnotatedClass.java</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -112,11 +112,11 @@
                         <configuration>
                             <proc>only</proc>
                             <excludes>
+                                <exclude>org/europa/together/utils/FF4jAnnotationPreProcessor.java</exclude>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
-                                <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
-                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessorHelper.java</exclude>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
-                                <exclude>org/europa/together/application/FF4jAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</exclude>
+                                <exclude>org/europa/together/application/internal/AnnotatedClass.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -129,11 +129,11 @@
                         <configuration>
                             <proc>none</proc>
                             <excludes>
+                                <exclude>org/europa/together/utils/FF4jAnnotationPreProcessor.java</exclude>
                                 <exclude>org/europa/together/business/FeatureToggle.java</exclude>
-                                <exclude>org/europa/together/domain/AnnotatedClass.java</exclude>
-                                <include>org/europa/together/utils/AnnotationProcessingHelper.java</include>
                                 <exclude>org/europa/together/application/FF4jProcessor.java</exclude>
-                                <exclude>org/europa/together/utils/ToggleAnnotationPreProcessor.java</exclude>
+                                <exclude>org/europa/together/application/internal/FF4jAnnotationPreProcessorHelper.java</exclude>
+                                <exclude>org/europa/together/application/internal/AnnotatedClass.java</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -156,6 +156,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultEntries/>
+                            <addDefaultImplementationEntries/>
+                            <addDefaultSpecificationEntries/>
+                            <addBuildEnvironmentEntries/>
+                        </manifest>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${groupId}.${artifactId}</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -235,7 +248,7 @@
         <dependency>
             <groupId>org.ff4j</groupId>
             <artifactId>ff4j-core</artifactId>
-            <version>1.8.1</version>
+            <version>1.8.2</version>
         </dependency>
 
         <!-- Bundels -->

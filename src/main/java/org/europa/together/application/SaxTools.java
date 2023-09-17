@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
+import org.europa.together.application.internal.SaxDocumentHandler;
 import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
