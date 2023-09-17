@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE EmployeeInfo [
+    <!ELEMENT EmployeeInfo (Employee)*>
+    <!ELEMENT Employee (Name, Department, Telephone, Email)>
+    <!ELEMENT Name (#PCDATA)>
+    <!ELEMENT Department (#PCDATA)>
+    <!ELEMENT Telephone (#PCDATA)>
+    <!ELEMENT Email (#PCDATA)>
+    <!ATTLIST Employee EmployeeNumber CDATA #REQUIRED>
+]>
+
+<EmployeeInfo><![CDATA[some stuff]]>
+    <Employee  EmployeeNumber="105">
+        <Name>Masashi Okamura</Name>
+        <Department>Design Department</Department>
+        <Telephone>03-1452-4567</Telephone>
+        <Email>okamura@xmltr.co.jp</Email>
+    </Employee>
+    <!-- THIs Is AN XML COMMENT -->
+</EmployeeInfo>

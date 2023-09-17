@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmployeeInfo SYSTEM "simple.dtd"><!-- THIs Is AN XML COMMENT -->
+<EmployeeInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns:e="http://www.sample.com/EmployeeInfo"           xsi:schemaLocation="http://www.sample.com/EmployeeInfo simple.xsd"><!-- THIs Is AN XML COMMENT -->
+
+           <![CDATA[some stuff]]>
+<Employee EmployeeNumber="1"> <!-- THIs Is AN XML COMMENT -->
+<Name>Masashi Okamura</Name>
+<Department>
+       Design Department
+</Department>
+<Telephone>03-1452-4567</Telephone>
+<Email>okamura@xmltr.co.jp<!-- THIs Is AN XML COMMENT --></Email>
+<Email>okamura@xmltr.co.jp</Email><XXX>        <ABC>03-1452-4567</ABC><!-- THIs Is AN XML COMMENT --></XXX>
+</Employee></EmployeeInfo>
