@@ -4,7 +4,7 @@ import static com.google.code.beanmatchers.BeanMatchers.*;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 public class ConfigurationDOTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDOTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDOTest.class);
 
     private static ValidatorFactory validatorFactory;
     private static Validator validate;
@@ -82,6 +82,29 @@ public class ConfigurationDOTest {
         assertThat(ConfigurationDO.class, hasValidBeanToString());
         assertThat(ConfigurationDO.class, hasValidBeanHashCodeFor("key", "modulName", "version"));
         assertThat(ConfigurationDO.class, hasValidBeanEqualsFor("key", "modulName", "version"));
+    }
+
+    @Test
+    void testHasValidGetter() {
+        LOGGER.log("TEST CASE: hasValidGetter()", LogLevel.DEBUG);
+
+        ConfigurationDO domainObject = new ConfigurationDO();
+        domainObject.setComment("comment");
+        domainObject.setConfigurationSet(configSet);
+        domainObject.setDefaultValue(defaultValue);
+        domainObject.setKey(key);
+        domainObject.setModulName(modulName);
+        domainObject.setValue(value);
+        domainObject.setVersion(version);
+
+        assertEquals("comment", domainObject.getComment());
+        assertEquals(configSet, domainObject.getConfigurationSet());
+        assertEquals(defaultValue, domainObject.getDefaultValue());
+        assertEquals(key, domainObject.getKey());
+        assertEquals(modulName, domainObject.getModulName());
+        assertNotNull(domainObject.getUuid());
+        assertEquals(value, domainObject.getValue());
+        assertEquals(version, domainObject.getVersion());
     }
 
     @Test
@@ -179,6 +202,41 @@ public class ConfigurationDOTest {
     }
 
     @Test
+    void testIsEqual() {
+        LOGGER.log("TEST CASE: isEqual()", LogLevel.DEBUG);
+
+        ConfigurationDO A
+                = new ConfigurationDO(key, "111", modulName, version);
+        ConfigurationDO B
+                = new ConfigurationDO(key, "000", modulName, version);
+
+        assertTrue(A.equals(B));
+        assertTrue(B.equals(A));
+    }
+
+    @Test
+    void testIsNotEqual() {
+        LOGGER.log("TEST CASE: isNotEqual()", LogLevel.DEBUG);
+
+        ConfigurationDO A
+                = new ConfigurationDO("AAA", "000", "test", "1.0.1");
+        ConfigurationDO B
+                = new ConfigurationDO("BBB", "001", "test", "1.0.1");
+        ConfigurationDO C
+                = new ConfigurationDO("BBB", "010", "module", "1.0.1");
+        ConfigurationDO D
+                = new ConfigurationDO("BBB", "011", "test", "2.0");
+
+        //KEY
+        assertFalse(A.equals(B));
+        assertFalse(B.equals(A));
+        //MODULE
+        assertFalse(B.equals(C));
+        //VERION
+        assertFalse(B.equals(D));
+    }
+
+    @Test
     void testValidationEmptyComment() {
         LOGGER.log("TEST CASE: validationEmptyComment()", LogLevel.DEBUG);
 
@@ -206,4 +264,5 @@ public class ConfigurationDOTest {
         domainObject.setValue("");
         assertEquals("", domainObject.getValue());
     }
+
 }

@@ -2,12 +2,13 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import com.tngtech.jgiven.junit5.ScenarioTest;
-import org.europa.together.application.DatabaseActionsImpl;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.JdbcActions;
+import org.europa.together.application.FF4jProcessor;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.SocketTimeout;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -24,24 +25,33 @@ public class ConfigurationServiceScenarioTest extends
         ScenarioTest<ConfigurationServiceGiven, ConfigurationServiceAction, ConfigurationServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceScenarioTest.class);
+            = new LogbackLogger(ConfigurationServiceScenarioTest.class);
 
-    public static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    public static DatabaseActions CONNECTION = new JdbcActions(true);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
 
-        CONNECTION.connect("default");
-        boolean check = SocketTimeout.timeout(2000, CONNECTION.getUri(), CONNECTION.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(ConfigurationDAO.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        boolean socket = CONNECTION.connect("default");
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
         String out;
-        if (check) {
-            out = "executed.";
-        } else {
+        if (!toggle || !socket) {
             out = "skiped.";
+            check = false;
+        } else {
+            out = "executed.";
+            check = true;
         }
-        LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
         Assumptions.assumeTrue(check);
     }
 
@@ -72,7 +82,7 @@ public class ConfigurationServiceScenarioTest extends
     }
 
     @Test
-    void testResetModuleToDefault() {
+    void scenario_resetModuleToDefault() {
         LOGGER.log("Scenario A: Reset a full module to the default entries.", LogLevel.DEBUG);
 
         try {
@@ -91,7 +101,7 @@ public class ConfigurationServiceScenarioTest extends
     }
 
     @Test
-    void testFilterMandatoryFieldsOfConfigSet() {
+    void scenario_filterMandatoryFieldsOfConfigSet() {
         LOGGER.log("Scenario B: Filter the mandatory fields of a config set.", LogLevel.DEBUG);
 
         try {

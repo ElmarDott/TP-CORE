@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ff4j xmlns="http://www.ff4j.org/schema/ff4j"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.ff4j.org/schema/ff4j http://ff4j.org/schema/ff4j-1.6.xsd">
+
+    <features>
+        <feature uid="CM-0000" enable="true" description="Test entry for feature toggls" />
+
+        <feature-group name="Release_1.0">
+            <feature-group name="CM-0001">
+                <feature uid="CM-0001"      enable="true" description="Logback Logger" />
+                <feature uid="CM-0001.DO01" enable="true" description="LogLevel Enum" />
+                <feature uid="CM-0001.S001" enable="true" description="Service: Create logging Configuration" />
+                <feature uid="CM-0001.S002" enable="true" description="Service: Read logging Configuration" />
+                <feature uid="CM-0001.S003" enable="true" description="Service: Write logging Configuration" />
+            </feature-group>
+            <feature-group name="CM-0002">
+                <feature uid="CM-0002"       enable="true" description="generic Hibernate Data Access Object" />
+                <feature uid="CM-0002.EX01"  enable="true" description="Exception: DAO" />
+            </feature-group>
+            <feature uid="CM-0003" enable="true" description="Velocity Renderer" />
+            <feature uid="CM-0004" enable="true" description="Property File Reader" />
+            <feature-group name="CM-0005">
+                <feature uid="CM-0005"       enable="true" description="Application Hibernate Configuration" />
+                <feature uid="CM-0005.DO01"  enable="true" description="Configuration Domain Object" />
+                <feature uid="CM-0005.DO02"  enable="true" description="Version Number Object" />
+                <feature uid="CM-0005.S001"  enable="true" description="Service: Reset module to default" />
+                <feature uid="CM-0005.S002"  enable="true" description="Service: Filter mandatory fields of ConfigSets" />
+                <feature uid="CM-0005.EX01"  enable="true" description="Exception: Unsupportet Version" />
+            </feature-group>
+            <feature-group name="CM-0006">
+                <feature uid="CM-0006"      enable="true" description="SMTP JavaMail Client" />
+                <feature uid="CM-0006.S001" enable="true" description="Service: Update Database Configuration." />
+                <feature uid="CM-0006.S002" enable="true" description="Service: Send E-Mail." />
+                <feature uid="CM-0006.S003" enable="true" description="Service: Send Bulk E-Mail." />
+                <feature uid="CM-0006.S004" enable="true" description="Service: Get DB Configuration." />
+            </feature-group>
+            <feature uid="CM-0007" enable="true" description="Zxing QR Code Reader / Writer" />
+            <feature-group name="CM-0008">
+                <feature uid="CM-0008"      enable="true" description="JDBC Database Actions" />
+                <feature uid="CM-0008.CO01" enable="true" description="Constructor: default" />
+                <feature uid="CM-0008.CO02" enable="true" description="Constructor: testmode" />
+                <feature uid="CM-0008.DO01" enable="true" description="JDBC Connection Info" />
+            </feature-group>
+            <feature-group name="CM-0009">
+                <feature uid="CM-0009"    enable="true" description="List Tree Walker" />
+                <feature uid="CM-0009.DO" enable="true" description="Tree Node Domain Object" />
+            </feature-group>
+            <feature-group name="CM-0010">
+                <feature uid="CM-0010"      enable="true" description="XML Tools" />
+                <feature uid="CM-0010.H01"  enable="true" description="Util: SAX Document Handler" />
+            </feature-group>
+            <feature uid="CM-0011" enable="true" description="iText PDF Renderer" />
+            <feature uid="CM-0012" enable="true" description="ImgSclr Processor" />
+        </feature-group>
+
+        <feature-group name="Release_1.1">
+            <!-- No new feature implemented in this Version -->
+        </feature-group>
+
+        <feature-group name="Release_1.2">
+            <feature-group name="CM-0013">
+                <feature uid="CM-0013"      enable="true" description="FF4J Feature Toggle" />
+                <feature uid="CM-0013.DO01" enable="true" description="Annotated Class" />
+                <feature uid="CM-0013.H01"  enable="true" description="Feature Toggle Annotation PreProcessor" />
+            </feature-group>
+        </feature-group>
+
+        <feature-group name="Release_2.0">
+            <feature uid="CM-0015"      enable="true" description="Java Crypto Tools" />
+        </feature-group>
+    </features>
+</ff4j>

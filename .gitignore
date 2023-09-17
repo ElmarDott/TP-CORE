@@ -3,6 +3,11 @@
 /nbactions.xml
 /nb-configuration.xml
 /.idea/
+/.classpath
+/.project
+/.settings
 /*.iml
 /*.log
-/.project
+/*.log.*
+/cobertura.ser
+/faces-config.NavData

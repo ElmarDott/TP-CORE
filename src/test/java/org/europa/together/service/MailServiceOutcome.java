@@ -1,9 +1,10 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
+import java.util.Map;
 import javax.mail.Address;
 import javax.mail.internet.MimeMessage;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.MailClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,10 +25,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class MailServiceOutcome extends Stage<MailServiceOutcome> {
 
     private static final org.europa.together.business.Logger LOGGER
-            = new LoggerImpl(MailServiceOutcome.class);
+            = new LogbackLogger(MailServiceOutcome.class);
 
     @Autowired
-    @Qualifier("mailClientImpl")
+    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     public MailServiceOutcome email_is_arrived(MimeMessage msg) {
@@ -64,6 +65,20 @@ public class MailServiceOutcome extends Stage<MailServiceOutcome> {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
+        return self();
+    }
+
+    public MailServiceOutcome db_service_configuration_is_accessible() {
+
+        try {
+            MailClientService service = new MailClientService();
+            Map<String, String> config = service.getDbConfiguration();
+            // expected: <smtp.gmail.com> but was: <127.0.0.1>
+            assertEquals("smtp.gmail.com", config.get("mailer.host"));
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+
         return self();
     }
 }

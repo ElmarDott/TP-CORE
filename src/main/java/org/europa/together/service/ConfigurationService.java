@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
@@ -22,13 +23,14 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.0")
 @Service
+@FeatureToggle(featureID = ConfigurationDAO.FEATURE_ID)
 public final class ConfigurationService {
 
     private static final long serialVersionUID = 205L;
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationService.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationService.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     /**
@@ -46,6 +48,7 @@ public final class ConfigurationService {
      * @param module as String
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0005.S001")
     public void resetModuleToDefault(final String module) {
 
         List<ConfigurationDO> configurationEntries = configurationDAO.getAllModuleEntries(module);
@@ -63,6 +66,7 @@ public final class ConfigurationService {
      * @return mandatory as List&lt;Configuration&gt;
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0005.S002")
     public List<ConfigurationDO> filterMandatoryFieldsOfConfigSet(
             final String module, final String version, final String configSet) {
 

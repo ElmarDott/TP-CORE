@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class FileUtilsTest {
 
-    private static final Logger LOGGER = new LoggerImpl(FileUtilsTest.class);
+    private static final Logger LOGGER = new LogbackLogger(FileUtilsTest.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
@@ -154,11 +154,17 @@ public class FileUtilsTest {
 
     @Test
     void testFailCopyFile() throws Exception {
+
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(null, new File(""));
         });
+
         assertThrows(Exception.class, () -> {
             FileUtils.copyFile(new File(""), null);
+        });
+
+        assertThrows(Exception.class, () -> {
+            FileUtils.copyFile(null, null);
         });
 
         assertThrows(Exception.class, () -> {

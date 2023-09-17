@@ -3,6 +3,7 @@ package org.europa.together.business;
 import java.sql.ResultSet;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
+import org.europa.together.domain.JdbcConnection;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,12 +13,18 @@ import org.springframework.stereotype.Component;
  * DatabaseActions(boolean activateTestMode);
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface DatabaseActions {
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0008";
 
     /**
      * Establish an JDBC Connection. If the propertyFile Parameter is empty,
@@ -82,69 +89,13 @@ public interface DatabaseActions {
     ResultSet getResultSet();
 
     /**
-     * Return the name of the connected catalog. Also known as DBMS Schemata or
-     * Database.
+     * Return a object with all JDBC Connection meta date.
      *
-     * @return catalogNeame as String
+     * @return JdbcConnection as Object
+     * @throws java.sql.SQLException
      */
-    @API(status = STABLE, since = "1.1")
-    String getMetaCatalog();
-
-    /**
-     * Return the name of the connected Database System.
-     *
-     * @return dbms as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaDbmsName();
-
-    /**
-     * Return the version of the connected DBMS.
-     *
-     * @return dbmsVersion as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaDbmsVersion();
-
-    /**
-     * Return the driver name of the conected DBMS.
-     *
-     * @return driverName as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaJdbcDriverName();
-
-    /**
-     * Return the version of the used database driver.
-     *
-     * @return driverVersion as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaJdbcDriverVersion();
-
-    /**
-     * Return the JDBC Version of the current DBMS driver.
-     *
-     * @return jdbcVersion as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaJdbcVersion();
-
-    /**
-     * Return the connection URL to the DBMS.
-     *
-     * @return as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaUrl();
-
-    /**
-     * Return the current DBMS user.
-     *
-     * @return user as String
-     */
-    @API(status = STABLE, since = "1.1")
-    String getMetaUser();
+    @API(status = STABLE, since = "1.2")
+    JdbcConnection getJdbcMetaData();
 
     /**
      * Get the host URL / IP of the configured Database connection.

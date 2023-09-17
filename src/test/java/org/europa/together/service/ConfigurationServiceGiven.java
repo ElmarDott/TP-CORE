@@ -1,7 +1,7 @@
 package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.europa.together.service.ConfigurationServiceScenarioTest.CONNECTION;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ConfigurationServiceGiven extends Stage<ConfigurationServiceGiven> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceGiven.class);
+            = new LogbackLogger(ConfigurationServiceGiven.class);
     private static final String SQL_FILE
             = "org/europa/together/sql/configuration-test.sql";
 

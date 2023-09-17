@@ -1,7 +1,7 @@
 package org.europa.together.utils;
 
 import java.lang.reflect.Constructor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class ValidatorTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ValidatorTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ValidatorTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
@@ -195,7 +195,7 @@ public class ValidatorTest {
     }
 
     @Test
-    void testRGBColor() {
+    void testIsRGBColor() {
 
         assertTrue(Validator.validate("#000", Validator.RGB_COLOR));
         assertTrue(Validator.validate("#fff", Validator.RGB_COLOR));
@@ -214,8 +214,46 @@ public class ValidatorTest {
 
         assertTrue(Validator.validate("#996789", Validator.RGB_COLOR));
         assertTrue(Validator.validate("#6789Af", Validator.RGB_COLOR));
+    }
 
-        //FALSE POSITIVE
+    @Test
+    void testIsVersionNumber() {
+        assertTrue(Validator.validate("000.000.000-LABEL", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("000.000.000", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("000.000", Validator.VERSION_NUMBER));
+
+        assertTrue(Validator.validate("1.0", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.0", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("01.0", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("001.0", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.00", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.000", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.00.0", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.00", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.000", Validator.VERSION_NUMBER));
+
+        assertTrue(Validator.validate("1.00-XYZ", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.0-SNAPSHOT", Validator.VERSION_NUMBER));
+        assertTrue(Validator.validate("1.0.0-XXXXXXXXXX", Validator.VERSION_NUMBER));
+    }
+
+    @Test
+    void testIsNotVersionNumber() {
+        assertFalse(Validator.validate("A", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate(".1", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.0.0", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("0001.0", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0000", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.0000", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.000-0", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.000-abc", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1.0.000-XXXXXXXXXXX", Validator.VERSION_NUMBER));
+        assertFalse(Validator.validate("1-XYZ", Validator.VERSION_NUMBER));
+    }
+
+    @Test
+    void testIsNotRGBColor() {
         assertFalse(Validator.validate("#0", Validator.RGB_COLOR));
         assertFalse(Validator.validate("#11af990", Validator.RGB_COLOR));
 

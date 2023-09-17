@@ -1,8 +1,11 @@
 package org.europa.together.domain;
 
+import org.europa.together.business.FeatureToggle;
+
 /**
  * Available LogLevels.
  */
+@FeatureToggle(featureID = "CM-0001.DO01")
 public enum LogLevel {
 
     DEBUG("DEBUG"),

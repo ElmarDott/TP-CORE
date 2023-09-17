@@ -1,14 +1,18 @@
 package org.europa.together.utils;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.FF4jProcessor;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
+import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -17,12 +21,22 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class SocketTimeoutTest {
 
-    private static final Logger LOGGER = new LoggerImpl(SocketTimeoutTest.class);
+    private static final Logger LOGGER = new LogbackLogger(SocketTimeoutTest.class);
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("Assumption terminated. TestSuite will be excecuted.", LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        boolean check = true;
+        String out = "executed";
+        boolean hasInternet
+                = SocketTimeout.isUrlAvailable("http://www.google.com");
+        if (!hasInternet) {
+            out = "skiped.";
+            check = false;
+        }
+        LOGGER.log("Assumption terminated. TestSuite will be " + out, LogLevel.TRACE);
+        Assumptions.assumeTrue(check);
     }
 
     @AfterAll

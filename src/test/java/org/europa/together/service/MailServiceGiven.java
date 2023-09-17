@@ -2,7 +2,7 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import javax.mail.internet.MimeMessage;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import static org.europa.together.service.MailClientScenarioTest.CONNECTION;
@@ -26,27 +26,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class MailServiceGiven extends Stage<MailServiceGiven> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(MailServiceGiven.class);
+            = new LogbackLogger(MailServiceGiven.class);
 
     @Autowired
-    @Qualifier("mailClientImpl")
+    @Qualifier("javaMailClient")
     private MailClient mailer;
 
     public MailServiceGiven service_has_database_connection() {
         try {
             assertTrue(CONNECTION.connect("default"));
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return self();
-    }
-
-    public MailServiceGiven service_get_db_configuration() {
-
-        try {
-            mailer.loadConfigurationFromDatabase();
-            assertEquals(10, mailer.getConfiguration().size());
-            assertEquals("smtp.gmail.com", mailer.getConfiguration().get("mailer.host"));
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

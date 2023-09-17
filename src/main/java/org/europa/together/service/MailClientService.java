@@ -1,5 +1,6 @@
 package org.europa.together.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -9,15 +10,17 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.MailClientImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
+import org.europa.together.business.FeatureToggle;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
+import org.europa.together.application.JavaCryptoTools;
+import org.europa.together.business.CryptoTools;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,13 +35,16 @@ import org.springframework.stereotype.Service;
  */
 @API(status = STABLE, since = "1.0")
 @Service
+@FeatureToggle(featureID = MailClient.FEATURE_ID)
 public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
-    private static final Logger LOGGER = new LoggerImpl(MailClientService.class);
+    private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
+
+    private CryptoTools cryptoTools = new JavaCryptoTools();
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     /**
@@ -66,6 +72,7 @@ public final class MailClientService {
      * @param configurationList as Map
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S001")
     public void updateDatabaseConfiguration(final Map<String, String> configurationList) {
         List<ConfigurationDO> configurationEntries
                 = configurationDAO.getAllConfigurationSetEntries(
@@ -75,13 +82,90 @@ public final class MailClientService {
 
             for (Map.Entry<String, String> entry : configurationList.entrySet()) {
                 if (configEntry.getKey().equals(
-                        StringUtils.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
+                        cryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
 
                     configEntry.setValue(entry.getValue());
                     configurationDAO.update(configEntry.getUuid(), configEntry);
                 }
             }
         }
+    }
+
+    /**
+     * Get the Configuration for the E-Mail Service from the Database and return
+     * the result as Map.
+     *
+     * @return mailConfiguration as Map
+     */
+    @API(status = STABLE, since = "1.1")
+    @FeatureToggle(featureID = "CM-0006.S004")
+    public Map<String, String> getDbConfiguration() {
+
+        Map<String, String> configuration = new HashMap<>();
+        List<ConfigurationDO> configurationEntries
+                = configurationDAO.getAllConfigurationSetEntries(
+                        Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
+
+        for (ConfigurationDO entry : configurationEntries) {
+            String value;
+            if (StringUtils.isEmpty(entry.getValue())) {
+                value = entry.getDefaultValue();
+            } else {
+                value = entry.getValue();
+            }
+
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.host",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.host", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.port",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.port", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.sender",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.sender", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.user",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.user", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.password",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.password", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.ssl",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.ssl", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.tls",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.tls", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.debug",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.debug", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.count",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.count", value);
+            }
+            if (entry.getKey()
+                    .equals(cryptoTools.calculateHash("mailer.wait",
+                            HashAlgorithm.SHA256))) {
+                configuration.replace("mailer.wait", value);
+            }
+        }
+        return configuration;
     }
 
     /**
@@ -101,6 +185,7 @@ public final class MailClientService {
      * @param mail as MailClient
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S002")
     public void sendEmail(final MailClient mail) {
         try {
             Address[] addresses = new Address[1];
@@ -129,6 +214,7 @@ public final class MailClientService {
      * @return sendedEmails as int
      */
     @API(status = STABLE, since = "1.0")
+    @FeatureToggle(featureID = "CM-0006.S003")
     public int sendBulkMail(final MailClient mail) {
 
         int countSendedMails = 0;
@@ -155,19 +241,5 @@ public final class MailClientService {
         }
         LOGGER.log(countSendedMails + " E-Mails was send", LogLevel.DEBUG);
         return countSendedMails;
-    }
-
-    /**
-     * Get the Configuration for the E-Mail Service from the Database and return
-     * the result as Map.
-     *
-     * @return mailConfiguration as Map
-     */
-    @API(status = STABLE, since = "1.1")
-    public Map<String, String> getDbConfiguration() {
-
-        MailClient client = new MailClientImpl();
-        client.loadConfigurationFromDatabase();
-        return client.getConfiguration();
     }
 }

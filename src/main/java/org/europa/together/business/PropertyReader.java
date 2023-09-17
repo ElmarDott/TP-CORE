@@ -23,6 +23,12 @@ import org.springframework.stereotype.Component;
 public interface PropertyReader {
 
     /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0004";
+
+    /**
      * Add a single Property to the Property list. If the property already exist
      * in the List, the new entry will not added and the method return false.
      *

@@ -1,14 +1,12 @@
 package org.europa.together.utils;
 
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
-import org.europa.together.domain.HashAlgorithm;
 import org.europa.together.domain.LogLevel;
 
 /**
@@ -20,7 +18,7 @@ public final class StringUtils {
     private static final int LIMIT = 2100;
     private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
 
     /**
      * Constructor.
@@ -100,32 +98,6 @@ public final class StringUtils {
                     (bytes[i] & Constraints.HEX_255) | Constraints.HEX_256).substring(1, 1 + 2));
         }
         return sb.toString();
-    }
-
-    /**
-     * Calculates a hash from a given String.
-     *
-     * @param plainText as String
-     * @param algorithm as HashAlgorithm
-     * @return the calculated hash as String
-     */
-    public static String calculateHash(final String plainText,
-            final HashAlgorithm algorithm) {
-
-        String hash = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance(algorithm.toString());
-            md.reset();
-            hash = StringUtils.byteToString(md.digest(plainText.getBytes("UTF-8")));
-
-            String msg = "Utils.calculateHash(" + algorithm.toString() + ")"
-                    + " plaintext: " + plainText + " hash: " + hash;
-            LOGGER.log(msg, LogLevel.DEBUG);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return hash;
     }
 
     /**
@@ -316,5 +288,4 @@ public final class StringUtils {
 
         return clean;
     }
-
 }

@@ -2,7 +2,7 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import java.util.List;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
@@ -25,10 +25,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ConfigurationServiceOutcome extends Stage<ConfigurationServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(ConfigurationServiceOutcome.class);
+            = new LogbackLogger(ConfigurationServiceOutcome.class);
 
     @Autowired
-    @Qualifier("configurationDAOImpl")
+    @Qualifier("configurationHbmDAO")
     private ConfigurationDAO configurationDAO;
 
     public ConfigurationServiceOutcome check_default_entries() {

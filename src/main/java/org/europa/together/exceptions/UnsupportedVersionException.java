@@ -1,8 +1,11 @@
 package org.europa.together.exceptions;
 
+import org.europa.together.business.FeatureToggle;
+
 /**
  * Exception for unsupported Versions.
  */
+@FeatureToggle(featureID = "CM-0005.EX01")
 public class UnsupportedVersionException extends Exception {
 
     private static final long serialVersionUID = 1L;

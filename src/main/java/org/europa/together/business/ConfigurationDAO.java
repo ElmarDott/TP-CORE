@@ -19,12 +19,18 @@ import org.springframework.stereotype.Component;
  * editing.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0005";
 
     /**
      * Get the whole configuration object by a given key, module and the version

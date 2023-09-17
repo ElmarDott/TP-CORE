@@ -11,6 +11,12 @@
         </encoder>
     </appender>
 
+    <logger name="ch.qos.logback" level="WARN" />
+    <logger name="com.tngtech.jgiven" level="WARN" />
+    <logger name="com.icegreen.greenmail" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="com.mchange.v2" level="WARN" />
     <logger name="org.europa.together" level="TRACE" />
 
     <root level="DEBUG">

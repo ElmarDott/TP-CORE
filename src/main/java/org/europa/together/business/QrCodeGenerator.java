@@ -21,6 +21,12 @@ import org.springframework.stereotype.Component;
 public interface QrCodeGenerator {
 
     /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0007";
+
+    /**
      * Configure the Generator with the dimension (height and width) of the QR
      * Code Image. Height = Weight; the produced Image will be always an square.
      * It also define where the file will be stored.

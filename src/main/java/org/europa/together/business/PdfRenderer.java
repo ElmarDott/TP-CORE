@@ -10,12 +10,18 @@ import org.springframework.stereotype.Component;
  * Basic PDF functionality to generate from an Application letters or reports.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface PdfRenderer {
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0011";
 
     /**
      * Writes a PDF document (PdfReader) to the given Destination.

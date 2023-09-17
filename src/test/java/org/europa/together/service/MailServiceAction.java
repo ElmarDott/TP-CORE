@@ -2,7 +2,7 @@ package org.europa.together.service;
 
 import com.tngtech.jgiven.Stage;
 import java.util.Map;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import static org.europa.together.service.MailClientScenarioTest.SMTP_SERVER;
@@ -23,18 +23,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class MailServiceAction extends Stage<MailServiceAction> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(MailServiceAction.class);
+            = new LogbackLogger(MailServiceAction.class);
 
     private final MailClientService service = new MailClientService();
-
-    public MailServiceAction smpt_server_is_available() {
-        try {
-            assertTrue(SMTP_SERVER.getSmtps().isRunning());
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return self();
-    }
 
     public MailServiceAction send_email(MailClient client) {
         try {
@@ -59,6 +50,15 @@ public class MailServiceAction extends Stage<MailServiceAction> {
     public MailServiceAction update_email_database_config(Map<String, String> configurationList) {
         try {
             service.updateDatabaseConfiguration(configurationList);
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return self();
+    }
+
+    public MailServiceAction load_service_database_configuration() {
+        try {
+            assertEquals(10, service.getDbConfiguration().size());
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

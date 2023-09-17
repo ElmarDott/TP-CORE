@@ -1,6 +1,6 @@
 package org.europa.together.domain;
 
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class HashAlgorithmTest {
 
-    private static final Logger LOGGER = new LoggerImpl(HashAlgorithmTest.class);
+    private static final Logger LOGGER = new LogbackLogger(HashAlgorithmTest.class);
 
     @Test
     void testEnumValues() {
@@ -26,4 +26,5 @@ public class HashAlgorithmTest {
         assertEquals("SHA-512",
                 HashAlgorithm.SHA512.toString());
     }
+
 }

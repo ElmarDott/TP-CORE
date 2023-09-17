@@ -1,6 +1,6 @@
 package org.europa.together.utils;
 
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.joda.time.DateTime;
@@ -14,7 +14,7 @@ public final class Validator {
     //  ###  * = 0 or more quantifier
     //  ###  + = 1 or more quantifier
     //  ###  ? = 0 or 1 quantifier
-    private static final Logger LOGGER = new LoggerImpl(Validator.class);
+    private static final Logger LOGGER = new LogbackLogger(Validator.class);
 
     /**
      * Constructor.
@@ -73,6 +73,13 @@ public final class Validator {
      */
     public static final String E_MAIL_ADDRESS = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    /**
+     * Version number based on semantic versioning. Major.Minor.Patch-SNAPSHOT :
+     * 1.0; 1.0-SNAPSHOT; 1.0.0-SNAPSHOT :: 000.000.000-ABCDEFGHIJ
+     */
+    public static final String VERSION_NUMBER
+            = "([0-9]{1,3})\\.([0-9]){1,3}(\\.[0-9]{1,3})?(-[A-Z]{1,10})?";
 
     /**
      * Check if the Variable test inside the range of the borders min and max.

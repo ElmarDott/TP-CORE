@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.europa.together.application.DatabaseActionsImpl;
-import org.europa.together.application.LoggerImpl;
-import org.europa.together.application.MailClientImpl;
+import org.europa.together.application.JdbcActions;
+import org.europa.together.application.FF4jProcessor;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.application.JavaMailClient;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
-import org.europa.together.utils.SocketTimeout;
 import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
@@ -36,18 +36,18 @@ public class MailClientScenarioTest extends
         ScenarioTest<MailServiceGiven, MailServiceAction, MailServiceOutcome> {
 
     private static final Logger LOGGER
-            = new LoggerImpl(MailClientScenarioTest.class);
+            = new LogbackLogger(MailClientScenarioTest.class);
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes";
     private static final String SQL_FILE
             = "org/europa/together/sql/email-config-test.sql";
 
-    public static DatabaseActions CONNECTION = new DatabaseActionsImpl(true);
+    public static DatabaseActions CONNECTION = new JdbcActions(true);
     public static GreenMail SMTP_SERVER = null;
     private MailClient client = null;
 
     public MailClientScenarioTest() {
-        client = new MailClientImpl();
+        client = new JavaMailClient();
         //COMPOSE MAIL
         client.loadConfigurationFromProperties("org/europa/together/properties/mail-test.properties");
         client.setSubject("JGiven Test E-Mail");
@@ -59,19 +59,29 @@ public class MailClientScenarioTest extends
     @BeforeAll
     static void setUp() {
 
-        CONNECTION.connect("default");
-        boolean check = SocketTimeout.timeout(2000, CONNECTION.getUri(), CONNECTION.getPort());
-        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + check, LogLevel.TRACE);
+        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        FF4jProcessor feature = new FF4jProcessor();
+        boolean toggle = feature.deactivateUnitTests(MailClient.FEATURE_ID);
+        LOGGER.log("PERFORM TESTS :: FeatureToggle", LogLevel.TRACE);
+
+        boolean socket = CONNECTION.connect("default");
+        LOGGER.log("PERFORM TESTS :: Check DBMS availability -> " + socket, LogLevel.TRACE);
+
+        boolean check;
         String out;
-        if (check) {
-            out = "executed.";
+        if (!toggle || !socket) {
+            out = "skiped.";
+            check = false;
         } else {
-            out = "skipped.";
+            out = "executed.";
+            check = true;
         }
+
         LOGGER.log("Assumption terminated. TestSuite will be " + out + "\n", LogLevel.TRACE);
         Assumptions.assumeTrue(check);
 
-        //DATABASE CONFIGURATION ENTIES FOR E-MAIL
+        //DBMS Table setup
         CONNECTION.executeSqlFromClasspath(SQL_FILE);
 
         //SMTP Test Server
@@ -145,8 +155,7 @@ public class MailClientScenarioTest extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().smpt_server_is_available()
-                    .and().send_bulk_email(client);
+            when().send_bulk_email(client);
 
             //PostCondition
             then().mass_emails_are_arrived(SMTP_SERVER.getReceivedMessages());
@@ -171,8 +180,7 @@ public class MailClientScenarioTest extends
                     .and().email_is_composed(client);
 
             // Invariant
-            when().smpt_server_is_available()
-                    .and().send_email(client);
+            when().send_email(client);
 
             //PostCondition
             then().email_is_arrived(SMTP_SERVER.getReceivedMessages()[0]);
@@ -190,8 +198,7 @@ public class MailClientScenarioTest extends
         config.put("mailer.host", "SMTPS.localhost:5432");
         try {
             // PreCondition
-            given().service_has_database_connection()
-                    .and().service_get_db_configuration();
+            given().service_has_database_connection();
 
             // Invariant
             when().update_email_database_config(config);
@@ -199,6 +206,24 @@ public class MailClientScenarioTest extends
             //PostCondition
             then().configuration_is_changed();
 
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+    }
+
+    @Test
+    void scenario_getDbConfiguration() {
+        LOGGER.log("Scenario D: Get Database Configuration", LogLevel.DEBUG);
+
+        try {
+            // PreCondition
+            given().service_has_database_connection();
+
+            // Invariant
+            when().load_service_database_configuration();
+
+            //PostCondition
+            then().db_service_configuration_is_accessible();
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }

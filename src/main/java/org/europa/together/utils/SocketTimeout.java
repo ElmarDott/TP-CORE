@@ -1,7 +1,9 @@
 package org.europa.together.utils;
 
 import java.net.Socket;
-import org.europa.together.application.LoggerImpl;
+import java.net.URL;
+import java.net.URLConnection;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 
@@ -11,13 +13,33 @@ import org.europa.together.domain.LogLevel;
  */
 public final class SocketTimeout {
 
-    private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(SocketTimeout.class);
 
     /**
      * Constructor.
      */
     private SocketTimeout() {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Check if a URL e. g. www.google.com is available. It is a simple test if
+     * a connection to the internet is possible.
+     *
+     * @param url as String
+     * @return true on success
+     */
+    public static boolean isUrlAvailable(final String url) {
+        boolean success = false;
+        try {
+            URL uri = new URL(url);
+            URLConnection connection = uri.openConnection();
+            connection.connect();
+            success = true;
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return success;
     }
 
     /**
@@ -34,21 +56,17 @@ public final class SocketTimeout {
     public static boolean timeout(final int milliseconds, final String uri, final int port) {
 
         boolean success = false;
-        for (int i = 1; i <= 3; i++) {
-            try {
-                Socket socket = new Socket(uri, port);
-                socket.setSoTimeout(milliseconds);
-                socket.close();
+        try {
+            Socket socket = new Socket(uri, port);
+            socket.setSoTimeout(milliseconds);
+            socket.close();
 
-                success = true;
-                LOGGER.log("[After " + i + " tries] Socket connection to " + uri
-                        + ":" + port + " can be established.",
-                        LogLevel.DEBUG);
-                break;
+            success = true;
+            LOGGER.log("Socket connection  can be established.",
+                    LogLevel.DEBUG);
 
-            } catch (Exception ex) {
-                LOGGER.catchException(ex);
-            }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
         return success;
     }

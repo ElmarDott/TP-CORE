@@ -1,5 +1,6 @@
 package org.europa.together.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
@@ -25,7 +26,7 @@ import org.europa.together.domain.LogLevel;
  */
 public final class FileUtils {
 
-    private static final Logger LOGGER = new LoggerImpl(FileUtils.class);
+    private static final Logger LOGGER = new LogbackLogger(FileUtils.class);
     private static final Charset CHARSET = Charset.forName("UTF-8");
     private static final int BYTES = 1024;
 
@@ -174,40 +175,29 @@ public final class FileUtils {
      * @param destination as File
      * @throws java.io.IOException on failure
      */
+    @SuppressFBWarnings(
+            value = "OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE",
+            justification = "Exception Handling have to be done in the class calling this method.")
     public static void copyFile(final File source, final File destination)
             throws IOException {
-
-        if (source == null || destination == null) {
-            throw new NullPointerException("parameters of copyFile = NULL");
-        }
-        if (!source.exists()) {
-            throw new IOException("Source " + source.getPath() + " don't exist.");
-        }
 
         InputStream is = null;
         OutputStream os = null;
 
-        try {
-            is = new FileInputStream(source);
-            os = new FileOutputStream(destination);
+        is = new FileInputStream(source);
+        os = new FileOutputStream(destination);
 
-            byte[] buffer = new byte[BYTES];
-            int length;
-            while ((length = is.read(buffer)) > 0) {
-                os.write(buffer, 0, length);
-            }
+        byte[] buffer = new byte[BYTES];
+        int length;
+        while ((length = is.read(buffer)) > 0) {
+            os.write(buffer, 0, length);
+        }
 
-        } catch (Exception ex) {
-
-            LOGGER.catchException(ex);
-        } finally {
-
-            if (is != null) {
-                is.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+        if (is != null) {
+            is.close();
+        }
+        if (os != null) {
+            os.close();
         }
     }
 
@@ -220,6 +210,9 @@ public final class FileUtils {
      * @param directory as File
      * @return Collection of Files
      */
+    @SuppressFBWarnings(
+            value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+            justification = "No violation, because of using recrusion")
     public static Collection<File> listFileTree(final File directory) {
 
         Set<File> fileTree;

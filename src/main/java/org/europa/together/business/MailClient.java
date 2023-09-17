@@ -3,6 +3,7 @@ package org.europa.together.business;
 import java.util.List;
 import java.util.Map;
 import javax.activation.FileDataSource;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -17,12 +18,18 @@ import org.springframework.stereotype.Component;
  * amount of mails for a few seconds.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 2.0
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 @Component
 public interface MailClient {
+
+    /**
+     * Identifier for the given feature to enable toggles.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-0006";
 
     /**
      * Define the Configuration Set for the MailClient.
@@ -63,6 +70,12 @@ public interface MailClient {
     void clearAttachments();
 
     /**
+     * Clean (reset) the mailer configuration.
+     */
+    @API(status = STABLE, since = "2.0")
+    void clearConfiguration();
+
+    /**
      * Reset the Recipient List.
      */
     @API(status = STABLE, since = "1.0")
@@ -70,15 +83,12 @@ public interface MailClient {
 
     /**
      * Population the database with the MailClient Configuration.
+     *
+     * @param sqlFile as String
+     * @param connectTestDb as boolean
      */
-    @API(status = STABLE, since = "1.1")
-    void populateConfiguration();
-
-    /**
-     * Allow a re-connection to the configured SMTP Server.
-     */
-    @API(status = STABLE, since = "1.0")
-    void reconnect();
+    @API(status = STABLE, since = "2.0")
+    void populateDbConfiguration(String sqlFile, boolean... connectTestDb);
 
     /**
      * Limit the maximum file size for attachments.
@@ -183,6 +193,7 @@ public interface MailClient {
      * Get the configured session to connect the SMTP Server.
      *
      * @return session as Session
+     * @throws javax.mail.NoSuchProviderException
      */
     @API(status = STABLE, since = "1.0")
     Session getSession();
@@ -235,7 +246,8 @@ public interface MailClient {
      *
      * @param recipient as InternetAddress
      * @return e-mail as MimeMessage
+     * @throws javax.mail.MessagingException by error
      */
     @API(status = STABLE, since = "1.0")
-    MimeMessage composeMail(InternetAddress recipient);
+    MimeMessage composeMail(InternetAddress recipient) throws MessagingException;
 }

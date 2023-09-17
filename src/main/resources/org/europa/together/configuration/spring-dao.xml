@@ -38,30 +38,11 @@
         <!-- in case we want to support redeploy, these can stop memory leaks -->
         <!--property name="contextClassLoaderSource" value="library" -->
         <!--property name="privilegeSpawnedThreads" value="true" -->
-
-        <!--
-            DEBUG, not for production -
-            (if we have unreturned connections, we have a BIG problem)
-        -->
-        <!-- property name="debugUnreturnedConnectionStackTraces" value="true"/>
-        <property name="unreturnedConnectionTimeout" value="5" / -->
     </bean>
-
-    <!-- SESSION FACTORY (Hibernate Standard) -->
-    <!-- bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource" ref="mainSchemata"/>
-        <property name="packagesToScan" value="eu.freeplace.infrastructure.domain"/>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-            </props>
-        </property>
-    </bean -->
 
     <!-- ENTITY MANAGER for MAIN Database Schemata (JPA Standard) -->
     <bean id="mainEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
         <property name="dataSource" ref="mainSchemata" />
         <property name="packagesToScan">
             <list>
@@ -79,12 +60,6 @@
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect.database}</prop>
-                <!--
-                    validate: validate the schema, makes no changes to the database.
-                    update: update the schema.
-                    create: creates the schema, destroying previous data.
-                    create-drop: drop the schema at the end of the session.
-                -->
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <!-- prop key="hibernate.id.new_generator_mappings">true</prop -->
