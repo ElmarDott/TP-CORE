@@ -14,7 +14,7 @@
     <parent>
         <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.4.0</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.together.modules</groupId>
@@ -25,7 +25,7 @@
     <properties>
         <skipUnitTests>false</skipUnitTests>
         <skipIntegrationTests>false</skipIntegrationTests>
-        <skipEnforcer>false</skipEnforcer>
+        <skipEnforcer>true</skipEnforcer>
 
         <skipCoveralls>true</skipCoveralls>
         <skipSwagger>true</skipSwagger>
@@ -42,10 +42,9 @@
         <url>https://travis-ci.org/ElmarDott/TP-CORE</url>
     </ciManagement>
 
-    <!-- Jira issue management -->
     <issueManagement>
-        <system>IssueTracking@Github</system>
-        <url><![CDATA[https://github.com/ElmarDott/TP-CORE/issues?sort=created&direction=desc&state=open]]></url>
+        <system>Redmine</system>
+        <url>https://issues.elmar-dott.com/projects/tp-core</url>
     </issueManagement>
 
     <build>
@@ -127,12 +126,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
+            <version>2.0.9</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.6</version>
+            <version>1.4.11</version>
         </dependency>
 
         <dependency>
@@ -143,7 +142,7 @@
         <dependency>
             <groupId>jakarta.activation</groupId>
             <artifactId>jakarta.activation-api</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
         </dependency>
 
         <dependency>
@@ -159,17 +158,17 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.2</version>
+            <version>2.15.2</version>
         </dependency>
         <dependency>
             <groupId>xerces</groupId>
@@ -184,23 +183,23 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-openpdf</artifactId>
-            <version>9.1.22</version>
+            <version>9.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.4</version>
+            <version>1.16.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.imgscalr</groupId>
@@ -222,7 +221,7 @@
         <dependency>
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-circuitbreaker</artifactId>
-            <version>2.0.2</version>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
 </project>

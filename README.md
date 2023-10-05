@@ -12,7 +12,7 @@
 ## Getting Started
 The TP-CORE artifact contains typical basic functions for Java Applications. The module is elaborated as library and packed as JAR file. It is possible to use this artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
-Components - Release: 2.0
+Components - Release: 3.0
 
  * [CORE-01] [Application Logger](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-01%5D-Logger)
  * [CORE-02] [generic Data Access Object](https://github.com/ElmarDott/TP-CORE/wiki/%5BCORE-02%5D-generic-Data-Access-Object---DAO)
@@ -103,7 +103,7 @@ In the case you like this project, let me know it and rate it with a star.
 |Version | Comment
 |--------|----------------------------------------------------------------------
 | 3.1.0  | in prgress
-|        | -
+|        | - update Spring 6.0 & HBM 6.1 (javax -> jakarta)
 |--------|----------------------------------------------------------------------
 | 3.0    | published 10/2022
 |        | - implement FeatureFlags based FF4j
