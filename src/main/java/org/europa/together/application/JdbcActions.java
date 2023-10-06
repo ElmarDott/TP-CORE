@@ -101,6 +101,8 @@ public class JdbcActions implements DatabaseActions {
             statement = jdbcConnection.createStatement();
             statement.execute(sql);
             resultSet = statement.getResultSet();
+
+            LOGGER.log("Execute SQL: " + sql, LogLevel.DEBUG);
         } else {
             LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
         }
