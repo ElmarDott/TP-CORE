@@ -2,26 +2,37 @@ package org.europa.together.business;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Map;
+import java.util.List;
+import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
 import org.apiguardian.api.API;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import org.europa.together.exceptions.MisconfigurationException;
-import org.europa.together.exceptions.UnsupportedVersionException;
 import org.springframework.stereotype.Component;
 
 /**
- * A simple Image Processor with some useful basic functionality in
+ * A simple image processor with some useful basic functionality in
  * applications. The implementation is a wrapper for the Java2D & imgscalr.
  *
- *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ImgSclrProcessor")
 @Component
 public interface ImageProcessor {
+
+    /**
+     * Identifier for the given feature.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-12";
+
+    /**
+     * Supported JPEG file format.
+     */
+    @API(status = STABLE, since = "3.0")
+    String FORMAT_JPEG = "jpeg";
 
     /**
      * Supported JPG file format.
@@ -42,18 +53,18 @@ public interface ImageProcessor {
     String FORMAT_PNG = "png";
 
     /**
-     * Load an BufferdImage. In te case an Image is already loaded, this method
-     * overwrite the prvieous image.
+     * Load an BufferdImage. In te case an image is already loaded, this method
+     * overwrite the previous image.
      *
      * @param image as BufferdImage
      * @return true on success
      */
     @API(status = STABLE, since = "1.0")
-    boolean loadImage(final BufferedImage image);
+    boolean loadImage(BufferedImage image);
 
     /**
-     * Load an image from a file. In te case an Image is already loaded, this
-     * method overwrite the prvieous image.
+     * Load an image from a file. In te case an image is already loaded, this
+     * method overwrite the previous image.
      *
      * @param image as File
      * @return true on success
@@ -66,10 +77,11 @@ public interface ImageProcessor {
      *
      * @return true on success
      */
+    @API(status = DEPRECATED, since = "1.1")
     boolean isImageSet();
 
     /**
-     * Save a modified Image to a given name and path wich is definde as file.
+     * Save a modified image to a given name and path which is defined as file.
      * Also the format (GIF, PNG, BMP or JPG) has to be defined. <br>
      * <code>
      *   saveImage(renderedImage, new File("/my/file/image.png"), FORMAT_PNG);
@@ -79,7 +91,7 @@ public interface ImageProcessor {
      * @param file as File
      * @param format as String
      * @return true on success
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     boolean saveImage(BufferedImage renderedImage, File file, String format)
@@ -90,6 +102,7 @@ public interface ImageProcessor {
      *
      * @return height as int
      */
+    @API(status = STABLE, since = "1.1")
     int getHeight();
 
     /**
@@ -97,6 +110,7 @@ public interface ImageProcessor {
      *
      * @return width as int
      */
+    @API(status = STABLE, since = "1.1")
     int getWidth();
 
     /**
@@ -105,17 +119,18 @@ public interface ImageProcessor {
      * @param image as BufferedImage
      * @return imageSize as long
      */
+    @API(status = STABLE, since = "1.1")
     long getImageSize(BufferedImage image);
 
     /**
-     * Reset the loaded Image.
+     * Reset the loaded image.
      */
     @API(status = STABLE, since = "1.0")
     void clearImage();
 
     /**
      * Get from an given image an defined clipping. X and Y are the coordinates
-     * where the cropping starts. Height and Width define an rectangle of the
+     * where the cropping starts. Height and width define an rectangle of the
      * cropped area, which will be the new image.
      *
      * @param x as int
@@ -123,7 +138,7 @@ public interface ImageProcessor {
      * @param height as int
      * @param width as int
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage crop(int x, int y, int height, int width)
@@ -133,7 +148,7 @@ public interface ImageProcessor {
      * Flip the image horizontaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipHorizontal() throws MisconfigurationException;
@@ -142,7 +157,7 @@ public interface ImageProcessor {
      * Flip the image verticaly.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage flipVertical() throws MisconfigurationException;
@@ -156,49 +171,32 @@ public interface ImageProcessor {
     BufferedImage getImage();
 
     /**
-     * Resize an given imag to a new Size. The new scale is given in percent and
-     * is be automatic calculated from the original Image. The calculation is
-     * rounded, because of the mathematic operation as Integer.<br>
-     * calculation: int (orginal.size / 100) * percent<br>
+     * Resize an given image to a new Size. The new scale is given in percent
+     * and is be automatic calculated from the original image. The calculation
+     * is rounded, because of the mathematic operation as Integer.<br>
+     * calculation: int (original.size / 100) * percent<br>
      *
      * @param percentage as int
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage resize(int percentage) throws MisconfigurationException;
 
     /**
-     * Rotate the image 90 degree steps to the right side.Clockwise rotation.
+     * Rotate the image 90 degree steps to the right side. Clockwise rotation.
      *
      * @return renderdImage as BufferedImage
-     * @throws MisconfigurationException - in the case of wrong usage
+     * @throws org.europa.together.exceptions.MisconfigurationException
      */
     @API(status = STABLE, since = "1.0")
     BufferedImage rotateRight() throws MisconfigurationException;
 
     /**
-     * Function is not implemented now.
+     * Get the full list of ImageMetaData.
      *
-     * @return BufferedImage null
-     * @throws UnsupportedVersionException - always
+     * @return ImageMetaData as List
      */
-    @API(status = EXPERIMENTAL, since = "1.1")
-    default BufferedImage setMetaData()
-            throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
-    }
-
-    /**
-     * Function is not implemented now.
-     *
-     * @return Map null
-     * @throws UnsupportedVersionException - always
-     */
-    @API(status = EXPERIMENTAL, since = "1.1")
-    default Map<String, String> getMetaData()
-            throws UnsupportedVersionException {
-        throw new UnsupportedVersionException("Method not implemnted in this Version.");
-    }
-
+    @API(status = STABLE, since = "2.1")
+    List<ImageMetadataItem> getMetaData();
 }

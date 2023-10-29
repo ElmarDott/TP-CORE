@@ -4,6 +4,7 @@ import java.util.List;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.ConfigurationDO;
+import org.europa.together.exceptions.DAOException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,18 +14,24 @@ import org.springframework.stereotype.Component;
  * entries.<br>
  *
  * Domain Object: ID, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME,
- * MODUL_VERSION, DEPECATED, COMMENT<br>
+ * MODUL_VERSION, DEPRECATED, COMMENT<br>
  *
- * The keys are stored as SHA-256 hash, to protect the Database against direct
+ * The keys are stored as SHA-256 hash, to protect the database against direct
  * editing.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ConfigurationHbmDAO")
 @Component
 public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
+
+    /**
+     * Identifier for the given feature.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-05";
 
     /**
      * Get the whole configuration object by a given key, module and the version
@@ -39,9 +46,9 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     ConfigurationDO getConfigurationByKey(String key, String module, String version);
 
     /**
-     * Return a List with all configuration Objects of a ConfigurationSet. A
-     * ConfigurationSet is a collection of all configuration Entries of one
-     * version for a special service like email inside a module.
+     * Return a List with all configuration objects of a ConfigurationSet.A
+     * ConfigurationSet is a collection of all configuration entries of one
+     * version for a service like email inside a module.
      *
      * @param module as String
      * @param version as String
@@ -53,7 +60,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
             getAllConfigurationSetEntries(String module, String version, String configSet);
 
     /**
-     * get all configuration entries for a module.
+     * Get all configuration entries for a module.
      *
      * @param module as String
      * @return ConfigurationSet as List&lt;Configuration&gt;
@@ -67,10 +74,10 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * @return deprecated as List&lt;Configuration&gt;
      */
     @API(status = STABLE, since = "1.0")
-    List<ConfigurationDO> getAllDepecatedEntries();
+    List<ConfigurationDO> getAllDeprecatedEntries();
 
     /**
-     * In the case that for a module exist more versions than one. fFor example
+     * In the case that for a module exist more versions than one. For example
      * after some upgrades, this method supports a history function of the
      * previous configuration.
      *
@@ -90,7 +97,7 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
      * E-Mail Configuration is implemented in core, since version 1.0
      *
      * In the case a entry exist but the value is empty, then the default value
-     * will be use.
+     * will used.
      *
      * @param key as String
      * @param module as String
@@ -101,19 +108,22 @@ public interface ConfigurationDAO extends GenericDAO<ConfigurationDO, String> {
     String getValueByKey(String key, String module, String version);
 
     /**
-     * Restore a single Entry to his default value.
+     * Restore a single entry to his default value.
      *
      * @param entry as Configuration
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
-    void restoreKeyToDefault(ConfigurationDO entry);
+    void restoreKeyToDefault(ConfigurationDO entry)
+            throws DAOException;
 
     /**
      * Update a List of existing configuration entries.
      *
      * @param configuration as List&lt;Configuration&gt;
+     * @throws org.europa.together.exceptions.DAOException
      */
     @API(status = STABLE, since = "1.0")
-    void updateConfigurationEntries(List<ConfigurationDO> configuration);
-
+    void updateConfigurationEntries(List<ConfigurationDO> configuration)
+            throws DAOException;
 }

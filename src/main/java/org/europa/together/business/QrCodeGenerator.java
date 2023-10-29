@@ -1,28 +1,34 @@
 package org.europa.together.business;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
-import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 /**
- * Generates Quick Response Codes (QR Codes) with the Zxing Library. The
- * Generator provides DataStructures like Calendar Entry or Contact Informations
- * (PIM). It's implemeted an encoder and also an decoder.
+ * Generates Quick Response Codes (QR Codes). The generator provides
+ * DataStructures like calendar entry or contact information (PIM). It's
+ * implemented an encoder and also an decoder.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "ZxingGenerator")
 @Component
 public interface QrCodeGenerator {
 
     /**
-     * Configure the Generator with the dimension (height and width) of the QR
-     * Code Image. Height = Weight; the produced Image will be always an square.
+     * Identifier for the given feature.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-07";
+
+    /**
+     * Configure the generator with the dimension (height and width) of the QR
+     * Code Image. Height = Weight; the produced image will be always an square.
      * It also define where the file will be stored.
      *
      * @param dimensions as int
@@ -32,7 +38,7 @@ public interface QrCodeGenerator {
     void setup(String fileOutputPath, int dimensions);
 
     /**
-     * Encode from a given String the Image and store it on the configured path.
+     * Encode from a given String the image and store it on the configured path.
      *
      * @param data as String
      * @return true on success
@@ -41,7 +47,7 @@ public interface QrCodeGenerator {
     boolean encode(String data);
 
     /**
-     * Extract (decode) from a Image file the Information as String.
+     * Extract (decode) from a image file the information as String.
      *
      * @param qrCode as File
      * @return the content as String
@@ -50,7 +56,7 @@ public interface QrCodeGenerator {
     String decode(File qrCode);
 
     /**
-     * Create a vCard (Version 3.0) data structure.URL:
+     * Create a vCard (Version 3.0) data structure. URL:
      * https://en.wikipedia.org/wiki/VCard<br><br>
      *
      * Property Set:<br>
@@ -92,12 +98,12 @@ public interface QrCodeGenerator {
      * Encode an calender event.
      *
      * @param event as String
-     * @param start as DateTime
-     * @param end as DateTime
+     * @param start as ZonedDateTime
+     * @param end as ZonedDateTime
      * @return dataStructure as String
      */
-    @API(status = STABLE, since = "1.0")
-    String generateDataForCalenderEvent(String event, DateTime start, DateTime end);
+    @API(status = STABLE, since = "2.1")
+    String generateDataForCalendarEvent(String event, ZonedDateTime start, ZonedDateTime end);
 
     /**
      * Encode an URL which will opened in a web browser.
@@ -124,5 +130,4 @@ public interface QrCodeGenerator {
      */
     @API(status = STABLE, since = "1.0")
     String generateDataForGeoLocation(String latitude, String longitude);
-
 }

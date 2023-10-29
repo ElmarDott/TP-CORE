@@ -1,52 +1,26 @@
 package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import org.europa.together.application.LoggerImpl;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import java.util.Set;
+import org.europa.together.JUnit5Preperator;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
+@ExtendWith({JUnit5Preperator.class})
 public class ConfigurationDOTest {
 
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDOTest.class);
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDOTest.class);
 
-    private static ValidatorFactory validatorFactory;
-    private static Validator validate;
-
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-        validatorFactory = Validation.buildDefaultValidatorFactory();
-        validate = validatorFactory.getValidator();
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        validatorFactory.close();
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
-    }
-    //</editor-fold>
+    private static Validator validate
+            = Validation.buildDefaultValidatorFactory().getValidator();
 
     private String key = "key";
     private String value = "value";
@@ -54,24 +28,28 @@ public class ConfigurationDOTest {
     private String modulName = "module";
     private String configSet = "configuration";
     private String version = "1.0";
-    private boolean depecated = true;
+    private boolean deprecated = true;
     private boolean mandatory = false;
     private String comment = "no comment";
 
     @Test
     void prePersist() {
+        LOGGER.log("TEST CASE: prePersist", LogLevel.DEBUG);
+
         ConfigurationDO domainObject = new ConfigurationDO();
         domainObject.prePersist();
 
         assertNotNull(domainObject);
         assertEquals("default", domainObject.getConfigurationSet());
         assertEquals("NIL", domainObject.getDefaultValue());
-        assertEquals(false, domainObject.isDepecated());
+        assertEquals(false, domainObject.isDeprecated());
         assertEquals(false, domainObject.isMandatory());
     }
 
     @Test
-    void testDomainObject() {
+    void domainObject() {
+        LOGGER.log("TEST CASE: domainObject", LogLevel.DEBUG);
+
         assertThat(ConfigurationDO.class, hasValidBeanConstructor());
         assertThat(ConfigurationDO.class, hasValidBeanToString());
         assertThat(ConfigurationDO.class, hasValidBeanHashCodeFor("key", "modulName", "version"));
@@ -79,7 +57,32 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    void testCreateDomainObjectBySetter() {
+    void hasValidGetter() {
+        LOGGER.log("TEST CASE: hasValidGetter", LogLevel.DEBUG);
+
+        ConfigurationDO domainObject = new ConfigurationDO();
+        domainObject.setComment("comment");
+        domainObject.setConfigurationSet(configSet);
+        domainObject.setDefaultValue(defaultValue);
+        domainObject.setKey(key);
+        domainObject.setModulName(modulName);
+        domainObject.setValue(value);
+        domainObject.setVersion(version);
+
+        assertEquals("comment", domainObject.getComment());
+        assertEquals(configSet, domainObject.getConfigurationSet());
+        assertEquals(defaultValue, domainObject.getDefaultValue());
+        assertEquals(key, domainObject.getKey());
+        assertEquals(modulName, domainObject.getModulName());
+        assertNotNull(domainObject.getUuid());
+        assertEquals(value, domainObject.getValue());
+        assertEquals(version, domainObject.getVersion());
+    }
+
+    @Test
+    void createDomainObjectBySetter() {
+        LOGGER.log("TEST CASE: createDomainObjectBySetter", LogLevel.DEBUG);
+
         ConfigurationDO domainObject = new ConfigurationDO();
         domainObject.setKey(key);
         domainObject.setModulName(modulName);
@@ -89,12 +92,17 @@ public class ConfigurationDOTest {
         domainObject.setValue(value);
 
         assertNotNull(domainObject);
-        assertEquals(0, validate.validate(domainObject).size());
-        assertTrue(validate.validate(domainObject).isEmpty());
+
+        Set<ConstraintViolation<ConfigurationDO>> result
+                = validate.validate(domainObject);
+
+        assertTrue(result.isEmpty());
+        assertEquals(0, result.size());
     }
 
     @Test
-    void testCorrectBeanConstruction() {
+    void correctBeanConstruction() {
+        LOGGER.log("TEST CASE: correctBeanConstruction", LogLevel.DEBUG);
 
         ConfigurationDO domainObject;
 
@@ -112,64 +120,44 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    void testIncorrectBenaConstruction() {
+    void isEqual() {
+        LOGGER.log("TEST CASE: isEqual", LogLevel.DEBUG);
 
-        ConfigurationDO domainObject;
+        ConfigurationDO A
+                = new ConfigurationDO(key, "111", modulName, version);
+        ConfigurationDO B
+                = new ConfigurationDO(key, "000", modulName, version);
 
-        LOGGER.log("Create DOmainObject with empty KEY", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(null, value, modulName, version);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DOmainObject with empty MODULE_NAME", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, null, version);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DOmainObject with empty VERSION", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, null);
-        domainObject.prePersist();
-        assertNotNull(domainObject);
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DOmainObject with empty CONF_SET", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, version);
-        domainObject.prePersist();
-        domainObject.setConfigurationSet(null);
-
-        assertNotNull(domainObject);
-        assertEquals(null, domainObject.getConfigurationSet());
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
-
-        LOGGER.log("Create DOmainObject with empty DEFAULT_VALUE", LogLevel.DEBUG);
-        domainObject = new ConfigurationDO(key, value, modulName, version);
-        domainObject.prePersist();
-        domainObject.setDefaultValue(null);
-
-        assertNotNull(domainObject);
-        assertEquals(null, domainObject.getDefaultValue());
-        assertEquals(1, validate.validate(domainObject).size());
-        assertFalse(validate.validate(domainObject).isEmpty());
-        assertEquals("{validation.notnull}",
-                validate.validate(domainObject).iterator().next().getMessage());
+        assertTrue(A.equals(B));
+        assertTrue(B.equals(A));
     }
 
     @Test
-    void testValidationEmptyComment() {
+    void isNotEqual() {
+        LOGGER.log("TEST CASE: isNotEqual", LogLevel.DEBUG);
+
+        ConfigurationDO A
+                = new ConfigurationDO("AAA", "000", "test", "1.0.1");
+        ConfigurationDO B
+                = new ConfigurationDO("BBB", "001", "test", "1.0.1");
+        ConfigurationDO C
+                = new ConfigurationDO("BBB", "010", "module", "1.0.1");
+        ConfigurationDO D
+                = new ConfigurationDO("BBB", "011", "test", "2.0");
+
+        //KEY
+        assertFalse(A.equals(B));
+        assertFalse(B.equals(A));
+        //MODULE
+        assertFalse(B.equals(C));
+        //VERION
+        assertFalse(B.equals(D));
+    }
+
+    @Test
+    void validationEmptyComment() {
+        LOGGER.log("TEST CASE: validationEmptyComment", LogLevel.DEBUG);
+
         ConfigurationDO domainObject
                 = new ConfigurationDO(key, value, modulName, version);
         domainObject.prePersist();
@@ -180,7 +168,9 @@ public class ConfigurationDOTest {
     }
 
     @Test
-    void testValidationEmptyValue() {
+    void validationEmptyValue() {
+        LOGGER.log("TEST CASE: validationEmptyValue", LogLevel.DEBUG);
+
         ConfigurationDO domainObject
                 = new ConfigurationDO(key, null, modulName, version);
         domainObject.prePersist();
@@ -192,4 +182,5 @@ public class ConfigurationDOTest {
         domainObject.setValue("");
         assertEquals("", domainObject.getValue());
     }
+
 }

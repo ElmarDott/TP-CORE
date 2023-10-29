@@ -2,15 +2,14 @@ package org.europa.together.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import org.europa.together.application.LoggerImpl;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
@@ -21,59 +20,53 @@ import org.europa.together.utils.StringUtils;
  */
 @Entity
 @Table(name = "APP_CONFIG",
+        //CHECKSTYLE:OFF
         indexes = {
             @Index(columnList = "CONF_KEY", name = "configuration_key"),
             @Index(columnList = "MODUL_NAME", name = "modul_name"),
             @Index(columnList = "CONF_SET", name = "configuration_set")
         },
+        //CHECKSTYLE:ON
         uniqueConstraints = {
             @UniqueConstraint(columnNames
-                    = {"MODUL_NAME", "MODUL_VERSION", "CONF_KEY"})
+                    = {"MODUL_NAME", "SERVICE_VERSION", "CONF_KEY"})
         }
 )
 public class ConfigurationDO implements Serializable {
 
     private static final long serialVersionUID = 102L;
-    private static final Logger LOGGER = new LoggerImpl(ConfigurationDO.class);
-    private static final int HASH = 43;
+    private static final Logger LOGGER = new LogbackLogger(ConfigurationDO.class);
 
     /**
      * The name of the used database table for this domain object.
      */
     public static final String TABLE_NAME = "APP_CONFIG";
 
-    @Id
+    @Id //validate uuid
     @Column(name = "IDX")
     private String uuid;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_KEY", nullable = false)
     private String key;
 
     @Column(name = "CONF_VALUE")
     private String value;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "DEFAULT_VALUE", nullable = false)
     private String defaultValue;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MODUL_NAME", nullable = false)
     private String modulName;
 
-    @NotNull(message = "{validation.notnull}")
-    @Column(name = "MODUL_VERSION", nullable = false)
+    @Column(name = "SERVICE_VERSION", nullable = false)
     private String version;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "CONF_SET", nullable = false)
     private String configurationSet;
 
-    @NotNull(message = "{validation.notnull}")
-    @Column(name = "DEPECATED", nullable = false)
-    private boolean depecated;
+    @Column(name = "DEPRECATED", nullable = false)
+    private boolean deprecated;
 
-    @NotNull(message = "{validation.notnull}")
     @Column(name = "MANDATORY", nullable = false)
     private boolean mandatory;
 
@@ -98,7 +91,6 @@ public class ConfigurationDO implements Serializable {
      */
     public ConfigurationDO(final String key, final String value, final String modulName,
             final String version) {
-
         //PreSet
         this.uuid = StringUtils.generateUUID();
         //mandatory
@@ -109,7 +101,7 @@ public class ConfigurationDO implements Serializable {
         //optional
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         this.comment = "";
     }
@@ -122,19 +114,19 @@ public class ConfigurationDO implements Serializable {
     public void prePersist() {
         this.configurationSet = "default";
         this.defaultValue = "NIL";
-        this.depecated = false;
+        this.deprecated = false;
         this.mandatory = false;
         LOGGER.log("@PrePersist [ConfigurationDO]", LogLevel.INFO);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">
     /**
-     * Show if entry is depecated.
+     * Show if entry is deprecated.
      *
-     * @return true if is depecated
+     * @return true if is deprecated
      */
-    public boolean isDepecated() {
-        return depecated;
+    public boolean isDeprecated() {
+        return deprecated;
     }
 
     /**
@@ -174,12 +166,12 @@ public class ConfigurationDO implements Serializable {
     }
 
     /**
-     * Set if a entry is depecated.
+     * Set if a entry is deprecated.
      *
-     * @param depecated as boolean
+     * @param deprecated as boolean
      */
-    public void setDepecated(final boolean depecated) {
-        this.depecated = depecated;
+    public void setDeprecated(final boolean deprecated) {
+        this.deprecated = deprecated;
     }
 
     /**
@@ -311,34 +303,30 @@ public class ConfigurationDO implements Serializable {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
+
+        boolean success = false;
+        if (obj != null && obj instanceof ConfigurationDO) {
+
+            if (this == obj) {
+                success = true;
+            } else {
+
+                final ConfigurationDO other = (ConfigurationDO) obj;
+                if (Objects.equals(this.key, other.key)
+                        && Objects.equals(this.modulName, other.modulName)
+                        && Objects.equals(this.version, other.version)) {
+                    success = true;
+                }
+            }
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ConfigurationDO other = (ConfigurationDO) obj;
-        if (!Objects.equals(this.key, other.key)) {
-            return false;
-        }
-        if (!Objects.equals(this.modulName, other.modulName)) {
-            return false;
-        }
-        if (!Objects.equals(this.version, other.version)) {
-            return false;
-        }
-        return true;
+        return success;
     }
 
     @Override
     public int hashCode() {
-        int hash = HASH * 5;
-        hash = hash + Objects.hashCode(this.key);
-        hash = hash + Objects.hashCode(this.modulName);
-        hash = hash + Objects.hashCode(this.version);
+        int hash = Objects.hashCode(this.key);
+        hash += Objects.hashCode(this.modulName);
+        hash += Objects.hashCode(this.version);
         return hash;
     }
 
@@ -351,7 +339,7 @@ public class ConfigurationDO implements Serializable {
                 + ", modulName=" + modulName
                 + ", configurationSet=" + configurationSet
                 + ", version=" + version
-                + ", depecated=" + depecated
+                + ", deprecated=" + deprecated
                 + ", mandatory=" + mandatory
                 + ", comment=" + comment + '}';
     }

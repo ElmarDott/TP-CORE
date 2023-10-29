@@ -6,26 +6,32 @@ import org.europa.together.domain.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
- * Wrapper for the SLF4j and Logback Logging Framework.
+ * Simple API for application logging.
  *
  * @author elmar.dott@gmail.com
- * @version 1.0
+ * @version 1.2
  * @since 1.0
  */
-@API(status = STABLE, since = "1.0")
+@API(status = STABLE, since = "1.0", consumers = "LogbackLogger")
 @Component
 public interface Logger {
 
     /**
-     * Create a Log-Entry with the given message for the configured Log-Level.
+     * Identifier for the given feature.
+     */
+    @API(status = STABLE, since = "1.2")
+    String FEATURE_ID = "CM-01";
+
+    /**
+     * Create a log entry with the given message for the configured LogLevel.
      * Log-Level: TRACE | DEBUG | INFO | WARN | ERROR
      *
-     * @param message the LogMessage as String.
+     * @param message as String.
      * @param level as LogLevel.
      * @return LogLevel
      */
     @API(status = STABLE, since = "1.0")
-    LogLevel log(final String message, final LogLevel level);
+    LogLevel log(String message, LogLevel level);
 
     /**
      * Get the configured LogLevel for the Logger.
@@ -36,14 +42,13 @@ public interface Logger {
     LogLevel getConfiguredLogLevel();
 
     /**
-     * Modified Method to log Exceptions. The output will be the exception Name
-     * and the exception message in the LogLevel Error. In the case a
+     * Modified method to log exceptions. The output will be the exception name
+     * and the exception message in the LogLevel ERROR. In the case a
      * NullPointerException is thrown, the StackTrace will be logged too.
      *
      * @param ex as Exception
-     * @return exception MEssage as String
+     * @return exception message as String
      */
     @API(status = STABLE, since = "1.0")
     String catchException(Exception ex);
-
 }

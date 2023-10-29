@@ -1,104 +1,146 @@
 package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.JUnit5Preperator;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
+import org.europa.together.utils.StringUtils;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @SuppressWarnings("unchecked")
-@RunWith(JUnitPlatform.class)
+@ExtendWith({JUnit5Preperator.class})
 public class TreeNodeTest {
 
-    private static final Logger LOGGER = new LoggerImpl(TreeNodeTest.class);
-
-    //<editor-fold defaultstate="collapsed" desc="Test Preparation">
-    @BeforeAll
-    static void setUp() {
-    }
-
-    @AfterAll
-    static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.", LogLevel.TRACE);
-    }
-
-    @BeforeEach
-    void testCaseInitialization() {
-    }
-
-    @AfterEach
-    void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED. \n", LogLevel.TRACE);
-    }
-    //</editor-fold>
+    private static final Logger LOGGER = new LogbackLogger(TreeNodeTest.class);
 
     @Test
-    void testDomainObject() {
+    void createDomainObject() {
+        LOGGER.log("TEST CASE: createDomainObject", LogLevel.DEBUG);
+
         assertThat(TreeNode.class, hasValidBeanConstructor());
-        assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName", "parent"));
+        assertThat(TreeNode.class, hasValidBeanHashCodeFor("nodeName"));
+        assertThat(TreeNode.class, hasValidBeanEqualsFor("nodeName"));
     }
 
     @Test
-    void testEqual() {
-        TreeNode node_00 = new TreeNode("node 1");
-        node_00.setNodeName("node 1");
+    void correctBeanConstruction() {
+        LOGGER.log("TEST CASE: correctBeanConstruction", LogLevel.DEBUG);
+
+        TreeNode<String> node_00 = new TreeNode<>();
         assertNotNull(node_00.getUuid());
 
-        TreeNode node_01 = new TreeNode("node 2");
+        TreeNode<String> node_01 = new TreeNode<>("Node");
         assertNotNull(node_01.getUuid());
-
-        TreeNode node_03 = node_00;
-        node_03.setNodeName("node 3");
-        assertNotNull(node_03.getUuid());
-        assertEquals("node 3", node_03.getNodeName());
-
-        assertNotEquals(node_01, node_00);
-        assertNotEquals(node_01, node_03);
-        assertEquals(node_00, node_03);
-
-        assertFalse(node_00.equals(null));
-        assertFalse(node_00.equals(new Object()));
-        assertFalse(node_00.equals(new TreeNode("node 4")));
-        assertFalse(node_00.equals(node_01));
-
-        assertTrue(node_03.equals(node_00));
+        assertEquals("Node", node_01.getNodeName());
     }
 
     @Test
-    void testToString() {
-        TreeNode node = new TreeNode("NODE");
+    void createDomainObjectBySetter() {
+        LOGGER.log("TEST CASE: createDomainObjectBySetter", LogLevel.DEBUG);
+
+        TreeNode<Integer> parent = new TreeNode<>();
+        TreeNode<Integer> node = new TreeNode<>();
+        node.setNodeName("name");
+        node.setValue(100);
+        node.setParent(parent.getUuid());
+
+        assertEquals("name", node.getNodeName());
+        assertEquals(100, node.getValue());
+        assertEquals(parent.getUuid(), node.getParent());
+    }
+
+    @Test
+    void createDomainObjectWithDifferentValueObjects() {
+        LOGGER.log("TEST CASE: createDomainObjectWithDifferentValueObjects", LogLevel.DEBUG);
+
+        TreeNode<Integer> parent = new TreeNode<>();
+        parent.setValue(404);
+
+        TreeNode<String> node = new TreeNode<>();
+        node.setNodeName("name");
+        node.setValue("String Object instead of the parent Integer");
+        node.setParent(parent.getUuid());
+
+        assertTrue(parent.getValue() instanceof Integer);
+        assertTrue(node.getValue() instanceof String);
+    }
+
+    @Test
+    void generateToString() {
+        LOGGER.log("TEST CASE: generateToString", LogLevel.DEBUG);
+
+        TreeNode<String> node = new TreeNode<>("NODE");
+        node.setValue("string value.");
         String out = node.toString();
         LOGGER.log("toString() " + out, LogLevel.DEBUG);
         assertEquals(out, node.toString());
     }
 
     @Test
-    void testCreateDomainObjectBySetter() {
-        TreeNode parent = new TreeNode();
-        TreeNode node = new TreeNode();
-        node.setNodeName("name");
-        node.setValue("000");
-        node.setParent(parent.getUuid());
+    void equalByCopy() {
+        LOGGER.log("TEST CASE: equalByCopy", LogLevel.DEBUG);
 
-        assertEquals("name", node.getNodeName());
-        assertEquals("000", node.getValue());
-        assertEquals(parent.getUuid(), node.getParent());
+        TreeNode<String> node_01 = new TreeNode<>("cloend");
+        node_01.setParent(StringUtils.generateUUID());
+        node_01.setValue("string value");
+
+        TreeNode<String> node_02 = node_01.copy(node_01);
+
+        assertEquals(node_01, node_02);
+        assertEquals(node_01.getValue(), node_02.getValue());
     }
 
     @Test
-    void testCorrectBeanConstruction() {
-        TreeNode node_00 = new TreeNode();
-        assertNotNull(node_00.getUuid());
+    void notEqualByCopyAndManipulate() {
+        LOGGER.log("TEST CASE: notEqualByCopyAndManipulate", LogLevel.DEBUG);
 
-        TreeNode node_01 = new TreeNode("Node");
-        assertNotNull(node_01.getUuid());
-        assertEquals("Node", node_01.getNodeName());
+        TreeNode<String> node_01 = new TreeNode<>("node x");
+        node_01.setNodeName("node 1");
+        node_01.setParent(StringUtils.generateUUID());
+
+        TreeNode<String> node_02 = node_01.copy(node_01);
+        node_02.setNodeName("node 2");
+
+        LOGGER.log("Node: " + node_02.toString(), LogLevel.DEBUG);
+        LOGGER.log("Node: " + node_01.toString(), LogLevel.DEBUG);
+
+        assertNotEquals(node_01, node_02);
     }
+
+    @Test
+    void equalByDiffrentUuid() {
+        LOGGER.log("TEST CASE: equalByDiffrentUuid", LogLevel.DEBUG);
+
+        TreeNode<Boolean> a = new TreeNode<>("");
+        TreeNode<Boolean> b = new TreeNode<>("");
+
+        assertTrue(a.equals(b));
+        assertEquals(a, b);
+    }
+
+    @Test
+    void notEqualBySameRootAndDiffrentName() {
+        LOGGER.log("TEST CASE: notEqualDefaultCompare", LogLevel.DEBUG);
+
+        TreeNode<Boolean> root = new TreeNode<>("root");
+        TreeNode<Boolean> node_01 = new TreeNode<>("node A");
+        node_01.setParent(root.getUuid());
+        TreeNode<Boolean> node_02 = new TreeNode<>("node B");
+        node_02.setParent(root.getUuid());
+
+        assertNotEquals(node_01, node_02);
+        assertFalse(node_01.equals(node_02));
+    }
+
+    @Test
+    void notEqualByNull() {
+        LOGGER.log("TEST CASE: notEqualByNull", LogLevel.DEBUG);
+
+        TreeNode<?> node_01 = new TreeNode<>("node A");
+        assertFalse(node_01.equals(null));
+    }
+
 }

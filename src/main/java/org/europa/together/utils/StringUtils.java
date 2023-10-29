@@ -1,12 +1,16 @@
 package org.europa.together.utils;
 
-import java.security.MessageDigest;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.europa.together.application.LoggerImpl;
+import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
-import org.europa.together.domain.HashAlgorithm;
+import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
 
 /**
@@ -14,10 +18,10 @@ import org.europa.together.domain.LogLevel;
  */
 public final class StringUtils {
 
+    private static final Logger LOGGER = new LogbackLogger(StringUtils.class);
+    private static final Charset CHARSET = Charset.forName("UTF-8");
     private static final int LIMES = 9;
     private static final int LIMIT = 2100;
-
-    private static final Logger LOGGER = new LoggerImpl(StringUtils.class);
 
     /**
      * Constructor.
@@ -27,11 +31,12 @@ public final class StringUtils {
     }
 
     /**
-     * Test a String if is Empty or NULL. The test don't figure out when a Sting
-     * contains only non printable or whitespace characters.
+     * Test a String if is empty or NULL. Return TRUE when the String is empty
+     * or NULL. The test don't figure out when a Sting contains only non
+     * printable or whitespace characters.
      *
      * @param string as String
-     * @return true if the string is empty or null
+     * @return true on success
      */
     public static boolean isEmpty(final String string) {
         boolean test = false;
@@ -76,10 +81,6 @@ public final class StringUtils {
                 list.add(s);
             }
         }
-
-        if (list.isEmpty()) {
-            list = null;
-        }
         return list;
     }
 
@@ -100,36 +101,10 @@ public final class StringUtils {
     }
 
     /**
-     * Calculates a hash from a given String.
-     *
-     * @param plainText as String
-     * @param algorithm as HashAlgorithm
-     * @return the calculated hash as String
-     */
-    public static String calculateHash(final String plainText,
-            final HashAlgorithm algorithm) {
-
-        String hash = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance(algorithm.toString());
-            md.reset();
-            hash = StringUtils.byteToString(md.digest(plainText.getBytes("UTF-8")));
-
-            String msg = "Utils.calculateHash(" + algorithm.toString() + ")"
-                    + " plaintext: " + plainText + " hash: " + hash;
-            LOGGER.log(msg, LogLevel.DEBUG);
-
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
-        return hash;
-    }
-
-    /**
      * Concatenate a list of Strings using StringBuilder.
      *
      * @param strings as String
-     * @return string as string
+     * @return string as String
      */
     public static String concatString(final String... strings) {
         StringBuilder result = new StringBuilder();
@@ -146,7 +121,7 @@ public final class StringUtils {
      * SQL Injections for user modified content.
      *
      * @param content as String
-     * @return escapedHtml as String
+     * @return escapedXml as String
      */
     public static String escapeXmlCharacters(final String content) {
         //do not change ordering!
@@ -159,9 +134,9 @@ public final class StringUtils {
     }
 
     /**
-     * Produce a lorem ipsum Text with 4 paragraphs and 2100 characters. The
-     * paameter chars reduce the output to the given count of characters. To get
-     * the whole text set chars to 0.
+     * Produce a lorem ipsum text with 4 paragraphs and 2100 characters. The
+     * parameter chars reduce the output to the given count of characters. To
+     * get the whole text set chars to 0.
      *
      * @param chars as int
      * @return out as String
@@ -176,10 +151,11 @@ public final class StringUtils {
                 + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
                 + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. "
                 + "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor "
-                + "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
-                + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
-                + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet "
-                + "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n"
+                + "sitView Generated Project Site amet. Lorem ipsum dolor sit amet, consetetur "
+                + "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore "
+                + "magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo "
+                + "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus "
+                + "est Lorem ipsum dolor sit amet.\n"
                 + "\n"
                 + "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie "
                 + "consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan"
@@ -218,7 +194,6 @@ public final class StringUtils {
         StringBuilder sb = new StringBuilder(length);
         int counter = 0;
         for (int i = 0; i < length; ++i) {
-
             sb.append(counter);
             counter++;
             if (counter > LIMES) {
@@ -236,10 +211,85 @@ public final class StringUtils {
      * @return UUID as String
      */
     public static String generateUUID() {
-
         UUID uuid = UUID.randomUUID();
         LOGGER.log("generateUUID() " + uuid, LogLevel.DEBUG);
         return uuid.toString();
     }
 
+    /**
+     * Shrink XML, JS and CSS Files to reduce the payload for network traffic.
+     * The shrinker removes comments and unnecessary whitespace and line breaks.
+     *
+     * @param content as String
+     * @return shrinked content as String
+     */
+    public static String shrink(final String content) {
+        //Comments
+        String shrink = content
+                .replaceAll("(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", "");
+        shrink = shrink.replaceAll("(?s)<!--.*?-->", "");
+        //whitespace
+        shrink = shrink.replaceAll("\\s+", " ");
+        shrink = shrink.replaceAll("  ", " ");
+        shrink = shrink.replaceAll(">.*?<", "><");
+        return shrink;
+    }
+
+    /**
+     * Detect and remove the (BOM) Byte Order Mark from a string.
+     *
+     * @param content as String
+     * @return utf-8 String
+     */
+    public static String skipBom(final String content) {
+        if (content.isEmpty()) {
+            throw new NullPointerException("The String in StringUtils.skipBom() is null.");
+        }
+        List<ByteOrderMark> bomList = new ArrayList<>();
+        bomList.add(ByteOrderMark.UTF_8);
+        bomList.add(ByteOrderMark.UTF_16LE);
+        bomList.add(ByteOrderMark.UTF_16BE);
+        bomList.add(ByteOrderMark.UTF_32LE);
+        bomList.add(ByteOrderMark.UTF_32BE);
+        String clean = content;
+        byte[] array = content.getBytes(CHARSET);
+        for (ByteOrderMark entry : bomList) {
+            boolean hasBOM = true;
+            for (int i = 0; i < entry.getBytes().length; i++) {
+                byte[] s = {array[i]};
+                byte[] d = {entry.getBytes()[i]};
+                LOGGER.log(i + "> " + byteToString(s) + " : " + byteToString(d),
+                        LogLevel.TRACE);
+
+                if (array[i] != entry.getBytes()[i]) {
+                    hasBOM = false;
+                    break;
+                }
+            }
+
+            if (hasBOM) {
+                clean = content.substring(1);
+                LOGGER.log("BOM: " + entry.toString() + " detected and removed.",
+                        LogLevel.DEBUG);
+                break;
+            } else {
+                LOGGER.log("No BOM detected for: " + entry.toString(), LogLevel.DEBUG);
+            }
+        }
+        return clean;
+    }
+
+    /**
+     * Create from a given String for UTC in the format of yyyy-mm-dd HH:mm:ss a
+     * java.util.Date class.
+     *
+     * @param timestamp as Sting
+     * @return timestamp as Date
+     * @throws java.text.ParseException
+     */
+    public static Date createDateFromString(final String timestamp)
+            throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.parse(timestamp);
+    }
 }

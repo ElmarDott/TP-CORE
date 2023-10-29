@@ -1,0 +1,51 @@
+<!-- Shrink CONTENT FILE 123!@ -->
+
+    = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy "
+    + "eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam "
+    + "voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet "
+    + "clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit "
+    + "amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam "
+    + "nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed "
+    + "diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. "
+    + "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor "
+    + "sitView Generated Project Site amet. Lorem ipsum dolor sit amet, consetetur "
+    + "sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore "
+    + "magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo "
+    + "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus "
+    + "est Lorem ipsum dolor sit amet.\n"
+
+/* END OF TEXT */
+
+function createCache() {
+    var keys = [];
+            function cache(key, value) {
+            // Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
+            if (keys.push(key + " ") > Expr.cacheLength) {
+            // Only keep the most recent entries
+            delete cache[ keys.shift() ];
+            }
+            return (cache[ key + " " ] = value);
+            }
+    return cache;
+}
+
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.6.2');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.6.2') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.6.2') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.6.2') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.6.2') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.6.2#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+<catalog>
+    <cd>
+        <title>Empire Burlesque</title>
+        <artist>Bob Dylan</artist>
+        <country>USA</country>
+        <company>Columbia</company>
+        <price>10.90</price>
+        <year>1985</year>
+    </cd>
+</catalog>

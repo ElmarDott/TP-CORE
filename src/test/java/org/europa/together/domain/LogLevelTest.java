@@ -1,16 +1,21 @@
 package org.europa.together.domain;
 
+import org.europa.together.JUnit5Preperator;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(JUnitPlatform.class)
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 public class LogLevelTest {
 
+    private static final Logger LOGGER = new LogbackLogger(LogLevelTest.class);
+
     @Test
-    void testEnumValues() {
+    void enumValues() {
+        LOGGER.log("TEST CASE: enumValues", LogLevel.DEBUG);
 
         assertEquals("TRACE",
                 LogLevel.TRACE.toString());

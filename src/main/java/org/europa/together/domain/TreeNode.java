@@ -1,22 +1,27 @@
 package org.europa.together.domain;
 
 import java.util.Objects;
+import org.europa.together.application.LogbackLogger;
+import org.europa.together.business.Logger;
 import org.europa.together.utils.StringUtils;
 
 /**
- * Datastructure for a tree. A node is unique by is UUID, but in real
+ * Data structure for a tree.A node is unique by is UUID, but in real
  * environments is a more specified definition necessary. A parent node can not
  * have two child nods with the same name. for a user is then hard to
- * distinguish which child node is the right one. (e.g. Files and FOlders)
+ * distinguish which child node is the right one. (e.g. Files and Folders)
+ *
+ * @param <T> as generic Class
  */
-public class TreeNode {
+public final class TreeNode<T> {
 
+    private static final Logger LOGGER = new LogbackLogger(TreeNode.class);
     private static final int HASH = 97;
 
-    private final String uuid;
+    private String uuid;
     private String nodeName;
     private String parent;
-    private Object attributes;
+    private T value;
 
     /**
      * Constructor.
@@ -77,8 +82,8 @@ public class TreeNode {
      *
      * @return value as Object
      */
-    public Object getValue() {
-        return attributes;
+    public T getValue() {
+        return value;
     }
 
     /**
@@ -86,8 +91,8 @@ public class TreeNode {
      *
      * @param value as Object
      */
-    public void setValue(final Object value) {
-        this.attributes = value;
+    public void setValue(final T value) {
+        this.value = value;
     }
 
     /**
@@ -100,40 +105,51 @@ public class TreeNode {
     }
     //</editor-fold>
 
+    /**
+     * Clone (copy) a TreeNode to a we instance.
+     *
+     * @param node as TreeNode
+     * @return a copy of the TreeNode
+     */
+    public TreeNode<T> copy(final TreeNode<T> node) {
+        TreeNode<T> copy = new TreeNode<>();
+        copy.uuid = node.uuid;
+        copy.nodeName = node.nodeName;
+        copy.parent = node.parent;
+        copy.value = node.value;
+        return copy;
+    }
+
     @Override
     public String toString() {
         return "TreeNode{" + "uuid=" + uuid
                 + ", nodeName=" + nodeName
                 + ", parent=" + parent
-                + ", value=" + attributes + '}';
+                + ", value=" + value + '}';
     }
 
     @Override
     public int hashCode() {
-        int hash = HASH * 3;
-        hash = hash + Objects.hashCode(this.uuid);
-        hash = hash + Objects.hashCode(this.nodeName);
-        hash = hash + Objects.hashCode(this.parent);
-        return hash;
+        return HASH + Objects.hashCode(this.nodeName);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
+        boolean success = false;
+        if (obj != null && obj instanceof TreeNode) {
+            if (this == obj) {
+                success = true;
+            } else {
+                final TreeNode<?> other = (TreeNode<?>) obj;
+                if (Objects.equals(this.parent, other.parent)
+                        && Objects.equals(this.nodeName, other.nodeName)) {
+                    success = true;
+                }
+            }
         }
-        if (obj == null) {
-            return false;
+        if (success) {
+            LOGGER.log(this.toString() + " == " + obj.toString(), LogLevel.DEBUG);
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final TreeNode other = (TreeNode) obj;
-        if (!Objects.equals(this.uuid, other.uuid)) {
-            return false;
-        }
-        return true;
+        return success;
     }
-
 }
