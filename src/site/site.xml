@@ -19,7 +19,7 @@
 
     <body>
         <breadcrumbs>
-            <item name="Home" href="https://together-platform.com"/>
+            <item name="Home" href="https://together-platform.org"/>
         </breadcrumbs>
 
         <!-- menu ref="parent" / -->

@@ -10,26 +10,26 @@
 
 
 ## Getting Started
-**Homepage:** [together-platform.com](https://together-platform.com)
+**Homepage:** [together-platform.com](https://together-platform.org)
 The TP-CORE artifact contains typical basic functions for Java Applications. The module is elaborated as library and packed as JAR file. It is possible to use this artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
 Components - Release: 3.0.0
 
- * [CORE-01] [Application Logger](https://together-platform.com/tp-core/%5BCORE-01%5D-Logger)
- * [CORE-02] [generic Data Access Object](https://together-platform.com/tp-core/%5BCORE-02%5D-generic-Data-Access-Object---DAO)
- * [CORE-03] [Velocity Template Engine](https://together-platform.com/tp-core/%5BCORE-03%5D-Template-Renderer)
- * [CORE-04] [Property Reader](https://together-platform.com/tp-core/%5BCORE-04%5D-Property-Reader)
- * [CORE-05] [Application Configuration](https://together-platform.com/tp-core/%5BCORE-05%5D-ConfigurationDAO)
- * [CORE-06] [SMTP E-Mail Client](https://together-platform.com/tp-core/%5BCORE-06%5D-SMTP-E-Mail-Client)
- * [CORE-07] [QR Code Reader / Writer](https://together-platform.com/tp-core/%5BCORE-07%5D-QR-Code-Generator)
- * [CORE-08] [Database Actions](https://together-platform.com/tp-core/%5BCORE-08%5D-Database-Actions)
- * [CORE-09] [Tree Walker](https://together-platform.com/tp-core/%5BCORE-09%5D-Tree-Walker)
- * [CORE-10] [XML Tools](https://together-platform.com/tp-core/%5BCORE-10%5D-XML-Tools)
- * [CORE-11] [PDF Renderer](https://together-platform.com/tp-core/%5BCORE-11%5D-PDF-Renderer)
- * [CORE-12] [Image Processor](https://together-platform.com/tp-core/%5BCORE-12%5D-Image-Processor)
- * [CORE-13] [Feature Toggle](https://together-platform.com/tp-core/%5BCORE-13%5D-Feature-Toggle)
- * [CORE-14] [Crypto Tools](https://together-platform.com/tp-core/%5BCORE-14%5D-Crypto-Tools)
- * [CORE-15] [JSON Tools](https://together-platform.com/tp-core/%5BCORE-15%5D-Json-Tools)
+ * [CORE-01] [Application Logger](https://together-platform.org/tp-core/[CORE-01]-Logger.html)
+ * [CORE-02] [generic Data Access Object](https://together-platform.org/tp-core/[CORE-02]-generic-Data-Access-Object.html)
+ * [CORE-03] [Velocity Template Engine](https://together-platform.org/tp-core/[CORE-03]-Template-Renderer.html)
+ * [CORE-04] [Property Reader](https://together-platform.org/tp-core/[CORE-04]-Property-Reader.html)
+ * [CORE-05] [Application Configuration](https://together-platform.org/tp-core/[CORE-05]-ConfigurationDAO.html)
+ * [CORE-06] [SMTP E-Mail Client](https://together-platform.org/tp-core/[CORE-06]-SMTP-E-Mail-Client.html)
+ * [CORE-07] [QR Code Reader / Writer](https://together-platform.org/tp-core/[CORE-07]-QR-Code-Generator.html)
+ * [CORE-08] [Database Actions](https://together-platform.org/tp-core/[CORE-08]-Database-Actions.html)
+ * [CORE-09] [Tree Walker](https://together-platform.org/tp-core/[CORE-09]-Tree-Walker.html)
+ * [CORE-10] [XML Tools](https://together-platform.org/tp-core/[CORE-10]-XML-Tools.html)
+ * [CORE-11] [PDF Renderer](https://together-platform.org/tp-core/[CORE-11]-PDF-Renderer.html)
+ * [CORE-12] [Image Processor](https://together-platform.org/tp-core/[CORE-12]-Image-Processor.html)
+ * [CORE-13] [Feature Toggle](https://together-platform.org/tp-core/[CORE-13]-Feature-Toggle.html)
+ * [CORE-14] [Crypto Tools](https://together-platform.org/tp-core/[CORE-14]-Crypto-Tools.html)
+ * [CORE-15] [JSON Tools](https://together-platform.org/tp-core/[CORE-15]-Json-Tools.html)
 
 ### Prerequisites
 
