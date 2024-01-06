@@ -150,7 +150,8 @@ public class JdbcActions implements DatabaseActions {
 
     //  ----------------------------------------------------------------------------
     private String grabIpAndPort(final String connectionUrl) {
-        LOGGER.log("Grab IP4 Adress an Port from connection string.", LogLevel.DEBUG);
+        LOGGER.log("Grab IP4 Adress an Port from connection string: "
+                + connectionUrl, LogLevel.DEBUG);
         Pattern pattern = Pattern.compile(Validator.IP4_ADDRESS);
         Matcher matcher = pattern.matcher(connectionUrl);
         LOGGER.log("RegEx match found: " + matcher.find()
