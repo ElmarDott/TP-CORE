@@ -230,6 +230,16 @@ public class ValidatorTest {
     }
 
     @Test
+    void isValidIP4ForLocalhost() {
+        assertTrue(Validator.validate("localhost", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isValidIP4ForLocalhostWithPort() {
+        assertTrue(Validator.validate("localhost:80", Validator.IP4_ADDRESS));
+    }
+
+    @Test
     void isValidIP4() {
         assertTrue(Validator.validate("127.0.0.1", Validator.IP4_ADDRESS));
 

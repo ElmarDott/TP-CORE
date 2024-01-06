@@ -10,7 +10,7 @@
 
 
 ## Getting Started
-**Homepage:** [together-platform.com](https://together-platform.org)
+**Homepage:** [together-platform.org](https://together-platform.org)
 The TP-CORE artifact contains typical basic functions for Java Applications. The module is elaborated as library and packed as JAR file. It is possible to use this artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
 Components - Release: 3.0.0
@@ -33,7 +33,7 @@ Components - Release: 3.0.0
 
 ### Prerequisites
 
-The CORE Module is build with NetBeans, Maven and Java 17 SE (openJDK). The most important dependencies are Hibernate, Spring and JUnit 5. As Database Server (DBMS) PostgeSQL DBMS 11.1 is recommended.
+The CORE Module is build with NetBeans, Maven and Java 17 SE (openJDK). The most important dependencies are Hibernate, Spring and JUnit 5. As Database Server (DBMS) PostgeSQL DBMS 14 is recommended.
 
 Docker was chosen for an simple and fast database setup. In the case you wish to have a short introduction about docker, you can check my tutorial on [BitCute](https://elmar-dott.com/articles/tutorial/docker-basics/). After on your system docker is running, you are be able to setup the database by the following steps:
 
@@ -44,7 +44,7 @@ Docker was chosen for an simple and fast database setup. In the case you wish to
   -e POSTGRES_PASSWORD=s3cr3t \
   -e PGPASSWORD=s3cr3t \
   -v /home/user/docker/postgres:/var/lib/postgresql/data \
-  postgres:11.1
+  postgres:14
 
   docker run -d --name pgadmin --restart=no \
   -p 8004:80 --net services --ip 172.18.0.98 \
@@ -104,8 +104,11 @@ In the case you like this project, let me know it and rate it with a star.
 | 3.1.0  | in prgress
 |        | - update Spring 6.0 & HBM 6.1 (javax -> jakarta)
 |        | - add EQUAL pagination filter for: String, Bool, Int, Float, Date
-|        | - remove acceptance tests
+|        | - remove jGiven BDD acceptance tests
 |        | - optimize test excecution
+|        | - include postgres 14 testcontainers
+|        | - extend Validator.IP4_ADDRESS with localhost
+|        | - fix ConfigurationService
 |--------|----------------------------------------------------------------------
 | 3.0.0  | published 10/2022
 |        | - implement FeatureFlags based FF4j
