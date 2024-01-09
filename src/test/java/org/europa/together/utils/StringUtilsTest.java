@@ -51,6 +51,23 @@ public class StringUtilsTest {
     }
 
     @Test
+    void encodeBase64Url() {
+        String url = "https://elmar-dott.com";
+        String base64url = "aHR0cHM6Ly9lbG1hci1kb3R0LmNvbQ==";
+
+        assertEquals(base64url, StringUtils.base64UrlEncoding(url));
+
+    }
+
+    @Test
+    void decodeBase64Url() {
+        String url = "https://elmar-dott.com";
+        String base64url = "aHR0cHM6Ly9lbG1hci1kb3R0LmNvbQ==";
+
+        assertEquals(url, StringUtils.base64UrlDecoding(base64url));
+    }
+
+    @Test
     void generateStringOfLength() {
         assertEquals("012345678", StringUtils.generateStringOfLength(9));
         assertEquals("01234567890123", StringUtils.generateStringOfLength(14));

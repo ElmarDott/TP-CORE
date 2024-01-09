@@ -108,6 +108,7 @@ In the case you like this project, let me know it and rate it with a star.
 |        | - optimize test excecution
 |        | - include postgres 14 testcontainers
 |        | - extend Validator.IP4_ADDRESS with localhost
+|        | - extend SringUtils.base64Url encode/decode
 |        | - fix ConfigurationService
 |--------|----------------------------------------------------------------------
 | 3.0.0  | published 10/2022
