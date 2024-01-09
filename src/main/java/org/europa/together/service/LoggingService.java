@@ -46,12 +46,13 @@ public final class LoggingService {
      * @throws java.io.IOException
      */
     @API(status = STABLE, since = "1.1")
-    public void createLogConfiguration()
-            throws IOException {
+    public void createLogConfiguration() throws IOException {
         String destination = Constraints.SYSTEM_APP_DIR + "/logback.xml";
-        Files.copy(getClass().getClassLoader().getResourceAsStream("logback.xml"),
-                Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
         LOGGER.log("Copy File to: " + destination, LogLevel.DEBUG);
+
+        Files.copy(getClass().getClassLoader()
+                .getResourceAsStream("org/europa/together/configuration/logback.xml"),
+                Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
@@ -83,7 +84,7 @@ public final class LoggingService {
         xmlTools.parseXmlString(content);
         LOGGER.log("try to update logger configuration to: " + file, LogLevel.DEBUG);
         if (!xmlTools.isWellFormed()) {
-            LOGGER.log("xml is not wellformed, file can not updated.", LogLevel.WARN);
+            throw new IOException("xml is not wellformed, file can not updated.");
         } else {
             xmlTools.writeXmlToFile(xmlTools.prettyPrintXml(), file);
         }

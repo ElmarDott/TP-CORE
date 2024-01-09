@@ -1,6 +1,7 @@
 package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.ConfigurationHbmDAOTest;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
@@ -18,9 +19,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
-public class ConfigurationServiceIT {
+public class MailClientServiceTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
 
@@ -46,8 +48,7 @@ public class ConfigurationServiceIT {
     @Test
     void constructor() {
         LOGGER.log("TEST CASE: constructor", LogLevel.DEBUG);
-
-        assertThat(ConfigurationService.class, hasValidBeanConstructor());
+        assertThat(MailClientService.class, hasValidBeanConstructor());
     }
 
 }

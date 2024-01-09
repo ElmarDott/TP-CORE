@@ -275,7 +275,7 @@ public class JpaPagination {
      *
      * @param filterFloatCriteria as Map
      */
-    public void setFilterFloatCriteria(Map<String, Float> filterFloatCriteria) {
+    public void setFilterFloatCriteria(final Map<String, Float> filterFloatCriteria) {
         this.filterFloatCriteria = filterFloatCriteria;
     }
 
@@ -295,7 +295,7 @@ public class JpaPagination {
      *
      * @param filterDateCriteria as Map
      */
-    public void setFilterDateCriteria(Map<String, Date> filterDateCriteria) {
+    public void setFilterDateCriteria(final Map<String, Date> filterDateCriteria) {
         this.filterDateCriteria = filterDateCriteria;
     }
     //</editor-fold>

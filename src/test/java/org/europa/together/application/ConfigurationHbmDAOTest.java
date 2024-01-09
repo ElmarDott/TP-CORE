@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -23,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ConfigurationHbmDAOTest {
