@@ -56,6 +56,7 @@ public class JavaCryptoTools implements CryptoTools, Serializable {
             LOGGER.log(msg, LogLevel.DEBUG);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
+
         }
         return hash;
     }

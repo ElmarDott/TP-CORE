@@ -1,17 +1,20 @@
 package org.europa.together.domain;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 public class ConfigurationDOTest {
 
     private static final Logger LOGGER = new LogbackLogger(ConfigurationDOTest.class);

@@ -9,6 +9,7 @@ import java.util.Map;
 import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.business.MailClient;
@@ -30,6 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JakartaMailClientTest {
@@ -52,16 +54,16 @@ public class JakartaMailClientTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
+        //DBMS
+        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         //SMTP Test Server
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
-        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning());
-        //DBMS
-        Assumptions.assumeTrue(jdbcActions.connect("test"));
+        Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning(), "GreenMail embedded SMTP Server fail to start.");
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
@@ -73,7 +75,6 @@ public class JakartaMailClientTest {
         } catch (Exception ex) {
             LOGGER.catchException(ex);
         }
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -82,7 +83,6 @@ public class JakartaMailClientTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

@@ -7,11 +7,13 @@ import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
+import org.europa.together.JUnit5Preperator;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ValidatorTest {
@@ -225,6 +227,16 @@ public class ValidatorTest {
         assertFalse(Validator.validate("#AFaFA", Validator.RGB_COLOR));
 
         assertFalse(Validator.validate("#ggg", Validator.RGB_COLOR));
+    }
+
+    @Test
+    void isValidIP4ForLocalhost() {
+        assertTrue(Validator.validate("localhost", Validator.IP4_ADDRESS));
+    }
+
+    @Test
+    void isValidIP4ForLocalhostWithPort() {
+        assertTrue(Validator.validate("localhost:80", Validator.IP4_ADDRESS));
     }
 
     @Test

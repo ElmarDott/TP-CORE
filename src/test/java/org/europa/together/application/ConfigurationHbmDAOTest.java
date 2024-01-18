@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
@@ -23,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ConfigurationHbmDAOTest {
@@ -54,15 +56,14 @@ public class ConfigurationHbmDAOTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"));
-
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -73,7 +74,6 @@ public class ConfigurationHbmDAOTest {
     @AfterEach
     void testCaseTermination() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

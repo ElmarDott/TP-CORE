@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.lowagie.text.pdf.PdfReader;
 import java.io.File;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.internal.PdfDocument;
 import org.europa.together.business.Logger;
 import org.europa.together.business.PdfRenderer;
@@ -23,12 +24,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class OpenPdfRendererTest {
 
-    private static final Logger LOGGER = new LogbackLogger(OpenPdfRendererTest.class);
-    private static final String FILE_PATH = "org/europa/together/pdf";
+    private static final Logger LOGGER
+            = new LogbackLogger(OpenPdfRendererTest.class);
+    private static final String FILE_PATH
+            = "org/europa/together/pdf";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
@@ -38,14 +42,13 @@ public class OpenPdfRendererTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(true);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -54,7 +57,6 @@ public class OpenPdfRendererTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

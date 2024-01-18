@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import java.io.File;
 import java.io.IOException;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.service.LoggingService;
@@ -18,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class LogbackLoggerTest {
@@ -27,14 +29,13 @@ public class LogbackLoggerTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(true);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -43,7 +44,6 @@ public class LogbackLoggerTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 
@@ -139,4 +139,5 @@ public class LogbackLoggerTest {
         assertEquals("Logging exception test.",
                 logger.catchException(new NullPointerException("Logging exception test.")));
     }
+
 }

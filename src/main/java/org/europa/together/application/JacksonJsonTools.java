@@ -31,6 +31,9 @@ public class JacksonJsonTools<T> implements JsonTools<T> {
     public String serializeAsJsonObject(final T object)
             throws JsonProcessingException {
         try {
+            if (object == null) {
+                throw new JsonProcessingException("Object is null.");
+            }
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(object);
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
@@ -41,12 +44,10 @@ public class JacksonJsonTools<T> implements JsonTools<T> {
 
     @Override
     @SuppressWarnings("unchecked")
+    //TODO: TP-CORE Release 4.0 (API Change) try to get rid of the object Parameter.
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
         try {
-//            ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-//            Class<?> clazz = (Class<?>) type.getActualTypeArguments()[0];
-
             Class<?> clazz = Class.forName(object.getCanonicalName());
             ObjectMapper mapper = new ObjectMapper();
             return (T) mapper.readValue(json, clazz);

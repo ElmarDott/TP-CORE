@@ -1,14 +1,17 @@
 package org.europa.together.domain;
 
 import java.lang.reflect.Constructor;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 public class JdbcConnectionTest {
 
     private static final Logger LOGGER = new LogbackLogger(JdbcConnectionTest.class);

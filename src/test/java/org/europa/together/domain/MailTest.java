@@ -3,14 +3,17 @@ package org.europa.together.domain;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.utils.Constraints;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 public class MailTest {
 
     private static final Logger LOGGER = new LogbackLogger(MailTest.class);

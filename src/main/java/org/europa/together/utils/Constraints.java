@@ -68,6 +68,11 @@ public final class Constraints {
     /**
      * Magic constant.
      */
+    public static final int INT_128 = 128;
+
+    /**
+     * Magic constant.
+     */
     public static final int INT_512 = 512;
 
     /**

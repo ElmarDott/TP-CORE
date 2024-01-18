@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.Logger;
 import org.europa.together.business.QrCodeGenerator;
 import org.europa.together.domain.LogLevel;
@@ -23,12 +24,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ZxingGeneratorTest {
 
-    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(ZxingGeneratorTest.class);
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
@@ -37,14 +39,13 @@ public class ZxingGeneratorTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(true);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -53,7 +54,6 @@ public class ZxingGeneratorTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

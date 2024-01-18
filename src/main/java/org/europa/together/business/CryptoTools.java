@@ -8,6 +8,7 @@ import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
 import org.europa.together.domain.CipherAlgorithm;
 import org.europa.together.domain.HashAlgorithm;
+import org.springframework.stereotype.Component;
 
 /**
  * Basic cryptographic functions for applications.
@@ -17,6 +18,7 @@ import org.europa.together.domain.HashAlgorithm;
  * @since 2.0
  */
 @API(status = STABLE, since = "2.0", consumers = "JavaCryptoTools")
+@Component
 public interface CryptoTools {
 
     /**

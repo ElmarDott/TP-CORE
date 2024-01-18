@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.FeatureFlags;
 import org.europa.together.business.Logger;
@@ -20,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class FeatureFlagsFF4jTest {
@@ -39,19 +41,25 @@ public class FeatureFlagsFF4jTest {
     private static DatabaseActions jdbcActions = new JdbcActions();
     private Feature feature;
 
+    public FeatureFlagsFF4jTest() {
+        feature = new Feature("TEST");
+        feature.setDescription("Temporary test feature.");
+        feature.setGroup("none");
+        feature.setEnable(true);
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"));
-
+        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() throws Exception {
         jdbcActions.executeQuery(FLUSH_TABLE);
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -61,16 +69,8 @@ public class FeatureFlagsFF4jTest {
     @AfterEach
     void testCaseTermination() throws Exception {
         jdbcActions.executeSqlFromClasspath("schema-drop.sql");
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
-
-    public FeatureFlagsFF4jTest() {
-        feature = new Feature("TEST");
-        feature.setDescription("Temporary test feature.");
-        feature.setGroup("none");
-        feature.setEnable(true);
-    }
 
     @Test
     void failConnectDatabase() throws Exception {

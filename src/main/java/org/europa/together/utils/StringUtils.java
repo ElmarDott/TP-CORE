@@ -1,10 +1,12 @@
 package org.europa.together.utils;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -112,6 +114,33 @@ public final class StringUtils {
             result.append(s);
         }
         return result.toString();
+    }
+
+    /**
+     * Decode a given URL to a Base64 String.
+     *
+     * @param url as String
+     * @return decodedUrl as String
+     */
+    public static String base64UrlEncoding(final String url) {
+        return Base64.getUrlEncoder().encodeToString(url.getBytes());
+    }
+
+    /**
+     * Encode from a Base64 back to a readable URL.
+     *
+     * @param base64Url as byte[]
+     * @return encodedUrl as String
+     */
+    public static String base64UrlDecoding(final String base64Url) {
+        String encoded = "";
+        try {
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(base64Url);
+            encoded = new String(decodedBytes, StandardCharsets.UTF_8.toString());
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
+        }
+        return encoded;
     }
 
     /**

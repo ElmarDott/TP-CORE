@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Logback Configuration Template -->
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%5p %date{yyyy-MM-dd HH:mm:ss} %-50logger{50} | %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.europa.together" level="INFO" />
+    <logger name="ch.qos.logback" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
+    <logger name="org.hibernate" level="WARN" />
+    <logger name="org.apache.commons.dbcp2" level="WARN" />
+    <logger name="com.icegreen.greenmail" level="WARN" />
+    <logger name="org.apache.velocity" level="WARN" />
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.JsonTools;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -13,12 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
-
 public class JacksonJsonToolsTest {
 
     private static final Logger LOGGER = new LogbackLogger(JacksonJsonToolsTest.class);
@@ -29,12 +31,13 @@ public class JacksonJsonToolsTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -43,7 +46,6 @@ public class JacksonJsonToolsTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 
@@ -65,9 +67,9 @@ public class JacksonJsonToolsTest {
     void failSerializeObjectToJson() throws Exception {
         LOGGER.log("TEST CASE: failSerializeObjectToJson", LogLevel.DEBUG);
 
-        assertNotNull(jsonTools.serializeAsJsonObject(null));
-        assertNotNull(jsonTools.serializeAsJsonObject(new JacksonObjectTest()));
-        LOGGER.log(new JacksonObjectTest().toString(), LogLevel.DEBUG);
+        assertThrows(Exception.class, () -> {
+            jsonTools.serializeAsJsonObject(null);
+        });
     }
 
     @Test

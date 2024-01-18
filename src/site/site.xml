@@ -1,21 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Module: CORE">
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 https://maven.apache.org/xsd/decoration-1.8.0.xsd"
+         name="Module: CORE">
+
+    <!--
+        https://maven.apache.org/guides/mini/guide-site.html
+        https://maven.apache.org/plugins/maven-site-plugin/examples/sitedescriptor.html
+        https://maven.apache.org/skins/maven-fluido-skin/
+    -->
     <bannerLeft>
         <name>together Platform</name>
         <src>images/logo.gif</src>
         <href>index.html</href>
     </bannerLeft>
+
+    <publishDate position="right"/>
+    <version position="right"/>
+
     <body>
-        <menu ref="parent" />
+        <breadcrumbs>
+            <item name="Home" href="https://together-platform.org"/>
+        </breadcrumbs>
+
+        <!-- menu ref="parent" / -->
+        <!-- menu ref="modules" / -->
+
         <menu name="Resources">
             <item name="OWASP Dependency Check" href="dependency-check-report.html" target="_blank" />
-            <item name="JGiven BDD Report" href="jgiven/index.html" target="_blank" />
             <item name="jaCoCo Report" href="jacoco/index.html" target="_blank" />
             <item name="Clover Report" href="clover/index.html" target="_blank" />
             <item name="Java Doc - API" href="apidocs/index.html" target="_blank" />
-            <item name="GitHub Repository" href="https://github.com/ElmarDott/TP-CORE" target="_blank" />
-            <item name="Follow on Twitter" href="https://twitter.com/ElmarDott" target="_blank" />
+            <item name="Git Repository" href="https://git.elmar-dott.com/scm/repo/TogetherPlatform/TP-CORE/readme" target="_blank" />
         </menu>
-        <menu ref="reports" />
+
+        <menu name="Reports" ref="reports" />
+
+        <menu name="Documentation">
+            <item name="01 Logger" href="[CORE-01]-Logger.html"/>
+            <item name="02 generic DAO" href="[CORE-02]-generic-Data-Access-Object.html"/>
+            <item name="03 Template Renderer" href="[CORE-03]-Template-Renderer.html"/>
+            <item name="04 Property Reader" href="[CORE-04]-Property-Reader.html"/>
+            <item name="05 ConfigurationDAO" href="[CORE-05]-ConfigurationDAO.html"/>
+            <item name="06 SMTP E-Mail Client" href="[CORE-06]-SMTP-E-Mail-Client.html"/>
+            <item name="07 QR Code Generator" href="[CORE-07]-QR-Code-Generator.html"/>
+            <item name="08 Database Actions" href="[CORE-08]-Database-Actions.html"/>
+            <item name="09 Tree Walker" href="[CORE-09]-Tree-Walker.html"/>
+            <item name="10 XML-Tools" href="[CORE-10]-XML-Tools.html"/>
+            <item name="11 PDF Renderer" href="[CORE-11]-PDF-Renderer.html"/>
+            <item name="12 Image Processor" href="[CORE-12]-Image-Processor.html"/>
+            <item name="13 Feature Toggle" href="[CORE-13]-Feature-Toggle.html"/>
+            <item name="14 Crypto Tools" href="[CORE-14]-Crypto-Tools.html"/>
+            <item name="15 Json Tools" href="[CORE-15]-Json-Tools.html"/>
+            <item name="16 Json Web Token" href="[CORE-16]-Json-Web-Token.html"/>
+        </menu>
+
+        <footer><![CDATA[<p style="text-align:center; font-weight:bold;">&copy; <span id="year"></span> <a href="https://elmar-dott.com" target="_blank">Elmar Dott Consulting</a></p>
+<script>document.getElementById("year").innerHTML = new Date().getFullYear();</script>]]></footer>
     </body>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>2.0.0-M8</version>
+    </skin>
+    <custom>
+        <fluidoSkin>
+            <topBarEnabled>false</topBarEnabled>
+            <sideBarEnabled>true</sideBarEnabled>
+            <sourceLineNumbersEnabled>true</sourceLineNumbersEnabled>
+        </fluidoSkin>
+        <matomo>
+            <siteId>together-platform</siteId>
+            <url>https://analytics.elmar-dott.com</url>
+            <options>
+                <disableCookies />
+                <trackPageView />
+                <enableLinkTracking />
+            </options>
+        </matomo>
+    </custom>
 </project>

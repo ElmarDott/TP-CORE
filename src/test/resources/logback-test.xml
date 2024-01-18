@@ -17,6 +17,8 @@
     <logger name="com.icegreen.greenmail" level="WARN" />
     <logger name="org.apache.velocity" level="WARN" />
     <logger name="com.tngtech.jgiven" level="WARN" />
+    <logger name="org.testcontainers" level="WARN" />
+    <logger name="com.github.dockerjava" level="WARN" />
 
     <root level="TRACE">
         <appender-ref ref="CONSOLE" />

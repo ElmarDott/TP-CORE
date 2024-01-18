@@ -1,6 +1,5 @@
 package org.europa.together.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +17,6 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.domain.Mail;
-import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +33,7 @@ public final class MailClientService {
 
     private static final long serialVersionUID = 206L;
     private static final Logger LOGGER = new LogbackLogger(MailClientService.class);
-    private String configurationFile = null;
+    private String configurationFile = "";
 
     @Autowired
     private CryptoTools cryptoTools;
@@ -67,57 +65,31 @@ public final class MailClientService {
      * <li>mailer.wait
      *
      * @param configurationList as Map
-     * @return configuration as Map
      */
     @API(status = STABLE, since = "3.0")
-    public Map<String, String> updateDatabaseConfiguration(
-            final Map<String, String> configurationList)
-            throws DAOException {
-        List<ConfigurationDO> configurationEntries
-                = configurationDAO.getAllConfigurationSetEntries(
-                        Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
-        for (ConfigurationDO configEntry : configurationEntries) {
+    public void updateConfiguration(
+            final Map<String, String> configurationList) {
 
-            for (Map.Entry<String, String> entry : configurationList.entrySet()) {
-                if (configEntry.getKey().equals(
-                        cryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
-                    configEntry.setValue(entry.getValue());
-                    configurationDAO.update(configEntry.getUuid(), configEntry);
+        mailClient.clearConfiguration();
+        try {
+            List<ConfigurationDO> configurationEntries
+                    = configurationDAO.getAllConfigurationSetEntries(
+                            Constraints.MODULE_NAME,
+                            MailClient.CONFIG_VERSION,
+                            MailClient.CONFIG_SET);
+            for (ConfigurationDO configEntry : configurationEntries) {
+
+                for (Map.Entry<String, String> entry : configurationList.entrySet()) {
+                    if (configEntry.getKey().equals(
+                            cryptoTools.calculateHash(entry.getKey(), HashAlgorithm.SHA256))) {
+                        configEntry.setValue(entry.getValue());
+                        configurationDAO.update(configEntry.getUuid(), configEntry);
+                    }
                 }
             }
+        } catch (Exception ex) {
+            LOGGER.catchException(ex);
         }
-        mailClient.clearConfiguration();
-        mailClient.loadConfigurationFromDatabase();
-        return mailClient.getDebugActiveConfiguration();
-    }
-
-    /**
-     * Allows to update the property configuration file for the MailClient by a
-     * map of configuration entries.<br>
-     * <li>mailer.host
-     * <li>mailer.port
-     * <li>mailer.sender
-     * <li>mailer.user
-     * <li>mailer.password
-     * <li>mailer.ssl
-     * <li>mailer.tls
-     * <li>mailer.debug
-     * <li>mailer.count
-     * <li>mailer.wait
-     *
-     * @param content as String
-     * @param resource as String
-     * @return configuration as Map
-     * @throws java.io.IOException
-     */
-    @API(status = STABLE, since = "3.0")
-    public Map<String, String> updatePropertyConfiguration(
-            final String content, final String resource)
-            throws IOException {
-        //write updates to file
-        mailClient.clearConfiguration();
-        mailClient.loadConfigurationFromProperties(resource);
-        return mailClient.getDebugActiveConfiguration();
     }
 
     /**
@@ -128,19 +100,11 @@ public final class MailClientService {
      */
     @API(status = STABLE, since = "3.0")
     public Map<String, String> loadConfiguration() {
-        return mailClient.getDebugActiveConfiguration();
-    }
-
-    /**
-     * Set the path to the external configuration property file. If this file is
-     * set the configuration is tried to fetch from this file. If this action is
-     * failed for some reason, the configuration will loaded from the database.
-     *
-     * @param resource as String
-     */
-    @API(status = STABLE, since = "3.0")
-    public void setExternalConfigurationFile(final String resource) {
-        this.configurationFile = resource;
+        mailClient.loadConfigurationFromDatabase();
+        Map<String, String> config
+                = mailClient.getDebugActiveConfiguration();
+        LOGGER.log("CONFIG: " + config, LogLevel.DEBUG);
+        return config;
     }
 
     /**
@@ -160,12 +124,9 @@ public final class MailClientService {
     @API(status = STABLE, since = "1.0")
     public void sendEmail(final Mail mail) {
         try {
-            if (this.configurationFile != null) {
-                mailClient.loadConfigurationFromProperties(configurationFile);
-            } else {
-                mailClient.loadConfigurationFromDatabase();
-            }
+            mailClient.loadConfigurationFromDatabase();
             mailClient.composeMail(mail);
+
             Address[] address = new Address[1];
             address[0] = (Address) mail.getRecipentList().get(0);
 
@@ -196,12 +157,9 @@ public final class MailClientService {
     public int sendBulkMail(final Mail mail) {
         int countSendedMails = 0;
         try {
-            if (this.configurationFile != null) {
-                mailClient.loadConfigurationFromProperties(configurationFile);
-            } else {
-                mailClient.loadConfigurationFromDatabase();
-            }
+            mailClient.loadConfigurationFromDatabase();
             mailClient.composeMail(mail);
+
             int maximumMailBulk = mailClient.getBulkMailLimiter();
             long countWaitTime = mailClient.getWaitTime();
             Transport postman = mailClient.getSession().getTransport();

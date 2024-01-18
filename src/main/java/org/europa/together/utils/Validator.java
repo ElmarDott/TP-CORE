@@ -72,10 +72,11 @@ public final class Validator {
      * (1-255).(0-255).(0-255).(0-255):(1-65535)
      */
     public static final String IP4_ADDRESS
-            = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 1
+            = "(localhost|"
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 1
             + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 2
             + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\." // 3
-            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])" //    4
+            + "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]))" //    4
             // Optinal Port
             + "(:[1-5]?[0-9]{0,4}" //           1-59.999
             + "|:6[0-4][0-9][0-9][0-9]" // 60.000-64.999
@@ -126,6 +127,9 @@ public final class Validator {
      * Sample:
      * <code>Validator.isDateAfter(new DateTime(), new DateTime(2015, 12, 31, 23, 59));</code>
      * Validate to TRUE because: now() is after 2015
+     * <br><br>
+     * Convert java.util.Date to ZonedDateTime
+     * <code>ZonedDateTime.from(Date.toInstant();</code>
      *
      * @param check as DateTime
      * @param after as DateTime
@@ -145,6 +149,9 @@ public final class Validator {
      * Sample:
      * <code>Validator.isDateBefore(new DateTime(2015, 12, 31, 23, 59), new DateTime());</code>
      * Validate to TRUE because: 2015 is before now()
+     * <br><br>
+     * Convert java.util.Date to ZonedDateTime
+     * <code>ZonedDateTime.from(Date.toInstant();</code>
      *
      * @param check as DateTime
      * @param before as DateTime
@@ -161,6 +168,9 @@ public final class Validator {
     /**
      * Test if a given date is inside a range between a min and max. The
      * boundaries are inside the range.
+     * <br><br>
+     * Convert java.util.Date to ZonedDateTime
+     * <code>ZonedDateTime.from(Date.toInstant();</code>
      *
      * @param check as DateTime
      * @param min as DateTime

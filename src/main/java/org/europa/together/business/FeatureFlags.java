@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 /**
  * Feature Flags is a wrapper for the FF4j library to enable toggels for
  * activating and deactivating features.
+ *
+ * @author elmar.dott@gmail.com
+ * @version 1.0
+ * @since 1.0
  */
 @API(status = STABLE, since = "3.0", consumers = "FeatureFlagsFF4j")
 @Component

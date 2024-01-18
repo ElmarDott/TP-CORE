@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.business.Logger;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class StringUtilsTest {
@@ -46,6 +48,28 @@ public class StringUtilsTest {
     @Test
     void concatString() {
         assertEquals("ABCD", StringUtils.concatString("A", "B", "C", "D"));
+    }
+
+    @Test
+    void encodeBase64Url() {
+        String url = "https://elmar-dott.com";
+        String base64url = "aHR0cHM6Ly9lbG1hci1kb3R0LmNvbQ==";
+
+        assertEquals(base64url, StringUtils.base64UrlEncoding(url));
+
+    }
+
+    @Test
+    void decodeBase64Url() {
+        String url = "https://elmar-dott.com";
+        String base64url = "aHR0cHM6Ly9lbG1hci1kb3R0LmNvbQ==";
+
+        assertEquals(url, StringUtils.base64UrlDecoding(base64url));
+    }
+
+    @Test
+    void failDecodeBase64Url() {
+        assertEquals("", StringUtils.base64UrlDecoding(null));
     }
 
     @Test

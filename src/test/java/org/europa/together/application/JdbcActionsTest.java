@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.sql.ResultSet;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.JdbcConnection;
@@ -20,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JdbcActionsTest {
@@ -35,7 +37,7 @@ public class JdbcActionsTest {
     static void setUp() {
         Assumptions.assumeTrue(true);
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

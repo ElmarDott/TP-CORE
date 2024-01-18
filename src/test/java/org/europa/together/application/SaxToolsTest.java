@@ -2,6 +2,7 @@ package org.europa.together.application;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.io.File;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.Logger;
 import org.europa.together.business.XmlTools;
 import org.europa.together.domain.LogLevel;
@@ -14,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class SaxToolsTest {
 
-    private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(SaxToolsTest.class);
     private static final String FILE_PATH
             = "org/europa/together/xml";
     private static final String DIRECTORY
@@ -49,10 +50,10 @@ public class SaxToolsTest {
             FileUtils.copyFile(new File(DIRECTORY + "/simple.xsd"), SCHEMA);
         } catch (Exception ex) {
             LOGGER.catchException(ex);
-            Assumptions.assumeTrue(false);
+            Assumptions.assumeTrue(false, "XML grammar definition files faild to copy.");
         }
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
@@ -63,8 +64,6 @@ public class SaxToolsTest {
         if (SCHEMA.exists()) {
             SCHEMA.delete();
         }
-
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -73,7 +72,6 @@ public class SaxToolsTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 

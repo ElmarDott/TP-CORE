@@ -3,6 +3,7 @@ package org.europa.together.application;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.HashMap;
 import java.util.Map;
+import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
@@ -21,12 +22,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
+@ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class VelocityRendererTest {
 
-    private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(VelocityRendererTest.class);
     private static final String FILE_PATH
             = "org/europa/together/velocity";
     private static final String DIRECTORY
@@ -40,14 +42,13 @@ public class VelocityRendererTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(true);
+        Assumptions.assumeTrue(true, "Assumtion failed.");
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
     static void tearDown() {
-        LOGGER.log("### TEST SUITE TERMINATED.\n", LogLevel.TRACE);
     }
 
     @BeforeEach
@@ -56,7 +57,6 @@ public class VelocityRendererTest {
 
     @AfterEach
     void testCaseTermination() {
-        LOGGER.log("TEST CASE TERMINATED.", LogLevel.TRACE);
     }
     //</editor-fold>
 
