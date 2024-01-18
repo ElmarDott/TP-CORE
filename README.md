@@ -37,29 +37,7 @@ Components - Release: 3.1.0
 
 The CORE Module is build with NetBeans, Maven and Java 17 SE (openJDK). The most important dependencies are Hibernate, Spring and JUnit 5. As Database Server (DBMS) PostgeSQL DBMS 14 is recommended.
 
-Docker was chosen for an simple and fast database setup. In the case you wish to have a short introduction about docker, you can check my tutorial on [BitCute](https://elmar-dott.com/articles/tutorial/docker-basics/). After on your system docker is running, you are be able to setup the database by the following steps:
-
-  docker network create -d bridge --subnet=172.18.0.0/16 services
-
-  docker run -d --name postgres --restart=no \
-  -p 5432:5432 --net services --ip 172.18.0.2 \
-  -e POSTGRES_PASSWORD=s3cr3t \
-  -e PGPASSWORD=s3cr3t \
-  -v /home/user/docker/postgres:/var/lib/postgresql/data \
-  postgres:14
-
-  docker run -d --name pgadmin --restart=no \
-  -p 8004:80 --net services --ip 172.18.0.98 \
-  -e PGADMIN_DEFAULT_EMAIL=myself@sample.com \
-  -e PGADMIN_DEFAULT_PASSWORD=s3cr3t \
-  --link postgres:11 \
-  dpage/pgadmin4:4.29
-
-  **URI**/>  172.17.0.1:5432   User: postgres PWD: n/a
-  **DOC**/>  https://docs.docker.com/samples/library/postgres/
-
-  * docker start postgres
-  * docker stop postgres
+Docker in combination with Testcontainers was chosen for an simple and fast database setup. In the case you wish to have a short introduction about docker, you can check my tutorial on [BitCute](https://elmar-dott.com/articles/tutorial/docker-basics/). After on your system docker is running, TEstcontainers is doing the job for you.
 
 To create default user and schemata (also for testing), you are be able to use [TP-CM/dbms/src/sql/initial_postgresql.sql](https://github.com/ElmarDott/TP-CM/blob/master/dbms/src/sql/initial_postgresql.sql) script.
 
