@@ -27,8 +27,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class SaxToolsTest {
 
-    private static final Logger LOGGER = new LogbackLogger(SaxToolsTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(SaxToolsTest.class);
     private static final String FILE_PATH
             = "org/europa/together/xml";
     private static final String DIRECTORY
@@ -52,6 +52,8 @@ public class SaxToolsTest {
             LOGGER.catchException(ex);
             Assumptions.assumeTrue(false, "XML grammar definition files faild to copy.");
         }
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

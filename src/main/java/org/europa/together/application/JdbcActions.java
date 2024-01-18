@@ -69,6 +69,7 @@ public class JdbcActions implements DatabaseActions {
     @Override
     public boolean executeSqlFromClasspath(final String sqlFile) {
         boolean success = true;
+        LOGGER.log("SQL from Classpath -> File(" + sqlFile + ")", LogLevel.DEBUG);
         BufferedReader reader = null;
         StringBuilder sql = new StringBuilder();
         ApplicationContext context = new ClassPathXmlApplicationContext();
@@ -89,7 +90,6 @@ public class JdbcActions implements DatabaseActions {
             success = false;
             LOGGER.catchException(ex);
         }
-        LOGGER.log("SQL from Classpath -> File(" + sqlFile + ")", LogLevel.DEBUG);
         return success;
     }
 
@@ -97,12 +97,11 @@ public class JdbcActions implements DatabaseActions {
     public ResultSet executeQuery(final String sql)
             throws SQLException {
         ResultSet resultSet = null;
+        LOGGER.log("Execute SQL: " + sql, LogLevel.DEBUG);
         if (jdbcConnection != null) {
             statement = jdbcConnection.createStatement();
             statement.execute(sql);
             resultSet = statement.getResultSet();
-
-            LOGGER.log("Execute SQL: " + sql, LogLevel.DEBUG);
         } else {
             LOGGER.log("No JDBC Connection established.", LogLevel.ERROR);
         }
@@ -163,7 +162,7 @@ public class JdbcActions implements DatabaseActions {
 
     private void establishPooledConnection()
             throws TimeOutException, ClassNotFoundException, PropertyVetoException, SQLException {
-        LOGGER.log("Try to establish connection.", LogLevel.DEBUG);
+        LOGGER.log("Try to establish JDBC connection.", LogLevel.DEBUG);
         Class.forName(driverClass);
         BasicDataSource cpds = new BasicDataSource();
         cpds.setDriverClassName(driverClass);
@@ -171,6 +170,7 @@ public class JdbcActions implements DatabaseActions {
         cpds.setUsername(user);
         cpds.setPassword(pwd);
         this.jdbcConnection = cpds.getConnection();
+        LOGGER.log(getJdbcMetaData().toString(), LogLevel.DEBUG);
     }
 
     private void fetchProperties(final String propertyFile) throws IOException {

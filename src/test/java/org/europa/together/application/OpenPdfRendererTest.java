@@ -29,8 +29,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class OpenPdfRendererTest {
 
-    private static final Logger LOGGER = new LogbackLogger(OpenPdfRendererTest.class);
-    private static final String FILE_PATH = "org/europa/together/pdf";
+    private static final Logger LOGGER
+            = new LogbackLogger(OpenPdfRendererTest.class);
+    private static final String FILE_PATH
+            = "org/europa/together/pdf";
     private static final String DIRECTORY
             = Constraints.SYSTEM_APP_DIR + "/target/test-classes/";
 
@@ -41,6 +43,8 @@ public class OpenPdfRendererTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

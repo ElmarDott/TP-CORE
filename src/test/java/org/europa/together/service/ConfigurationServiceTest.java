@@ -2,9 +2,7 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.List;
-import java.util.logging.Level;
 import org.europa.together.JUnit5Preperator;
-import org.europa.together.application.ConfigurationHbmDAOTest;
 import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
@@ -12,7 +10,6 @@ import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.DAOException;
 import static org.hamcrest.MatcherAssert.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterAll;
@@ -32,8 +29,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ConfigurationServiceTest {
 
-    private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
-    public static DatabaseActions CONNECTION = new JdbcActions();
+    private static final Logger LOGGER
+            = new LogbackLogger(ConfigurationServiceTest.class);
+    public static DatabaseActions CONNECTION
+            = new JdbcActions();
     private static final String SQL_FILE
             = "org/europa/together/sql/configuration-test.sql";
 
@@ -47,7 +46,8 @@ public class ConfigurationServiceTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(CONNECTION.connect("test"), "JDBC DBMS Connection failed.");
-        LOGGER.log("Assumptions passed ...", LogLevel.DEBUG);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

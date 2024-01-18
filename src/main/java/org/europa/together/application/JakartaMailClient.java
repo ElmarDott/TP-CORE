@@ -78,6 +78,7 @@ public class JakartaMailClient implements MailClient {
     public boolean loadConfigurationFromProperties(final String resource)
             throws IOException {
         boolean success = true;
+        initConfig();
         Map<String, String> properties = new HashMap<>();
         try {
             propertyReader.appendPropertiesFromClasspath(resource);
@@ -107,6 +108,7 @@ public class JakartaMailClient implements MailClient {
     @Override
     public boolean loadConfigurationFromDatabase() {
         boolean success = false;
+        initConfig();
         LOGGER.log("Load all configuration sets of: " + CONFIG_SET
                 + " - Version: " + CONFIG_VERSION
                 + " - Module: " + Constraints.MODULE_NAME, LogLevel.DEBUG);
@@ -118,6 +120,7 @@ public class JakartaMailClient implements MailClient {
             processConfiguration(configurationEntries);
             success = true;
         }
+        LOGGER.log("DB CONFIG: " + configuration, LogLevel.DEBUG);
         return success;
     }
 
@@ -208,6 +211,21 @@ public class JakartaMailClient implements MailClient {
         configuration.put("mailer.wait", "-1");
     }
 
+    private Properties wireConfigurationEntries() {
+        configCountWaitTime = Long.parseLong(configuration.get("mailer.wait"));
+        configMaximumMailBulk = Integer.parseInt(configuration.get("mailer.count"));
+        Properties props = new Properties();
+        props.put("mail.smtp.host", configuration.get("mailer.host"));
+        props.put("mail.smtp.port", configuration.get("mailer.port"));
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", configuration.get("mailer.tls"));
+        props.put("mail.smtp.ssl.enable", configuration.get("mailer.ssl"));
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.port", configuration.get("mailer.port"));
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        return props;
+    }
+
     private void processConfiguration(final List<ConfigurationDO> configurationEntries) {
         LOGGER.log("Process E-Mail Configuration  (" + configurationEntries.size() + ")",
                 LogLevel.DEBUG);
@@ -260,20 +278,5 @@ public class JakartaMailClient implements MailClient {
                 configuration.replace("mailer.wait", value);
             }
         }
-    }
-
-    private Properties wireConfigurationEntries() {
-        configCountWaitTime = Long.parseLong(configuration.get("mailer.wait"));
-        configMaximumMailBulk = Integer.parseInt(configuration.get("mailer.count"));
-        Properties props = new Properties();
-        props.put("mail.smtp.host", configuration.get("mailer.host"));
-        props.put("mail.smtp.port", configuration.get("mailer.port"));
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", configuration.get("mailer.tls"));
-        props.put("mail.smtp.ssl.enable", configuration.get("mailer.ssl"));
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.port", configuration.get("mailer.port"));
-        props.put("mail.smtp.socketFactory.fallback", "false");
-        return props;
     }
 }

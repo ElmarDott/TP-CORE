@@ -62,6 +62,8 @@ public class JakartaMailClientTest {
         SMTP_SERVER.start();
         SMTP_SERVER.setUser("john.doe@localhost", "JohnDoe", "s3cr3t");
         Assumptions.assumeTrue(SMTP_SERVER.getSmtps().isRunning(), "GreenMail embedded SMTP Server fail to start.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

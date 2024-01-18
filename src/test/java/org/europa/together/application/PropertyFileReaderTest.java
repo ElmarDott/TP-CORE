@@ -27,7 +27,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class PropertyFileReaderTest {
 
-    private static final Logger LOGGER = new LogbackLogger(PropertyFileReaderTest.class);
+    private static final Logger LOGGER
+            = new LogbackLogger(PropertyFileReaderTest.class);
 
     private static final String FILE_PATH
             = "org/europa/together/properties/properties-test-classpath.properties";
@@ -41,6 +42,8 @@ public class PropertyFileReaderTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

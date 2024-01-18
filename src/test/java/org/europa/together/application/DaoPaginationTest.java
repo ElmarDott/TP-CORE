@@ -49,6 +49,8 @@ public class DaoPaginationTest {
     static void setUp() {
         Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

@@ -37,7 +37,7 @@ public class JdbcActionsTest {
     static void setUp() {
         Assumptions.assumeTrue(true);
 
-        LOGGER.log("### TEST SUITE INICIATED.", LogLevel.TRACE);
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

@@ -51,6 +51,7 @@
             <item name="13 Feature Toggle" href="[CORE-13]-Feature-Toggle.html"/>
             <item name="14 Crypto Tools" href="[CORE-14]-Crypto-Tools.html"/>
             <item name="15 Json Tools" href="[CORE-15]-Json-Tools.html"/>
+            <item name="16 Json Web Token" href="[CORE-16]-Json-Web-Token.html"/>
         </menu>
 
         <footer><![CDATA[<p style="text-align:center; font-weight:bold;">&copy; <span id="year"></span> <a href="https://elmar-dott.com" target="_blank">Elmar Dott Consulting</a></p>

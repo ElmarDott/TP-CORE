@@ -48,6 +48,8 @@ public class JavaCryptoToolsTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

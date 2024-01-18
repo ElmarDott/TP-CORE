@@ -3,7 +3,6 @@ package org.europa.together.service;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.io.File;
 import org.europa.together.JUnit5Preperator;
-import org.europa.together.application.ConfigurationHbmDAOTest;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
@@ -29,18 +28,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class LoggingServiceTest {
 
-    private static final Logger LOGGER = new LogbackLogger(ConfigurationHbmDAOTest.class);
+    private static final Logger LOGGER
+            = new LogbackLogger(LoggingServiceTest.class);
+    private final String configFile
+            = Constraints.SYSTEM_APP_DIR + "/";
 
     @Autowired
     private LoggingService loggingSevice;
-
-    private final String configFile = Constraints.SYSTEM_APP_DIR
-            + "/target/test-classes/org/europa/together/";
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

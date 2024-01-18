@@ -2,7 +2,9 @@ package org.europa.together.application;
 
 import org.europa.together.JUnit5Preperator;
 import org.europa.together.business.DatabaseActions;
+import org.europa.together.business.Logger;
 import org.europa.together.business.PaginationTestDAO;
+import org.europa.together.domain.LogLevel;
 import org.europa.together.domain.PaginationTestDO;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +20,17 @@ public class PaginationTestHbmDAO extends GenericHbmDAO<PaginationTestDO, String
         implements PaginationTestDAO {
 
     private static final long serialVersionUID = 99999L;
-    private static DatabaseActions jdbcActions = new JdbcActions();
+    private static final Logger LOGGER
+            = new LogbackLogger(PaginationTestHbmDAO.class);
+    private static DatabaseActions jdbcActions
+            = new JdbcActions();
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ExtendWith({JUnit5Preperator.class})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"/applicationContext.xml"})
-
 public class JacksonJsonToolsTest {
 
     private static final Logger LOGGER = new LogbackLogger(JacksonJsonToolsTest.class);
@@ -33,6 +32,8 @@ public class JacksonJsonToolsTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

@@ -3,6 +3,19 @@
 --- #### #######################################################################
 ---  Notes: CONF-KEY in table APP_CONFIG is SHA-256 protected
 
+CREATE TABLE IF NOT EXISTS APP_CONFIG (
+    IDX char(255) PRIMARY KEY,
+    CONF_KEY char(255),
+    CONF_VALUE char(255),
+    DEFAULT_VALUE char(255),
+    CONF_SET char(255),
+    MODUL_NAME char(255),
+    SERVICE_VERSION char(255),
+    MANDATORY boolean,
+    DEPRECATED boolean,
+    COMMENT char(255)
+);
+
 --- #### SIMPLE FIND
 INSERT INTO APP_CONFIG (IDX, CONF_KEY, CONF_VALUE, DEFAULT_VALUE, CONF_SET, MODUL_NAME, SERVICE_VERSION, MANDATORY, DEPRECATED, COMMENT)
 VALUES ('88888888-4444-4444-4444-cccccccccc', 'key', 'empty', 'X',

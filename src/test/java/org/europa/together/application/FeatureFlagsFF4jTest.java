@@ -41,11 +41,20 @@ public class FeatureFlagsFF4jTest {
     private static DatabaseActions jdbcActions = new JdbcActions();
     private Feature feature;
 
+    public FeatureFlagsFF4jTest() {
+        feature = new Feature("TEST");
+        feature.setDescription("Temporary test feature.");
+        feature.setGroup("none");
+        feature.setEnable(true);
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
@@ -62,13 +71,6 @@ public class FeatureFlagsFF4jTest {
         jdbcActions.executeSqlFromClasspath("schema-drop.sql");
     }
     //</editor-fold>
-
-    public FeatureFlagsFF4jTest() {
-        feature = new Feature("TEST");
-        feature.setDescription("Temporary test feature.");
-        feature.setGroup("none");
-        feature.setEnable(true);
-    }
 
     @Test
     void failConnectDatabase() throws Exception {

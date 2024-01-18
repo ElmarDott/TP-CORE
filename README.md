@@ -11,6 +11,7 @@
 
 ## Getting Started
 **Homepage:** [together-platform.org](https://together-platform.org)
+The GitHub Code Reposity contains just a backup branch of releases from https://git.elmar-dott.com.
 The TP-CORE artifact contains typical basic functions for Java Applications. The module is elaborated as library and packed as JAR file. It is possible to use this artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
 Components - Release: 3.0.0

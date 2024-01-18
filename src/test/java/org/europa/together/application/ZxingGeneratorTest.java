@@ -29,8 +29,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class ZxingGeneratorTest {
 
-    private static final Logger LOGGER = new LogbackLogger(ZxingGeneratorTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(ZxingGeneratorTest.class);
     private static final String FILE_PATH
             = "org/europa/together/qr_codes";
     private static final String DIRECTORY
@@ -40,6 +40,8 @@ public class ZxingGeneratorTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll

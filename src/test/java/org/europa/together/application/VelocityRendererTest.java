@@ -27,8 +27,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class VelocityRendererTest {
 
-    private static final Logger LOGGER = new LogbackLogger(VelocityRendererTest.class);
-
+    private static final Logger LOGGER
+            = new LogbackLogger(VelocityRendererTest.class);
     private static final String FILE_PATH
             = "org/europa/together/velocity";
     private static final String DIRECTORY
@@ -43,6 +43,8 @@ public class VelocityRendererTest {
     @BeforeAll
     static void setUp() {
         Assumptions.assumeTrue(true, "Assumtion failed.");
+
+        LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }
 
     @AfterAll
