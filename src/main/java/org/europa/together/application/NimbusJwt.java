@@ -1,6 +1,5 @@
 package org.europa.together.application;
 
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
@@ -20,6 +19,7 @@ import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
 import org.europa.together.exceptions.DAOException;
 import org.europa.together.exceptions.JsonProcessingException;
+import org.europa.together.utils.Constraints;
 import org.europa.together.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ public class NimbusJwt implements JsonWebToken {
     private String sharedSecret = "";
 
     @Autowired
-    ConfigurationDAO configurationDAO;
+    private ConfigurationDAO configurationDAO;
 
     public NimbusJwt() throws DAOException {
         LOGGER.log("instance class", LogLevel.INFO);
@@ -73,7 +73,8 @@ public class NimbusJwt implements JsonWebToken {
     }
 
     @Override
-    public String buildHMAC512SignedJwt(String issuer, String subject, List<String> audience)
+    public String buildHMAC512SignedJwt(final String issuer, final String subject,
+            final List<String> audience)
             throws JsonProcessingException {
         String jwt = "";
         try {
@@ -87,11 +88,12 @@ public class NimbusJwt implements JsonWebToken {
             JWSHeader jswHeader = new JWSHeader(JWSAlgorithm.HS512);
 
             Date currentTime = new Date();
+            //TODO: make json.expiration.time configurable: 1000 * 60 * 10 := 10 minutes
             JWTClaimsSet jwtClaims = new JWTClaimsSet.Builder()
                     .issuer(issuer)
                     .subject(subject)
                     .audience(audience)
-                    .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 10))
+                    .expirationTime(new Date(new Date().getTime() + 600000))
                     .notBeforeTime(currentTime)
                     .issueTime(currentTime)
                     .jwtID(StringUtils.generateUUID())
@@ -108,7 +110,7 @@ public class NimbusJwt implements JsonWebToken {
     }
 
     @Override
-    public String parseHMAC512SingedJws(String jws)
+    public String parseHMAC512SingedJws(final String jws)
             throws JsonProcessingException {
         String payload = "";
         try {
@@ -132,7 +134,7 @@ public class NimbusJwt implements JsonWebToken {
     }
 
     @Override
-    public String parseHMAC512SingedJwt(String jwt)
+    public String parseHMAC512SingedJwt(final String jwt)
             throws JsonProcessingException {
         String payload = "";
         try {
@@ -156,10 +158,10 @@ public class NimbusJwt implements JsonWebToken {
     }
 
     //--------------------------------------------------------------------------
-    private boolean validateLengthOfSharedSecret(String secret) {
+    private boolean validateLengthOfSharedSecret(final String secret) {
         boolean success = false;
         // 512 bits -> 64 byte = 128 chars
-        if (secret.length() >= 128) {
+        if (secret.length() >= Constraints.INT_128) {
             success = true;
         }
         return success;

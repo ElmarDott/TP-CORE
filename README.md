@@ -14,7 +14,7 @@
 The GitHub Code Reposity contains just a backup branch of releases from https://git.elmar-dott.com.
 The TP-CORE artifact contains typical basic functions for Java Applications. The module is elaborated as library and packed as JAR file. It is possible to use this artifact in Java EE and Java SE (Desktop) Applications. The implementation of these library has the goal, to create an useful and compact toolbox. Free of charge for any kind of usage, commercial and private,
 
-Components - Release: 3.0.0
+Components - Release: 3.1.0
 
  * [CORE-01] [Application Logger](https://together-platform.org/tp-core/[CORE-01]-Logger.html)
  * [CORE-02] [generic Data Access Object](https://together-platform.org/tp-core/[CORE-02]-generic-Data-Access-Object.html)
@@ -31,6 +31,7 @@ Components - Release: 3.0.0
  * [CORE-13] [Feature Toggle](https://together-platform.org/tp-core/[CORE-13]-Feature-Toggle.html)
  * [CORE-14] [Crypto Tools](https://together-platform.org/tp-core/[CORE-14]-Crypto-Tools.html)
  * [CORE-15] [JSON Tools](https://together-platform.org/tp-core/[CORE-15]-Json-Tools.html)
+ * [CORE-16] [JSON Web Token](https://together-platform.org/tp-core/[CORE-16]-Json-Web-Token.html)
 
 ### Prerequisites
 
@@ -78,7 +79,7 @@ All released artifacts are available on Maven Central for free usage. You are be
 <dependency>
     <groupId>io.github.together.modules</groupId>
     <artifactId>core</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
 </dependency>
 ```
 
@@ -102,15 +103,15 @@ In the case you like this project, let me know it and rate it with a star.
 
 |Version | Comment
 |--------|----------------------------------------------------------------------
-| 3.1.0  | in prgress
+| 3.1.0  | published 01/2024
 |        | - update Spring 6.0 & HBM 6.1 (javax -> jakarta)
 |        | - add EQUAL pagination filter for: String, Bool, Int, Float, Date
-|        | - remove jGiven BDD acceptance tests
-|        | - optimize test excecution
-|        | - include postgres 14 testcontainers
+|        | - remove jGiven BDD acceptance tests to TP-TestSuite
+|        | - include postgres 14 testcontainers & optimize test excecution
 |        | - extend Validator.IP4_ADDRESS with localhost
 |        | - extend SringUtils.base64Url encode/decode
-|        | - fix ConfigurationService
+|        | - fix ConfigurationService & MailClientService
+|        | - Add Functionality: JWT & JWS
 |--------|----------------------------------------------------------------------
 | 3.0.0  | published 10/2022
 |        | - implement FeatureFlags based FF4j

@@ -17,7 +17,6 @@ import org.europa.together.domain.LogLevel;
 import org.europa.together.utils.Constraints;
 import org.europa.together.business.CryptoTools;
 import org.europa.together.domain.Mail;
-import org.europa.together.exceptions.DAOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +65,6 @@ public final class MailClientService {
      * <li>mailer.wait
      *
      * @param configurationList as Map
-     * @return configuration as Map
      */
     @API(status = STABLE, since = "3.0")
     public void updateConfiguration(
@@ -76,7 +74,9 @@ public final class MailClientService {
         try {
             List<ConfigurationDO> configurationEntries
                     = configurationDAO.getAllConfigurationSetEntries(
-                            Constraints.MODULE_NAME, MailClient.CONFIG_VERSION, MailClient.CONFIG_SET);
+                            Constraints.MODULE_NAME,
+                            MailClient.CONFIG_VERSION,
+                            MailClient.CONFIG_SET);
             for (ConfigurationDO configEntry : configurationEntries) {
 
                 for (Map.Entry<String, String> entry : configurationList.entrySet()) {

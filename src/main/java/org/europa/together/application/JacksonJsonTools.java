@@ -1,7 +1,6 @@
 package org.europa.together.application;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.europa.together.exceptions.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -45,15 +44,12 @@ public class JacksonJsonTools<T> implements JsonTools<T> {
 
     @Override
     @SuppressWarnings("unchecked")
+    //TODO: TP-CORE Release 4.0 (API Change) try to get rid of the object Parameter.
     public T deserializeJsonAsObject(final String json, final Class<T> object)
             throws JsonProcessingException, ClassNotFoundException {
         try {
-//            ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
-//            Class<?> clazz = (Class<?>) type.getActualTypeArguments()[0];
-
             Class<?> clazz = Class.forName(object.getCanonicalName());
             ObjectMapper mapper = new ObjectMapper();
-//            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return (T) mapper.readValue(json, clazz);
         } catch (com.fasterxml.jackson.core.JsonProcessingException ex) {
             throw new JsonProcessingException(ex.getOriginalMessage());

@@ -68,6 +68,11 @@ public class StringUtilsTest {
     }
 
     @Test
+    void failDecodeBase64Url() {
+        assertEquals("", StringUtils.base64UrlDecoding(null));
+    }
+
+    @Test
     void generateStringOfLength() {
         assertEquals("012345678", StringUtils.generateStringOfLength(9));
         assertEquals("01234567890123", StringUtils.generateStringOfLength(14));
