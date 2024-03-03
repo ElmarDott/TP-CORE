@@ -22,7 +22,8 @@ import org.testcontainers.utility.DockerImageName;
  * shutdown after all the testenvironment.<br>
  * <b>USAGE: </b> @ExtendWith({JUnit5DbPreperator.class})
  */
-public class JUnit5Preperator implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
+public class JUnit5Preperator
+        implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
     private static final Logger LOGGER = new LogbackLogger(JUnit5Preperator.class);
     private static boolean started = false;

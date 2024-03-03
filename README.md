@@ -62,15 +62,12 @@ All released artifacts are available on Maven Central for free usage. You are be
 ```
 
 ## Authors
-
 * **Elmar Dott** - [*Concept, Architecture, Development*](https://elmar-dott.com)
 
 ## License
-
 This project is licensed under the Apache 2.0 license.
 
 ## Contribution
-
 Feel free open a pull request or to send a feature request by e-mail in the case you want to contribute the project. Everyone is welcome, even beginners in programming. I also appreciate help by optimizing the documentation and creating tutorials.
 
 Mistakes happen. But we only able to fix them, when we you inform us you found a bug. Do not hesitate to send a report in the way you feel common. I try to give as much as possible fast & direct support.
@@ -78,8 +75,10 @@ Mistakes happen. But we only able to fix them, when we you inform us you found a
 In the case you like this project, let me know it and rate it with a star.
 
 ## Release Notes
-
 |Version | Comment
+|--------|----------------------------------------------------------------------
+| 3.2.0  | in progress
+|        | - 
 |--------|----------------------------------------------------------------------
 | 3.1.0  | published 01/2024
 |        | - update Spring 6.0 & HBM 6.1 (javax -> jakarta)

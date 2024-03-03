@@ -14,7 +14,7 @@
     <parent>
         <groupId>io.github.together</groupId>
         <artifactId>build-workflow</artifactId>
-        <version>1.5.0</version>
+        <version>1.6-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.together.modules</groupId>
@@ -227,7 +227,7 @@
         <!-- Circuit Breaker -->
         <dependency>
             <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-circuitbreaker</artifactId>
+            <artifactId>resilience4j-all</artifactId>
             <version>2.2.0</version>
         </dependency>
     </dependencies>
