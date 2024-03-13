@@ -11,7 +11,6 @@ import org.europa.together.business.JsonWebToken;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ConfigurationDO;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.exceptions.JsonProcessingException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -37,7 +36,8 @@ public class NimbusJwtTest {
     private static final String FILE
             = "org/europa/together/sql/jwt-test.sql";
 
-    private static DatabaseActions jdbcActions = new JdbcActions();
+    private static DatabaseActions jdbcActions
+            = JUnit5Preperator.JDBC_CONNECTION;
 
     private String jws
             = "eyJhbGciOiJIUzUxMiJ9.e0hhbGxvIFdvcmxkIEpTT059.H4_JPE4135eUQUnAJrQD9nkLavNuEBYxxp4FnU7k7FOZbjWtiE-F6DjnThaxBpTRzuGpck0H3lud_H0U7_mHbQ";
@@ -48,7 +48,7 @@ public class NimbusJwtTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
 
         LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);

@@ -38,7 +38,8 @@ public class FeatureFlagsFF4jTest {
     @Autowired
     private FeatureFlags featureFlags;
 
-    private static DatabaseActions jdbcActions = new JdbcActions();
+    private static DatabaseActions jdbcActions
+            = JUnit5Preperator.JDBC_CONNECTION;
     private Feature feature;
 
     public FeatureFlagsFF4jTest() {
@@ -51,7 +52,7 @@ public class FeatureFlagsFF4jTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
 
         LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);

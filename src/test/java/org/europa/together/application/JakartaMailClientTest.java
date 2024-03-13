@@ -49,13 +49,14 @@ public class JakartaMailClientTest {
     private MailClient mailClient;
 
     private static GreenMail SMTP_SERVER;
-    private static DatabaseActions jdbcActions = new JdbcActions();
+    private static DatabaseActions jdbcActions
+            = JUnit5Preperator.JDBC_CONNECTION;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
         //DBMS
-        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
         //SMTP Test Server
         Security.setProperty("ssl.SocketFactory.provider", DummySSLSocketFactory.class.getName());
         SMTP_SERVER = new GreenMail(ServerSetupTest.SMTPS);

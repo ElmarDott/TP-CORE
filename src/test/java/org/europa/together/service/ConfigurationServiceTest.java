@@ -3,7 +3,6 @@ package org.europa.together.service;
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import java.util.List;
 import org.europa.together.JUnit5Preperator;
-import org.europa.together.application.JdbcActions;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.ConfigurationDAO;
 import org.europa.together.business.DatabaseActions;
@@ -32,7 +31,7 @@ public class ConfigurationServiceTest {
     private static final Logger LOGGER
             = new LogbackLogger(ConfigurationServiceTest.class);
     public static DatabaseActions CONNECTION
-            = new JdbcActions();
+            = JUnit5Preperator.JDBC_CONNECTION;
     private static final String SQL_FILE
             = "org/europa/together/sql/configuration-test.sql";
 
@@ -45,7 +44,7 @@ public class ConfigurationServiceTest {
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(CONNECTION.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
 
         LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }

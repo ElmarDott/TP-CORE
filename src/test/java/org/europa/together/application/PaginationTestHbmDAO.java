@@ -23,12 +23,12 @@ public class PaginationTestHbmDAO extends GenericHbmDAO<PaginationTestDO, String
     private static final Logger LOGGER
             = new LogbackLogger(PaginationTestHbmDAO.class);
     private static DatabaseActions jdbcActions
-            = new JdbcActions();
+            = JUnit5Preperator.JDBC_CONNECTION;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
 
         LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
     }

@@ -42,12 +42,13 @@ public class DaoPaginationTest {
     @Autowired
     private PaginationTestDAO paginationTestDAO;
 
-    private static DatabaseActions jdbcActions = new JdbcActions();
+    private static DatabaseActions jdbcActions
+            = JUnit5Preperator.JDBC_CONNECTION;
 
     //<editor-fold defaultstate="collapsed" desc="Test Preparation">
     @BeforeAll
     static void setUp() {
-        Assumptions.assumeTrue(jdbcActions.connect("test"), "JDBC DBMS Connection failed.");
+        Assumptions.assumeTrue(JUnit5Preperator.isConnected(), "JDBC DBMS Connection failed.");
         jdbcActions.executeSqlFromClasspath(FILE);
 
         LOGGER.log("Assumptions passed ...\n\n", LogLevel.DEBUG);
