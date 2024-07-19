@@ -30,8 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@ExtendWith({JUnit5Preperator.class})
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, JUnit5Preperator.class})
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 @TestMethodOrder(OrderAnnotation.class)
 public class JavaCryptoToolsTest {

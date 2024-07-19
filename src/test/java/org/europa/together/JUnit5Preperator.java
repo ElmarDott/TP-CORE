@@ -6,7 +6,6 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.DatabaseActions;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
-import org.europa.together.utils.Constraints;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;

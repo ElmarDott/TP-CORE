@@ -13,9 +13,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.stereotype.Repository;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Repository
-@ExtendWith({JUnit5Preperator.class})
+@ExtendWith({SpringExtension.class, JUnit5Preperator.class})
 public class PaginationTestHbmDAO extends GenericHbmDAO<PaginationTestDO, String>
         implements PaginationTestDAO {
 

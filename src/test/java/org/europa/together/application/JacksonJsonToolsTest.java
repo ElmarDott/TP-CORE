@@ -18,8 +18,7 @@ import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("unchecked")
-@ExtendWith({JUnit5Preperator.class})
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, JUnit5Preperator.class})
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class JacksonJsonToolsTest {
 
