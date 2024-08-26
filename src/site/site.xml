@@ -22,14 +22,17 @@
             <item name="Home" href="https://together-platform.org"/>
         </breadcrumbs>
 
-        <!-- menu ref="parent" / -->
-        <!-- menu ref="modules" / -->
+        <menu name="Parent">
+            <item name="together Platform - Build Workflow" href="https://together-platform.org/tp-cm/" target="_blank" />
+        </menu>
 
         <menu name="Resources">
             <item name="OWASP Dependency Check" href="dependency-check-report.html" target="_blank" />
             <item name="jaCoCo Report" href="jacoco/index.html" target="_blank" />
             <item name="Clover Report" href="clover/index.html" target="_blank" />
             <item name="Java Doc - API" href="apidocs/index.html" target="_blank" />
+
+            <item name="Follow on X" href="https://twitter.com/ElmarDott" target="_blank" />
             <item name="Git Repository" href="https://git.elmar-dott.com/scm/repo/TogetherPlatform/TP-CORE/readme" target="_blank" />
         </menu>
 
