@@ -40,11 +40,6 @@
         <url>scm:git:https://git.elmar-dott.com/scm/repo/TogetherPlatform/TP-CORE/</url>
     </scm>
 
-    <ciManagement>
-        <system>Travis CI</system>
-        <url>https://travis-ci.org/ElmarDott/TP-CORE</url>
-    </ciManagement>
-
     <issueManagement>
         <system>Redmine</system>
         <url>https://issues.elmar-dott.com/projects/tp-core</url>
