@@ -277,4 +277,30 @@ public class StringUtilsTest {
 
         assertEquals(compare, convert);
     }
+
+    @Test
+    void splitDigitStringToIntegerListTest() {
+        List<Integer> integerList = new ArrayList<>();
+        integerList.add(1);
+        integerList.add(2);
+        integerList.add(3);
+        integerList.add(4);
+        integerList.add(5);
+        integerList.add(6);
+
+        assertEquals(integerList, StringUtils.splitDigitStringToIntegerList("123456"));
+    }
+
+    @Test
+    void failSplitDigitStringToIntegerListTest() {
+        List<Integer> integerList = new ArrayList<>();
+        integerList.add(1);
+        integerList.add(2);
+        integerList.add(3);
+
+        assertNotEquals(integerList, StringUtils.splitDigitStringToIntegerList("123z456"));
+        assertNotEquals(integerList, StringUtils.splitDigitStringToIntegerList("1@456"));
+        assertNotEquals(integerList, StringUtils.splitDigitStringToIntegerList(".3z456"));
+        assertNotEquals(integerList, StringUtils.splitDigitStringToIntegerList("X23z456"));
+    }
 }

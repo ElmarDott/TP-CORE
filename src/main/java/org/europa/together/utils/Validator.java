@@ -1,6 +1,7 @@
 package org.europa.together.utils;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.LogLevel;
@@ -242,6 +243,54 @@ public final class Validator {
             if (tmp % value10 == 0) {
                 success = true;
             }
+        }
+        return success;
+    }
+
+    /**
+     * Luhns Algortihm is secure way to find for an number it's corrsponding
+     * checksum (validation key). This algorithm is used by Visa, Mastercard and
+     * others to verify the credit card number.This mechanism can also used to
+     * verify gift card codes.<br>
+     * You need to place the number wich have verified and it's corresponding
+     * checksum. If the validation succeed by the correct checksum the method
+     * return tue.
+     *
+     * @param numbers as Integer
+     * @return true on success
+     */
+    public static boolean luhnNumberChecksum(final String numbers) {
+        boolean success = false;
+        List<Integer> digits = StringUtils.splitDigitStringToIntegerList(numbers);
+
+        int sum = 0;
+        int counter = 1;
+        for (Integer digit : digits) {
+
+            if (counter % 2 == 0) {
+                sum += digit;
+
+            } else {
+                int result = digit * 2;
+                if (result >= 10) {
+                    List<Integer> stack = StringUtils.splitDigitStringToIntegerList(
+                            String.valueOf(result));
+                    int temporal = 0;
+                    for (Integer element : stack) {
+                        temporal += element;
+                    }
+                    sum += temporal;
+
+                } else {
+                    sum += result;
+                }
+            }
+            LOGGER.log("CNT: " + counter + "\tDigit: " + digit + "\tSUM: " + sum, LogLevel.DEBUG);
+            counter++;
+        }
+
+        if (sum % 10 == 0) {
+            success = true;
         }
         return success;
     }

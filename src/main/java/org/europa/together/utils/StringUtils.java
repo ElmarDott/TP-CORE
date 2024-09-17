@@ -123,7 +123,7 @@ public final class StringUtils {
      * @return decodedUrl as String
      */
     public static String base64UrlEncoding(final String url) {
-        return Base64.getUrlEncoder().encodeToString(url.getBytes());
+        return Base64.getUrlEncoder().encodeToString(url.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -320,5 +320,26 @@ public final class StringUtils {
             throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.parse(timestamp);
+    }
+
+    /**
+     * Split a string of numbers into an ordered list of integer digits. If the
+     * string contains something else than a digit like a letter etc. the result
+     * will be an empty list.
+     *
+     * @param digits as String
+     * @return List of Integers
+     */
+    public static List<Integer> splitDigitStringToIntegerList(String digits) {
+        List<Integer> integerList = new ArrayList<>();
+        if (Validator.validate(digits, Validator.DIGIT)) {
+            String[] charArray = digits.split("(?<=.)");
+            for (String character : charArray) {
+                integerList.add(Integer.decode(character));
+            }
+        } else {
+            LOGGER.log("Imput string contains non digit characters", LogLevel.ERROR);
+        }
+        return integerList;
     }
 }

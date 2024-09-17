@@ -571,9 +571,21 @@ public class ValidatorTest {
         });
     }
 
+    @Test
     void isInvalidIsbn13_tolong() throws Exception {
         assertThrows(Exception.class, () -> {
             Validator.isIsbn("97838362783481");
         });
     }
+
+    @Test
+    void luhnNumberChecksumTest() {
+        assertTrue(Validator.luhnNumberChecksum("5374343040363120"));
+    }
+
+    @Test
+    void failLuhnNumberChecksumTest() {
+        assertFalse(Validator.luhnNumberChecksum("79927398713"));
+    }
+
 }
