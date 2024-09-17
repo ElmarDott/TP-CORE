@@ -9,7 +9,7 @@
         https://maven.apache.org/skins/maven-fluido-skin/
     -->
     <bannerLeft>
-        <name>together Platform</name>
+        <name>Together Platform</name>
         <src>images/logo.gif</src>
         <href>index.html</href>
     </bannerLeft>
@@ -32,6 +32,7 @@
             <item name="jaCoCo Report" href="jacoco/index.html" target="_blank" />
             <item name="Clover Report" href="clover/index.html" target="_blank" />
             <item name="Java Doc - API" href="apidocs/index.html" target="_blank" />
+            <item name="Release Notes" href="release-notes.html" />
 
             <item name="Follow on X" href="https://twitter.com/ElmarDott" target="_blank" />
             <item name="Git Repository" href="https://git.elmar-dott.com/scm/repo/TogetherPlatform/TP-CORE/readme" target="_blank" />

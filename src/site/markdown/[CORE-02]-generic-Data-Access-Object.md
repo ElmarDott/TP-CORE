@@ -14,7 +14,7 @@ Files:
 
 This implementation of a Data Access Object (DAO) is generic and is easy to extend by inheritance. The DAO organize all basic database operations CRUD (Create, Read, Update and Delete) for their Domain Objects (DO). Also serialization and deserialization as JSON Objects for interoperable data exchange are available.
 
-![GenericDAO UML](https://github.com/ElmarDott/TP-CORE/wiki/images/genericDAO.png)
+![GenericDAO UML](https://git.elmar-dott.com/scm/api/v2/plugins/directFileLink/TogetherPlatform/TP-CORE/src%2Fsite%2Fresources%2Fimages%2Fdoc%2FgenericDAO.png)
 
 The concrete implementation of the GenericDAO is based on the Java Persistence API (JPA) provided by Hibernate (HBM). The GenericDAO is designed for transaction management (Spring JPA Transaction Manager). To reach a better performance, a connection pool is used. The connection pool library is Apache Commons DBCP2 and configured within the Spring context. Bean Validation is supported by the Hibernate Validator. JSON Processing is supported by Jackson. The following list gives a brief overview about Hibernate and JPA version compatibility.
 

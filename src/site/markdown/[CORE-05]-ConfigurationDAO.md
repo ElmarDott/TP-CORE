@@ -36,7 +36,7 @@ In compliance of the given architecture have the ConfigurationService an higher 
 
 The database table of the ConfigurationDO is APP_CONFIG. The constant &lt;DomainObject&gt;.TABLE_NAME contains the information about the table name for this Domain Object.
 
-![ConfiguratioDO](https://github.com/ElmarDott/TP-CORE/wiki/images/ConfigurationDO.png)
+![ConfiguratioDO](https://git.elmar-dott.com/scm/api/v2/plugins/directFileLink/TogetherPlatform/TP-CORE/src%2Fsite%2Fresources%2Fimages%2Fdoc%2FConfigurationDO.png)
 
 In the case a service change his API and an entry will be obsolete in the next version, it can declared as deprecated. The flag mandatory mark an entry as necessary. This information is specially for GUI form descriptions. The versioning for configuration entries follows the version of the module which define them.
 

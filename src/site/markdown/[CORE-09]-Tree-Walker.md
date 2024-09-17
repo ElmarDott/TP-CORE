@@ -14,7 +14,7 @@ The TreeWalker is a simple implementation of a tree data structure. As usage is 
 
 **basic theory**
 
-![](https://github.com/ElmarDott/TP-CORE/wiki/images/Tree.jpg)
+![Tree Graph](https://git.elmar-dott.com/scm/api/v2/plugins/directFileLink/TogetherPlatform/TP-CORE/src%2Fsite%2Fresources%2Fimages%2Fdoc%2FTree.jpg)
 
 Dealing with trees you need to pay attention on some circumstances and definitions to get the expected result. Every tree have just one root node. Except the root node, every node need to have a parent. If a  node do not have a child node it called leaf. The example tree in the picture have the following metrics:
 
