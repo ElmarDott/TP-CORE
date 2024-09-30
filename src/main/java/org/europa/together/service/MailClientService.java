@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import jakarta.mail.Address;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Transport;
 import org.apiguardian.api.API;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -120,24 +121,21 @@ public final class MailClientService {
      * send to the first entry.
      *
      * @param mail as MailClient
+     * @throws jakarta.mail.MessagingException
      */
     @API(status = STABLE, since = "1.0")
-    public void sendEmail(final Mail mail) {
-        try {
-            mailClient.loadConfigurationFromDatabase();
-            mailClient.composeMail(mail);
+    public void sendEmail(final Mail mail) throws MessagingException {
+        mailClient.loadConfigurationFromDatabase();
+        mailClient.composeMail(mail);
 
-            Address[] address = new Address[1];
-            address[0] = (Address) mail.getRecipentList().get(0);
+        Address[] address = new Address[1];
+        address[0] = (Address) mail.getRecipentList().get(0);
 
-            Transport postman = mailClient.getSession().getTransport();
-            postman.connect();
-            postman.sendMessage(mailClient.getMimeMessage(), address);
-            postman.close();
-            LOGGER.log("E-Mail should send.", LogLevel.TRACE);
-        } catch (Exception ex) {
-            LOGGER.catchException(ex);
-        }
+        Transport postman = mailClient.getSession().getTransport();
+        postman.connect();
+        postman.sendMessage(mailClient.getMimeMessage(), address);
+        postman.close();
+        LOGGER.log("E-Mail should send.", LogLevel.TRACE);
     }
 
     /**
@@ -152,9 +150,10 @@ public final class MailClientService {
      *
      * @param mail as MailClient
      * @return sendedEmails as int
+     * @throws jakarta.mail.MessagingException
      */
     @API(status = STABLE, since = "1.0")
-    public int sendBulkMail(final Mail mail) {
+    public int sendBulkMail(final Mail mail) throws MessagingException {
         int countSendedMails = 0;
         try {
             mailClient.loadConfigurationFromDatabase();
@@ -180,7 +179,7 @@ public final class MailClientService {
             }
             postman.close();
 
-        } catch (Exception ex) {
+        } catch (InterruptedException ex) {
             LOGGER.catchException(ex);
         }
         LOGGER.log(countSendedMails + " E-Mails should sended", LogLevel.DEBUG);

@@ -98,6 +98,15 @@ public interface ImageProcessor {
             throws MisconfigurationException;
 
     /**
+     * A deep copy of a BufferdImage (CopyConstructor).
+     *
+     * @param source as BufferedImage
+     * @return a copied BufferedImage
+     */
+    @API(status = STABLE, since = "3.1")
+    BufferedImage copyImage(BufferedImage source);
+
+    /**
      * Get the height in pixel of the loaded image.
      *
      * @return height as int

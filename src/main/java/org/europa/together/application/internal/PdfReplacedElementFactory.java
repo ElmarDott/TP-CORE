@@ -27,8 +27,8 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
 
     private static final Logger LOGGER = new LogbackLogger(PdfReplacedElementFactory.class);
 
-    private final int height = 250;
-    private final int width = 150;
+    private static final int HEIGHT = 250;
+    private static final int WIDTH = 150;
 
     @Override
     public ReplacedElement createReplacedElement(final LayoutContext c, final BlockBox box,
@@ -54,7 +54,7 @@ public class PdfReplacedElementFactory implements ReplacedElementFactory {
                 if (cssWidth != -1 || cssHeight != -1) {
                     fsImage.scale(cssWidth, cssHeight);
                 } else {
-                    fsImage.scale(height, width);
+                    fsImage.scale(HEIGHT, WIDTH);
                 }
                 return new ITextImageElement(fsImage);
             }

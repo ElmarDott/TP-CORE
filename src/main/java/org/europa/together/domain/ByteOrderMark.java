@@ -1,5 +1,7 @@
 package org.europa.together.domain;
 
+import java.util.Arrays;
+
 /**
  * Existing Byte Order Mark (BOM) types.
  */
@@ -27,7 +29,7 @@ public enum ByteOrderMark {
      * @return value as Byte
      */
     public byte[] getBytes() {
-        byte[] val = this.value;
+        byte[] val = Arrays.copyOf(this.value, this.value.length);
         return val;
     }
 

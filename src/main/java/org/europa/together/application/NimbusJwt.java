@@ -144,6 +144,7 @@ public class NimbusJwt implements JsonWebToken {
             JWSVerifier verifier = new MACVerifier(sharedSecret);
             payload = signedJWT.getPayload().toString();
 
+            //TODO: extract for validation
             if (!signedJWT.verify(verifier)) {
                 LOGGER.log("JWT is not valid.", LogLevel.ERROR);
                 LOGGER.log("\t payload: " + payload, LogLevel.ERROR);

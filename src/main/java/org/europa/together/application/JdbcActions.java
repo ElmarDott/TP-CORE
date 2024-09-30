@@ -36,7 +36,7 @@ public class JdbcActions implements DatabaseActions {
     private static final long serialVersionUID = 8L;
     private static final Logger LOGGER = new LogbackLogger(JdbcActions.class);
 
-    private final String jdbcProperties = "org/europa/together/configuration/jdbc.properties";
+    private static final String JDBC_PROPERTIES = "org/europa/together/configuration/jdbc.properties";
     private Connection jdbcConnection = null;
     private Statement statement = null;
     private DatabaseMetaData metadata;
@@ -177,8 +177,8 @@ public class JdbcActions implements DatabaseActions {
         String properties = propertyFile;
         PropertyReader reader = new PropertyFileReader();
         if (StringUtils.isEmpty(properties) || propertyFile.equals("test")) {
-            LOGGER.log("Append (test) properties: " + jdbcProperties, LogLevel.DEBUG);
-            reader.appendPropertiesFromClasspath(jdbcProperties);
+            LOGGER.log("Append (test) properties: " + JDBC_PROPERTIES, LogLevel.DEBUG);
+            reader.appendPropertiesFromClasspath(JDBC_PROPERTIES);
         } else {
             LOGGER.log("Append properties from: " + propertyFile, LogLevel.DEBUG);
             reader.appendPropertiesFromFile(propertyFile);

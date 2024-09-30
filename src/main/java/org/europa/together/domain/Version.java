@@ -54,30 +54,31 @@ public class Version implements Comparable<Version> {
             String msg = "The version number " + version
                     + " do not match the Pattern: [1].[2].[3]-[LABEL].";
             throw new MisconfigurationException(msg);
-        }
-        String[] fragments = version.split("\\.");
-        LOGGER.log("Fragments: " + fragments.length, LogLevel.DEBUG);
+        } else {
+            String[] fragments = version.split("\\.");
+            LOGGER.log("Fragments: " + fragments.length, LogLevel.DEBUG);
 
-        major = Integer.parseInt(fragments[0]);
-        if (fragments.length > 1) {
-            if (!fragments[1].contains("-")) {
-                minor = Integer.parseInt(fragments[1]);
-            } else {
-                LOGGER.log("Lable after minor.", LogLevel.DEBUG);
-                String[] optional = fragments[1].split("-");
-                minor = Integer.parseInt(optional[0]);
-                label = optional[1];
+            major = Integer.parseInt(fragments[0]);
+            if (fragments.length > 1) {
+                if (!fragments[1].contains("-")) {
+                    minor = Integer.parseInt(fragments[1]);
+                } else {
+                    LOGGER.log("Lable after minor.", LogLevel.DEBUG);
+                    String[] optional = fragments[1].split("-");
+                    minor = Integer.parseInt(optional[0]);
+                    label = optional[1];
+                }
             }
-        }
-        if (fragments.length > 2) {
-            String[] optional = fragments[2].split("-");
+            if (fragments.length > 2) {
+                String[] optional = fragments[2].split("-");
 
-            patch = Integer.parseInt(optional[0]);
-            if (optional.length == 2) { //prevent index out of bound exception
-                label = optional[1];
+                patch = Integer.parseInt(optional[0]);
+                if (optional.length == 2) { //prevent index out of bound exception
+                    label = optional[1];
+                }
             }
+            LOGGER.log("Version: " + toString(), LogLevel.DEBUG);
         }
-        LOGGER.log("Version: " + toString(), LogLevel.DEBUG);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getter / Setter">

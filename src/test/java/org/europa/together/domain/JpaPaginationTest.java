@@ -21,11 +21,15 @@ public class JpaPaginationTest {
         assertThat(JpaPagination.class, hasValidBeanConstructor());
         assertThat(JpaPagination.class, hasValidBeanToStringExcluding("filterBooleanCriteria",
                 "filterIntegerCriteria",
-                "filterStringCriteria"));
+                "filterStringCriteria",
+                "filterFloatCriteria",
+                "filterDateCriteria"));
         assertThat(JpaPagination.class,
                 hasValidGettersAndSettersExcluding("filterBooleanCriteria",
                         "filterIntegerCriteria",
-                        "filterStringCriteria"));
+                        "filterStringCriteria",
+                        "filterFloatCriteria",
+                        "filterDateCriteria"));
     }
 
 }

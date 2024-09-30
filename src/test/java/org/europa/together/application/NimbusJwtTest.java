@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +56,16 @@ public class NimbusJwtTest {
 
     @AfterAll
     static void tearDown() throws SQLException {
-        jdbcActions.executeQuery(FLUSH_TABLE);
     }
 
     @BeforeEach
     void testCaseInitialization() {
+        jdbcActions.executeSqlFromClasspath(FILE);
     }
 
     @AfterEach
-    void testCaseTermination() {
+    void testCaseTermination() throws SQLException {
+        jdbcActions.executeQuery(FLUSH_TABLE);
     }
     //</editor-fold>
 
@@ -81,15 +83,15 @@ public class NimbusJwtTest {
     }
 
     @Test
-    void buildHMAC512SignedJwt() throws Exception {
-        LOGGER.log("TEST CASE: buildHMAC512SignedJwt", LogLevel.DEBUG);
+    void failBuildHMAC512SignedJws() throws Exception {
+        LOGGER.log("TEST CASE: failBuildHMAC512SignedJws", LogLevel.DEBUG);
 
-        String issuer = "https://togehter-platform.org";
-        String subject = "togetherPlatform-API";
-        List<String> audience = new ArrayList<>();
-        audience.add("https://app.togehter-platform.org");
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        jdbcActions.executeSqlFromClasspath("org/europa/together/sql/jwt-fail-test.sql");
 
-        assertEquals(383, jsonWebToken.buildHMAC512SignedJwt(issuer, subject, audience).length());
+        assertThrows(Exception.class, () -> {
+            jsonWebToken.buildHMAC512SignedJws("{Hallo World JSON}");
+        });
     }
 
     @Test
@@ -105,6 +107,47 @@ public class NimbusJwtTest {
 
         assertThrows(Exception.class, () -> {
             jsonWebToken.parseHMAC512SingedJws(jws.substring(1));
+        });
+    }
+
+    @Test
+    void parseHMAC512invalidSigningJws() throws Exception {
+        LOGGER.log("TEST CASE: parseHMAC512invalidSigningJws", LogLevel.DEBUG);
+
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        jdbcActions.executeSqlFromClasspath("org/europa/together/sql/jwt-fail-test.sql");
+
+        assertThrows(Exception.class, () -> {
+            jsonWebToken.parseHMAC512SingedJws(jws);
+        });
+    }
+
+    @Test
+    void buildHMAC512SignedJwt() throws Exception {
+        LOGGER.log("TEST CASE: buildHMAC512SignedJwt", LogLevel.DEBUG);
+
+        String issuer = "https://togehter-platform.org";
+        String subject = "togetherPlatform-API";
+        List<String> audience = new ArrayList<>();
+        audience.add("https://app.togehter-platform.org");
+
+        assertEquals(383, jsonWebToken.buildHMAC512SignedJwt(issuer, subject, audience).length());
+    }
+
+    @Test
+    void failBuildHMAC512SignedJwt() throws Exception {
+        LOGGER.log("TEST CASE: failBuildHMAC512SignedJwt", LogLevel.DEBUG);
+
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        jdbcActions.executeSqlFromClasspath("org/europa/together/sql/jwt-fail-test.sql");
+
+        assertThrows(Exception.class, () -> {
+            String issuer = "https://togehter-platform.org";
+            String subject = "togetherPlatform-API";
+            List<String> audience = new ArrayList<>();
+            audience.add("https://app.togehter-platform.org");
+
+            jsonWebToken.buildHMAC512SignedJwt(issuer, subject, audience).length();
         });
     }
 
@@ -132,4 +175,17 @@ public class NimbusJwtTest {
             jsonWebToken.parseHMAC512SingedJwt(jwt.substring(1));
         });
     }
+
+    @Test
+    void parseHMAC512invalidSigningJwt() throws Exception {
+        LOGGER.log("TEST CASE: parseHMAC512invalidSigningJwt", LogLevel.DEBUG);
+
+        jdbcActions.executeQuery(FLUSH_TABLE);
+        jdbcActions.executeSqlFromClasspath("org/europa/together/sql/jwt-fail-test.sql");
+
+        assertThrows(Exception.class, () -> {
+            jsonWebToken.parseHMAC512SingedJwt("null");
+        });
+    }
+
 }

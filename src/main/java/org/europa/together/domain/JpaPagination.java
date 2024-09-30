@@ -266,7 +266,7 @@ public class JpaPagination {
      * @return filterFloatCriteria as Map
      */
     public Map<String, Float> getFilterFloatCriteria() {
-        return filterFloatCriteria;
+        return Map.copyOf(filterFloatCriteria);
     }
 
     /**
@@ -276,7 +276,7 @@ public class JpaPagination {
      * @param filterFloatCriteria as Map
      */
     public void setFilterFloatCriteria(final Map<String, Float> filterFloatCriteria) {
-        this.filterFloatCriteria = filterFloatCriteria;
+        this.filterFloatCriteria.putAll(filterFloatCriteria);
     }
 
     /**
@@ -286,7 +286,7 @@ public class JpaPagination {
      * @return filterDateCriteria as Map
      */
     public Map<String, Date> getFilterDateCriteria() {
-        return filterDateCriteria;
+        return Map.copyOf(filterDateCriteria);
     }
 
     /**
@@ -296,7 +296,7 @@ public class JpaPagination {
      * @param filterDateCriteria as Map
      */
     public void setFilterDateCriteria(final Map<String, Date> filterDateCriteria) {
-        this.filterDateCriteria = filterDateCriteria;
+//        this.filterDateCriteria.putAll(filterDateCriteria);
     }
     //</editor-fold>
 }

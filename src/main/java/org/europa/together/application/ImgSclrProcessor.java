@@ -1,5 +1,6 @@
 package org.europa.together.application;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.io.File;
@@ -49,7 +50,7 @@ public class ImgSclrProcessor implements ImageProcessor {
             this.clearImage();
         }
         if (image != null) {
-            this.image = image;
+            this.image = copyImage(image);
             this.height = image.getHeight();
             this.width = image.getWidth();
             success = true;
@@ -183,7 +184,7 @@ public class ImgSclrProcessor implements ImageProcessor {
 
     @Override
     public BufferedImage getImage() {
-        return this.image;
+        return copyImage(this.image);
     }
 
     @Override
@@ -255,6 +256,16 @@ public class ImgSclrProcessor implements ImageProcessor {
             success = true;
         }
         return success;
+    }
+
+    @Override
+    public BufferedImage copyImage(BufferedImage source) {
+        BufferedImage image = new BufferedImage(source.getWidth(),
+                source.getHeight(), source.getType());
+        Graphics graphics = image.getGraphics();
+        graphics.drawImage(source, 0, 0, null);
+        graphics.dispose();
+        return image;
     }
 
     private boolean isFormatAccepted(final String imageFormat) {

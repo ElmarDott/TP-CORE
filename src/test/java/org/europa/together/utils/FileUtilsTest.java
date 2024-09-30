@@ -144,8 +144,11 @@ public class FileUtilsTest {
 
     @Test
     void failListFileTree() {
-        assertNotNull(FileUtils.listFileTree(new File("")));
-        assertNotNull(FileUtils.listFileTree(null));
+        assertEquals(0, FileUtils.listFileTree(null).size());
+        assertEquals(0, FileUtils.listFileTree(new File("")).size());
+        assertEquals(0, FileUtils.listFileTree(
+                new File(DIRECTORY + "dir-test/root")).size()
+        );
     }
 
     @Test

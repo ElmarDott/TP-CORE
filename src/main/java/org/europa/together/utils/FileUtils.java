@@ -202,7 +202,9 @@ public final class FileUtils {
      */
     public static Set<File> listFileTree(final File directory) {
         Set<File> fileTree = new HashSet<>();
-        if (directory != null && directory.isDirectory() && directory.listFiles().length != 0) {
+        if (directory != null && directory.exists()
+                && directory.isDirectory()
+                && directory.listFiles().length != 0) {
             for (File entry : directory.listFiles()) {
                 if (entry.isFile()) {
                     fileTree.add(entry);
