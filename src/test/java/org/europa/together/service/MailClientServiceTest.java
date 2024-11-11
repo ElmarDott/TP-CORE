@@ -2,6 +2,10 @@ package org.europa.together.service;
 
 import static com.google.code.beanmatchers.BeanMatchers.*;
 import com.sun.mail.util.MailConnectException;
+import jakarta.mail.Message;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
 import org.europa.together.JUnit5Preperator;
@@ -18,15 +22,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SuppressWarnings("unchecked")
-@ExtendWith({JUnit5Preperator.class})
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, JUnit5Preperator.class})
+//@ExtendWith({MockitoExtension.class, SpringExtension.class, JUnit5Preperator.class})
 @ContextConfiguration(locations = {"/applicationContext.xml"})
 public class MailClientServiceTest {
 
@@ -106,8 +115,8 @@ public class MailClientServiceTest {
     }
 
     @Test
-    void sendMail() throws Exception {
-        LOGGER.log("TEST CASE: sendMail", LogLevel.DEBUG);
+    void failConnectionSendMail() throws Exception {
+        LOGGER.log("TEST CASE: failConnectionSendMail", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         mail.setSubject("JGiven Test E-Mail");
@@ -120,8 +129,8 @@ public class MailClientServiceTest {
     }
 
     @Test
-    void sendBulkMail() throws Exception {
-        LOGGER.log("TEST CASE: sendBulkMail", LogLevel.DEBUG);
+    void failConnectionSendBulkMail() throws Exception {
+        LOGGER.log("TEST CASE: failConnectionSendBulkMail", LogLevel.DEBUG);
 
         Mail mail = new Mail();
         mail.setSubject("JGiven Test E-Mail");

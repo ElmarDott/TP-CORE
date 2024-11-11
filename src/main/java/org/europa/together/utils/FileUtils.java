@@ -1,5 +1,6 @@
 package org.europa.together.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,8 @@ import org.europa.together.application.LogbackLogger;
 import org.europa.together.business.Logger;
 import org.europa.together.domain.ByteOrderMark;
 import org.europa.together.domain.LogLevel;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Some helpful stuff for file handling.
@@ -120,6 +123,30 @@ public final class FileUtils {
             LOGGER.log("File " + filePath + " does not exists!", LogLevel.ERROR);
         }
         return size;
+    }
+
+    /**
+     * Read a file from the class path.
+     *
+     * @param path to the file
+     * @return fielContent as String
+     * @throws FileNotFoundException
+     */
+    public static String readFileFromClasspath(String path)
+            throws IOException {
+
+        StringBuilder content = new StringBuilder();
+        ApplicationContext context = new ClassPathXmlApplicationContext();
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        context.getResource(path).getInputStream(), "UTF8")
+        );
+        String line;
+        while ((line = reader.readLine()) != null) {
+            content.append(line + " \n");
+        }
+        reader.close();
+        return content.toString();
     }
 
     /**

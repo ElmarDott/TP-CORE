@@ -94,6 +94,19 @@ public class FileUtilsTest {
     }
 
     @Test
+    void readFileFromClasspath() throws Exception {
+        String content = FileUtils.readFileFromClasspath("/TestFile");
+        assertEquals("Hello World! \n", content);
+    }
+
+    @Test
+    void failReadFileFromClasspath() throws Exception {
+        assertThrows(Exception.class, () -> {
+            FileUtils.readFileStream(new File("no_file"));
+        });
+    }
+
+    @Test
     void appendFile() throws Exception {
         String file = DIRECTORY + "AppendTestFile.txt";
         FileUtils.writeStringToFile("Hello World!", file);
